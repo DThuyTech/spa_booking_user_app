@@ -1,0 +1,271 @@
+{
+  "@@locale": "en",
+  "appTitle": "Spa Booking",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "homeTitle": "Home",
+  "@homeTitle": {
+    "description": "Home screen title"
+  },
+  "loginTitle": "Sign In",
+  "@loginTitle": {
+    "description": "Login screen title"
+  },
+  "welcomeBack": "Welcome Back",
+  "@welcomeBack": {
+    "description": "Welcome back header text"
+  },
+  "signInSubtitle": "Sign in to continue your beauty journey",
+  "@signInSubtitle": {
+    "description": "Subtitle below welcome back"
+  },
+  "phone": "Phone number",
+  "@phone": {
+    "description": "Phone number label"
+  },
+  "enterPhone": "Enter your phone number",
+  "@enterPhone": {
+    "description": "Enter phone number placeholder"
+  },
+  "continueButton": "Continue",
+  "@continueButton": {
+    "description": "Continue action button"
+  },
+  "loginButton": "Login",
+  "@loginButton": {
+    "description": "Login action button"
+  },
+  "enterEmailOrPhone": "Enter your email or phone number",
+  "@enterEmailOrPhone": {
+    "description": "Enter email or phone placeholder"
+  },
+  "enterPassword": "Enter your password",
+  "@enterPassword": {
+    "description": "Enter password placeholder"
+  },
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "invalidPhone": "Please enter a valid 10-digit phone number",
+  "@invalidPhone": {
+    "description": "Validation error for invalid phone"
+  },
+  "sendOtp": "Send OTP",
+  "@sendOtp": {
+    "description": "Send OTP button"
+  },
+  "otp": "OTP",
+  "@otp": {
+    "description": "OTP label"
+  },
+  "enterOtp": "Enter verification code",
+  "@enterOtp": {
+    "description": "Enter OTP placeholder"
+  },
+  "verifyYourNumber": "Verify your number",
+  "@verifyYourNumber": {
+    "description": "Verify number headline"
+  },
+  "weSentCodeTo": "We sent a verification code to",
+  "@weSentCodeTo": {
+    "description": "Subtitle indicating code sent"
+  },
+  "remaining": "remaining",
+  "@remaining": {
+    "description": "Remaining countdown label"
+  },
+  "resendOtp": "Resend Code",
+  "@resendOtp": {
+    "description": "Resend code button"
+  },
+  "didNotReceiveCode": "Didn't receive the code?",
+  "@didNotReceiveCode": {
+    "description": "Question before resend link"
+  },
+  "invalidOtp": "Invalid verification code. Please try again.",
+  "@invalidOtp": {
+    "description": "Error message for invalid OTP"
+  },
+  "expiredOtp": "Verification code has expired. Please request a new one.",
+  "@expiredOtp": {
+    "description": "Error message for expired OTP"
+  },
+  "verify": "Verify",
+  "@verify": {
+    "description": "Verify action button"
+  },
+  "changePhoneNumber": "Change phone number",
+  "@changePhoneNumber": {
+    "description": "Change phone number button"
+  },
+  "loginFailed": "Login failed. Please try again.",
+  "@loginFailed": {
+    "description": "Login failed error message"
+  },
+  "networkError": "Network connection error. Please check your internet.",
+  "@networkError": {
+    "description": "Network failure message"
+  },
+  "sessionExpired": "Session has expired. Please log in again.",
+  "@sessionExpired": {
+    "description": "Session expired message"
+  },
+  "termsNotice": "By continuing, you agree to our Terms & Conditions and Privacy Policy",
+  "@termsNotice": {
+    "description": "Terms and conditions notice at login footer"
+  },
+  "orDivider": "OR",
+  "@orDivider": {
+    "description": "Divider text"
+  },
+  "dontHaveAccount": "Don't have an account?",
+  "@dontHaveAccount": {
+    "description": "Registration prompt"
+  },
+  "register": "Register",
+  "@register": {
+    "description": "Register action link"
+  },
+  "createAccount": "Create Account",
+  "@createAccount": {
+    "description": "Create Account header"
+  },
+  "registerSubtitle": "Sign up to begin your beauty journey",
+  "@registerSubtitle": {
+    "description": "Subtitle below create account header"
+  },
+  "fullName": "Full name",
+  "@fullName": {
+    "description": "Full name label"
+  },
+  "enterFullName": "Enter your full name",
+  "@enterFullName": {
+    "description": "Full name placeholder"
+  },
+  "alreadyHaveAccount": "Already have an account?",
+  "@alreadyHaveAccount": {
+    "description": "Sign in prompt"
+  },
+  "signIn": "Sign In",
+  "@signIn": {
+    "description": "Sign in action link"
+  },
+  "refresh": "Refresh",
+  "@refresh": {
+    "description": "Refresh button label"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout button label"
+  },
+  "errorOccurred": "An error occurred",
+  "@errorOccurred": {
+    "description": "Generic error message"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button label"
+  },
+  "otpInput": "Enter verification code",
+  "@otpInput": {
+    "description": "Accessible label for OTP input"
+  },
+  "verificationFailed": "Verification failed. Please try again.",
+  "@verificationFailed": {
+    "description": "General verification failed error"
+  },
+  "resendFailed": "Failed to resend code. Please try again.",
+  "@resendFailed": {
+    "description": "General resend failed error"
+  },
+  "tryAgain": "Try again",
+  "@tryAgain": {
+    "description": "Try again label"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Back button accessibility label"
+  },
+  "searchSalonsPlaceholder": "Search salons, services, stylists...",
+  "@searchSalonsPlaceholder": {
+    "description": "Placeholder for salon search bar"
+  },
+  "upcomingAppointment": "Upcoming Appointment",
+  "@upcomingAppointment": {
+    "description": "Upcoming appointment section header"
+  },
+  "noUpcomingAppointments": "No upcoming appointments",
+  "@noUpcomingAppointments": {
+    "description": "Empty state title when no appointment"
+  },
+  "bookAppointment": "Book an Appointment",
+  "@bookAppointment": {
+    "description": "Action button to book an appointment"
+  },
+  "bookAppointmentSubtitle": "Discover top-rated beauty salons near you",
+  "@bookAppointmentSubtitle": {
+    "description": "Subtitle below empty appointments"
+  },
+  "services": "Services",
+  "@services": {
+    "description": "Services section header"
+  },
+  "seeAll": "See all",
+  "@seeAll": {
+    "description": "See all action link"
+  },
+  "recommendedSalons": "Recommended Salons",
+  "@recommendedSalons": {
+    "description": "Recommended salons section header"
+  },
+  "nearbySalons": "Nearby Salons",
+  "@nearbySalons": {
+    "description": "Nearby salons section header"
+  },
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Notifications button accessibility label"
+  },
+  "goodMorning": "Good morning,",
+  "@goodMorning": {
+    "description": "Good morning greeting prefix"
+  },
+  "goodAfternoon": "Good afternoon,",
+  "@goodAfternoon": {
+    "description": "Good afternoon greeting prefix"
+  },
+  "goodEvening": "Good evening,",
+  "@goodEvening": {
+    "description": "Good evening greeting prefix"
+  },
+  "categoryHaircut": "Haircut",
+  "@categoryHaircut": {
+    "description": "Haircut service category"
+  },
+  "categorySpa": "Spa & Massage",
+  "@categorySpa": {
+    "description": "Spa service category"
+  },
+  "categoryNails": "Nails",
+  "@categoryNails": {
+    "description": "Nails service category"
+  },
+  "categoryFacial": "Facial Care",
+  "@categoryFacial": {
+    "description": "Facial service category"
+  },
+  "categoryColoring": "Coloring",
+  "@categoryColoring": {
+    "description": "Coloring service category"
+  },
+  "salonDiscoveryComingSoon": "Salon discovery coming soon",
+  "@salonDiscoveryComingSoon": {
+    "description": "Placeholder title for store discovery"
+  },
+  "salonDiscoverySubtitle": "We are curating top luxury beauty salons for you",
+  "@salonDiscoverySubtitle": {
+    "description": "Placeholder subtitle for store discovery"
+  }
+}
