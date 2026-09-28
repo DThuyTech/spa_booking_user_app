@@ -1,4 +1,3 @@
-import 'package:board_oi/src/presentation/view/write_review/body_view/write_review_body_view.dart';
 import 'package:board_oi/src/presentation/view/write_review/view/write_review_view.dart';
 import 'package:board_oi/src/presentation/view/write_review/widgets/review_criteria_card.dart';
 import 'package:board_oi/src/presentation/view/write_review/widgets/review_input_card.dart';

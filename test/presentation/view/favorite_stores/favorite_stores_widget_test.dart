@@ -1,4 +1,3 @@
-import 'package:board_oi/src/presentation/view/favorite_stores/models/favorite_store_item.dart';
 import 'package:board_oi/src/presentation/view/favorite_stores/view/favorite_stores_view.dart';
 import 'package:board_oi/src/presentation/view/favorite_stores/widgets/favorite_store_card.dart';
 import 'package:board_oi/src/presentation/view/favorite_stores/widgets/favorite_stores_empty_view.dart';
