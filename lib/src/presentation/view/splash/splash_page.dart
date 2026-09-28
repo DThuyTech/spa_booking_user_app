@@ -111,10 +111,7 @@ class _SplashPageState extends State<SplashPage>
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0xFFFFECE5),
-                          Color(0xFFF9DCD1),
-                        ],
+                        colors: [Color(0xFFFFECE5), Color(0xFFF9DCD1)],
                       ),
                     ),
                     child: const Center(

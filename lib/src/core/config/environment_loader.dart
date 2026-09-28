@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'app_config.dart';
 import 'environment.dart';
 
@@ -11,15 +13,21 @@ class EnvironmentLoader {
     );
     final environment = Environment.fromString(rawEnv);
 
-    const apiBaseUrl = String.fromEnvironment(
-      'API_BASE_URL',
-      defaultValue: 'https://api.example.com/api/v1',
-    );
+    // Fallback to local API server documented in API_DOCUMENTATION.md
+    final String defaultHost;
+    if (kIsWeb) {
+      defaultHost = 'http://localhost:3000';
+    } else if (Platform.isAndroid) {
+      defaultHost = 'http://10.0.2.2:3000';
+    } else {
+      defaultHost = 'http://localhost:3000';
+    }
 
-    const socketUrl = String.fromEnvironment(
-      'SOCKET_URL',
-      defaultValue: 'https://socket.example.com',
-    );
+    const envApiBaseUrl = String.fromEnvironment('API_BASE_URL');
+    final apiBaseUrl = envApiBaseUrl.isNotEmpty ? envApiBaseUrl : defaultHost;
+
+    const envSocketUrl = String.fromEnvironment('SOCKET_URL');
+    final socketUrl = envSocketUrl.isNotEmpty ? envSocketUrl : defaultHost;
 
     final config = AppConfig(
       environment: environment,

@@ -91,10 +91,7 @@ class _OnboardingGlassCardState extends State<OnboardingGlassCard> {
                 gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFFFA7355),
-                    Color(0xFFF26242),
-                  ],
+                  colors: [Color(0xFFFA7355), Color(0xFFF26242)],
                 ),
                 boxShadow: [
                   BoxShadow(

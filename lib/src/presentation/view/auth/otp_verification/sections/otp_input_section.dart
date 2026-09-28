@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/otp_verification_bloc.dart';
-import '../bloc/otp_verification_event.dart';
-import '../bloc/otp_verification_state.dart';
+import '../../../../bloc/auth/otp_verification/otp_verification_bloc.dart';
+import '../../../../bloc/auth/otp_verification/otp_verification_event.dart';
+import '../../../../bloc/auth/otp_verification/otp_verification_state.dart';
 import '../widgets/otp_countdown.dart';
 import '../widgets/otp_input.dart';
 import '../widgets/otp_resend_button.dart';
@@ -41,9 +41,7 @@ class OtpInputSection extends StatelessWidget {
             const SizedBox(height: 22),
 
             // Countdown Timer Display
-            OtpCountdown(
-              formattedCountdown: state.formattedCountdown,
-            ),
+            OtpCountdown(formattedCountdown: state.formattedCountdown),
 
             const SizedBox(height: 10),
 

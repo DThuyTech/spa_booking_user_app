@@ -1,9 +1,23 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
 
-part 'home_event.freezed.dart';
+sealed class HomeEvent extends Equatable {
+  const HomeEvent();
 
-@freezed
-abstract class HomeEvent with _$HomeEvent {
-  const factory HomeEvent.loadGreeting() = _LoadGreeting;
-  const factory HomeEvent.refreshGreeting() = _RefreshGreeting;
+  @override
+  List<Object?> get props => [];
+}
+
+/// Triggers initial fetch of home data
+final class HomeStarted extends HomeEvent {
+  const HomeStarted();
+}
+
+/// User triggered pull-to-refresh
+final class HomeRefreshed extends HomeEvent {
+  const HomeRefreshed();
+}
+
+/// User triggered error retry
+final class HomeRetried extends HomeEvent {
+  const HomeRetried();
 }

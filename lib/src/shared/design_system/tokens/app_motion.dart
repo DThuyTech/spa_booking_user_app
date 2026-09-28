@@ -90,8 +90,9 @@ abstract final class AppMotion {
   static const int staggerMaxItems = 6;
 
   /// Stagger delay for item at [index]
-  static Duration staggerDelay(int index) =>
-      Duration(milliseconds: staggerBase.inMilliseconds * index.clamp(0, staggerMaxItems));
+  static Duration staggerDelay(int index) => Duration(
+    milliseconds: staggerBase.inMilliseconds * index.clamp(0, staggerMaxItems),
+  );
 
   // ---------------------------------------------------------------------------
   // Offset Tokens (for enter/exit translations)

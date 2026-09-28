@@ -41,11 +41,7 @@ class HomeCategoryItem extends StatelessWidget {
                 ],
               ),
               child: Center(
-                child: Icon(
-                  icon,
-                  size: 24,
-                  color: AppColors.primaryBrown,
-                ),
+                child: Icon(icon, size: 24, color: AppColors.primaryBrown),
               ),
             ),
             const SizedBox(height: 8),

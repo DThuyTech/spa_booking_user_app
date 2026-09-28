@@ -140,7 +140,9 @@ class _AppButtonState extends State<AppButton>
           curve: AppMotion.spring,
           padding: cfg.padding,
           decoration: BoxDecoration(
-            color: _isEnabled ? cfg.background : cfg.background.withValues(alpha: 0.5),
+            color: _isEnabled
+                ? cfg.background
+                : cfg.background.withValues(alpha: 0.5),
             borderRadius: cfg.borderRadius,
             border: cfg.border,
             boxShadow: _isEnabled ? cfg.shadows : null,
@@ -186,55 +188,58 @@ class _ButtonConfig {
   static _ButtonConfig of(AppButtonVariant variant, AppButtonSize size) {
     final (padding, fontSize, br) = switch (size) {
       AppButtonSize.sm => (
-          const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-          12.0,
-          BorderRadius.circular(AppRadius.button - 2),
-        ),
+        const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+        12.0,
+        BorderRadius.circular(AppRadius.button - 2),
+      ),
       AppButtonSize.md => (
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          14.0,
-          BorderRadius.circular(AppRadius.button),
-        ),
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        14.0,
+        BorderRadius.circular(AppRadius.button),
+      ),
       AppButtonSize.lg => (
-          const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
-          16.0,
-          BorderRadius.circular(AppRadius.button + 2),
-        ),
+        const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+        16.0,
+        BorderRadius.circular(AppRadius.button + 2),
+      ),
     };
 
     return switch (variant) {
       AppButtonVariant.primary => _ButtonConfig(
-          background: AppColors.darkBrown,
-          foreground: AppColors.white,
-          padding: padding,
-          borderRadius: br,
-          fontSize: fontSize,
-          shadows: AppShadows.accentGlow(AppColors.darkBrown),
-        ),
+        background: AppColors.darkBrown,
+        foreground: AppColors.white,
+        padding: padding,
+        borderRadius: br,
+        fontSize: fontSize,
+        shadows: AppShadows.accentGlow(AppColors.darkBrown),
+      ),
       AppButtonVariant.secondary => _ButtonConfig(
-          background: AppColors.surfaceWarm,
-          foreground: AppColors.darkBrown,
-          padding: padding,
-          borderRadius: br,
-          fontSize: fontSize,
-          border: Border.all(color: AppColors.border, width: 1),
-          shadows: AppShadows.neuLow,
-        ),
+        background: AppColors.surfaceWarm,
+        foreground: AppColors.darkBrown,
+        padding: padding,
+        borderRadius: br,
+        fontSize: fontSize,
+        border: Border.all(color: AppColors.border, width: 1),
+        shadows: AppShadows.neuLow,
+      ),
       AppButtonVariant.outline => _ButtonConfig(
-          background: AppColors.white,
-          foreground: AppColors.primaryBrown,
-          padding: padding,
-          borderRadius: br,
-          fontSize: fontSize,
-          border: Border.all(color: AppColors.primaryBrown.withValues(alpha: 0.5), width: 1.2),
+        background: AppColors.white,
+        foreground: AppColors.primaryBrown,
+        padding: padding,
+        borderRadius: br,
+        fontSize: fontSize,
+        border: Border.all(
+          color: AppColors.primaryBrown.withValues(alpha: 0.5),
+          width: 1.2,
         ),
+      ),
       AppButtonVariant.ghost => _ButtonConfig(
-          background: AppColors.transparent,
-          foreground: AppColors.primaryBrown,
-          padding: padding,
-          borderRadius: br,
-          fontSize: fontSize,
-        ),
+        background: AppColors.transparent,
+        foreground: AppColors.primaryBrown,
+        padding: padding,
+        borderRadius: br,
+        fontSize: fontSize,
+      ),
     };
   }
 }

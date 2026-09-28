@@ -34,9 +34,9 @@ void main() {
 
   group('AuthGuard', () {
     test('calls resolver.next(true) when session is authenticated', () {
-      when(() => mockSessionManager.currentSession).thenReturn(
-        const AppSession.authenticated(userId: 'usr_1'),
-      );
+      when(
+        () => mockSessionManager.currentSession,
+      ).thenReturn(const AppSession.authenticated(userId: 'usr_1'));
 
       final guard = AuthGuard(mockSessionManager);
       guard.onNavigation(mockResolver, mockRouter);
@@ -45,36 +45,42 @@ void main() {
       verifyNever(() => mockRouter.push(any()));
     });
 
-    test('calls resolver.next(false) and pushes LoginRoute when unauthenticated', () {
-      when(() => mockSessionManager.currentSession).thenReturn(
-        const AppSession.unauthenticated(),
-      );
+    test(
+      'calls resolver.next(false) and pushes LoginRoute when unauthenticated',
+      () {
+        when(
+          () => mockSessionManager.currentSession,
+        ).thenReturn(const AppSession.unauthenticated());
 
-      final guard = AuthGuard(mockSessionManager);
-      guard.onNavigation(mockResolver, mockRouter);
+        final guard = AuthGuard(mockSessionManager);
+        guard.onNavigation(mockResolver, mockRouter);
 
-      verify(() => mockResolver.next(false)).called(1);
-      verify(() => mockRouter.push(const LoginRoute())).called(1);
-    });
+        verify(() => mockResolver.next(false)).called(1);
+        verify(() => mockRouter.push(const LoginRoute())).called(1);
+      },
+    );
   });
 
   group('GuestGuard', () {
-    test('calls resolver.next(false) and redirects to RootRoute when authenticated', () {
-      when(() => mockSessionManager.currentSession).thenReturn(
-        const AppSession.authenticated(userId: 'usr_1'),
-      );
+    test(
+      'calls resolver.next(false) and redirects to RootRoute when authenticated',
+      () {
+        when(
+          () => mockSessionManager.currentSession,
+        ).thenReturn(const AppSession.authenticated(userId: 'usr_1'));
 
-      final guard = GuestGuard(mockSessionManager);
-      guard.onNavigation(mockResolver, mockRouter);
+        final guard = GuestGuard(mockSessionManager);
+        guard.onNavigation(mockResolver, mockRouter);
 
-      verify(() => mockResolver.next(false)).called(1);
-      verify(() => mockRouter.replace(const RootRoute())).called(1);
-    });
+        verify(() => mockResolver.next(false)).called(1);
+        verify(() => mockRouter.replace(const RootRoute())).called(1);
+      },
+    );
 
     test('calls resolver.next(true) when unauthenticated', () {
-      when(() => mockSessionManager.currentSession).thenReturn(
-        const AppSession.unauthenticated(),
-      );
+      when(
+        () => mockSessionManager.currentSession,
+      ).thenReturn(const AppSession.unauthenticated());
 
       final guard = GuestGuard(mockSessionManager);
       guard.onNavigation(mockResolver, mockRouter);

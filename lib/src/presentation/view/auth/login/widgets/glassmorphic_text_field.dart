@@ -44,7 +44,7 @@ class GlassmorphicTextField extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          height: 52,
+          height: 44,
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.36),
             borderRadius: BorderRadius.circular(30),
@@ -77,7 +77,8 @@ class GlassmorphicTextField extends StatelessWidget {
             decoration: InputDecoration(
               isDense: true,
               filled: true,
-              fillColor: Colors.transparent, // Overrides theme's solid white surface
+              fillColor:
+                  Colors.transparent, // Overrides theme's solid white surface
               hintText: hintText,
               hintStyle: const TextStyle(
                 fontSize: 14.5,
@@ -107,10 +108,6 @@ class GlassmorphicTextField extends StatelessWidget {
               errorBorder: InputBorder.none,
               disabledBorder: InputBorder.none,
               focusedErrorBorder: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 14,
-                horizontal: 16,
-              ),
             ),
           ),
         ),

@@ -128,11 +128,7 @@ class HomeStoreCard extends StatelessWidget {
     return Container(
       color: AppColors.surfaceWarm,
       child: const Center(
-        child: Icon(
-          LucideIcons.store,
-          size: 32,
-          color: AppColors.softBrown,
-        ),
+        child: Icon(LucideIcons.store, size: 32, color: AppColors.softBrown),
       ),
     );
   }

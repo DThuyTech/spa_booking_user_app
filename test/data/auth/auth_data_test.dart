@@ -71,11 +71,7 @@ void main() {
     });
 
     test('UserModel handles both id and _id with default role', () {
-      final json1 = {
-        '_id': 'usr_1',
-        'phone': '0901',
-        'name': 'User 1',
-      };
+      final json1 = {'_id': 'usr_1', 'phone': '0901', 'name': 'User 1'};
       final model1 = UserModel.fromJson(json1);
       expect(model1.id, equals('usr_1'));
       expect(model1.role, equals('CUSTOMER'));

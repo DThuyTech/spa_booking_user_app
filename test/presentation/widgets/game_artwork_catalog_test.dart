@@ -17,16 +17,34 @@ void main() {
 
     test('fuzzy resolves game names with casing and extra words', () {
       expect(GameArtworkCatalog.findByGameName('catan')?.title, 'Catan');
-      expect(GameArtworkCatalog.findByGameName('Settlers of Catan')?.title, 'Catan');
-      expect(GameArtworkCatalog.findByGameName('wingspan birds')?.title, 'Wingspan');
+      expect(
+        GameArtworkCatalog.findByGameName('Settlers of Catan')?.title,
+        'Catan',
+      );
+      expect(
+        GameArtworkCatalog.findByGameName('wingspan birds')?.title,
+        'Wingspan',
+      );
       expect(GameArtworkCatalog.findByGameName('AZUL')?.title, 'Azul');
-      expect(GameArtworkCatalog.findByGameName('coup resistance')?.title, 'Coup & Avalon');
-      expect(GameArtworkCatalog.findByGameName('Splendor Marvel')?.title, 'Splendor Duel');
-      expect(GameArtworkCatalog.findByGameName('Ticket to Ride Europe')?.title, 'Ticket to Ride');
+      expect(
+        GameArtworkCatalog.findByGameName('coup resistance')?.title,
+        'Coup & Avalon',
+      );
+      expect(
+        GameArtworkCatalog.findByGameName('Splendor Marvel')?.title,
+        'Splendor Duel',
+      );
+      expect(
+        GameArtworkCatalog.findByGameName('Ticket to Ride Europe')?.title,
+        'Ticket to Ride',
+      );
     });
 
     test('returns null for unknown games to allow clean fallback', () {
-      expect(GameArtworkCatalog.findByGameName('TotallyUnknownGame123'), isNull);
+      expect(
+        GameArtworkCatalog.findByGameName('TotallyUnknownGame123'),
+        isNull,
+      );
       expect(GameArtworkCatalog.findByGameName(''), isNull);
     });
 

@@ -14,7 +14,8 @@ class EventEntity {
   final double longitude;
   final int participantCount;
   final int maxCapacity;
-  final String eventType; // "Tournament", "Social Night", "Beginner Night", "Weekly Meetup"
+  final String
+  eventType; // "Tournament", "Social Night", "Beginner Night", "Weekly Meetup"
   final String organizerName;
   final String? organizerAvatar;
   final bool isUserJoined;

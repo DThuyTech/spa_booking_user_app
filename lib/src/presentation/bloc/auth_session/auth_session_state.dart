@@ -9,6 +9,9 @@ enum AuthSessionStatus {
   failure,
 }
 
+/// Trailing Enum naming alias
+typedef AuthSessionStatusEnum = AuthSessionStatus;
+
 class AuthSessionState extends Equatable {
   final AuthSessionStatus status;
   final User? user;
@@ -21,23 +24,23 @@ class AuthSessionState extends Equatable {
   });
 
   const AuthSessionState.bootstrapping()
-      : this(status: AuthSessionStatus.bootstrapping);
+    : this(status: AuthSessionStatus.bootstrapping);
 
   const AuthSessionState.unauthenticated()
-      : this(status: AuthSessionStatus.unauthenticated);
+    : this(status: AuthSessionStatus.unauthenticated);
 
   const AuthSessionState.authenticated(User user)
-      : this(status: AuthSessionStatus.authenticated, user: user);
+    : this(status: AuthSessionStatus.authenticated, user: user);
 
   const AuthSessionState.refreshing({User? user})
-      : this(status: AuthSessionStatus.refreshing, user: user);
+    : this(status: AuthSessionStatus.refreshing, user: user);
 
   const AuthSessionState.failure(String message, {User? user})
-      : this(
-          status: AuthSessionStatus.failure,
-          errorMessage: message,
-          user: user,
-        );
+    : this(
+        status: AuthSessionStatus.failure,
+        errorMessage: message,
+        user: user,
+      );
 
   bool get isBootstrapping => status == AuthSessionStatus.bootstrapping;
   bool get isAuthenticated => status == AuthSessionStatus.authenticated;

@@ -31,9 +31,15 @@ import '../../domain/usecases/auth/request_otp_usecase.dart';
 import '../../domain/usecases/auth/restore_session.dart';
 import '../../domain/usecases/auth/verify_otp_usecase.dart';
 import '../../domain/usecases/home/get_greeting_usecase.dart';
-import '../../presentation/view/home/bloc/home_bloc.dart';
-import '../../presentation/view/auth/login/bloc/login_bloc.dart';
-import '../../presentation/view/auth/otp_verification/bloc/otp_verification_bloc.dart';
+import '../../domain/usecases/auth/login_usecase.dart';
+import '../../domain/usecases/auth/register_usecase.dart';
+import '../../domain/usecases/auth/save_customer_profile_usecase.dart';
+import '../../presentation/bloc/home/home_bloc.dart';
+import '../../presentation/bloc/auth/login/login_bloc.dart';
+import '../../presentation/bloc/auth/register/register_bloc.dart';
+import '../../presentation/bloc/auth/otp_verification/otp_verification_bloc.dart';
+import '../../presentation/bloc/profile/profile_bloc.dart';
+import '../../presentation/bloc/profile_edit/profile_edit_bloc.dart';
 import '../../presentation/bloc/auth_session/auth_session_bloc.dart';
 import '../router/app_router.dart';
 import '../session/session_manager.dart';
@@ -156,14 +162,55 @@ Future<void> registerDependencies({
   sl.registerFactory<GetCurrentUser>(
     () => GetCurrentUser(sl<AuthRepository>()),
   );
+  sl.registerFactory<SaveCustomerProfileUseCase>(
+    () => SaveCustomerProfileUseCase(sl<AuthRepository>()),
+  );
+
+  sl.registerFactory<LoginUseCase>(() => LoginUseCase(sl<AuthRepository>()));
+  sl.registerFactory<RegisterUseCase>(
+    () => RegisterUseCase(sl<AuthRepository>()),
+  );
 
   sl.registerFactory<LoginBloc>(
-    () => LoginBloc(requestOtpUseCase: sl<RequestOtpUseCase>()),
+    () => LoginBloc(
+      loginUseCase: sl<LoginUseCase>(),
+      sessionManager: sl<SessionManager>(),
+      authSessionBloc: sl.isRegistered<AuthSessionBloc>()
+          ? sl<AuthSessionBloc>()
+          : null,
+    ),
+  );
+  sl.registerFactory<RegisterBloc>(
+    () => RegisterBloc(
+      registerUseCase: sl<RegisterUseCase>(),
+      sessionManager: sl<SessionManager>(),
+      authSessionBloc: sl.isRegistered<AuthSessionBloc>()
+          ? sl<AuthSessionBloc>()
+          : null,
+    ),
   );
   sl.registerFactory<OtpVerificationBloc>(
     () => OtpVerificationBloc(
       verifyOtpUseCase: sl<VerifyOtpUseCase>(),
       requestOtpUseCase: sl<RequestOtpUseCase>(),
+    ),
+  );
+  sl.registerFactory<ProfileBloc>(
+    () => ProfileBloc(
+      getCurrentUserUseCase: sl<GetCurrentUser>(),
+      logoutUseCase: sl<LogoutUseCase>(),
+      sessionManager: sl<SessionManager>(),
+      authSessionBloc: sl.isRegistered<AuthSessionBloc>()
+          ? sl<AuthSessionBloc>()
+          : null,
+    ),
+  );
+  sl.registerFactory<ProfileEditBloc>(
+    () => ProfileEditBloc(
+      saveCustomerProfileUseCase: sl<SaveCustomerProfileUseCase>(),
+      authSessionBloc: sl.isRegistered<AuthSessionBloc>()
+          ? sl<AuthSessionBloc>()
+          : null,
     ),
   );
   sl.registerLazySingleton<AuthSessionBloc>(

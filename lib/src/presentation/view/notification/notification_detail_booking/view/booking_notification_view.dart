@@ -1,0 +1,137 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:board_oi/src/presentation/view/booking_flow/booking_detail/view/booking_detail_view.dart';
+import 'package:board_oi/src/shared/design_system/components/navigation/app_app_bar.dart';
+import 'package:board_oi/src/shared/widgets/toast/app_toast.dart';
+import '../../models/notification_models.dart';
+import '../body_view/booking_notification_body_view.dart';
+import '../mockup_data/booking_notification_mock_data.dart';
+
+@RoutePage()
+class BookingNotificationPage extends StatelessWidget {
+  final BookingNotificationData booking;
+
+  const BookingNotificationPage({
+    super.key,
+    this.booking = BookingNotificationMockData.defaultBooking,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BookingNotificationView(booking: booking);
+  }
+}
+
+class BookingNotificationView extends StatelessWidget {
+  final BookingNotificationData booking;
+
+  const BookingNotificationView({
+    super.key,
+    this.booking = BookingNotificationMockData.defaultBooking,
+  });
+
+  static const Color _coralColor = Color(0xFFFF6F59);
+  static const Color _textDark = Color(0xFF1E2022);
+
+  void _onViewBooking(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => BookingDetailView(
+          salonName: booking.salonName,
+          selectedDate: booking.date,
+          selectedTime: booking.time,
+        ),
+      ),
+    );
+  }
+
+  void _onContactSalon(BuildContext context) {
+    AppToast.info(
+      context,
+      message: 'Calling ${booking.salonName}: +84 912 345 678',
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFFAFAFA),
+      appBar: AppAppBar(title: 'Detail', onMorePressed: () {}),
+      body: BookingNotificationBodyView(booking: booking),
+      bottomNavigationBar: Container(
+        width: double.infinity,
+        padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 14,
+          bottom: MediaQuery.of(context).padding.bottom > 0
+              ? MediaQuery.of(context).padding.bottom + 8
+              : 16,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 14,
+              offset: const Offset(0, -4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Coral "View Booking" Button
+            Expanded(
+              child: SizedBox(
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () => _onViewBooking(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _coralColor,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  child: const Text('View Booking'),
+                ),
+              ),
+            ),
+
+            const SizedBox(width: 14),
+
+            // Outlined "Contact Salon" Button
+            Expanded(
+              child: SizedBox(
+                height: 48,
+                child: OutlinedButton(
+                  onPressed: () => _onContactSalon(context),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: _textDark,
+                    side: const BorderSide(
+                      color: Color(0xFFCBD5E1),
+                      width: 1.2,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  child: const Text('Contact Salon'),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

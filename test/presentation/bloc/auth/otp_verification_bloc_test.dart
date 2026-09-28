@@ -3,11 +3,12 @@ import 'package:board_oi/src/core/error/failure.dart';
 import 'package:board_oi/src/domain/entities/auth/auth_session_entity.dart';
 import 'package:board_oi/src/domain/entities/auth/request_otp_result.dart';
 import 'package:board_oi/src/domain/entities/auth/user.dart';
+import 'package:board_oi/src/domain/entities/auth/user_role_enum.dart';
 import 'package:board_oi/src/domain/usecases/auth/request_otp_usecase.dart';
 import 'package:board_oi/src/domain/usecases/auth/verify_otp_usecase.dart';
-import 'package:board_oi/src/presentation/view/auth/otp_verification/bloc/otp_verification_bloc.dart';
-import 'package:board_oi/src/presentation/view/auth/otp_verification/bloc/otp_verification_event.dart';
-import 'package:board_oi/src/presentation/view/auth/otp_verification/bloc/otp_verification_state.dart';
+import 'package:board_oi/src/presentation/bloc/auth/otp_verification/otp_verification_bloc.dart';
+import 'package:board_oi/src/presentation/bloc/auth/otp_verification/otp_verification_event.dart';
+import 'package:board_oi/src/presentation/bloc/auth/otp_verification/otp_verification_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
@@ -41,7 +42,7 @@ void main() {
       id: 'usr_001',
       phone: tPhone,
       fullName: 'Aura Customer',
-      role: 'CUSTOMER',
+      role: UserRoleEnum.customer,
     );
     const tSession = AuthSessionEntity(
       accessToken: 'access_123',
@@ -60,10 +61,8 @@ void main() {
     blocTest<OtpVerificationBloc, OtpVerificationState>(
       'formats countdown and masks phone number correctly',
       build: () => otpBloc,
-      seed: () => const OtpVerificationState(
-        phone: tPhone,
-        remainingSeconds: 45,
-      ),
+      seed: () =>
+          const OtpVerificationState(phone: tPhone, remainingSeconds: 45),
       verify: (bloc) {
         expect(bloc.state.formattedCountdown, equals('00:45'));
         expect(bloc.state.maskedPhone, equals('+84 *** *** 001'));
@@ -75,18 +74,16 @@ void main() {
       build: () => otpBloc,
       act: (bloc) => bloc.add(const OtpDigitChanged('123')),
       expect: () => [
-        const OtpVerificationState(
-          code: '123',
-          status: OtpStatus.entering,
-        ),
+        const OtpVerificationState(code: '123', status: OtpStatus.entering),
       ],
     );
 
     blocTest<OtpVerificationBloc, OtpVerificationState>(
       'verifies OTP successfully on valid 6-digit code',
       build: () {
-        when(() => mockVerifyOtpUseCase(phone: tPhone, code: tCode))
-            .thenAnswer((_) async => const Right(tSession));
+        when(
+          () => mockVerifyOtpUseCase(phone: tPhone, code: tCode),
+        ).thenAnswer((_) async => const Right(tSession));
         return otpBloc;
       },
       seed: () => const OtpVerificationState(
@@ -109,15 +106,20 @@ void main() {
         ),
       ],
       verify: (_) {
-        verify(() => mockVerifyOtpUseCase(phone: tPhone, code: tCode)).called(1);
+        verify(
+          () => mockVerifyOtpUseCase(phone: tPhone, code: tCode),
+        ).called(1);
       },
     );
 
     blocTest<OtpVerificationBloc, OtpVerificationState>(
       'emits failure on incorrect OTP verification',
       build: () {
-        when(() => mockVerifyOtpUseCase(phone: tPhone, code: '000000'))
-            .thenAnswer((_) async => const Left(UnauthorizedFailure('Invalid code')));
+        when(
+          () => mockVerifyOtpUseCase(phone: tPhone, code: '000000'),
+        ).thenAnswer(
+          (_) async => const Left(UnauthorizedFailure('Invalid code')),
+        );
         return otpBloc;
       },
       seed: () => const OtpVerificationState(
@@ -240,16 +242,21 @@ void main() {
         ),
       ],
       verify: (_) {
-        verifyNever(() => mockVerifyOtpUseCase(phone: any(named: 'phone'), code: any(named: 'code')));
+        verifyNever(
+          () => mockVerifyOtpUseCase(
+            phone: any(named: 'phone'),
+            code: any(named: 'code'),
+          ),
+        );
       },
     );
 
     blocTest<OtpVerificationBloc, OtpVerificationState>(
       'emits failure on network failure during verification',
       build: () {
-        when(() => mockVerifyOtpUseCase(phone: tPhone, code: tCode)).thenAnswer(
-          (_) async => const Left(NetworkFailure('No connection')),
-        );
+        when(
+          () => mockVerifyOtpUseCase(phone: tPhone, code: tCode),
+        ).thenAnswer((_) async => const Left(NetworkFailure('No connection')));
         return otpBloc;
       },
       seed: () => const OtpVerificationState(
@@ -277,9 +284,7 @@ void main() {
       'updates remainingSeconds on OtpTimerTicked',
       build: () => otpBloc,
       act: (bloc) => bloc.add(const OtpTimerTicked(0)),
-      expect: () => [
-        const OtpVerificationState(remainingSeconds: 0),
-      ],
+      expect: () => [const OtpVerificationState(remainingSeconds: 0)],
       verify: (bloc) {
         expect(bloc.state.canResend, isTrue);
       },

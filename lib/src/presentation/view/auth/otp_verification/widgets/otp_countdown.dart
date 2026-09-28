@@ -6,10 +6,7 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 class OtpCountdown extends StatelessWidget {
   final String formattedCountdown;
 
-  const OtpCountdown({
-    super.key,
-    required this.formattedCountdown,
-  });
+  const OtpCountdown({super.key, required this.formattedCountdown});
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +15,7 @@ class OtpCountdown extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(
-          LucideIcons.clock,
-          size: 15,
-          color: Color(0xFF5A5149),
-        ),
+        const Icon(LucideIcons.clock, size: 15, color: Color(0xFF5A5149)),
         const SizedBox(width: 6),
         Text(
           '$formattedCountdown ${l10n.remaining}',

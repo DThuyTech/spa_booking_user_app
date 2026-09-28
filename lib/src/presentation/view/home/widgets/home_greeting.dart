@@ -9,11 +9,7 @@ class HomeGreeting extends StatelessWidget {
   final User? user;
   final String? subtitle;
 
-  const HomeGreeting({
-    super.key,
-    this.user,
-    this.subtitle,
-  });
+  const HomeGreeting({super.key, this.user, this.subtitle});
 
   String _getTimeGreeting(BuildContext context) {
     final l10n = context.l10n;

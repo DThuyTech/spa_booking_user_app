@@ -33,7 +33,10 @@ class DefaultGameVisual extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 margin: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: AppColors.surface.withValues(alpha: 0.92),
@@ -156,11 +159,7 @@ class _BoardGameElementsPainter extends CustomPainter {
 
     // 4. D6 Die (Bottom right)
     final diceRect = RRect.fromRectAndRadius(
-      Rect.fromCenter(
-        center: Offset(cx + 26, cy + 24),
-        width: 22,
-        height: 22,
-      ),
+      Rect.fromCenter(center: Offset(cx + 26, cy + 24), width: 22, height: 22),
       const Radius.circular(5),
     );
     canvas.drawRRect(

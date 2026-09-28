@@ -3,8 +3,8 @@ import 'package:board_oi/src/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
-import '../bloc/otp_verification_bloc.dart';
-import '../bloc/otp_verification_state.dart';
+import '../../../../bloc/auth/otp_verification/otp_verification_bloc.dart';
+import '../../../../bloc/auth/otp_verification/otp_verification_state.dart';
 import '../widgets/otp_mail_illustration.dart';
 
 class OtpHeaderSection extends StatelessWidget {

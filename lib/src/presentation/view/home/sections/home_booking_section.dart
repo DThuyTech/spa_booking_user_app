@@ -21,9 +21,7 @@ class HomeBookingSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HomeSectionHeader(
-          title: l10n.upcomingAppointment,
-        ),
+        HomeSectionHeader(title: l10n.upcomingAppointment),
         const SizedBox(height: 8),
         HomeBookingCard(
           onTap: onBookingCardTap,

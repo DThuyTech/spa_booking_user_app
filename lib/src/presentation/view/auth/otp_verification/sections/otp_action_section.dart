@@ -2,9 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:board_oi/src/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/otp_verification_bloc.dart';
-import '../bloc/otp_verification_event.dart';
-import '../bloc/otp_verification_state.dart';
+import '../../../../bloc/auth/otp_verification/otp_verification_bloc.dart';
+import '../../../../bloc/auth/otp_verification/otp_verification_event.dart';
+import '../../../../bloc/auth/otp_verification/otp_verification_state.dart';
 
 class OtpActionSection extends StatelessWidget {
   const OtpActionSection({super.key});
@@ -43,7 +43,9 @@ class OtpActionSection extends StatelessWidget {
                 boxShadow: isEnabled
                     ? [
                         BoxShadow(
-                          color: const Color(0xFFF26242).withValues(alpha: 0.35),
+                          color: const Color(
+                            0xFFF26242,
+                          ).withValues(alpha: 0.35),
                           blurRadius: 18,
                           offset: const Offset(0, 6),
                         ),
@@ -56,9 +58,9 @@ class OtpActionSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                   onTap: isEnabled
                       ? () {
-                          context
-                              .read<OtpVerificationBloc>()
-                              .add(const OtpSubmitted());
+                          context.read<OtpVerificationBloc>().add(
+                            const OtpSubmitted(),
+                          );
                         }
                       : null,
                   child: Center(
@@ -68,8 +70,9 @@ class OtpActionSection extends StatelessWidget {
                             height: 22,
                             child: CircularProgressIndicator(
                               strokeWidth: 2.4,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
                             ),
                           )
                         : Text(

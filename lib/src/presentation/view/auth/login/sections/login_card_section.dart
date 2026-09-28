@@ -2,9 +2,11 @@ import 'package:board_oi/src/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
-import '../bloc/login_bloc.dart';
-import '../bloc/login_event.dart';
-import '../bloc/login_state.dart';
+import 'package:board_oi/src/shared/widgets/toast/app_toast.dart';
+import '../../../../bloc/auth/login/login_bloc.dart';
+import '../../../../bloc/auth/login/login_event.dart';
+import '../../../../bloc/auth/login/login_state.dart';
+import '../../forgot_password/view/forgot_password_view.dart';
 import '../widgets/frosted_glass_card.dart';
 import '../widgets/glassmorphic_text_field.dart';
 
@@ -53,21 +55,12 @@ class _LoginCardSectionState extends State<LoginCardSection> {
           previous.errorMessage != current.errorMessage &&
           current.errorMessage != null,
       listener: (context, state) {
-        if (state.errorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errorMessage!),
-              backgroundColor: const Color(0xFFD34836),
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          );
+        if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
+          AppToast.error(context, message: state.errorMessage!);
         }
       },
       builder: (context, state) {
-        final hasError = state.phoneError != null;
+        final hasError = state.identifierError != null;
 
         return FrostedGlassCard(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
@@ -81,11 +74,11 @@ class _LoginCardSectionState extends State<LoginCardSection> {
                 focusNode: _identifierFocusNode,
                 hintText: l10n.enterEmailOrPhone,
                 prefixIcon: LucideIcons.user,
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 hasError: hasError,
                 onChanged: (value) {
-                  context.read<LoginBloc>().add(LoginPhoneChanged(value));
+                  context.read<LoginBloc>().add(LoginIdentifierChanged(value));
                 },
                 onSubmitted: (_) {
                   _passwordFocusNode.requestFocus();
@@ -98,7 +91,7 @@ class _LoginCardSectionState extends State<LoginCardSection> {
                 Padding(
                   padding: const EdgeInsets.only(left: 18),
                   child: Text(
-                    state.phoneError!,
+                    state.identifierError!,
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
@@ -110,7 +103,7 @@ class _LoginCardSectionState extends State<LoginCardSection> {
 
               const SizedBox(height: 16),
 
-              // 2. Password Field with translucent white glassmorphism (matching Image 2)
+              // 2. Password Field with translucent white glassmorphism
               GlassmorphicTextField(
                 textFieldKey: const Key('login_password_field'),
                 controller: _passwordController,
@@ -120,8 +113,26 @@ class _LoginCardSectionState extends State<LoginCardSection> {
                 obscureText: true,
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,
+                onChanged: (value) {
+                  context.read<LoginBloc>().add(LoginPasswordChanged(value));
+                },
                 onSubmitted: (_) => _handleSubmit(),
               ),
+
+              if (state.passwordError != null) ...[
+                const SizedBox(height: 6),
+                Padding(
+                  padding: const EdgeInsets.only(left: 18),
+                  child: Text(
+                    state.passwordError!,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFFD32F2F),
+                    ),
+                  ),
+                ),
+              ],
 
               const SizedBox(height: 14),
 
@@ -130,7 +141,11 @@ class _LoginCardSectionState extends State<LoginCardSection> {
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
                   onTap: () {
-                    // Future password recovery flow
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const ForgotPasswordView(),
+                      ),
+                    );
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(

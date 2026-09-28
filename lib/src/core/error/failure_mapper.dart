@@ -90,11 +90,15 @@ class FailureMapper {
   static String? _extractErrorMessage(dynamic data) {
     if (data == null) return null;
     if (data is Map<String, dynamic>) {
-      if (data.containsKey('message') && data['message'] is String) {
-        return data['message'] as String;
+      if (data.containsKey('message')) {
+        final msg = data['message'];
+        if (msg is String) return msg;
+        if (msg is List) return msg.map((e) => e.toString()).join('\n');
       }
-      if (data.containsKey('error') && data['error'] is String) {
-        return data['error'] as String;
+      if (data.containsKey('error')) {
+        final err = data['error'];
+        if (err is String) return err;
+        if (err is List) return err.map((e) => e.toString()).join('\n');
       }
     }
     return null;

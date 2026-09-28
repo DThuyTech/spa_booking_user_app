@@ -11,11 +11,7 @@ class HomeSearchBar extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onFilterTap;
 
-  const HomeSearchBar({
-    super.key,
-    this.onTap,
-    this.onFilterTap,
-  });
+  const HomeSearchBar({super.key, this.onTap, this.onFilterTap});
 
   @override
   Widget build(BuildContext context) {

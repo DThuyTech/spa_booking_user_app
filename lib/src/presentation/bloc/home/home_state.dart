@@ -1,15 +1,38 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:board_oi/src/core/error/failure.dart';
 import 'package:board_oi/src/domain/entities/home/greeting.dart';
+import 'package:equatable/equatable.dart';
 
-part 'home_state.freezed.dart';
+enum HomeStatus { initial, loading, loaded, refreshing, failure }
 
-@freezed
-abstract class HomeState with _$HomeState {
-  const factory HomeState({
-    @Default(false) bool isLoading,
-    @Default(false) bool isRefreshing,
-    Greeting? greeting,
-    Failure? failure,
-  }) = _HomeState;
+class HomeState extends Equatable {
+  final HomeStatus status;
+  final Greeting? greeting;
+  final String? errorMessage;
+
+  const HomeState({
+    this.status = HomeStatus.initial,
+    this.greeting,
+    this.errorMessage,
+  });
+
+  bool get isInitial => status == HomeStatus.initial;
+  bool get isLoading => status == HomeStatus.loading;
+  bool get isLoaded => status == HomeStatus.loaded;
+  bool get isRefreshing => status == HomeStatus.refreshing;
+  bool get isFailure => status == HomeStatus.failure;
+  bool get hasGreeting => greeting != null;
+
+  HomeState copyWith({
+    HomeStatus? status,
+    Greeting? Function()? greeting,
+    String? Function()? errorMessage,
+  }) {
+    return HomeState(
+      status: status ?? this.status,
+      greeting: greeting != null ? greeting() : this.greeting,
+      errorMessage: errorMessage != null ? errorMessage() : this.errorMessage,
+    );
+  }
+
+  @override
+  List<Object?> get props => [status, greeting, errorMessage];
 }

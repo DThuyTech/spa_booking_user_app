@@ -7,10 +7,7 @@ import '../widgets/home_store_card.dart';
 class HomeStoreSection extends StatelessWidget {
   final VoidCallback? onStoreTap;
 
-  const HomeStoreSection({
-    super.key,
-    this.onStoreTap,
-  });
+  const HomeStoreSection({super.key, this.onStoreTap});
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +16,9 @@ class HomeStoreSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HomeSectionHeader(
-          title: l10n.recommendedSalons,
-        ),
+        HomeSectionHeader(title: l10n.recommendedSalons),
         const SizedBox(height: 8),
-        HomeStoreCard(
-          onTap: onStoreTap,
-        ),
+        HomeStoreCard(onTap: onStoreTap),
       ],
     );
   }

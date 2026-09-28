@@ -5,9 +5,9 @@ import 'package:board_oi/src/app/session/session_manager.dart';
 import 'package:board_oi/src/core/network/auth/token_pair.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/otp_verification_bloc.dart';
-import '../bloc/otp_verification_event.dart';
-import '../bloc/otp_verification_state.dart';
+import '../../../../bloc/auth/otp_verification/otp_verification_bloc.dart';
+import '../../../../bloc/auth/otp_verification/otp_verification_event.dart';
+import '../../../../bloc/auth/otp_verification/otp_verification_state.dart';
 import 'package:board_oi/src/presentation/bloc/auth_session/auth_session_bloc.dart';
 import '../body_view/otp_verification_body_view.dart';
 
@@ -27,10 +27,7 @@ class OtpVerificationPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => sl<OtpVerificationBloc>()
         ..add(
-          OtpStarted(
-            phone: phone,
-            initialCountdownSeconds: expiresInSeconds,
-          ),
+          OtpStarted(phone: phone, initialCountdownSeconds: expiresInSeconds),
         ),
       child: const OtpVerificationView(),
     );
@@ -55,7 +52,7 @@ class OtpVerificationView extends StatelessWidget {
               refreshToken: session.refreshToken,
             ),
             userId: session.user.id,
-            role: session.user.role,
+            role: session.user.role.value,
           );
 
           if (sl.isRegistered<AuthSessionBloc>()) {

@@ -25,9 +25,7 @@ class OtpMailIllustration extends StatelessWidget {
         child: SizedBox(
           width: 80,
           height: 90,
-          child: CustomPaint(
-            painter: _PhoneMailPainter(),
-          ),
+          child: CustomPaint(painter: _PhoneMailPainter()),
         ),
       ),
     );
@@ -101,9 +99,15 @@ class _PhoneMailPainter extends CustomPainter {
 
     // Envelope flap lines (V)
     final flapPath = Path()
-      ..moveTo(envCenter.dx - envWidth / 2 + 2, envCenter.dy - envHeight / 2 + 2)
+      ..moveTo(
+        envCenter.dx - envWidth / 2 + 2,
+        envCenter.dy - envHeight / 2 + 2,
+      )
       ..lineTo(envCenter.dx, envCenter.dy + 2)
-      ..lineTo(envCenter.dx + envWidth / 2 - 2, envCenter.dy - envHeight / 2 + 2);
+      ..lineTo(
+        envCenter.dx + envWidth / 2 - 2,
+        envCenter.dy - envHeight / 2 + 2,
+      );
 
     canvas.drawPath(flapPath, envBorderPaint);
 

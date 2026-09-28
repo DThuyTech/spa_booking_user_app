@@ -23,6 +23,14 @@ class AppTextField extends StatefulWidget {
   final int? maxLength;
   final FocusNode? focusNode;
   final VoidCallback? onTap;
+  final Color? fillColor;
+  final InputBorder? border;
+  final InputBorder? enabledBorder;
+  final InputBorder? focusedBorder;
+  final TextStyle? style;
+  final TextStyle? hintStyle;
+  final TextStyle? labelStyle;
+  final EdgeInsetsGeometry? contentPadding;
 
   const AppTextField({
     super.key,
@@ -46,6 +54,14 @@ class AppTextField extends StatefulWidget {
     this.maxLength,
     this.focusNode,
     this.onTap,
+    this.fillColor,
+    this.border,
+    this.enabledBorder,
+    this.focusedBorder,
+    this.style,
+    this.hintStyle,
+    this.labelStyle,
+    this.contentPadding,
   });
 
   @override
@@ -96,7 +112,10 @@ class _AppTextFieldState extends State<AppTextField> {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (widget.label != null) ...[
-          Text(widget.label!, style: Theme.of(context).textTheme.labelLarge),
+          Text(
+            widget.label!,
+            style: widget.labelStyle ?? Theme.of(context).textTheme.labelLarge,
+          ),
           const SizedBox(height: AppSpacing.xs),
         ],
         TextField(
@@ -113,8 +132,16 @@ class _AppTextFieldState extends State<AppTextField> {
           maxLines: widget.isPassword ? 1 : widget.maxLines,
           minLines: widget.minLines,
           maxLength: widget.maxLength,
+          style: widget.style,
           decoration: InputDecoration(
+            filled: widget.fillColor != null ? true : null,
+            fillColor: widget.fillColor,
+            contentPadding: widget.contentPadding,
+            border: widget.border,
+            enabledBorder: widget.enabledBorder ?? widget.border,
+            focusedBorder: widget.focusedBorder ?? widget.border,
             hintText: widget.hint,
+            hintStyle: widget.hintStyle,
             helperText: widget.helperText,
             errorText: widget.errorText,
             prefixIcon: widget.prefixIcon,

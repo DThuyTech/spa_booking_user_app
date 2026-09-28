@@ -22,6 +22,11 @@ import 'package:board_oi/src/presentation/view/onboarding/onboarding_page.dart'
     as _i3;
 import 'package:board_oi/src/presentation/view/root/root_page.dart' as _i6;
 import 'package:board_oi/src/presentation/view/splash/splash_page.dart' as _i7;
+import 'package:board_oi/src/presentation/view/profile/view/profile_view.dart'
+    as _i10;
+import 'package:board_oi/src/presentation/view/profile/edit/view/profile_edit_view.dart'
+    as _i11;
+import 'package:board_oi/src/domain/entities/auth/user.dart' as _i12;
 import 'package:flutter/material.dart' as _i9;
 
 /// generated route for
@@ -182,4 +187,72 @@ class SplashRoute extends _i8.PageRouteInfo<void> {
       return const _i7.SplashPage();
     },
   );
+}
+
+/// generated route for
+/// [_i10.ProfilePage]
+class ProfileRoute extends _i8.PageRouteInfo<void> {
+  const ProfileRoute({List<_i8.PageRouteInfo>? children})
+    : super(ProfileRoute.name, initialChildren: children);
+
+  static const String name = 'ProfileRoute';
+
+  static _i8.PageInfo page = _i8.PageInfo(
+    name,
+    builder: (data) {
+      return const _i10.ProfilePage();
+    },
+  );
+}
+
+/// generated route for
+/// [_i11.ProfileEditPage]
+class ProfileEditRoute extends _i8.PageRouteInfo<ProfileEditRouteArgs> {
+  ProfileEditRoute({
+    _i9.Key? key,
+    _i12.User? user,
+    bool isInitialSetup = false,
+    List<_i8.PageRouteInfo>? children,
+  }) : super(
+         ProfileEditRoute.name,
+         args: ProfileEditRouteArgs(
+           key: key,
+           user: user,
+           isInitialSetup: isInitialSetup,
+         ),
+         initialChildren: children,
+       );
+
+  static const String name = 'ProfileEditRoute';
+
+  static _i8.PageInfo page = _i8.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ProfileEditRouteArgs>(
+        orElse: () => const ProfileEditRouteArgs(),
+      );
+      return _i11.ProfileEditPage(
+        key: args.key,
+        user: args.user,
+        isInitialSetup: args.isInitialSetup,
+      );
+    },
+  );
+}
+
+class ProfileEditRouteArgs {
+  const ProfileEditRouteArgs({
+    this.key,
+    this.user,
+    this.isInitialSetup = false,
+  });
+
+  final _i9.Key? key;
+  final _i12.User? user;
+  final bool isInitialSetup;
+
+  @override
+  String toString() {
+    return 'ProfileEditRouteArgs{key: $key, user: $user, isInitialSetup: $isInitialSetup}';
+  }
 }

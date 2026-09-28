@@ -20,6 +20,56 @@ class AuthRepositoryImpl implements AuthRepository {
   });
 
   @override
+  Future<Either<Failure, AuthSessionEntity>> loginCustomer({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await remote.loginCustomer(
+        email: email,
+        password: password,
+      );
+      final entity = AuthMapper.toAuthSessionEntityFromAuthResponse(response);
+
+      await sessionStorage.saveTokens(
+        accessToken: entity.accessToken,
+        refreshToken: entity.refreshToken,
+        expiresInSeconds: entity.expiresIn,
+      );
+      await sessionStorage.saveUserData(entity.user.id);
+
+      return Right(entity);
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthSessionEntity>> registerCustomer({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await remote.registerCustomer(
+        email: email,
+        password: password,
+      );
+      final entity = AuthMapper.toAuthSessionEntityFromAuthResponse(response);
+
+      await sessionStorage.saveTokens(
+        accessToken: entity.accessToken,
+        refreshToken: entity.refreshToken,
+        expiresInSeconds: entity.expiresIn,
+      );
+      await sessionStorage.saveUserData(entity.user.id);
+
+      return Right(entity);
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
   Future<Either<Failure, RequestOtpResult>> requestOtp(String phone) async {
     try {
       final response = await remote.requestOtp(phone);
@@ -95,6 +145,97 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Either<Failure, User>> createCustomerProfile({
+    required String firstName,
+    required String lastName,
+    required String phoneNumber,
+    required String dateOfBirth,
+  }) async {
+    try {
+      final model = await remote.createCustomerProfile(
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        dateOfBirth: dateOfBirth,
+      );
+      final user = AuthMapper.toUser(model);
+      await sessionStorage.saveUserData(user.id);
+      return Right(user);
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> updateCustomerProfile({
+    required String firstName,
+    required String lastName,
+    required String phoneNumber,
+    required String dateOfBirth,
+  }) async {
+    try {
+      final model = await remote.updateCustomerProfile(
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        dateOfBirth: dateOfBirth,
+      );
+      final user = AuthMapper.toUser(model);
+      await sessionStorage.saveUserData(user.id);
+      return Right(user);
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> saveCustomerProfile({
+    required String firstName,
+    required String lastName,
+    required String phoneNumber,
+    required String dateOfBirth,
+    bool isCreate = false,
+  }) async {
+    if (isCreate) {
+      final createResult = await createCustomerProfile(
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        dateOfBirth: dateOfBirth,
+      );
+      return createResult.fold((failure) async {
+        if (failure is ConflictFailure) {
+          return updateCustomerProfile(
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: phoneNumber,
+            dateOfBirth: dateOfBirth,
+          );
+        }
+        return Left(failure);
+      }, (user) => Right(user));
+    } else {
+      final updateResult = await updateCustomerProfile(
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        dateOfBirth: dateOfBirth,
+      );
+      return updateResult.fold((failure) async {
+        if (failure is NotFoundFailure) {
+          return createCustomerProfile(
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: phoneNumber,
+            dateOfBirth: dateOfBirth,
+          );
+        }
+        return Left(failure);
+      }, (user) => Right(user));
+    }
+  }
+
+  @override
   Future<Either<Failure, User?>> restoreSession() async {
     try {
       final token = await sessionStorage.getAccessToken();
@@ -123,10 +264,7 @@ class AuthRepositoryImpl implements AuthRepository {
       }
 
       final userResult = await getCurrentUser();
-      return userResult.fold(
-        (failure) => Left(failure),
-        (user) => Right(user),
-      );
+      return userResult.fold((failure) => Left(failure), (user) => Right(user));
     } catch (e) {
       return Left(FailureMapper.map(e));
     }
