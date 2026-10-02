@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
-import 'package:board_oi/src/shared/design_system/components/navigation/app_app_bar.dart';
+import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
 import '../../../../../shared/widgets/toast/app_toast.dart';
 import '../../booking_detail/view/booking_detail_view.dart';
 import '../../models/booking_models.dart';

@@ -8,8 +8,8 @@ import 'di/dependency_injection.dart';
 import 'router/app_router.dart';
 import 'session/session_manager.dart';
 
-class BoardOiApp extends StatelessWidget {
-  const BoardOiApp({super.key});
+class SpaBookingApp extends StatelessWidget {
+  const SpaBookingApp({super.key});
 
   @override
   Widget build(BuildContext context) {

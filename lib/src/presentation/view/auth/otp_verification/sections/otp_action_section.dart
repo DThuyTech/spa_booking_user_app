@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:board_oi/src/core/localization/app_localizations.dart';
+import 'package:spa_booking/src/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../bloc/auth/otp_verification/otp_verification_bloc.dart';

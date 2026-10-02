@@ -1,8 +1,8 @@
-import 'package:board_oi/src/presentation/view/notification/notification_dashboard/view/notification_dashboard_view.dart';
-import 'package:board_oi/src/presentation/view/notification/notification_detail_booking/view/booking_notification_view.dart';
-import 'package:board_oi/src/presentation/view/notification/notification_detail_booking/widgets/booking_notification_card.dart';
-import 'package:board_oi/src/presentation/view/notification/notification_detail_voucher/view/voucher_detail_view.dart';
-import 'package:board_oi/src/presentation/view/notification/notification_detail_voucher/widgets/voucher_info_card.dart';
+import 'package:spa_booking/src/presentation/view/notification/notification_dashboard/view/notification_dashboard_view.dart';
+import 'package:spa_booking/src/presentation/view/notification/notification_detail_booking/view/booking_notification_view.dart';
+import 'package:spa_booking/src/presentation/view/notification/notification_detail_booking/widgets/booking_notification_card.dart';
+import 'package:spa_booking/src/presentation/view/notification/notification_detail_voucher/view/voucher_detail_view.dart';
+import 'package:spa_booking/src/presentation/view/notification/notification_detail_voucher/widgets/voucher_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

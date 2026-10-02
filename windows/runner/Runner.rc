@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.production.base" "\0"
-            VALUE "FileDescription", "board_oi" "\0"
+            VALUE "FileDescription", "spa_booking" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "board_oi" "\0"
+            VALUE "InternalName", "spa_booking" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.production.base. All rights reserved." "\0"
-            VALUE "OriginalFilename", "board_oi.exe" "\0"
-            VALUE "ProductName", "board_oi" "\0"
+            VALUE "OriginalFilename", "spa_booking.exe" "\0"
+            VALUE "ProductName", "spa_booking" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

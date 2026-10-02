@@ -1,7 +1,7 @@
-import 'package:board_oi/src/presentation/view/write_review/view/write_review_view.dart';
-import 'package:board_oi/src/presentation/view/write_review/widgets/review_criteria_card.dart';
-import 'package:board_oi/src/presentation/view/write_review/widgets/review_input_card.dart';
-import 'package:board_oi/src/presentation/view/write_review/widgets/review_salon_header_card.dart';
+import 'package:spa_booking/src/presentation/view/write_review/view/write_review_view.dart';
+import 'package:spa_booking/src/presentation/view/write_review/widgets/review_criteria_card.dart';
+import 'package:spa_booking/src/presentation/view/write_review/widgets/review_input_card.dart';
+import 'package:spa_booking/src/presentation/view/write_review/widgets/review_salon_header_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

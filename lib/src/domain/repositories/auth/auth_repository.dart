@@ -14,6 +14,7 @@ abstract interface class AuthRepository {
   Future<Either<Failure, AuthSessionEntity>> registerCustomer({
     required String email,
     required String password,
+    String? fullName,
   });
 
   Future<Either<Failure, RequestOtpResult>> requestOtp(String phone);

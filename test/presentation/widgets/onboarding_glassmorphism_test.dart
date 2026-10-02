@@ -1,7 +1,7 @@
-import 'package:board_oi/src/presentation/view/onboarding/widgets/onboarding_glass_card.dart';
-import 'package:board_oi/src/presentation/view/onboarding/widgets/onboarding_page_indicator.dart';
-import 'package:board_oi/src/shared/design_system/components/buttons/app_glass_button.dart';
-import 'package:board_oi/src/shared/design_system/components/cards/app_glass_card.dart';
+import 'package:spa_booking/src/presentation/view/onboarding/widgets/onboarding_glass_card.dart';
+import 'package:spa_booking/src/presentation/view/onboarding/widgets/onboarding_page_indicator.dart';
+import 'package:spa_booking/src/shared/design_system/components/buttons/app_glass_button.dart';
+import 'package:spa_booking/src/shared/design_system/components/cards/app_glass_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

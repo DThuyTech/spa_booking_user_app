@@ -1,10 +1,10 @@
-import 'package:board_oi/src/presentation/view/booking_dashboard/mockup_data/booking_dashboard_mock_data.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard/widgets/booking_dashboard_card.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard/widgets/booking_dashboard_summary_grid.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard/widgets/booking_dashboard_summary_short_bar.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard/widgets/booking_search_filter_bar.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard_detail/view/booking_dashboard_detail_view.dart';
-import 'package:board_oi/src/shared/widgets/toast/app_toast.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard/mockup_data/booking_dashboard_mock_data.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard/widgets/booking_dashboard_card.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard/widgets/booking_dashboard_summary_grid.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard/widgets/booking_dashboard_summary_short_bar.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard/widgets/booking_search_filter_bar.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/view/booking_dashboard_detail_view.dart';
+import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 

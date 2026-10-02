@@ -1,11 +1,11 @@
-import 'package:board_oi/src/core/error/exceptions.dart';
-import 'package:board_oi/src/core/error/failure.dart';
-import 'package:board_oi/src/core/error/failure_mapper.dart';
-import 'package:board_oi/src/data/mapper/auth/auth_mapper.dart';
-import 'package:board_oi/src/data/model/auth/refresh_token_response_model.dart';
-import 'package:board_oi/src/data/model/auth/request_otp_response_model.dart';
-import 'package:board_oi/src/data/model/auth/user_model.dart';
-import 'package:board_oi/src/data/model/auth/verify_otp_response_model.dart';
+import 'package:spa_booking/src/core/error/exceptions.dart';
+import 'package:spa_booking/src/core/error/failure.dart';
+import 'package:spa_booking/src/core/error/failure_mapper.dart';
+import 'package:spa_booking/src/data/mapper/auth/auth_mapper.dart';
+import 'package:spa_booking/src/data/model/auth/refresh_token_response_model.dart';
+import 'package:spa_booking/src/data/model/auth/request_otp_response_model.dart';
+import 'package:spa_booking/src/data/model/auth/user_model.dart';
+import 'package:spa_booking/src/data/model/auth/verify_otp_response_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 

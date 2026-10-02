@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:board_oi/src/domain/usecases/auth/request_otp_usecase.dart';
-import 'package:board_oi/src/domain/usecases/auth/verify_otp_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/request_otp_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/verify_otp_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'otp_verification_event.dart';
 import 'otp_verification_state.dart';

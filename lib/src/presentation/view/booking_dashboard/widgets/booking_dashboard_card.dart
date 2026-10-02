@@ -1,4 +1,4 @@
-import 'package:board_oi/src/presentation/view/booking_dashboard/mockup_data/booking_dashboard_mock_data.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard/mockup_data/booking_dashboard_mock_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 

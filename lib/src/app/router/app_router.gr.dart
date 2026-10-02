@@ -11,22 +11,24 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 
 import 'package:auto_route/auto_route.dart' as _i8;
-import 'package:board_oi/src/presentation/view/auth/login/view/login_view.dart'
+import 'package:spa_booking/src/presentation/view/auth/login/view/login_view.dart'
     as _i2;
-import 'package:board_oi/src/presentation/view/auth/otp_verification/view/otp_verification_view.dart'
+import 'package:spa_booking/src/presentation/view/auth/otp_verification/view/otp_verification_view.dart'
     as _i4;
-import 'package:board_oi/src/presentation/view/auth/register/view/register_view.dart'
+import 'package:spa_booking/src/presentation/view/auth/register/view/register_view.dart'
     as _i5;
-import 'package:board_oi/src/presentation/view/home/view/home_view.dart' as _i1;
-import 'package:board_oi/src/presentation/view/onboarding/onboarding_page.dart'
+import 'package:spa_booking/src/presentation/view/home/view/home_view.dart'
+    as _i1;
+import 'package:spa_booking/src/presentation/view/onboarding/onboarding_page.dart'
     as _i3;
-import 'package:board_oi/src/presentation/view/root/root_page.dart' as _i6;
-import 'package:board_oi/src/presentation/view/splash/splash_page.dart' as _i7;
-import 'package:board_oi/src/presentation/view/profile/view/profile_view.dart'
+import 'package:spa_booking/src/presentation/view/root/root_page.dart' as _i6;
+import 'package:spa_booking/src/presentation/view/splash/splash_page.dart'
+    as _i7;
+import 'package:spa_booking/src/presentation/view/profile/view/profile_view.dart'
     as _i10;
-import 'package:board_oi/src/presentation/view/profile/edit/view/profile_edit_view.dart'
+import 'package:spa_booking/src/presentation/view/profile/edit/view/profile_edit_view.dart'
     as _i11;
-import 'package:board_oi/src/domain/entities/auth/user.dart' as _i12;
+import 'package:spa_booking/src/domain/entities/auth/user.dart' as _i12;
 import 'package:flutter/material.dart' as _i9;
 
 /// generated route for

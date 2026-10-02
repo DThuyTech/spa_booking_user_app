@@ -1,7 +1,7 @@
-import 'package:board_oi/src/core/localization/app_localizations.dart';
-import 'package:board_oi/src/presentation/bloc/auth/register/register_bloc.dart';
-import 'package:board_oi/src/presentation/view/auth/register/view/register_view.dart';
-import 'package:board_oi/src/presentation/view/terms/view/terms_of_use_view.dart';
+import 'package:spa_booking/src/core/localization/app_localizations.dart';
+import 'package:spa_booking/src/presentation/bloc/auth/register/register_bloc.dart';
+import 'package:spa_booking/src/presentation/view/auth/register/view/register_view.dart';
+import 'package:spa_booking/src/presentation/view/terms/view/terms_of_use_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

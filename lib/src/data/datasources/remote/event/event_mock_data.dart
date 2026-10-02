@@ -1,4 +1,4 @@
-import 'package:board_oi/src/domain/entities/event/event_entity.dart';
+import 'package:spa_booking/src/domain/entities/event/event_entity.dart';
 
 /// Seed data of realistic Board Ơi community events.
 abstract final class MockEventData {

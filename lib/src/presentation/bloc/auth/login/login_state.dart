@@ -1,5 +1,5 @@
-import 'package:board_oi/src/domain/entities/auth/auth_session_entity.dart';
-import 'package:board_oi/src/domain/entities/auth/request_otp_result.dart';
+import 'package:spa_booking/src/domain/entities/auth/auth_session_entity.dart';
+import 'package:spa_booking/src/domain/entities/auth/request_otp_result.dart';
 import 'package:equatable/equatable.dart';
 
 enum LoginStatus { initial, validating, loading, success, failure }

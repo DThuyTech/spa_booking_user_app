@@ -1,5 +1,5 @@
-import 'package:board_oi/src/presentation/view/terms/mockup_data/terms_of_use_mock_data.dart';
-import 'package:board_oi/src/shared/design_system/components/navigation/app_app_bar.dart';
+import 'package:spa_booking/src/presentation/view/terms/mockup_data/terms_of_use_mock_data.dart';
+import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 

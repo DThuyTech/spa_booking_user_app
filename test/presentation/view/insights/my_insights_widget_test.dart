@@ -1,11 +1,11 @@
-import 'package:board_oi/src/presentation/view/insights/view/my_insights_view.dart';
-import 'package:board_oi/src/presentation/view/insights/widgets/insights_activity_chart_card.dart';
-import 'package:board_oi/src/presentation/view/insights/widgets/insights_favorite_salon_card.dart';
-import 'package:board_oi/src/presentation/view/insights/widgets/insights_favorite_services_card.dart';
-import 'package:board_oi/src/presentation/view/insights/widgets/insights_month_summary_card.dart';
-import 'package:board_oi/src/presentation/view/insights/widgets/insights_spending_chart_card.dart';
-import 'package:board_oi/src/presentation/view/insights/widgets/insights_usual_visit_card.dart';
-import 'package:board_oi/src/presentation/view/insights/widgets/insights_visits_card.dart';
+import 'package:spa_booking/src/presentation/view/insights/view/my_insights_view.dart';
+import 'package:spa_booking/src/presentation/view/insights/widgets/insights_activity_chart_card.dart';
+import 'package:spa_booking/src/presentation/view/insights/widgets/insights_favorite_salon_card.dart';
+import 'package:spa_booking/src/presentation/view/insights/widgets/insights_favorite_services_card.dart';
+import 'package:spa_booking/src/presentation/view/insights/widgets/insights_month_summary_card.dart';
+import 'package:spa_booking/src/presentation/view/insights/widgets/insights_spending_chart_card.dart';
+import 'package:spa_booking/src/presentation/view/insights/widgets/insights_usual_visit_card.dart';
+import 'package:spa_booking/src/presentation/view/insights/widgets/insights_visits_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

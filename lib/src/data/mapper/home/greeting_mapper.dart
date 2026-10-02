@@ -1,5 +1,5 @@
-import 'package:board_oi/src/domain/entities/home/greeting.dart';
-import 'package:board_oi/src/data/model/home/greeting_model.dart';
+import 'package:spa_booking/src/domain/entities/home/greeting.dart';
+import 'package:spa_booking/src/data/model/home/greeting_model.dart';
 
 extension GreetingModelMapper on GreetingModel {
   Greeting toEntity() {

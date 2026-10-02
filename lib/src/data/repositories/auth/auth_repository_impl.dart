@@ -48,11 +48,13 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, AuthSessionEntity>> registerCustomer({
     required String email,
     required String password,
+    String? fullName,
   }) async {
     try {
       final response = await remote.registerCustomer(
         email: email,
         password: password,
+        fullName: fullName,
       );
       final entity = AuthMapper.toAuthSessionEntityFromAuthResponse(response);
 

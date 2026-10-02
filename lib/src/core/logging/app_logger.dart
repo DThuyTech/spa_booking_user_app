@@ -66,7 +66,7 @@ class AppLogger implements Logger {
 
     developer.log(
       '$prefix $sanitizedMessage',
-      name: 'BoardOi',
+      name: 'SpaBooking',
       level: _toDeveloperLogLevel(level),
       error: error,
       stackTrace: stackTrace,

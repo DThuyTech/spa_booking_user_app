@@ -1,11 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:board_oi/src/core/error/failure.dart';
-import 'package:board_oi/src/domain/entities/home/greeting.dart';
-import 'package:board_oi/src/domain/repositories/home/home_repository.dart';
-import 'package:board_oi/src/domain/usecases/home/get_greeting_usecase.dart';
-import 'package:board_oi/src/presentation/bloc/home/home_bloc.dart';
-import 'package:board_oi/src/presentation/bloc/home/home_event.dart';
-import 'package:board_oi/src/presentation/bloc/home/home_state.dart';
+import 'package:spa_booking/src/core/error/failure.dart';
+import 'package:spa_booking/src/domain/entities/home/greeting.dart';
+import 'package:spa_booking/src/domain/repositories/home/home_repository.dart';
+import 'package:spa_booking/src/domain/usecases/home/get_greeting_usecase.dart';
+import 'package:spa_booking/src/presentation/bloc/home/home_bloc.dart';
+import 'package:spa_booking/src/presentation/bloc/home/home_event.dart';
+import 'package:spa_booking/src/presentation/bloc/home/home_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 

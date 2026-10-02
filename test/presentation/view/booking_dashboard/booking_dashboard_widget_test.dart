@@ -1,14 +1,14 @@
-import 'package:board_oi/src/presentation/view/booking_dashboard/view/booking_dashboard_view.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard/widgets/booking_dashboard_card.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard/widgets/booking_dashboard_summary_grid.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard/widgets/booking_search_filter_bar.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard_detail/view/booking_dashboard_detail_view.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_datetime_card.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_notes_card.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_payment_card.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_services_card.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_store_card.dart';
-import 'package:board_oi/src/presentation/view/terms/view/terms_of_use_view.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard/view/booking_dashboard_view.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard/widgets/booking_dashboard_card.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard/widgets/booking_dashboard_summary_grid.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard/widgets/booking_search_filter_bar.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/view/booking_dashboard_detail_view.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_datetime_card.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_notes_card.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_payment_card.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_services_card.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_store_card.dart';
+import 'package:spa_booking/src/presentation/view/terms/view/terms_of_use_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

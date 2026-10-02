@@ -1,5 +1,5 @@
-import 'package:board_oi/src/domain/entities/auth/user_role_enum.dart';
-import 'package:board_oi/src/domain/entities/auth/user_status_enum.dart';
+import 'package:spa_booking/src/domain/entities/auth/user_role_enum.dart';
+import 'package:spa_booking/src/domain/entities/auth/user_status_enum.dart';
 import 'package:equatable/equatable.dart';
 
 class UserModel extends Equatable {
@@ -51,6 +51,28 @@ class UserModel extends Equatable {
       avatar: (json['avatarUrl'] ?? json['avatar']) as String?,
       status: status,
       dateOfBirth: json['dateOfBirth']?.toString(),
+    );
+  }
+
+  UserModel copyWith({
+    String? id,
+    String? email,
+    String? phone,
+    UserRoleEnum? role,
+    String? fullName,
+    String? Function()? avatar,
+    UserStatusEnum? status,
+    String? Function()? dateOfBirth,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      role: role ?? this.role,
+      fullName: fullName ?? this.fullName,
+      avatar: avatar != null ? avatar() : this.avatar,
+      status: status ?? this.status,
+      dateOfBirth: dateOfBirth != null ? dateOfBirth() : this.dateOfBirth,
     );
   }
 

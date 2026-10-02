@@ -11,7 +11,12 @@ class RegisterUseCase {
   Future<Either<Failure, AuthSessionEntity>> call({
     required String email,
     required String password,
+    String? fullName,
   }) {
-    return repository.registerCustomer(email: email, password: password);
+    return repository.registerCustomer(
+      email: email,
+      password: password,
+      fullName: fullName,
+    );
   }
 }

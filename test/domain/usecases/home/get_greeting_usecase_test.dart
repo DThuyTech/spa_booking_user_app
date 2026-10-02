@@ -1,7 +1,7 @@
-import 'package:board_oi/src/core/error/failure.dart';
-import 'package:board_oi/src/domain/entities/home/greeting.dart';
-import 'package:board_oi/src/domain/repositories/home/home_repository.dart';
-import 'package:board_oi/src/domain/usecases/home/get_greeting_usecase.dart';
+import 'package:spa_booking/src/core/error/failure.dart';
+import 'package:spa_booking/src/domain/entities/home/greeting.dart';
+import 'package:spa_booking/src/domain/repositories/home/home_repository.dart';
+import 'package:spa_booking/src/domain/usecases/home/get_greeting_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 

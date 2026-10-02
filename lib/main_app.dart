@@ -11,8 +11,8 @@ import 'src/presentation/bloc/auth_session/auth_session_bloc.dart';
 import 'src/shared/design_system/theme/app_theme.dart';
 
 /// Main application widget configuring MaterialApp, Router, Locale, and Global Theme.
-class BoardOiApp extends StatelessWidget {
-  const BoardOiApp({super.key});
+class SpaBookingApp extends StatelessWidget {
+  const SpaBookingApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,4 +46,4 @@ class BoardOiApp extends StatelessWidget {
 }
 
 // Alias for MainApp if referenced interchangeably
-typedef MainApp = BoardOiApp;
+typedef MainApp = SpaBookingApp;

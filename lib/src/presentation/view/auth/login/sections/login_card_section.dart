@@ -1,8 +1,8 @@
-import 'package:board_oi/src/core/localization/app_localizations.dart';
+import 'package:spa_booking/src/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
-import 'package:board_oi/src/shared/widgets/toast/app_toast.dart';
+import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
 import '../../../../bloc/auth/login/login_bloc.dart';
 import '../../../../bloc/auth/login/login_event.dart';
 import '../../../../bloc/auth/login/login_state.dart';
@@ -169,6 +169,57 @@ class _LoginCardSectionState extends State<LoginCardSection> {
 
               // 4. Action Button (Login)
               _buildLoginButton(context, state),
+
+              const SizedBox(height: 14),
+
+              // 5. Quick Fill Demo Account
+              Center(
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () {
+                    _identifierController.text = 'demo@aura.com';
+                    _passwordController.text = 'password123';
+                    context.read<LoginBloc>().add(
+                      const LoginIdentifierChanged('demo@aura.com'),
+                    );
+                    context.read<LoginBloc>().add(
+                      const LoginPasswordChanged('password123'),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFA7762).withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: const Color(0xFFFA7762).withValues(alpha: 0.25),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          LucideIcons.sparkles,
+                          size: 13,
+                          color: Color(0xFFB85848),
+                        ),
+                        SizedBox(width: 6),
+                        Text(
+                          'Quick Demo: demo@aura.com',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFFB85848),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         );

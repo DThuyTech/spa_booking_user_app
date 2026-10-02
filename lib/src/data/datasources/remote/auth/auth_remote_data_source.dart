@@ -1,10 +1,10 @@
-import 'package:board_oi/src/data/model/auth/auth_response_model.dart';
-import 'package:board_oi/src/data/model/auth/refresh_token_response_model.dart';
-import 'package:board_oi/src/data/model/auth/request_otp_request_model.dart';
-import 'package:board_oi/src/data/model/auth/request_otp_response_model.dart';
-import 'package:board_oi/src/data/model/auth/user_model.dart';
-import 'package:board_oi/src/data/model/auth/verify_otp_request_model.dart';
-import 'package:board_oi/src/data/model/auth/verify_otp_response_model.dart';
+import 'package:spa_booking/src/data/model/auth/auth_response_model.dart';
+import 'package:spa_booking/src/data/model/auth/refresh_token_response_model.dart';
+import 'package:spa_booking/src/data/model/auth/request_otp_request_model.dart';
+import 'package:spa_booking/src/data/model/auth/request_otp_response_model.dart';
+import 'package:spa_booking/src/data/model/auth/user_model.dart';
+import 'package:spa_booking/src/data/model/auth/verify_otp_request_model.dart';
+import 'package:spa_booking/src/data/model/auth/verify_otp_response_model.dart';
 import 'auth_api_service.dart';
 
 abstract interface class AuthRemoteDataSource {
@@ -16,6 +16,7 @@ abstract interface class AuthRemoteDataSource {
   Future<AuthResponseModel> registerCustomer({
     required String email,
     required String password,
+    String? fullName,
   });
 
   Future<RequestOtpResponseModel> requestOtp(String phone);
@@ -63,6 +64,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<AuthResponseModel> registerCustomer({
     required String email,
     required String password,
+    String? fullName,
   }) {
     return _apiService.registerCustomer(email: email, password: password);
   }

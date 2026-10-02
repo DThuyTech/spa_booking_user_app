@@ -1,4 +1,4 @@
-import 'package:board_oi/src/domain/entities/home/greeting.dart';
+import 'package:spa_booking/src/domain/entities/home/greeting.dart';
 import 'package:equatable/equatable.dart';
 
 enum HomeStatus { initial, loading, loaded, refreshing, failure }

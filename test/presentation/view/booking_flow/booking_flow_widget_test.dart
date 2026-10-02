@@ -1,9 +1,9 @@
-import 'package:board_oi/src/presentation/view/booking_flow/booking_detail/view/booking_detail_view.dart';
-import 'package:board_oi/src/presentation/view/booking_flow/booking_result/view/booking_result_view.dart';
-import 'package:board_oi/src/presentation/view/booking_flow/booking_schedule/view/booking_schedule_view.dart';
-import 'package:board_oi/src/presentation/view/booking_flow/booking_schedule/widgets/booking_schedule_matrix_grid.dart';
-import 'package:board_oi/src/presentation/view/booking_flow/select_services/view/select_services_view.dart';
-import 'package:board_oi/src/presentation/view/booking_flow/select_services/widgets/booking_service_selection_card.dart';
+import 'package:spa_booking/src/presentation/view/booking_flow/booking_detail/view/booking_detail_view.dart';
+import 'package:spa_booking/src/presentation/view/booking_flow/booking_result/view/booking_result_view.dart';
+import 'package:spa_booking/src/presentation/view/booking_flow/booking_schedule/view/booking_schedule_view.dart';
+import 'package:spa_booking/src/presentation/view/booking_flow/booking_schedule/widgets/booking_schedule_matrix_grid.dart';
+import 'package:spa_booking/src/presentation/view/booking_flow/select_services/view/select_services_view.dart';
+import 'package:spa_booking/src/presentation/view/booking_flow/select_services/widgets/booking_service_selection_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

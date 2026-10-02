@@ -18,6 +18,7 @@ import '../../core/storage/preferences_storage.dart';
 import '../../core/storage/secure_storage.dart';
 import '../../core/storage/session_storage.dart';
 import '../../data/datasources/remote/auth/auth_api_service.dart';
+import '../../data/datasources/remote/auth/auth_mock_data.dart';
 import '../../data/datasources/remote/auth/auth_remote_data_source.dart';
 import '../../data/datasources/remote/home/home_remote_data_source.dart';
 import '../../data/repositories/auth/auth_repository_impl.dart';
@@ -132,12 +133,12 @@ Future<void> registerDependencies({
   final appRouter = AppRouter(sessionManager: sessionManager);
   sl.registerSingleton<AppRouter>(appRouter);
 
-  // 8. Feature - Auth
+  // 8. Feature - Auth (Mocked for standalone offline flow)
   sl.registerLazySingleton<AuthApiService>(
     () => AuthApiServiceImpl(sl<NetworkClient>()),
   );
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(sl<AuthApiService>()),
+    () => MockAuthRemoteDataSource(),
   );
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
@@ -223,9 +224,9 @@ Future<void> registerDependencies({
     ),
   );
 
-  // 9. Feature - Home
+  // 9. Feature - Home (Mocked for standalone offline flow)
   sl.registerFactory<HomeRemoteDataSource>(
-    () => HomeRemoteDataSourceImpl(sl<NetworkClient>()),
+    () => const MockHomeRemoteDataSource(),
   );
   sl.registerFactory<HomeRepository>(
     () => HomeRepositoryImpl(sl<HomeRemoteDataSource>()),

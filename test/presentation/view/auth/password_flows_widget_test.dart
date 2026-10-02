@@ -1,8 +1,8 @@
-import 'package:board_oi/src/presentation/view/auth/change_password/view/change_password_view.dart';
-import 'package:board_oi/src/presentation/view/auth/forgot_password/view/forgot_password_view.dart';
-import 'package:board_oi/src/presentation/view/auth/forgot_password_otp/view/forgot_password_otp_view.dart';
-import 'package:board_oi/src/presentation/view/auth/reset_password/view/reset_password_view.dart';
-import 'package:board_oi/src/presentation/view/auth/reset_password/widgets/password_strength_checklist_card.dart';
+import 'package:spa_booking/src/presentation/view/auth/change_password/view/change_password_view.dart';
+import 'package:spa_booking/src/presentation/view/auth/forgot_password/view/forgot_password_view.dart';
+import 'package:spa_booking/src/presentation/view/auth/forgot_password_otp/view/forgot_password_otp_view.dart';
+import 'package:spa_booking/src/presentation/view/auth/reset_password/view/reset_password_view.dart';
+import 'package:spa_booking/src/presentation/view/auth/reset_password/widgets/password_strength_checklist_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

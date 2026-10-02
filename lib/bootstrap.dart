@@ -11,7 +11,7 @@ import 'src/presentation/bloc/auth_session/auth_session_bloc.dart';
 import 'main_app.dart';
 
 /// Bootstrap class initializing logging, crash reporting, async zone,
-/// storage, and dependency injection before starting [BoardOiApp].
+/// storage, and dependency injection before starting [SpaBookingApp].
 abstract final class AppBootstrap {
   static Future<void> run({AppConfig? config}) async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +58,6 @@ abstract final class AppBootstrap {
     await authSessionBloc.restoreSession();
 
     // 6. Run Application
-    runApp(const BoardOiApp());
+    runApp(const SpaBookingApp());
   }
 }

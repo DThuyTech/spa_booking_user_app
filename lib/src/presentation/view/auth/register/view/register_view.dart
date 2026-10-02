@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:board_oi/src/app/di/dependency_injection.dart';
-import 'package:board_oi/src/app/router/app_router.gr.dart';
-import 'package:board_oi/src/core/localization/app_localizations.dart';
+import 'package:spa_booking/src/app/di/dependency_injection.dart';
+import 'package:spa_booking/src/app/router/app_router.gr.dart';
+import 'package:spa_booking/src/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,8 +9,8 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import '../../login/widgets/aura_logo_badge.dart';
 import '../../login/widgets/frosted_glass_card.dart';
 import '../../login/widgets/glassmorphic_text_field.dart';
-import 'package:board_oi/src/presentation/view/terms/view/terms_of_use_view.dart';
-import 'package:board_oi/src/shared/widgets/toast/app_toast.dart';
+import 'package:spa_booking/src/presentation/view/terms/view/terms_of_use_view.dart';
+import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
 import '../../../../bloc/auth/register/register_bloc.dart';
 
 @RoutePage()

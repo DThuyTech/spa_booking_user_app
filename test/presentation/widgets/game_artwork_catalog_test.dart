@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:board_oi/src/shared/design_system/components/games/game_artwork_catalog.dart';
+import 'package:spa_booking/src/shared/design_system/components/games/game_artwork_catalog.dart';
 
 void main() {
   group('GameArtworkCatalog', () {

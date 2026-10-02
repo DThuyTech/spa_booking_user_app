@@ -1,5 +1,5 @@
-import 'package:board_oi/src/core/network/idempotency/idempotency_policy.dart';
-import 'package:board_oi/src/core/network/interceptors/idempotency_interceptor.dart';
+import 'package:spa_booking/src/core/network/idempotency/idempotency_policy.dart';
+import 'package:spa_booking/src/core/network/interceptors/idempotency_interceptor.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 

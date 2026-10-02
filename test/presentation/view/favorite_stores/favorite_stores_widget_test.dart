@@ -1,8 +1,8 @@
-import 'package:board_oi/src/presentation/view/favorite_stores/view/favorite_stores_view.dart';
-import 'package:board_oi/src/presentation/view/favorite_stores/widgets/favorite_store_card.dart';
-import 'package:board_oi/src/presentation/view/favorite_stores/widgets/favorite_stores_empty_view.dart';
-import 'package:board_oi/src/presentation/view/favorite_stores/widgets/favorite_stores_search_bar.dart';
-import 'package:board_oi/src/presentation/view/store_detail/view/store_detail_view.dart';
+import 'package:spa_booking/src/presentation/view/favorite_stores/view/favorite_stores_view.dart';
+import 'package:spa_booking/src/presentation/view/favorite_stores/widgets/favorite_store_card.dart';
+import 'package:spa_booking/src/presentation/view/favorite_stores/widgets/favorite_stores_empty_view.dart';
+import 'package:spa_booking/src/presentation/view/favorite_stores/widgets/favorite_stores_search_bar.dart';
+import 'package:spa_booking/src/presentation/view/store_detail/view/store_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:board_oi/src/presentation/view/store_detail/view/store_detail_view.dart';
-import 'package:board_oi/src/presentation/view/store_detail/widgets/store_available_now_card.dart';
-import 'package:board_oi/src/presentation/view/store_detail/widgets/store_header_card.dart';
+import 'package:spa_booking/src/presentation/view/store_detail/view/store_detail_view.dart';
+import 'package:spa_booking/src/presentation/view/store_detail/widgets/store_available_now_card.dart';
+import 'package:spa_booking/src/presentation/view/store_detail/widgets/store_header_card.dart';
 
 void main() {
   Widget createTestWidget() {

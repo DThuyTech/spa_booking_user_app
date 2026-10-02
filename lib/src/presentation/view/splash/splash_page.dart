@@ -7,7 +7,7 @@ import '../../../app/router/app_router.gr.dart';
 import '../../../app/session/session_manager.dart';
 import '../../../core/constants/asset_constants.dart';
 import '../../../core/storage/preferences_storage.dart';
-import 'package:board_oi/src/presentation/bloc/auth_session/auth_session_bloc.dart';
+import 'package:spa_booking/src/presentation/bloc/auth_session/auth_session_bloc.dart';
 
 @RoutePage()
 class SplashPage extends StatefulWidget {

@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:board_oi/src/app/router/app_router.gr.dart';
-import 'package:board_oi/src/app/router/guards/auth_guard.dart';
-import 'package:board_oi/src/app/router/guards/guest_guard.dart';
-import 'package:board_oi/src/app/session/app_session.dart';
-import 'package:board_oi/src/app/session/session_manager.dart';
+import 'package:spa_booking/src/app/router/app_router.gr.dart';
+import 'package:spa_booking/src/app/router/guards/auth_guard.dart';
+import 'package:spa_booking/src/app/router/guards/guest_guard.dart';
+import 'package:spa_booking/src/app/session/app_session.dart';
+import 'package:spa_booking/src/app/session/session_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

@@ -1,10 +1,10 @@
-import 'package:board_oi/src/presentation/view/booking_dashboard_detail/mockup_data/booking_dashboard_detail_mock_data.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_datetime_card.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_notes_card.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_payment_card.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_services_card.dart';
-import 'package:board_oi/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_store_card.dart';
-import 'package:board_oi/src/shared/widgets/toast/app_toast.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/mockup_data/booking_dashboard_detail_mock_data.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_datetime_card.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_notes_card.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_payment_card.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_services_card.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_store_card.dart';
+import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
 import 'package:flutter/material.dart';
 
 class BookingDashboardDetailBodyView extends StatefulWidget {

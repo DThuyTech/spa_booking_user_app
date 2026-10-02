@@ -1,4 +1,5 @@
 # FLUTTER BASE ARCHITECTURE SPECIFICATION
+
 ## Clean Architecture (Domain-Driven Design) + BLoC
 
 This document outlines the architectural standard, layer separation, conventions, and patterns used across the Board Ơi application.
@@ -8,7 +9,7 @@ This document outlines the architectural standard, layer separation, conventions
 ## 1. Root Directory Structure
 
 ```text
-board_oi/
+spa_booking/
 ├── android/                    # Native Android configuration (Gradle, Manifest, Kotlin)
 ├── ios/                        # Native iOS configuration (Xcode workspace, Podfile, Info.plist)
 ├── assets/                     # Static assets

@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:board_oi/src/presentation/view/booking_flow/booking_detail/view/booking_detail_view.dart';
-import 'package:board_oi/src/shared/design_system/components/navigation/app_app_bar.dart';
-import 'package:board_oi/src/shared/widgets/toast/app_toast.dart';
+import 'package:spa_booking/src/presentation/view/booking_flow/booking_detail/view/booking_detail_view.dart';
+import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
+import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
 import '../../models/notification_models.dart';
 import '../body_view/booking_notification_body_view.dart';
 import '../mockup_data/booking_notification_mock_data.dart';

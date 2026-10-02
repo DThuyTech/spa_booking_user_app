@@ -32,16 +32,24 @@ class AuraLogoBadge extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: const Color(0xFFFFF1EB),
-            ),
-            child: const Icon(
-              LucideIcons.sparkles,
-              size: 24,
-              color: Color(0xFFF26E4F),
+          ClipOval(
+            child: Image.asset(
+              'assets/images/app_logo.png',
+              width: size * 0.55,
+              height: size * 0.55,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                padding: const EdgeInsets.all(6),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFFFF1EB),
+                ),
+                child: const Icon(
+                  LucideIcons.sparkles,
+                  size: 24,
+                  color: Color(0xFFF26E4F),
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 3),

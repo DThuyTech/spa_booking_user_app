@@ -1,7 +1,7 @@
-import 'package:board_oi/src/app/session/session_manager.dart';
-import 'package:board_oi/src/core/network/auth/token_pair.dart';
-import 'package:board_oi/src/domain/usecases/auth/login_usecase.dart';
-import 'package:board_oi/src/presentation/bloc/auth_session/auth_session_bloc.dart';
+import 'package:spa_booking/src/app/session/session_manager.dart';
+import 'package:spa_booking/src/core/network/auth/token_pair.dart';
+import 'package:spa_booking/src/domain/usecases/auth/login_usecase.dart';
+import 'package:spa_booking/src/presentation/bloc/auth_session/auth_session_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'login_event.dart';
 import 'login_state.dart';
@@ -74,7 +74,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       return;
     }
 
-    if (!_emailRegex.hasMatch(identifier)) {
+    final isEmail = _emailRegex.hasMatch(identifier);
+    final isPhone = RegExp(
+      r'^\+?[0-9]{8,15}$',
+    ).hasMatch(identifier.replaceAll(RegExp(r'[\s-]'), ''));
+
+    if (!isEmail && !isPhone) {
       emit(
         state.copyWith(
           identifierError: () => 'Please enter a valid email address.',

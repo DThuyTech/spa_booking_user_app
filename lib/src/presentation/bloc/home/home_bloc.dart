@@ -1,4 +1,4 @@
-import 'package:board_oi/src/domain/usecases/home/get_greeting_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/home/get_greeting_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'home_event.dart';
 import 'home_state.dart';

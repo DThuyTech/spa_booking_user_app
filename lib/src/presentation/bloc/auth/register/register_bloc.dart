@@ -1,7 +1,7 @@
-import 'package:board_oi/src/app/session/session_manager.dart';
-import 'package:board_oi/src/core/network/auth/token_pair.dart';
-import 'package:board_oi/src/domain/usecases/auth/register_usecase.dart';
-import 'package:board_oi/src/presentation/bloc/auth_session/auth_session_bloc.dart';
+import 'package:spa_booking/src/app/session/session_manager.dart';
+import 'package:spa_booking/src/core/network/auth/token_pair.dart';
+import 'package:spa_booking/src/domain/usecases/auth/register_usecase.dart';
+import 'package:spa_booking/src/presentation/bloc/auth_session/auth_session_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'register_event.dart';
 import 'register_state.dart';
@@ -81,7 +81,11 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       state.copyWith(status: RegisterStatus.loading, errorMessage: () => null),
     );
 
-    final result = await registerUseCase(email: email, password: password);
+    final result = await registerUseCase(
+      email: email,
+      password: password,
+      fullName: state.fullName,
+    );
 
     await result.fold(
       (failure) async {

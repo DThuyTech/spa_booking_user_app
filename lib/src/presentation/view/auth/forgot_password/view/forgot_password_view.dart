@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:board_oi/src/shared/design_system/components/navigation/app_app_bar.dart';
-import 'package:board_oi/src/shared/widgets/toast/app_toast.dart';
+import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
+import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
 import 'package:flutter/material.dart';
 import '../body_view/forgot_password_body_view.dart';
 import '../../forgot_password_otp/view/forgot_password_otp_view.dart';
@@ -47,7 +47,10 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       return;
     }
 
-    AppToast.info(context, message: 'OTP code sent to $contact');
+    AppToast.info(
+      context,
+      message: 'OTP code sent to $contact (Demo OTP: 123456)',
+    );
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => ForgotPasswordOtpView(contact: contact),

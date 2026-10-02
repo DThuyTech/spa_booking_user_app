@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:board_oi/src/shared/design_system/components/navigation/app_app_bar.dart';
+import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:board_oi/src/shared/widgets/toast/app_toast.dart';
+import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
 import '../../models/notification_models.dart';
 import '../../notification_detail_booking/view/booking_notification_view.dart';
 import '../../notification_detail_voucher/view/voucher_detail_view.dart';

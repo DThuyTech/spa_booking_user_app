@@ -1,4 +1,4 @@
-import 'package:board_oi/src/domain/entities/auth/user.dart';
+import 'package:spa_booking/src/domain/entities/auth/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 
