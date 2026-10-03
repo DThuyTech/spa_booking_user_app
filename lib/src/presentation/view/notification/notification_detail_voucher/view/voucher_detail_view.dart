@@ -11,10 +11,7 @@ import '../mockup_data/voucher_detail_mock_data.dart';
 class VoucherDetailPage extends StatelessWidget {
   final VoucherNotificationData? voucher;
 
-  const VoucherDetailPage({
-    super.key,
-    this.voucher,
-  });
+  const VoucherDetailPage({super.key, this.voucher});
 
   @override
   Widget build(BuildContext context) {

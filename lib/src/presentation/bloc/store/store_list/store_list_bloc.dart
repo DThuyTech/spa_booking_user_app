@@ -11,7 +11,7 @@ class StoreListBloc extends Bloc<StoreListEvent, StoreListState> {
   final GetStoresUseCase getStoresUseCase;
 
   StoreListBloc({required this.getStoresUseCase})
-      : super(const StoreListState()) {
+    : super(const StoreListState()) {
     on<FetchStoresEvent>(_onFetchStores);
     on<LoadMoreStoresEvent>(_onLoadMore);
   }
@@ -33,20 +33,21 @@ class StoreListBloc extends Bloc<StoreListEvent, StoreListState> {
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: StoreListStatus.failure,
-        failure: failure,
-      )),
-      (stores) => emit(state.copyWith(
-        status: StoreListStatus.loaded,
-        stores: stores,
-        hasMore: stores.length >= 10,
-        currentPage: 1,
-        search: event.search,
-        province: event.province,
-        district: event.district,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: StoreListStatus.failure, failure: failure),
+      ),
+      (stores) => emit(
+        state.copyWith(
+          status: StoreListStatus.loaded,
+          stores: stores,
+          hasMore: stores.length >= 10,
+          currentPage: 1,
+          search: event.search,
+          province: event.province,
+          district: event.district,
+          failure: null,
+        ),
+      ),
     );
   }
 
@@ -67,11 +68,13 @@ class StoreListBloc extends Bloc<StoreListEvent, StoreListState> {
 
     result.fold(
       (Failure failure) => emit(state.copyWith(failure: failure)),
-      (newStores) => emit(state.copyWith(
-        stores: [...state.stores, ...newStores],
-        hasMore: newStores.length >= 10,
-        currentPage: nextPage,
-      )),
+      (newStores) => emit(
+        state.copyWith(
+          stores: [...state.stores, ...newStores],
+          hasMore: newStores.length >= 10,
+          currentPage: nextPage,
+        ),
+      ),
     );
   }
 }

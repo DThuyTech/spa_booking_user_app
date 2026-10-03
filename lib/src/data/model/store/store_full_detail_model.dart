@@ -71,7 +71,8 @@ class StoreFullDetailModel extends Equatable {
   factory StoreFullDetailModel.fromJson(Map<String, dynamic> json) {
     final storeDetail = StoreDetailModel.fromJson(json);
 
-    final rawHours = json['businessHours'] ??
+    final rawHours =
+        json['businessHours'] ??
         (json['store'] is Map<String, dynamic>
             ? (json['store'] as Map<String, dynamic>)['businessHours']
             : null);
@@ -83,7 +84,8 @@ class StoreFullDetailModel extends Equatable {
           .toList();
     }
 
-    final rawSettings = json['bookingSettings'] ??
+    final rawSettings =
+        json['bookingSettings'] ??
         (json['store'] is Map<String, dynamic>
             ? (json['store'] as Map<String, dynamic>)['bookingSettings']
             : null);
@@ -129,7 +131,9 @@ class StoreFullDetailModel extends Equatable {
 
     return StoreFullDetailModel(
       store: storeDetail,
-      businessHours: parsedHours.isNotEmpty ? parsedHours : storeDetail.businessHours,
+      businessHours: parsedHours.isNotEmpty
+          ? parsedHours
+          : storeDetail.businessHours,
       bookingSettings: parsedSettings ?? storeDetail.bookingSettings,
       categories: parsedCategories,
       services: parsedServices,
@@ -141,13 +145,13 @@ class StoreFullDetailModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        store,
-        businessHours,
-        bookingSettings,
-        categories,
-        services,
-        staff,
-        reviews,
-        isFavorite,
-      ];
+    store,
+    businessHours,
+    bookingSettings,
+    categories,
+    services,
+    staff,
+    reviews,
+    isFavorite,
+  ];
 }

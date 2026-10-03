@@ -11,7 +11,7 @@ class StoreReviewsBloc extends Bloc<StoreReviewsEvent, StoreReviewsState> {
   final GetStoreReviewsUseCase getStoreReviewsUseCase;
 
   StoreReviewsBloc({required this.getStoreReviewsUseCase})
-      : super(const StoreReviewsState()) {
+    : super(const StoreReviewsState()) {
     on<FetchStoreReviewsEvent>(_onFetchReviews);
     on<FilterReviewsByRatingEvent>(_onFilterByRating);
   }
@@ -32,16 +32,17 @@ class StoreReviewsBloc extends Bloc<StoreReviewsEvent, StoreReviewsState> {
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: StoreReviewsStatus.failure,
-        failure: failure,
-      )),
-      (reviewData) => emit(state.copyWith(
-        status: StoreReviewsStatus.loaded,
-        reviewData: reviewData,
-        selectedRatingFilter: event.rating ?? state.selectedRatingFilter,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: StoreReviewsStatus.failure, failure: failure),
+      ),
+      (reviewData) => emit(
+        state.copyWith(
+          status: StoreReviewsStatus.loaded,
+          reviewData: reviewData,
+          selectedRatingFilter: event.rating ?? state.selectedRatingFilter,
+          failure: null,
+        ),
+      ),
     );
   }
 
@@ -52,11 +53,13 @@ class StoreReviewsBloc extends Bloc<StoreReviewsEvent, StoreReviewsState> {
     final storeId = state.reviewData?.storeId;
     if (storeId == null) return;
 
-    emit(state.copyWith(
-      status: StoreReviewsStatus.loading,
-      selectedRatingFilter: event.rating,
-      failure: null,
-    ));
+    emit(
+      state.copyWith(
+        status: StoreReviewsStatus.loading,
+        selectedRatingFilter: event.rating,
+        failure: null,
+      ),
+    );
 
     final result = await getStoreReviewsUseCase(
       storeId: storeId,
@@ -66,15 +69,16 @@ class StoreReviewsBloc extends Bloc<StoreReviewsEvent, StoreReviewsState> {
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: StoreReviewsStatus.failure,
-        failure: failure,
-      )),
-      (reviewData) => emit(state.copyWith(
-        status: StoreReviewsStatus.loaded,
-        reviewData: reviewData,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: StoreReviewsStatus.failure, failure: failure),
+      ),
+      (reviewData) => emit(
+        state.copyWith(
+          status: StoreReviewsStatus.loaded,
+          reviewData: reviewData,
+          failure: null,
+        ),
+      ),
     );
   }
 }

@@ -23,13 +23,15 @@ abstract class ReviewModel with _$ReviewModel {
   factory ReviewModel.fromJson(Map<String, dynamic> json) {
     final customer = json['customer'] as Map<String, dynamic>?;
     final user = json['user'] as Map<String, dynamic>?;
-    final customerName = json['customerName'] ??
+    final customerName =
+        json['customerName'] ??
         customer?['name'] ??
         customer?['fullName'] ??
         user?['name'] ??
         user?['fullName'] ??
         'Customer';
-    final avatarUrl = json['avatarUrl'] ??
+    final avatarUrl =
+        json['avatarUrl'] ??
         customer?['avatar'] ??
         customer?['avatarUrl'] ??
         user?['avatar'] ??
@@ -44,8 +46,7 @@ abstract class ReviewModel with _$ReviewModel {
     final rawServiceNames = json['serviceNames'];
     List<String> parsedServiceNames = [];
     if (rawServiceNames is List) {
-      parsedServiceNames =
-          rawServiceNames.map((e) => e.toString()).toList();
+      parsedServiceNames = rawServiceNames.map((e) => e.toString()).toList();
     }
 
     final rawRating = json['rating'];

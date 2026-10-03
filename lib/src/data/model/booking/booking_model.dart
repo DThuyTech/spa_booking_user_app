@@ -17,11 +17,12 @@ abstract class BookingServiceItemModel with _$BookingServiceItemModel {
     return BookingServiceItemModel(
       serviceId: (json['serviceId'] ?? json['id'] ?? '') as String,
       name: (json['name'] ?? '') as String,
-      price: (json['price'] ?? json['unitPrice'] ?? json['totalAmount'] as num?)
+      price:
+          (json['price'] ?? json['unitPrice'] ?? json['totalAmount'] as num?)
               ?.toInt() ??
           0,
-      duration: (json['duration'] ?? json['durationMinutes'] as num?)?.toInt() ??
-          60,
+      duration:
+          (json['duration'] ?? json['durationMinutes'] as num?)?.toInt() ?? 60,
     );
   }
 }
@@ -42,7 +43,8 @@ abstract class BookingStaffSnapshotModel with _$BookingStaffSnapshotModel {
 }
 
 @freezed
-abstract class BookingCustomerSnapshotModel with _$BookingCustomerSnapshotModel {
+abstract class BookingCustomerSnapshotModel
+    with _$BookingCustomerSnapshotModel {
   const factory BookingCustomerSnapshotModel({
     required String name,
     required String phoneNumber,
@@ -161,8 +163,8 @@ abstract class BookingModel with _$BookingModel {
       endAt: (json['endAt'] ?? '') as String,
       totalDuration:
           (json['totalDuration'] ?? json['totalDurationMinutes'] as num?)
-                  ?.toInt() ??
-              0,
+              ?.toInt() ??
+          0,
       totalAmount: (json['totalAmount'] as num?)?.toInt() ?? 0,
       services: services,
       staffSnapshot: staffSnapshot,
@@ -196,12 +198,14 @@ extension BookingModelX on BookingModel {
       totalDuration: totalDuration,
       totalAmount: totalAmount,
       services: services
-          .map((s) => BookingServiceItemEntity(
-                serviceId: s.serviceId,
-                name: s.name,
-                price: s.price,
-                duration: s.duration,
-              ))
+          .map(
+            (s) => BookingServiceItemEntity(
+              serviceId: s.serviceId,
+              name: s.name,
+              price: s.price,
+              duration: s.duration,
+            ),
+          )
           .toList(),
       staffSnapshot: staffSnapshot != null
           ? BookingStaffSnapshotEntity(

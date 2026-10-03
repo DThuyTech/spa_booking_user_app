@@ -23,7 +23,8 @@ abstract class ServiceModel with _$ServiceModel {
         ? rawPrice.toInt()
         : (int.tryParse(rawPrice.toString()) ?? 0);
 
-    final rawOrigPrice = (json['effectivePrice'] != null && json['basePrice'] != null)
+    final rawOrigPrice =
+        (json['effectivePrice'] != null && json['basePrice'] != null)
         ? json['basePrice']
         : json['originalPrice'];
     final origPriceVal = (rawOrigPrice is num)
@@ -50,13 +51,13 @@ abstract class ServiceModel with _$ServiceModel {
 
 extension ServiceModelX on ServiceModel {
   ServiceEntity toEntity() => ServiceEntity(
-        id: id,
-        name: name,
-        description: description,
-        price: price,
-        originalPrice: originalPrice,
-        durationMinutes: durationMinutes,
-        imageUrl: imageUrl,
-        categoryId: categoryId,
-      );
+    id: id,
+    name: name,
+    description: description,
+    price: price,
+    originalPrice: originalPrice,
+    durationMinutes: durationMinutes,
+    imageUrl: imageUrl,
+    categoryId: categoryId,
+  );
 }

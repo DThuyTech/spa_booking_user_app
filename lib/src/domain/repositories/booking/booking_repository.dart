@@ -51,4 +51,3 @@ abstract interface class BookingRepository {
     String? storeId,
   });
 }
-

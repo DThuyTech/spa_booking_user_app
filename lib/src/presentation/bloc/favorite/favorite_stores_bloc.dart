@@ -26,22 +26,20 @@ class FavoriteStoresBloc
   ) async {
     emit(state.copyWith(status: FavoriteStoresStatus.loading, failure: null));
 
-    final result = await getFavoritesUseCase(
-      page: 1,
-      limit: 50,
-    );
+    final result = await getFavoritesUseCase(page: 1, limit: 50);
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: FavoriteStoresStatus.failure,
-        failure: failure,
-      )),
-      (stores) => emit(state.copyWith(
-        status: FavoriteStoresStatus.loaded,
-        items: stores,
-        total: stores.length,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: FavoriteStoresStatus.failure, failure: failure),
+      ),
+      (stores) => emit(
+        state.copyWith(
+          status: FavoriteStoresStatus.loaded,
+          items: stores,
+          total: stores.length,
+          failure: null,
+        ),
+      ),
     );
   }
 
@@ -62,10 +60,8 @@ class FavoriteStoresBloc
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        items: originalItems,
-        failure: failure,
-      )),
+      (Failure failure) =>
+          emit(state.copyWith(items: originalItems, failure: failure)),
       (bool isFavorite) {
         // success
       },

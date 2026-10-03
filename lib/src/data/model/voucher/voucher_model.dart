@@ -14,7 +14,8 @@ abstract class VoucherModel with _$VoucherModel {
     @JsonKey(name: 'storeId') String? storeId,
     @JsonKey(name: 'title', defaultValue: '') required String title,
     @JsonKey(name: 'description') String? description,
-    @JsonKey(name: 'discountType', defaultValue: 'FLAT') required String discountType,
+    @JsonKey(name: 'discountType', defaultValue: 'FLAT')
+    required String discountType,
     @JsonKey(name: 'discountValue', defaultValue: 0) required int discountValue,
     @JsonKey(name: 'minOrderValue', defaultValue: 0) required int minOrderValue,
     @JsonKey(name: 'maxDiscountAmount') int? maxDiscountAmount,
@@ -52,8 +53,10 @@ abstract class AppliedVoucherModel with _$AppliedVoucherModel {
     @JsonKey(name: 'isValid', defaultValue: true) required bool isValid,
     @JsonKey(name: 'message', defaultValue: '') required String message,
     @JsonKey(name: 'code', defaultValue: '') required String code,
-    @JsonKey(name: 'originalAmount', defaultValue: 0) required int originalAmount,
-    @JsonKey(name: 'discountAmount', defaultValue: 0) required int discountAmount,
+    @JsonKey(name: 'originalAmount', defaultValue: 0)
+    required int originalAmount,
+    @JsonKey(name: 'discountAmount', defaultValue: 0)
+    required int discountAmount,
     @JsonKey(name: 'finalAmount', defaultValue: 0) required int finalAmount,
   }) = _AppliedVoucherModel;
 

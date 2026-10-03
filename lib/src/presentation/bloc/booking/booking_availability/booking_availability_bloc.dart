@@ -9,7 +9,7 @@ class BookingAvailabilityBloc
   final GetAvailabilityUseCase getAvailabilityUseCase;
 
   BookingAvailabilityBloc({required this.getAvailabilityUseCase})
-      : super(const BookingAvailabilityState()) {
+    : super(const BookingAvailabilityState()) {
     on<CheckAvailabilitySlotsEvent>(_onCheckSlots);
     on<SelectBookingSlotEvent>(_onSelectSlot);
   }
@@ -18,10 +18,9 @@ class BookingAvailabilityBloc
     CheckAvailabilitySlotsEvent event,
     Emitter<BookingAvailabilityState> emit,
   ) async {
-    emit(state.copyWith(
-      status: BookingAvailabilityStatus.loading,
-      failure: null,
-    ));
+    emit(
+      state.copyWith(status: BookingAvailabilityStatus.loading, failure: null),
+    );
 
     final result = await getAvailabilityUseCase(
       storeId: event.storeId,
@@ -31,10 +30,12 @@ class BookingAvailabilityBloc
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: BookingAvailabilityStatus.failure,
-        failure: failure,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(
+          status: BookingAvailabilityStatus.failure,
+          failure: failure,
+        ),
+      ),
       (availability) {
         String? firstAvailable;
         for (final slot in availability.slots) {
@@ -43,12 +44,14 @@ class BookingAvailabilityBloc
             break;
           }
         }
-        emit(state.copyWith(
-          status: BookingAvailabilityStatus.loaded,
-          availability: availability,
-          selectedTime: firstAvailable,
-          failure: null,
-        ));
+        emit(
+          state.copyWith(
+            status: BookingAvailabilityStatus.loaded,
+            availability: availability,
+            selectedTime: firstAvailable,
+            failure: null,
+          ),
+        );
       },
     );
   }

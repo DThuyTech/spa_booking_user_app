@@ -43,68 +43,70 @@ void main() {
       ),
     ];
 
-    testWidgets('displays store services instead of mock data when navigated from store',
-        (tester) async {
-      tester.view.physicalSize = const Size(800, 1400);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
+    testWidgets(
+      'displays store services instead of mock data when navigated from store',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 1400);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: SelectServicesView(
-            storeId: 'store_spa_royal',
-            salonName: 'Royal Spa Retreat',
-            initialServices: customStoreServices,
-            initialSelectedServiceId: 'srv_massage_1',
+        await tester.pumpWidget(
+          MaterialApp(
+            home: SelectServicesView(
+              storeId: 'store_spa_royal',
+              salonName: 'Royal Spa Retreat',
+              initialServices: customStoreServices,
+              initialSelectedServiceId: 'srv_massage_1',
+            ),
           ),
-        ),
-      );
-      await tester.pump();
+        );
+        await tester.pump();
 
-      // Verify that the custom store services are displayed
-      expect(find.text('Aroma Therapy Full Body Massage'), findsOneWidget);
-      expect(find.text('Hot Stone Therapy'), findsOneWidget);
-      expect(find.text('Deep Cleansing Facial Treatment'), findsOneWidget);
+        // Verify that the custom store services are displayed
+        expect(find.text('Aroma Therapy Full Body Massage'), findsOneWidget);
+        expect(find.text('Hot Stone Therapy'), findsOneWidget);
+        expect(find.text('Deep Cleansing Facial Treatment'), findsOneWidget);
 
-      // Verify that mock data services are NOT present
-      expect(find.text('Haircut'), findsNothing);
-      expect(find.text('Hair Styling'), findsNothing);
-      expect(find.text('Hair Coloring'), findsNothing);
+        // Verify that mock data services are NOT present
+        expect(find.text('Haircut'), findsNothing);
+        expect(find.text('Hair Styling'), findsNothing);
+        expect(find.text('Hair Coloring'), findsNothing);
 
-      // Verify dynamic category headers
-      expect(find.text('Massage Body Service'), findsOneWidget);
-      expect(find.text('Skin Care Service'), findsOneWidget);
+        // Verify dynamic category headers
+        expect(find.text('Massage Body Service'), findsOneWidget);
+        expect(find.text('Skin Care Service'), findsOneWidget);
 
-      // Verify summary shows initial selected service (1 service, 1h30m, 450,000 VND)
-      expect(find.text('1 Service'), findsOneWidget);
-      expect(find.text('1h30m'), findsOneWidget);
-      expect(find.text('450,000 VND'), findsWidgets);
+        // Verify summary shows initial selected service (1 service, 1h30m, 450,000 VND)
+        expect(find.text('1 Service'), findsOneWidget);
+        expect(find.text('1h30m'), findsOneWidget);
+        expect(find.text('450,000 VND'), findsWidgets);
 
-      // Toggle hot stone therapy (60m, 350,000 VND)
-      final hotStoneCard = find.widgetWithText(
-        BookingServiceSelectionCard,
-        'Hot Stone Therapy',
-      );
-      await tester.ensureVisible(hotStoneCard);
-      await tester.pump();
-      await tester.tap(hotStoneCard);
-      await tester.pump();
+        // Toggle hot stone therapy (60m, 350,000 VND)
+        final hotStoneCard = find.widgetWithText(
+          BookingServiceSelectionCard,
+          'Hot Stone Therapy',
+        );
+        await tester.ensureVisible(hotStoneCard);
+        await tester.pump();
+        await tester.tap(hotStoneCard);
+        await tester.pump();
 
-      // Total count should be 2, duration 90m + 60m = 150m = 2h30m, total 800,000 VND
-      expect(find.text('2 Service'), findsOneWidget);
-      expect(find.text('2h30m'), findsOneWidget);
-      expect(find.text('800,000 VND'), findsWidgets);
+        // Total count should be 2, duration 90m + 60m = 150m = 2h30m, total 800,000 VND
+        expect(find.text('2 Service'), findsOneWidget);
+        expect(find.text('2h30m'), findsOneWidget);
+        expect(find.text('800,000 VND'), findsWidgets);
 
-      // Filter by category: tap 'Skin Care' chip
-      final skinCareChip = find.text('Skin Care');
-      await tester.ensureVisible(skinCareChip);
-      await tester.pump();
-      await tester.tap(skinCareChip);
-      await tester.pump();
+        // Filter by category: tap 'Skin Care' chip
+        final skinCareChip = find.text('Skin Care');
+        await tester.ensureVisible(skinCareChip);
+        await tester.pump();
+        await tester.tap(skinCareChip);
+        await tester.pump();
 
-      // Only Skin Care service should be shown
-      expect(find.text('Deep Cleansing Facial Treatment'), findsOneWidget);
-      expect(find.text('Aroma Therapy Full Body Massage'), findsNothing);
-    });
+        // Only Skin Care service should be shown
+        expect(find.text('Deep Cleansing Facial Treatment'), findsOneWidget);
+        expect(find.text('Aroma Therapy Full Body Massage'), findsNothing);
+      },
+    );
   });
 }

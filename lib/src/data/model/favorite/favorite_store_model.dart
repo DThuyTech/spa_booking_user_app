@@ -33,9 +33,7 @@ abstract class FavoriteStoreModel with _$FavoriteStoreModel {
       address: address,
       phoneNumber: phoneNumber,
       isFavorite: isFavorite,
-      favoritedAt: favoritedAt != null
-          ? DateTime.tryParse(favoritedAt!)
-          : null,
+      favoritedAt: favoritedAt != null ? DateTime.tryParse(favoritedAt!) : null,
     );
   }
 }

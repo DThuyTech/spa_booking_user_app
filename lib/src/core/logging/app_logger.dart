@@ -32,18 +32,19 @@ class AppLogger implements Logger {
     this.minLevel = LogLevel.debug,
     this.isProduction = false,
     log_pkg.Logger? internalLogger,
-  }) : _internalLogger = internalLogger ??
-            log_pkg.Logger(
-              printer: log_pkg.PrettyPrinter(
-                methodCount: 0,
-                errorMethodCount: 8,
-                lineLength: 90,
-                colors: true,
-                printEmojis: true,
-                dateTimeFormat: log_pkg.DateTimeFormat.onlyTimeAndSinceStart,
-              ),
-              level: isProduction ? log_pkg.Level.warning : log_pkg.Level.trace,
-            );
+  }) : _internalLogger =
+           internalLogger ??
+           log_pkg.Logger(
+             printer: log_pkg.PrettyPrinter(
+               methodCount: 0,
+               errorMethodCount: 8,
+               lineLength: 90,
+               colors: true,
+               printEmojis: true,
+               dateTimeFormat: log_pkg.DateTimeFormat.onlyTimeAndSinceStart,
+             ),
+             level: isProduction ? log_pkg.Level.warning : log_pkg.Level.trace,
+           );
 
   @override
   void debug(String message, [Object? error, StackTrace? stackTrace]) {
@@ -94,13 +95,29 @@ class AppLogger implements Logger {
 
     switch (level) {
       case LogLevel.debug:
-        _internalLogger.d(sanitizedMessage, error: error, stackTrace: stackTrace);
+        _internalLogger.d(
+          sanitizedMessage,
+          error: error,
+          stackTrace: stackTrace,
+        );
       case LogLevel.info:
-        _internalLogger.i(sanitizedMessage, error: error, stackTrace: stackTrace);
+        _internalLogger.i(
+          sanitizedMessage,
+          error: error,
+          stackTrace: stackTrace,
+        );
       case LogLevel.warning:
-        _internalLogger.w(sanitizedMessage, error: error, stackTrace: stackTrace);
+        _internalLogger.w(
+          sanitizedMessage,
+          error: error,
+          stackTrace: stackTrace,
+        );
       case LogLevel.error:
-        _internalLogger.e(sanitizedMessage, error: error, stackTrace: stackTrace);
+        _internalLogger.e(
+          sanitizedMessage,
+          error: error,
+          stackTrace: stackTrace,
+        );
     }
   }
 
@@ -108,9 +125,7 @@ class AppLogger implements Logger {
   static String formatJson(dynamic data) {
     if (data == null) return 'null';
     try {
-      final sanitized = data is Map<String, dynamic>
-          ? sanitizeMap(data)
-          : data;
+      final sanitized = data is Map<String, dynamic> ? sanitizeMap(data) : data;
       if (sanitized is Map || sanitized is List) {
         return const JsonEncoder.withIndent('  ').convert(sanitized);
       }

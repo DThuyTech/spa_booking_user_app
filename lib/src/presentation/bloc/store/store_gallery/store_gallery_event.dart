@@ -11,10 +11,7 @@ class FetchStoreGalleryEvent extends StoreGalleryEvent {
   final String storeId;
   final String category;
 
-  const FetchStoreGalleryEvent({
-    required this.storeId,
-    this.category = 'ALL',
-  });
+  const FetchStoreGalleryEvent({required this.storeId, this.category = 'ALL'});
 
   @override
   List<Object?> get props => [storeId, category];

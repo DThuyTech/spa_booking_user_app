@@ -12,7 +12,7 @@ class StoreGalleryBloc extends Bloc<StoreGalleryEvent, StoreGalleryState> {
   String? _currentStoreId;
 
   StoreGalleryBloc({required this.getStoreGalleryUseCase})
-      : super(const StoreGalleryState()) {
+    : super(const StoreGalleryState()) {
     on<FetchStoreGalleryEvent>(_onFetchGallery);
     on<FilterGalleryCategoryEvent>(_onFilterCategory);
   }
@@ -22,11 +22,13 @@ class StoreGalleryBloc extends Bloc<StoreGalleryEvent, StoreGalleryState> {
     Emitter<StoreGalleryState> emit,
   ) async {
     _currentStoreId = event.storeId;
-    emit(state.copyWith(
-      status: StoreGalleryStatus.loading,
-      activeCategory: event.category,
-      failure: null,
-    ));
+    emit(
+      state.copyWith(
+        status: StoreGalleryStatus.loading,
+        activeCategory: event.category,
+        failure: null,
+      ),
+    );
 
     final result = await getStoreGalleryUseCase(
       event.storeId,
@@ -34,15 +36,16 @@ class StoreGalleryBloc extends Bloc<StoreGalleryEvent, StoreGalleryState> {
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: StoreGalleryStatus.failure,
-        failure: failure,
-      )),
-      (gallery) => emit(state.copyWith(
-        status: StoreGalleryStatus.loaded,
-        gallery: gallery,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: StoreGalleryStatus.failure, failure: failure),
+      ),
+      (gallery) => emit(
+        state.copyWith(
+          status: StoreGalleryStatus.loaded,
+          gallery: gallery,
+          failure: null,
+        ),
+      ),
     );
   }
 
@@ -52,11 +55,13 @@ class StoreGalleryBloc extends Bloc<StoreGalleryEvent, StoreGalleryState> {
   ) async {
     if (_currentStoreId == null) return;
 
-    emit(state.copyWith(
-      status: StoreGalleryStatus.loading,
-      activeCategory: event.category,
-      failure: null,
-    ));
+    emit(
+      state.copyWith(
+        status: StoreGalleryStatus.loading,
+        activeCategory: event.category,
+        failure: null,
+      ),
+    );
 
     final result = await getStoreGalleryUseCase(
       _currentStoreId!,
@@ -64,15 +69,16 @@ class StoreGalleryBloc extends Bloc<StoreGalleryEvent, StoreGalleryState> {
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: StoreGalleryStatus.failure,
-        failure: failure,
-      )),
-      (gallery) => emit(state.copyWith(
-        status: StoreGalleryStatus.loaded,
-        gallery: gallery,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: StoreGalleryStatus.failure, failure: failure),
+      ),
+      (gallery) => emit(
+        state.copyWith(
+          status: StoreGalleryStatus.loaded,
+          gallery: gallery,
+          failure: null,
+        ),
+      ),
     );
   }
 }

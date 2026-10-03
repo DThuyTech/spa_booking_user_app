@@ -45,4 +45,3 @@ abstract interface class StoreRepository {
     String? staffProfileId,
   });
 }
-

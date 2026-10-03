@@ -19,15 +19,17 @@ class SaveCustomerProfileParams extends Equatable {
     required this.phoneNumber,
     required this.dateOfBirth,
     this.isCreate = false,
-  })  : name = name ?? '${firstName ?? ''} ${lastName ?? ''}'.trim(),
-        firstName = firstName ??
-            (name != null && name.trim().isNotEmpty
-                ? name.trim().split(' ').first
-                : ''),
-        lastName = lastName ??
-            (name != null && name.trim().split(' ').length > 1
-                ? name.trim().split(' ').sublist(1).join(' ')
-                : (name ?? ''));
+  }) : name = name ?? '${firstName ?? ''} ${lastName ?? ''}'.trim(),
+       firstName =
+           firstName ??
+           (name != null && name.trim().isNotEmpty
+               ? name.trim().split(' ').first
+               : ''),
+       lastName =
+           lastName ??
+           (name != null && name.trim().split(' ').length > 1
+               ? name.trim().split(' ').sublist(1).join(' ')
+               : (name ?? ''));
 
   @override
   List<Object?> get props => [

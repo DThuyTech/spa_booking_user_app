@@ -61,11 +61,15 @@ class SelectServicesBodyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final filteredServices = (selectedCategory == 'All' || selectedCategory.isEmpty)
+    final filteredServices =
+        (selectedCategory == 'All' || selectedCategory.isEmpty)
         ? services
         : services
-            .where((s) => s.category.toLowerCase() == selectedCategory.toLowerCase())
-            .toList();
+              .where(
+                (s) =>
+                    s.category.toLowerCase() == selectedCategory.toLowerCase(),
+              )
+              .toList();
 
     // Group services by category
     final Map<String, List<BookingServiceItem>> categoryGroups = {};
@@ -102,7 +106,11 @@ class SelectServicesBodyView extends StatelessWidget {
               alignment: Alignment.center,
               child: const Column(
                 children: [
-                  Icon(LucideIcons.scissors, size: 36, color: Color(0xFFCBD5E1)),
+                  Icon(
+                    LucideIcons.scissors,
+                    size: 36,
+                    color: Color(0xFFCBD5E1),
+                  ),
                   SizedBox(height: 10),
                   Text(
                     'No services found in this category',

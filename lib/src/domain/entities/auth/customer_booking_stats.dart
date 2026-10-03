@@ -21,12 +21,12 @@ class CustomerBookingStats extends Equatable {
 
   @override
   List<Object?> get props => [
-        totalBookings,
-        upcomingBookings,
-        completedBookings,
-        cancelledBookings,
-        totalSpent,
-        lastBookingDate,
-        lastBookingStoreName,
-      ];
+    totalBookings,
+    upcomingBookings,
+    completedBookings,
+    cancelledBookings,
+    totalSpent,
+    lastBookingDate,
+    lastBookingStoreName,
+  ];
 }

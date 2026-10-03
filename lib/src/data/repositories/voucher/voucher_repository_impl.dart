@@ -11,7 +11,9 @@ class VoucherRepositoryImpl implements VoucherRepository {
   const VoucherRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, List<VoucherEntity>>> getStoreVouchers(String storeId) async {
+  Future<Either<Failure, List<VoucherEntity>>> getStoreVouchers(
+    String storeId,
+  ) async {
     try {
       final models = await remoteDataSource.getStoreVouchers(storeId);
       final entities = models.map((m) => m.toEntity()).toList();
@@ -22,9 +24,13 @@ class VoucherRepositoryImpl implements VoucherRepository {
   }
 
   @override
-  Future<Either<Failure, List<VoucherEntity>>> getCustomerVouchers({String? storeId}) async {
+  Future<Either<Failure, List<VoucherEntity>>> getCustomerVouchers({
+    String? storeId,
+  }) async {
     try {
-      final models = await remoteDataSource.getCustomerVouchers(storeId: storeId);
+      final models = await remoteDataSource.getCustomerVouchers(
+        storeId: storeId,
+      );
       final entities = models.map((m) => m.toEntity()).toList();
       return Right(entities);
     } catch (e) {

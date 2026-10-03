@@ -27,7 +27,8 @@ abstract class StoreListResponseModel with _$StoreListResponseModel {
 
   factory StoreListResponseModel.fromJson(Map<String, dynamic> json) {
     final normalized = Map<String, dynamic>.from(json);
-    if (!normalized.containsKey('pagination') && normalized.containsKey('total')) {
+    if (!normalized.containsKey('pagination') &&
+        normalized.containsKey('total')) {
       normalized['pagination'] = {
         'total': normalized['total'],
         'page': normalized['page'] ?? 1,

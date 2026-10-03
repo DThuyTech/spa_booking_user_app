@@ -71,8 +71,9 @@ class BookingDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasBloc = context.findAncestorWidgetOfExactType<
-            BlocProvider<CreateBookingBloc>>() !=
+    final hasBloc =
+        context
+            .findAncestorWidgetOfExactType<BlocProvider<CreateBookingBloc>>() !=
         null;
     final canResolveBloc = GetIt.I.isRegistered<CreateBookingBloc>();
 
@@ -141,8 +142,8 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
     final base = BookingDetailMockData.defaultBookingDetail;
     final activeServices =
         (widget.selectedServices != null && widget.selectedServices!.isNotEmpty)
-            ? widget.selectedServices!
-            : base.services;
+        ? widget.selectedServices!
+        : base.services;
 
     final subtotal = activeServices.fold(0, (sum, s) => sum + s.price);
     final discount = (subtotal * 0.1).round();
@@ -169,7 +170,8 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
   String? _durationFrom(List<BookingServiceItem> services) {
     var total = 0;
     for (final s in services) {
-      total += s.durationMinutes ??
+      total +=
+          s.durationMinutes ??
           int.tryParse(RegExp(r'\d+').firstMatch(s.duration)?.group(0) ?? '') ??
           0;
     }
@@ -221,24 +223,26 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
     final serviceIds = _detail.services.map((s) => s.id).toList();
 
     // Use the slot picked on the schedule table (sent as UTC ISO-8601).
-    final isoDate =
-        (widget.startAt ?? DateTime.now()).toUtc().toIso8601String();
+    final isoDate = (widget.startAt ?? DateTime.now())
+        .toUtc()
+        .toIso8601String();
 
-    final hasBloc = context.findAncestorWidgetOfExactType<
-            BlocProvider<CreateBookingBloc>>() !=
+    final hasBloc =
+        context
+            .findAncestorWidgetOfExactType<BlocProvider<CreateBookingBloc>>() !=
         null;
     if (hasBloc) {
       context.read<CreateBookingBloc>().add(
-            SubmitBookingEvent(
-              storeId: storeId,
-              serviceIds: serviceIds.isNotEmpty ? serviceIds : ['srv_default'],
-              startAt: isoDate,
-              staffProfileId: widget.selectedStaffId,
-              note: _noteController.text.trim().isNotEmpty
-                  ? _noteController.text.trim()
-                  : (_detail.notes.isNotEmpty ? _detail.notes.join('; ') : null),
-            ),
-          );
+        SubmitBookingEvent(
+          storeId: storeId,
+          serviceIds: serviceIds.isNotEmpty ? serviceIds : ['srv_default'],
+          startAt: isoDate,
+          staffProfileId: widget.selectedStaffId,
+          note: _noteController.text.trim().isNotEmpty
+              ? _noteController.text.trim()
+              : (_detail.notes.isNotEmpty ? _detail.notes.join('; ') : null),
+        ),
+      );
     } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -257,8 +261,9 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
 
   @override
   Widget build(BuildContext context) {
-    final hasBloc = context.findAncestorWidgetOfExactType<
-            BlocProvider<CreateBookingBloc>>() !=
+    final hasBloc =
+        context
+            .findAncestorWidgetOfExactType<BlocProvider<CreateBookingBloc>>() !=
         null;
 
     if (!hasBloc) {
@@ -301,60 +306,60 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppAppBar(title: 'Booking detail', onMorePressed: () {}),
-          body: BookingDetailBodyView(
-            detail: _detail,
-            noteController: _noteController,
-            onAddNote: _onAddNote,
-          ),
-          bottomNavigationBar: Container(
-            width: double.infinity,
-            padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 14,
-              bottom: MediaQuery.of(context).padding.bottom > 0
-                  ? MediaQuery.of(context).padding.bottom + 8
-                  : 16,
+      body: BookingDetailBodyView(
+        detail: _detail,
+        noteController: _noteController,
+        onAddNote: _onAddNote,
+      ),
+      bottomNavigationBar: Container(
+        width: double.infinity,
+        padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 14,
+          bottom: MediaQuery.of(context).padding.bottom > 0
+              ? MediaQuery.of(context).padding.bottom + 8
+              : 16,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 16,
+              offset: const Offset(0, -4),
             ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 16,
-                  offset: const Offset(0, -4),
-                ),
-              ],
+          ],
+        ),
+        child: Row(
+          children: [
+            // Outlined Back Button
+            Expanded(
+              child: AppButton(
+                text: 'Back',
+                onPressed: isSubmitting
+                    ? null
+                    : () => Navigator.of(context).maybePop(),
+                variant: AppButtonVariant.outline,
+                textColor: const Color(0xFFBA4A32),
+                borderRadius: BorderRadius.circular(24),
+                height: 48,
+              ),
             ),
-            child: Row(
-              children: [
-                // Outlined Back Button
-                Expanded(
-                  child: AppButton(
-                    text: 'Back',
-                    onPressed: isSubmitting
-                        ? null
-                        : () => Navigator.of(context).maybePop(),
-                    variant: AppButtonVariant.outline,
-                    textColor: const Color(0xFFBA4A32),
-                    borderRadius: BorderRadius.circular(24),
-                    height: 48,
-                  ),
-                ),
-                const SizedBox(width: 14),
+            const SizedBox(width: 14),
 
-                // Coral Confirm Button
-                Expanded(
-                  child: AppButton(
-                    text: 'Confirm',
-                    isLoading: isSubmitting,
-                    backgroundColor: _coralColor,
-                    onPressed: isSubmitting ? null : _onConfirm,
-                  ),
-                ),
-              ],
+            // Coral Confirm Button
+            Expanded(
+              child: AppButton(
+                text: 'Confirm',
+                isLoading: isSubmitting,
+                backgroundColor: _coralColor,
+                onPressed: isSubmitting ? null : _onConfirm,
+              ),
             ),
-          ),
-        );
+          ],
+        ),
+      ),
+    );
   }
 }

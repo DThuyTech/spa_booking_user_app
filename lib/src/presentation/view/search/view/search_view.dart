@@ -74,11 +74,11 @@ class _SearchContentState extends State<_SearchContent> {
           _filterCriteria = criteria;
         });
         context.read<StoreListBloc>().add(
-              FetchStoresEvent(
-                search: _searchQuery.isNotEmpty ? _searchQuery : null,
-                province: criteria.location.isNotEmpty ? criteria.location : null,
-              ),
-            );
+          FetchStoresEvent(
+            search: _searchQuery.isNotEmpty ? _searchQuery : null,
+            province: criteria.location.isNotEmpty ? criteria.location : null,
+          ),
+        );
         AppToastHelper.showSuccess(context, message: 'Filters applied');
       },
     );
@@ -123,7 +123,10 @@ class _SearchContentState extends State<_SearchContent> {
         distance: '1.2 km',
         tags: const ['Spa & Wellness'],
         description: s.address,
-        imageUrl: s.coverUrl ?? s.logoUrl ?? 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80',
+        imageUrl:
+            s.coverUrl ??
+            s.logoUrl ??
+            'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80',
         isFavorite: false,
       );
     }).toList();
@@ -159,13 +162,13 @@ class _SearchContentState extends State<_SearchContent> {
                     _searchQuery = q.trim();
                   });
                   context.read<StoreListBloc>().add(
-                        FetchStoresEvent(
-                          search: _searchQuery.isNotEmpty ? _searchQuery : null,
-                          province: _filterCriteria.location.isNotEmpty
-                              ? _filterCriteria.location
-                              : null,
-                        ),
-                      );
+                    FetchStoresEvent(
+                      search: _searchQuery.isNotEmpty ? _searchQuery : null,
+                      province: _filterCriteria.location.isNotEmpty
+                          ? _filterCriteria.location
+                          : null,
+                    ),
+                  );
                 },
                 onClearQuery: () {
                   setState(() {
@@ -189,14 +192,14 @@ class _SearchContentState extends State<_SearchContent> {
                 onResetFilters: _onResetFilters,
                 onRefresh: () async {
                   context.read<StoreListBloc>().add(
-                        FetchStoresEvent(
-                          search: _searchQuery.isNotEmpty ? _searchQuery : null,
-                          province: _filterCriteria.location.isNotEmpty
-                              ? _filterCriteria.location
-                              : null,
-                          isRefresh: true,
-                        ),
-                      );
+                    FetchStoresEvent(
+                      search: _searchQuery.isNotEmpty ? _searchQuery : null,
+                      province: _filterCriteria.location.isNotEmpty
+                          ? _filterCriteria.location
+                          : null,
+                      isRefresh: true,
+                    ),
+                  );
                   await Future.delayed(const Duration(milliseconds: 400));
                 },
               ),
@@ -207,4 +210,3 @@ class _SearchContentState extends State<_SearchContent> {
     );
   }
 }
-

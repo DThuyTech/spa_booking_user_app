@@ -34,10 +34,7 @@ class UpdateBookingNotesEvent extends BookingActionEvent {
   final String bookingId;
   final String note;
 
-  const UpdateBookingNotesEvent({
-    required this.bookingId,
-    required this.note,
-  });
+  const UpdateBookingNotesEvent({required this.bookingId, required this.note});
 
   @override
   List<Object?> get props => [bookingId, note];
@@ -46,4 +43,3 @@ class UpdateBookingNotesEvent extends BookingActionEvent {
 class ResetBookingActionEvent extends BookingActionEvent {
   const ResetBookingActionEvent();
 }
-

@@ -70,9 +70,15 @@ void main() {
       expect(() => logger.debug('Debug test'), returnsNormally);
       expect(() => logger.info('Info test'), returnsNormally);
       expect(() => logger.warning('Warning test'), returnsNormally);
-      expect(() => logger.error('Error test', Exception('fail')), returnsNormally);
       expect(
-        () => logger.json({'id': 1, 'email': 'test@example.com'}, title: 'User Data'),
+        () => logger.error('Error test', Exception('fail')),
+        returnsNormally,
+      );
+      expect(
+        () => logger.json({
+          'id': 1,
+          'email': 'test@example.com',
+        }, title: 'User Data'),
         returnsNormally,
       );
     });
@@ -91,7 +97,10 @@ void main() {
       final options = RequestOptions(
         path: '/api/v1/customers/me/profile',
         method: 'POST',
-        headers: {'content-type': 'application/json', 'authorization': 'Bearer abc'},
+        headers: {
+          'content-type': 'application/json',
+          'authorization': 'Bearer abc',
+        },
         data: {'name': 'John Doe', 'password': 'myPassword'},
       );
 

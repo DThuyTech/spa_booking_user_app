@@ -58,11 +58,12 @@ class SelectServicesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final effectiveStoreId = storeId;
-    final hasServicesBloc = context
+    final hasServicesBloc =
+        context
             .findAncestorWidgetOfExactType<BlocProvider<StoreServicesBloc>>() !=
         null;
-    final hasStaffBloc = context
-            .findAncestorWidgetOfExactType<BlocProvider<StoreStaffBloc>>() !=
+    final hasStaffBloc =
+        context.findAncestorWidgetOfExactType<BlocProvider<StoreStaffBloc>>() !=
         null;
     final canResolveServices = sl.isRegistered<StoreServicesBloc>();
     final canResolveStaff = sl.isRegistered<StoreStaffBloc>();
@@ -85,8 +86,9 @@ class SelectServicesView extends StatelessWidget {
         effectiveStoreId.isNotEmpty) {
       providers.add(
         BlocProvider<StoreStaffBloc>(
-          create: (_) => sl<StoreStaffBloc>()
-            ..add(FetchStaffEvent(storeId: effectiveStoreId)),
+          create: (_) =>
+              sl<StoreStaffBloc>()
+                ..add(FetchStaffEvent(storeId: effectiveStoreId)),
         ),
       );
     }
@@ -159,8 +161,7 @@ class _SelectServicesContentViewState
 
     if (widget.initialServices != null && widget.initialServices!.isNotEmpty) {
       _services = widget.initialServices!.map((s) {
-        final isSelected =
-            _selectedServiceIds.contains(s.id) || s.isSelected;
+        final isSelected = _selectedServiceIds.contains(s.id) || s.isSelected;
         if (isSelected) {
           _selectedServiceIds.add(s.id);
         }
@@ -171,7 +172,7 @@ class _SelectServicesContentViewState
         ..._services
             .map((s) => s.category.trim())
             .where((c) => c.isNotEmpty)
-            .toSet()
+            .toSet(),
       ];
     } else if (widget.storeId == null || widget.storeId!.isEmpty) {
       _services = List.from(SelectServicesMockData.services);
@@ -277,20 +278,21 @@ class _SelectServicesContentViewState
 
   String get _subtitleText {
     final staff = _staffMembers.cast<BookingStaffItem?>().firstWhere(
-          (s) => s?.id == _selectedStaffId,
-          orElse: () => null,
-        );
+      (s) => s?.id == _selectedStaffId,
+      orElse: () => null,
+    );
     final staffName =
         staff?.name ?? (widget.storeId == null ? 'Sarah' : widget.salonName);
     return '$staffName • 10:00 AM - 10:30 AM (30 min)';
   }
 
   void _onConfirmBooking() {
-    final selectedServicesList =
-        _services.where((s) => s.isSelected).toList();
+    final selectedServicesList = _services.where((s) => s.isSelected).toList();
     if (selectedServicesList.isEmpty) {
-      AppToastHelper.showInfo(context,
-          message: 'Please select at least one service');
+      AppToastHelper.showInfo(
+        context,
+        message: 'Please select at least one service',
+      );
       return;
     }
 
@@ -308,11 +310,12 @@ class _SelectServicesContentViewState
 
   @override
   Widget build(BuildContext context) {
-    final hasServicesBloc = context
+    final hasServicesBloc =
+        context
             .findAncestorWidgetOfExactType<BlocProvider<StoreServicesBloc>>() !=
         null;
-    final hasStaffBloc = context
-            .findAncestorWidgetOfExactType<BlocProvider<StoreStaffBloc>>() !=
+    final hasStaffBloc =
+        context.findAncestorWidgetOfExactType<BlocProvider<StoreStaffBloc>>() !=
         null;
 
     final listeners = <BlocListener>[
@@ -331,11 +334,13 @@ class _SelectServicesContentViewState
               }
 
               final mappedServices = state.services.map((s) {
-                final catName = (s.categoryId != null &&
+                final catName =
+                    (s.categoryId != null &&
                         categoryNames.containsKey(s.categoryId))
                     ? categoryNames[s.categoryId]!
                     : 'Services';
-                final isSelected = _selectedServiceIds.contains(s.id) ||
+                final isSelected =
+                    _selectedServiceIds.contains(s.id) ||
                     (widget.initialSelectedServiceId == s.id);
                 if (isSelected) {
                   _selectedServiceIds.add(s.id);
@@ -438,8 +443,11 @@ class _SelectServicesContentViewState
             const SizedBox(height: 2),
             Row(
               children: [
-                const Icon(LucideIcons.calendar,
-                    size: 13, color: Color(0xFF71717A)),
+                const Icon(
+                  LucideIcons.calendar,
+                  size: 13,
+                  color: Color(0xFF71717A),
+                ),
                 const SizedBox(width: 4),
                 Text(
                   _subtitleText,
@@ -469,9 +477,7 @@ class _SelectServicesContentViewState
         ],
       ),
       body: isLoading && _services.isEmpty
-          ? const Center(
-              child: CircularProgressIndicator(color: _coralColor),
-            )
+          ? const Center(child: CircularProgressIndicator(color: _coralColor))
           : SelectServicesBodyView(
               selectedServiceCount: _selectedCount,
               selectedDurationTotal: _totalDurationDisplay,
@@ -542,8 +548,11 @@ class _SelectServicesContentViewState
             ),
             AppButton(
               text: 'Confirm Booking',
-              trailingIcon: const Icon(LucideIcons.arrow_right,
-                  size: 16, color: Colors.white),
+              trailingIcon: const Icon(
+                LucideIcons.arrow_right,
+                size: 16,
+                color: Colors.white,
+              ),
               backgroundColor: _coralColor,
               onPressed: _selectedCount > 0 ? _onConfirmBooking : null,
             ),

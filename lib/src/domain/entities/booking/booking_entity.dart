@@ -21,7 +21,8 @@ abstract class BookingStaffSnapshotEntity with _$BookingStaffSnapshotEntity {
 }
 
 @freezed
-abstract class BookingCustomerSnapshotEntity with _$BookingCustomerSnapshotEntity {
+abstract class BookingCustomerSnapshotEntity
+    with _$BookingCustomerSnapshotEntity {
   const factory BookingCustomerSnapshotEntity({
     required String name,
     required String phoneNumber,

@@ -11,7 +11,8 @@ abstract class StoreGalleryItemModel with _$StoreGalleryItemModel {
   const factory StoreGalleryItemModel({
     required String url,
     @JsonKey(name: 'thumbnailUrl') String? thumbnailUrl,
-    @JsonKey(name: 'category', defaultValue: 'INTERIOR') required String category,
+    @JsonKey(name: 'category', defaultValue: 'INTERIOR')
+    required String category,
     @JsonKey(name: 'caption') String? caption,
   }) = _StoreGalleryItemModel;
 

@@ -93,8 +93,11 @@ class StoreReviewsTabView extends StatelessWidget {
               ),
               child: const Column(
                 children: [
-                  Icon(LucideIcons.message_square_dashed,
-                      size: 36, color: Color(0xFF90A4AE)),
+                  Icon(
+                    LucideIcons.message_square_dashed,
+                    size: 36,
+                    color: Color(0xFF90A4AE),
+                  ),
                   SizedBox(height: 8),
                   Text(
                     'No reviews yet',
@@ -107,10 +110,7 @@ class StoreReviewsTabView extends StatelessWidget {
                   SizedBox(height: 4),
                   Text(
                     'Be the first to share your experience!',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Color(0xFF90A4AE),
-                    ),
+                    style: TextStyle(fontSize: 13, color: Color(0xFF90A4AE)),
                   ),
                 ],
               ),

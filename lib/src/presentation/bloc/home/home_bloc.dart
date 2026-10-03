@@ -12,10 +12,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetGreetingUseCase getGreetingUseCase;
   final GetStoresUseCase? getStoresUseCase;
 
-  HomeBloc({
-    required this.getGreetingUseCase,
-    this.getStoresUseCase,
-  }) : super(const HomeState()) {
+  HomeBloc({required this.getGreetingUseCase, this.getStoresUseCase})
+    : super(const HomeState()) {
     on<HomeStarted>(_onStarted);
     on<HomeRefreshed>(_onRefreshed);
     on<HomeRetried>(_onRetried);
@@ -73,14 +71,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       (g) => greeting = g,
     );
 
-    storesResult.fold(
-      (failure) {
-        if (errorMessage == null && greeting == null) {
-          errorMessage = failure.message;
-        }
-      },
-      (s) => stores = s,
-    );
+    storesResult.fold((failure) {
+      if (errorMessage == null && greeting == null) {
+        errorMessage = failure.message;
+      }
+    }, (s) => stores = s);
 
     if (errorMessage != null && greeting == null && stores.isEmpty) {
       emit(

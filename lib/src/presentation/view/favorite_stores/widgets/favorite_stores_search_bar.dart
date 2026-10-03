@@ -46,7 +46,11 @@ class FavoriteStoresSearchBar extends StatelessWidget {
             ),
             suffixIcon: controller.text.isNotEmpty
                 ? IconButton(
-                    icon: const Icon(LucideIcons.x, size: 18, color: Color(0xFF94A3B8)),
+                    icon: const Icon(
+                      LucideIcons.x,
+                      size: 18,
+                      color: Color(0xFF94A3B8),
+                    ),
                     onPressed: () {
                       controller.clear();
                       onChanged('');

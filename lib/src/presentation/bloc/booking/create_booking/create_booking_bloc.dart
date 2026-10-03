@@ -8,7 +8,7 @@ class CreateBookingBloc extends Bloc<CreateBookingEvent, CreateBookingState> {
   final CreateBookingUseCase createBookingUseCase;
 
   CreateBookingBloc({required this.createBookingUseCase})
-      : super(const CreateBookingState()) {
+    : super(const CreateBookingState()) {
     on<SubmitBookingEvent>(_onSubmitBooking);
     on<ResetCreateBookingEvent>(_onReset);
   }
@@ -17,10 +17,7 @@ class CreateBookingBloc extends Bloc<CreateBookingEvent, CreateBookingState> {
     SubmitBookingEvent event,
     Emitter<CreateBookingState> emit,
   ) async {
-    emit(state.copyWith(
-      status: CreateBookingStatus.submitting,
-      failure: null,
-    ));
+    emit(state.copyWith(status: CreateBookingStatus.submitting, failure: null));
 
     final result = await createBookingUseCase(
       storeId: event.storeId,
@@ -31,19 +28,23 @@ class CreateBookingBloc extends Bloc<CreateBookingEvent, CreateBookingState> {
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: CreateBookingStatus.failure,
-        failure: failure,
-      )),
-      (booking) => emit(state.copyWith(
-        status: CreateBookingStatus.success,
-        booking: booking,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: CreateBookingStatus.failure, failure: failure),
+      ),
+      (booking) => emit(
+        state.copyWith(
+          status: CreateBookingStatus.success,
+          booking: booking,
+          failure: null,
+        ),
+      ),
     );
   }
 
-  void _onReset(ResetCreateBookingEvent event, Emitter<CreateBookingState> emit) {
+  void _onReset(
+    ResetCreateBookingEvent event,
+    Emitter<CreateBookingState> emit,
+  ) {
     emit(const CreateBookingState());
   }
 }

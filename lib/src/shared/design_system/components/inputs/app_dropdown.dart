@@ -9,11 +9,7 @@ class AppDropdownItem<T> {
   final String label;
   final Widget? icon;
 
-  const AppDropdownItem({
-    required this.value,
-    required this.label,
-    this.icon,
-  });
+  const AppDropdownItem({required this.value, required this.label, this.icon});
 }
 
 class AppDropdown<T> extends StatelessWidget {
@@ -87,7 +83,8 @@ class AppDropdown<T> extends StatelessWidget {
           decoration: InputDecoration(
             filled: true,
             fillColor: fillColor ?? AppColors.surfaceWarm,
-            contentPadding: contentPadding ??
+            contentPadding:
+                contentPadding ??
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             prefixIcon: prefixIcon,
             hintText: hint,
@@ -118,10 +115,7 @@ class AppDropdown<T> extends StatelessWidget {
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppRadius.md),
-              borderSide: const BorderSide(
-                color: AppColors.error,
-                width: 1,
-              ),
+              borderSide: const BorderSide(color: AppColors.error, width: 1),
             ),
           ),
           dropdownColor: AppColors.white,

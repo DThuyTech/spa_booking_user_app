@@ -16,8 +16,9 @@ class MyInsightsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SpendingAnalyticsBloc>(
-      create: (_) => sl<SpendingAnalyticsBloc>()
-        ..add(const ChangeSpendingAnalyticsPeriodEvent('This Month')),
+      create: (_) =>
+          sl<SpendingAnalyticsBloc>()
+            ..add(const ChangeSpendingAnalyticsPeriodEvent('This Month')),
       child: const MyInsightsView(),
     );
   }
@@ -50,9 +51,9 @@ class _MyInsightsViewState extends State<MyInsightsView> {
                   _selectedPeriod = val;
                 });
                 try {
-                  context
-                      .read<SpendingAnalyticsBloc>()
-                      .add(ChangeSpendingAnalyticsPeriodEvent(val));
+                  context.read<SpendingAnalyticsBloc>().add(
+                    ChangeSpendingAnalyticsPeriodEvent(val),
+                  );
                 } catch (_) {}
               },
               shape: RoundedRectangleBorder(

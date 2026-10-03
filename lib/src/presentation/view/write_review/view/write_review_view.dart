@@ -121,14 +121,14 @@ class _WriteReviewViewState extends State<WriteReviewView> {
 
     if (_hasBloc) {
       context.read<WriteReviewBloc>().add(
-            SubmitReviewEvent(
-              storeId: widget.storeId ?? '',
-              bookingId: widget.bookingId ?? '',
-              rating: _selectedRating,
-              comment: _reviewController.text.trim(),
-              images: _photoUrls,
-            ),
-          );
+        SubmitReviewEvent(
+          storeId: widget.storeId ?? '',
+          bookingId: widget.bookingId ?? '',
+          rating: _selectedRating,
+          comment: _reviewController.text.trim(),
+          images: _photoUrls,
+        ),
+      );
       return;
     }
 

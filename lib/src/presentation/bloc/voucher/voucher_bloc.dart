@@ -30,15 +30,15 @@ class VoucherBloc extends Bloc<VoucherEvent, VoucherState> {
     emit(state.copyWith(status: VoucherStatus.loading, failure: null));
     final result = await getStoreVouchersUseCase(event.storeId);
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: VoucherStatus.failure,
-        failure: failure,
-      )),
-      (vouchers) => emit(state.copyWith(
-        status: VoucherStatus.loaded,
-        vouchers: vouchers,
-        failure: null,
-      )),
+      (Failure failure) =>
+          emit(state.copyWith(status: VoucherStatus.failure, failure: failure)),
+      (vouchers) => emit(
+        state.copyWith(
+          status: VoucherStatus.loaded,
+          vouchers: vouchers,
+          failure: null,
+        ),
+      ),
     );
   }
 
@@ -49,15 +49,15 @@ class VoucherBloc extends Bloc<VoucherEvent, VoucherState> {
     emit(state.copyWith(status: VoucherStatus.loading, failure: null));
     final result = await getCustomerVouchersUseCase(storeId: event.storeId);
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: VoucherStatus.failure,
-        failure: failure,
-      )),
-      (vouchers) => emit(state.copyWith(
-        status: VoucherStatus.loaded,
-        vouchers: vouchers,
-        failure: null,
-      )),
+      (Failure failure) =>
+          emit(state.copyWith(status: VoucherStatus.failure, failure: failure)),
+      (vouchers) => emit(
+        state.copyWith(
+          status: VoucherStatus.loaded,
+          vouchers: vouchers,
+          failure: null,
+        ),
+      ),
     );
   }
 
@@ -65,10 +65,12 @@ class VoucherBloc extends Bloc<VoucherEvent, VoucherState> {
     ApplyVoucherCodeEvent event,
     Emitter<VoucherState> emit,
   ) async {
-    emit(state.copyWith(
-      applyStatus: ApplyVoucherStatus.loading,
-      applyErrorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        applyStatus: ApplyVoucherStatus.loading,
+        applyErrorMessage: null,
+      ),
+    );
 
     final result = await applyVoucherUseCase(
       code: event.code,
@@ -77,15 +79,19 @@ class VoucherBloc extends Bloc<VoucherEvent, VoucherState> {
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        applyStatus: ApplyVoucherStatus.failure,
-        applyErrorMessage: failure.message,
-      )),
-      (applied) => emit(state.copyWith(
-        applyStatus: ApplyVoucherStatus.success,
-        appliedVoucher: applied,
-        applyErrorMessage: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(
+          applyStatus: ApplyVoucherStatus.failure,
+          applyErrorMessage: failure.message,
+        ),
+      ),
+      (applied) => emit(
+        state.copyWith(
+          applyStatus: ApplyVoucherStatus.success,
+          appliedVoucher: applied,
+          applyErrorMessage: null,
+        ),
+      ),
     );
   }
 
@@ -93,10 +99,12 @@ class VoucherBloc extends Bloc<VoucherEvent, VoucherState> {
     RemoveAppliedVoucherEvent event,
     Emitter<VoucherState> emit,
   ) {
-    emit(state.copyWith(
-      applyStatus: ApplyVoucherStatus.initial,
-      appliedVoucher: null,
-      applyErrorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        applyStatus: ApplyVoucherStatus.initial,
+        appliedVoucher: null,
+        applyErrorMessage: null,
+      ),
+    );
   }
 }

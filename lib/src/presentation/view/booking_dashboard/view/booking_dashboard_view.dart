@@ -41,8 +41,9 @@ class BookingDashboardView extends StatelessWidget {
     }
 
     return BlocProvider<BookingDashboardBloc>(
-      create: (_) => sl<BookingDashboardBloc>()
-        ..add(FetchCustomerBookingsEvent(tab: initialTab ?? 'UPCOMING')),
+      create: (_) =>
+          sl<BookingDashboardBloc>()
+            ..add(FetchCustomerBookingsEvent(tab: initialTab ?? 'UPCOMING')),
       child: Scaffold(
         backgroundColor: const Color(0xFFF8FAFC),
         appBar: showAppBar
@@ -56,4 +57,3 @@ class BookingDashboardView extends StatelessWidget {
     );
   }
 }
-

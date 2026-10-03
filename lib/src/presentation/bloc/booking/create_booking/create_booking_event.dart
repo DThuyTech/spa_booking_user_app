@@ -24,12 +24,12 @@ class SubmitBookingEvent extends CreateBookingEvent {
 
   @override
   List<Object?> get props => [
-        storeId,
-        serviceIds,
-        startAt,
-        staffProfileId,
-        note,
-      ];
+    storeId,
+    serviceIds,
+    startAt,
+    staffProfileId,
+    note,
+  ];
 }
 
 class ResetCreateBookingEvent extends CreateBookingEvent {

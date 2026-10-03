@@ -145,52 +145,58 @@ class ProfileView extends StatelessWidget {
                           completedCount: state.completedCount,
                           cancelledCount: state.cancelledCount,
                           onUpcomingTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const BookingDashboardView(
-                                  showAppBar: true,
-                                  initialTab: 'UPCOMING',
-                                ),
-                              ),
-                            ).then((_) {
-                              if (context.mounted) {
-                                context.read<ProfileBloc>().add(
-                                  const ProfileRefreshed(),
-                                );
-                              }
-                            });
+                            Navigator.of(context)
+                                .push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const BookingDashboardView(
+                                      showAppBar: true,
+                                      initialTab: 'UPCOMING',
+                                    ),
+                                  ),
+                                )
+                                .then((_) {
+                                  if (context.mounted) {
+                                    context.read<ProfileBloc>().add(
+                                      const ProfileRefreshed(),
+                                    );
+                                  }
+                                });
                           },
                           onCompletedTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const BookingDashboardView(
-                                  showAppBar: true,
-                                  initialTab: 'PAST',
-                                ),
-                              ),
-                            ).then((_) {
-                              if (context.mounted) {
-                                context.read<ProfileBloc>().add(
-                                  const ProfileRefreshed(),
-                                );
-                              }
-                            });
+                            Navigator.of(context)
+                                .push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const BookingDashboardView(
+                                      showAppBar: true,
+                                      initialTab: 'PAST',
+                                    ),
+                                  ),
+                                )
+                                .then((_) {
+                                  if (context.mounted) {
+                                    context.read<ProfileBloc>().add(
+                                      const ProfileRefreshed(),
+                                    );
+                                  }
+                                });
                           },
                           onCancelledTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const BookingDashboardView(
-                                  showAppBar: true,
-                                  initialTab: 'CANCELLED',
-                                ),
-                              ),
-                            ).then((_) {
-                              if (context.mounted) {
-                                context.read<ProfileBloc>().add(
-                                  const ProfileRefreshed(),
-                                );
-                              }
-                            });
+                            Navigator.of(context)
+                                .push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const BookingDashboardView(
+                                      showAppBar: true,
+                                      initialTab: 'CANCELLED',
+                                    ),
+                                  ),
+                                )
+                                .then((_) {
+                                  if (context.mounted) {
+                                    context.read<ProfileBloc>().add(
+                                      const ProfileRefreshed(),
+                                    );
+                                  }
+                                });
                           },
                         ),
 
@@ -219,20 +225,23 @@ class ProfileView extends StatelessWidget {
                               icon: LucideIcons.calendar,
                               title: 'My Bookings',
                               onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => const BookingDashboardView(
-                                      showAppBar: true,
-                                      initialTab: 'UPCOMING',
-                                    ),
-                                  ),
-                                ).then((_) {
-                                  if (context.mounted) {
-                                    context.read<ProfileBloc>().add(
-                                      const ProfileRefreshed(),
-                                    );
-                                  }
-                                });
+                                Navigator.of(context)
+                                    .push(
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            const BookingDashboardView(
+                                              showAppBar: true,
+                                              initialTab: 'UPCOMING',
+                                            ),
+                                      ),
+                                    )
+                                    .then((_) {
+                                      if (context.mounted) {
+                                        context.read<ProfileBloc>().add(
+                                          const ProfileRefreshed(),
+                                        );
+                                      }
+                                    });
                               },
                             ),
                             ProfileMenuItemData(

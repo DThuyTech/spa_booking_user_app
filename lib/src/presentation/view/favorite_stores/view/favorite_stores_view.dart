@@ -86,11 +86,11 @@ class _FavoriteStoresViewState extends State<FavoriteStoresView> {
 
     if (_hasBloc) {
       context.read<FavoriteStoresBloc>().add(
-            ToggleFavoriteStoreEvent(
-              storeId: store.id,
-              isFavorite: store.isFavorite,
-            ),
-          );
+        ToggleFavoriteStoreEvent(
+          storeId: store.id,
+          isFavorite: store.isFavorite,
+        ),
+      );
     }
 
     setState(() {
@@ -110,18 +110,13 @@ class _FavoriteStoresViewState extends State<FavoriteStoresView> {
         onAction: () {
           if (_hasBloc) {
             context.read<FavoriteStoresBloc>().add(
-                  ToggleFavoriteStoreEvent(
-                    storeId: store.id,
-                    isFavorite: false,
-                  ),
-                );
+              ToggleFavoriteStoreEvent(storeId: store.id, isFavorite: false),
+            );
           }
           setState(() {
             final index = _allStores.indexWhere((s) => s.id == store.id);
             if (index != -1) {
-              _allStores[index] = _allStores[index].copyWith(
-                isFavorite: true,
-              );
+              _allStores[index] = _allStores[index].copyWith(isFavorite: true);
             }
           });
         },
@@ -366,9 +361,9 @@ class _FavoriteStoresViewState extends State<FavoriteStoresView> {
                 return RefreshIndicator(
                   color: _coralColor,
                   onRefresh: () async {
-                    context
-                        .read<FavoriteStoresBloc>()
-                        .add(const FetchFavoriteStoresEvent());
+                    context.read<FavoriteStoresBloc>().add(
+                      const FetchFavoriteStoresEvent(),
+                    );
                   },
                   child: _buildContent(),
                 );

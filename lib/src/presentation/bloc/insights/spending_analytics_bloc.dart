@@ -8,7 +8,7 @@ class SpendingAnalyticsBloc
   final GetCustomerSpendingAnalyticsUseCase _getSpendingAnalyticsUseCase;
 
   SpendingAnalyticsBloc(this._getSpendingAnalyticsUseCase)
-      : super(const SpendingAnalyticsState()) {
+    : super(const SpendingAnalyticsState()) {
     on<FetchSpendingAnalyticsEvent>(_onFetchSpendingAnalytics);
     on<ChangeSpendingAnalyticsPeriodEvent>(_onChangePeriod);
   }
@@ -34,10 +34,7 @@ class SpendingAnalyticsBloc
         ),
       ),
       (data) => emit(
-        state.copyWith(
-          status: SpendingAnalyticsStatus.loaded,
-          analytics: data,
-        ),
+        state.copyWith(status: SpendingAnalyticsStatus.loaded, analytics: data),
       ),
     );
   }
@@ -69,10 +66,12 @@ class SpendingAnalyticsBloc
       to = _formatDate(now);
     }
 
-    emit(state.copyWith(
-      selectedPeriodLabel: label,
-      status: SpendingAnalyticsStatus.loading,
-    ));
+    emit(
+      state.copyWith(
+        selectedPeriodLabel: label,
+        status: SpendingAnalyticsStatus.loading,
+      ),
+    );
 
     final result = await _getSpendingAnalyticsUseCase(
       period: period,
@@ -88,10 +87,7 @@ class SpendingAnalyticsBloc
         ),
       ),
       (data) => emit(
-        state.copyWith(
-          status: SpendingAnalyticsStatus.loaded,
-          analytics: data,
-        ),
+        state.copyWith(status: SpendingAnalyticsStatus.loaded, analytics: data),
       ),
     );
   }

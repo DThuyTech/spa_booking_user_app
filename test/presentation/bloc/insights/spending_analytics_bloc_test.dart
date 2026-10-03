@@ -46,12 +46,14 @@ void main() {
     blocTest<SpendingAnalyticsBloc, SpendingAnalyticsState>(
       'emits [loading, loaded] when FetchSpendingAnalyticsEvent succeeds',
       build: () {
-        when(() => mockUseCase(
-              period: any(named: 'period'),
-              from: any(named: 'from'),
-              to: any(named: 'to'),
-              storeId: any(named: 'storeId'),
-            )).thenAnswer((_) async => const Right(mockAnalytics));
+        when(
+          () => mockUseCase(
+            period: any(named: 'period'),
+            from: any(named: 'from'),
+            to: any(named: 'to'),
+            storeId: any(named: 'storeId'),
+          ),
+        ).thenAnswer((_) async => const Right(mockAnalytics));
         return bloc;
       },
       act: (b) => b.add(const FetchSpendingAnalyticsEvent()),
@@ -67,11 +69,13 @@ void main() {
     blocTest<SpendingAnalyticsBloc, SpendingAnalyticsState>(
       'emits [loading, loaded] with updated label when ChangeSpendingAnalyticsPeriodEvent is added',
       build: () {
-        when(() => mockUseCase(
-              period: any(named: 'period'),
-              from: any(named: 'from'),
-              to: any(named: 'to'),
-            )).thenAnswer((_) async => const Right(mockAnalytics));
+        when(
+          () => mockUseCase(
+            period: any(named: 'period'),
+            from: any(named: 'from'),
+            to: any(named: 'to'),
+          ),
+        ).thenAnswer((_) async => const Right(mockAnalytics));
         return bloc;
       },
       act: (b) => b.add(const ChangeSpendingAnalyticsPeriodEvent('This Year')),
@@ -91,12 +95,14 @@ void main() {
     blocTest<SpendingAnalyticsBloc, SpendingAnalyticsState>(
       'emits [loading, error] when fetch fails',
       build: () {
-        when(() => mockUseCase(
-              period: any(named: 'period'),
-              from: any(named: 'from'),
-              to: any(named: 'to'),
-              storeId: any(named: 'storeId'),
-            )).thenAnswer(
+        when(
+          () => mockUseCase(
+            period: any(named: 'period'),
+            from: any(named: 'from'),
+            to: any(named: 'to'),
+            storeId: any(named: 'storeId'),
+          ),
+        ).thenAnswer(
           (_) async => const Left(ServerFailure('Failed to fetch analytics')),
         );
         return bloc;

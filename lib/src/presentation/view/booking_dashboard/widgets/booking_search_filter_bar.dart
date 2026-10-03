@@ -30,10 +30,7 @@ class BookingSearchFilterBar extends StatelessWidget {
               color: Color(0xFF94A3B8),
               fontWeight: FontWeight.w400,
             ),
-            style: const TextStyle(
-              fontSize: 13.5,
-              color: Color(0xFF1E293B),
-            ),
+            style: const TextStyle(fontSize: 13.5, color: Color(0xFF1E293B)),
             prefixIcon: const Icon(
               LucideIcons.search,
               size: 18,

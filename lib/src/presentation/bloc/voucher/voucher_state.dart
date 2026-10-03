@@ -5,6 +5,7 @@ import 'package:spa_booking/src/domain/entities/voucher/voucher_entity.dart';
 part 'voucher_state.freezed.dart';
 
 enum VoucherStatus { initial, loading, loaded, failure }
+
 enum ApplyVoucherStatus { initial, loading, success, failure }
 
 @freezed

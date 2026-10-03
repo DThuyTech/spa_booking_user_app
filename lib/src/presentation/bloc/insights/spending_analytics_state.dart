@@ -35,9 +35,9 @@ class SpendingAnalyticsState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status,
-        analytics,
-        selectedPeriodLabel,
-        errorMessage,
-      ];
+    status,
+    analytics,
+    selectedPeriodLabel,
+    errorMessage,
+  ];
 }

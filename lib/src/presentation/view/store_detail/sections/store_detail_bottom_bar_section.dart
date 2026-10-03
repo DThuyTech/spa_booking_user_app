@@ -93,7 +93,11 @@ class StoreDetailBottomBarSection extends StatelessWidget {
   Widget _buildFullAppointmentBar() {
     return AppButton(
       text: 'Book Appointment',
-      leadingIcon: const Icon(LucideIcons.calendar, size: 18, color: Colors.white),
+      leadingIcon: const Icon(
+        LucideIcons.calendar,
+        size: 18,
+        color: Colors.white,
+      ),
       onPressed: onBookAppointment ?? onBookNow,
       backgroundColor: _appointmentBtnColor,
       textColor: Colors.white,

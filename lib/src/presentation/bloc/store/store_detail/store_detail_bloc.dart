@@ -11,7 +11,7 @@ class StoreDetailBloc extends Bloc<StoreDetailEvent, StoreDetailState> {
   final GetStoreDetailUseCase getStoreDetailUseCase;
 
   StoreDetailBloc({required this.getStoreDetailUseCase})
-      : super(const StoreDetailState()) {
+    : super(const StoreDetailState()) {
     on<FetchStoreDetailEvent>(_onFetchStoreDetail);
   }
 
@@ -22,15 +22,16 @@ class StoreDetailBloc extends Bloc<StoreDetailEvent, StoreDetailState> {
     emit(state.copyWith(status: StoreDetailStatus.loading, failure: null));
     final result = await getStoreDetailUseCase(event.storeId);
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: StoreDetailStatus.failure,
-        failure: failure,
-      )),
-      (detail) => emit(state.copyWith(
-        status: StoreDetailStatus.loaded,
-        detail: detail,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: StoreDetailStatus.failure, failure: failure),
+      ),
+      (detail) => emit(
+        state.copyWith(
+          status: StoreDetailStatus.loaded,
+          detail: detail,
+          failure: null,
+        ),
+      ),
     );
   }
 }

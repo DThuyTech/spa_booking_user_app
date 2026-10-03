@@ -19,9 +19,9 @@ abstract class ServiceCategoryModel with _$ServiceCategoryModel {
 
 extension ServiceCategoryModelX on ServiceCategoryModel {
   ServiceCategoryEntity toEntity() => ServiceCategoryEntity(
-        id: id,
-        name: name,
-        iconUrl: iconUrl,
-        displayOrder: displayOrder,
-      );
+    id: id,
+    name: name,
+    iconUrl: iconUrl,
+    displayOrder: displayOrder,
+  );
 }

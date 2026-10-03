@@ -64,16 +64,20 @@ class BookingScheduleView extends StatelessWidget {
     final providers = <BlocProvider>[
       if (isRealStore &&
           getIt.isRegistered<StoreScheduleGridBloc>() &&
-          context.findAncestorWidgetOfExactType<
-                  BlocProvider<StoreScheduleGridBloc>>() ==
+          context
+                  .findAncestorWidgetOfExactType<
+                    BlocProvider<StoreScheduleGridBloc>
+                  >() ==
               null)
         BlocProvider<StoreScheduleGridBloc>(
           create: (_) => getIt<StoreScheduleGridBloc>(),
         ),
       if (isRealStore &&
           getIt.isRegistered<BookingAvailabilityBloc>() &&
-          context.findAncestorWidgetOfExactType<
-                  BlocProvider<BookingAvailabilityBloc>>() ==
+          context
+                  .findAncestorWidgetOfExactType<
+                    BlocProvider<BookingAvailabilityBloc>
+                  >() ==
               null)
         BlocProvider<BookingAvailabilityBloc>(
           create: (_) => getIt<BookingAvailabilityBloc>(),
@@ -125,17 +129,20 @@ class _BookingScheduleContentViewState
   ScheduleGridEntity? _grid;
   BookingAvailabilityEntity? _availability;
 
-  bool get _isRealStore =>
-      widget.storeId != null && widget.storeId!.isNotEmpty;
+  bool get _isRealStore => widget.storeId != null && widget.storeId!.isNotEmpty;
 
   bool get _hasGridBloc =>
-      context.findAncestorWidgetOfExactType<
-          BlocProvider<StoreScheduleGridBloc>>() !=
+      context
+          .findAncestorWidgetOfExactType<
+            BlocProvider<StoreScheduleGridBloc>
+          >() !=
       null;
 
   bool get _hasAvailabilityBloc =>
-      context.findAncestorWidgetOfExactType<
-          BlocProvider<BookingAvailabilityBloc>>() !=
+      context
+          .findAncestorWidgetOfExactType<
+            BlocProvider<BookingAvailabilityBloc>
+          >() !=
       null;
 
   bool get _useApi => _isRealStore && _hasGridBloc;
@@ -143,7 +150,8 @@ class _BookingScheduleContentViewState
   int get _serviceDurationMinutes {
     var total = 0;
     for (final s in widget.selectedServices ?? const <BookingServiceItem>[]) {
-      total += s.durationMinutes ??
+      total +=
+          s.durationMinutes ??
           int.tryParse(RegExp(r'\d+').firstMatch(s.duration)?.group(0) ?? '') ??
           0;
     }
@@ -179,19 +187,19 @@ class _BookingScheduleContentViewState
     });
 
     context.read<StoreScheduleGridBloc>().add(
-          FetchScheduleGridEvent(storeId: widget.storeId!, date: date),
-        );
+      FetchScheduleGridEvent(storeId: widget.storeId!, date: date),
+    );
 
     final serviceIds =
         widget.selectedServices?.map((s) => s.id).toList() ?? const [];
     if (_hasAvailabilityBloc && serviceIds.isNotEmpty) {
       context.read<BookingAvailabilityBloc>().add(
-            CheckAvailabilitySlotsEvent(
-              storeId: widget.storeId!,
-              date: date,
-              serviceIds: serviceIds,
-            ),
-          );
+        CheckAvailabilitySlotsEvent(
+          storeId: widget.storeId!,
+          date: date,
+          serviceIds: serviceIds,
+        ),
+      );
     }
   }
 
@@ -226,7 +234,10 @@ class _BookingScheduleContentViewState
       final mins = ScheduleGridMapper.displayToMinutes(time);
       final now = DateTime.now();
       if (mins != null && mins <= now.hour * 60 + now.minute) {
-        AppToastHelper.showInfo(context, message: 'This time has already passed');
+        AppToastHelper.showInfo(
+          context,
+          message: 'This time has already passed',
+        );
         return;
       }
     }
@@ -265,8 +276,8 @@ class _BookingScheduleContentViewState
       return;
     }
 
-    final isUnassigned = _selectedStaffId != null &&
-        _selectedStaffId!.startsWith('unassigned');
+    final isUnassigned =
+        _selectedStaffId != null && _selectedStaffId!.startsWith('unassigned');
     final staffIdToSend = isUnassigned ? null : _selectedStaffId;
 
     Navigator.of(context).push(
@@ -325,7 +336,8 @@ class _BookingScheduleContentViewState
 
     if (_useApi) {
       final gridState = context.watch<StoreScheduleGridBloc>().state;
-      isLoading = gridState.isLoading || (_grid == null && !gridState.isFailure);
+      isLoading =
+          gridState.isLoading || (_grid == null && !gridState.isFailure);
       dateDisplay = _displayDate.format(_selectedDate);
 
       final data = _grid == null
@@ -375,7 +387,10 @@ class _BookingScheduleContentViewState
           selectedTime: _selectedTime,
           onSelectSlot: _onSelectSlot,
           onAddCustomBooking: () {
-            AppToastHelper.showInfo(context, message: 'Add custom booking slot');
+            AppToastHelper.showInfo(
+              context,
+              message: 'Add custom booking slot',
+            );
           },
           bookingCount: bookingCount,
           isToday: _useApi ? _isToday : true,
@@ -402,7 +417,10 @@ class _BookingScheduleContentViewState
             // Add Custom Time Slot Button
             IconButton(
               onPressed: () {
-                AppToastHelper.showInfo(context, message: 'Add custom booking slot');
+                AppToastHelper.showInfo(
+                  context,
+                  message: 'Add custom booking slot',
+                );
               },
               icon: const Icon(
                 LucideIcons.circle_plus,

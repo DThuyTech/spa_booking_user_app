@@ -32,4 +32,3 @@ abstract class BookingActionState with _$BookingActionState {
       status == BookingActionStatus.notesUpdatedSuccess;
   bool get isFailure => status == BookingActionStatus.failure;
 }
-

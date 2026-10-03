@@ -36,11 +36,8 @@ class _BookingDashboardDetailBodyViewState
     });
     if (widget.booking != null) {
       context.read<BookingActionBloc>().add(
-            UpdateBookingNotesEvent(
-              bookingId: widget.booking!.id,
-              note: text,
-            ),
-          );
+        UpdateBookingNotesEvent(bookingId: widget.booking!.id, note: text),
+      );
     } else {
       AppToastHelper.showSuccess(context, message: 'Note added successfully');
     }
@@ -50,10 +47,15 @@ class _BookingDashboardDetailBodyViewState
   Widget build(BuildContext context) {
     final b = widget.booking;
     final status = b?.status ?? BookingDashboardDetailMockData.status;
-    final bookingCode = b != null ? '#${b.bookingCode}' : BookingDashboardDetailMockData.bookingCode;
-    final salonName = b?.store?.name ?? BookingDashboardDetailMockData.salonName;
-    final salonAddress = b?.store?.address ?? BookingDashboardDetailMockData.salonAddress;
-    final salonPhone = b?.store?.phoneNumber ?? BookingDashboardDetailMockData.salonPhone;
+    final bookingCode = b != null
+        ? '#${b.bookingCode}'
+        : BookingDashboardDetailMockData.bookingCode;
+    final salonName =
+        b?.store?.name ?? BookingDashboardDetailMockData.salonName;
+    final salonAddress =
+        b?.store?.address ?? BookingDashboardDetailMockData.salonAddress;
+    final salonPhone =
+        b?.store?.phoneNumber ?? BookingDashboardDetailMockData.salonPhone;
     final appointmentDate = b != null
         ? '${b.startAt.year}-${b.startAt.month.toString().padLeft(2, '0')}-${b.startAt.day.toString().padLeft(2, '0')}'
         : BookingDashboardDetailMockData.appointmentDate;
@@ -66,18 +68,21 @@ class _BookingDashboardDetailBodyViewState
 
     final services = (b != null && b.services.isNotEmpty)
         ? b.services
-            .map((item) => DetailServiceItem(
+              .map(
+                (item) => DetailServiceItem(
                   name: item.name,
                   duration: '${item.duration}m',
                   price: '${item.price} VND',
-                ))
-            .toList()
+                ),
+              )
+              .toList()
         : BookingDashboardDetailMockData.services;
 
     final totalAmount = b != null
         ? '${b.totalAmount} VND'
         : BookingDashboardDetailMockData.totalAmount;
-    final paymentStatus = b?.paymentStatus ?? BookingDashboardDetailMockData.paymentStatus;
+    final paymentStatus =
+        b?.paymentStatus ?? BookingDashboardDetailMockData.paymentStatus;
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -158,9 +163,7 @@ class _BookingDashboardDetailBodyViewState
           const SizedBox(height: 14),
 
           // Services Breakdown Card
-          BookingDetailServicesCard(
-            services: services,
-          ),
+          BookingDetailServicesCard(services: services),
 
           const SizedBox(height: 14),
 
@@ -190,4 +193,3 @@ class _BookingDashboardDetailBodyViewState
     );
   }
 }
-

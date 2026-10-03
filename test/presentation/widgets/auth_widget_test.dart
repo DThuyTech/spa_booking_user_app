@@ -175,7 +175,9 @@ void main() {
       final passwordFieldFinder = find.byKey(const Key('login_password_field'));
       expect(passwordFieldFinder, findsOneWidget);
 
-      TextField passwordTextField = tester.widget<TextField>(passwordFieldFinder);
+      TextField passwordTextField = tester.widget<TextField>(
+        passwordFieldFinder,
+      );
       expect(passwordTextField.obscureText, isTrue);
 
       final toggleButtonFinder = find.byIcon(LucideIcons.eye_off);

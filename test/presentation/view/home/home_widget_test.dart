@@ -287,37 +287,40 @@ void main() {
       },
     );
 
-    testWidgets('HomeNearSalonCard renders with long location text without overflow', (
-      tester,
-    ) async {
-      const nearItem = HomeNearSalonItem(
-        id: 'salon-1',
-        name: 'Aura Luxury Spa & Clinic',
-        categories: 'Massage · Facial · Hair Care · Nail Design',
-        rating: 4.9,
-        distance: '123 Nguyen Hue Boulevard, Ben Nghe Ward, District 1, Ho Chi Minh City, Vietnam',
-        imageUrl: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=600&q=80',
-      );
+    testWidgets(
+      'HomeNearSalonCard renders with long location text without overflow',
+      (tester) async {
+        const nearItem = HomeNearSalonItem(
+          id: 'salon-1',
+          name: 'Aura Luxury Spa & Clinic',
+          categories: 'Massage · Facial · Hair Care · Nail Design',
+          rating: 4.9,
+          distance:
+              '123 Nguyen Hue Boulevard, Ben Nghe Ward, District 1, Ho Chi Minh City, Vietnam',
+          imageUrl:
+              'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=600&q=80',
+        );
 
-      bool bookTapped = false;
-      await tester.pumpWidget(
-        createHomeTestWidget(
-          child: Center(
-            child: HomeNearSalonCard(
-              salon: nearItem,
-              onBook: () => bookTapped = true,
+        bool bookTapped = false;
+        await tester.pumpWidget(
+          createHomeTestWidget(
+            child: Center(
+              child: HomeNearSalonCard(
+                salon: nearItem,
+                onBook: () => bookTapped = true,
+              ),
             ),
           ),
-        ),
-      );
-      await tester.pump();
+        );
+        await tester.pump();
 
-      expect(find.text('Aura Luxury Spa & Clinic'), findsOneWidget);
-      expect(find.text('Book'), findsOneWidget);
+        expect(find.text('Aura Luxury Spa & Clinic'), findsOneWidget);
+        expect(find.text('Book'), findsOneWidget);
 
-      await tester.tap(find.text('Book'));
-      await tester.pump();
-      expect(bookTapped, isTrue);
-    });
+        await tester.tap(find.text('Book'));
+        await tester.pump();
+        expect(bookTapped, isTrue);
+      },
+    );
   });
 }

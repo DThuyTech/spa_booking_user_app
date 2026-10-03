@@ -16,7 +16,10 @@ class FavoriteRepositoryImpl implements FavoriteRepository {
     int limit = 20,
   }) async {
     try {
-      final response = await remoteDataSource.getFavorites(page: page, limit: limit);
+      final response = await remoteDataSource.getFavorites(
+        page: page,
+        limit: limit,
+      );
       final entities = response.items.map((m) => m.toEntity()).toList();
       return Right(entities);
     } catch (e) {

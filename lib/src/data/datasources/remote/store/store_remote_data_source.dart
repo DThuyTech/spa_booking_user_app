@@ -54,10 +54,7 @@ abstract interface class StoreRemoteDataSource {
     String? search,
   });
 
-  Future<List<StaffModel>> getStoreStaff(
-    String storeId, {
-    String? serviceId,
-  });
+  Future<List<StaffModel>> getStoreStaff(String storeId, {String? serviceId});
 
   Future<StoreGalleryResponseModel> getStoreGallery(
     String storeId, {
@@ -90,10 +87,7 @@ class StoreRemoteDataSourceImpl implements StoreRemoteDataSource {
     int page = 1,
     int limit = 10,
   }) async {
-    final queryParams = <String, dynamic>{
-      'page': page,
-      'limit': limit,
-    };
+    final queryParams = <String, dynamic>{'page': page, 'limit': limit};
     if (search != null && search.trim().isNotEmpty) {
       queryParams['search'] = search.trim();
     }
@@ -193,7 +187,9 @@ class StoreRemoteDataSourceImpl implements StoreRemoteDataSource {
       final payload = (data['data'] as Map<String, dynamic>?) ?? data;
       return StoreFullDetailModel.fromJson(payload);
     }
-    throw const FormatException('Empty response received for store full-detail');
+    throw const FormatException(
+      'Empty response received for store full-detail',
+    );
   }
 
   @override
@@ -217,7 +213,9 @@ class StoreRemoteDataSourceImpl implements StoreRemoteDataSource {
       final payload = (data['data'] as Map<String, dynamic>?) ?? data;
       return StoreScheduleGridModel.fromJson(payload);
     }
-    throw const FormatException('Empty response received for store schedule grid');
+    throw const FormatException(
+      'Empty response received for store schedule grid',
+    );
   }
 
   @override
@@ -231,7 +229,8 @@ class StoreRemoteDataSourceImpl implements StoreRemoteDataSource {
     if (data is List) {
       list = data;
     } else if (data is Map<String, dynamic>) {
-      list = (data['data'] as List<dynamic>?) ??
+      list =
+          (data['data'] as List<dynamic>?) ??
           (data['items'] as List<dynamic>?) ??
           [];
     }
@@ -266,7 +265,8 @@ class StoreRemoteDataSourceImpl implements StoreRemoteDataSource {
     if (data is List) {
       list = data;
     } else if (data is Map<String, dynamic>) {
-      list = (data['data'] as List<dynamic>?) ??
+      list =
+          (data['data'] as List<dynamic>?) ??
           (data['items'] as List<dynamic>?) ??
           [];
     }
@@ -297,7 +297,8 @@ class StoreRemoteDataSourceImpl implements StoreRemoteDataSource {
     if (data is List) {
       list = data;
     } else if (data is Map<String, dynamic>) {
-      list = (data['data'] as List<dynamic>?) ??
+      list =
+          (data['data'] as List<dynamic>?) ??
           (data['items'] as List<dynamic>?) ??
           [];
     }

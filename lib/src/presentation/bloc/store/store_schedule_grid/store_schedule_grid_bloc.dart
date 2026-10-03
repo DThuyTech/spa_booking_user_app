@@ -70,7 +70,7 @@ class StoreScheduleGridBloc
   final GetStoreScheduleGridUseCase getStoreScheduleGridUseCase;
 
   StoreScheduleGridBloc({required this.getStoreScheduleGridUseCase})
-      : super(const StoreScheduleGridState()) {
+    : super(const StoreScheduleGridState()) {
     on<FetchScheduleGridEvent>(_onFetch);
   }
 
@@ -78,10 +78,12 @@ class StoreScheduleGridBloc
     FetchScheduleGridEvent event,
     Emitter<StoreScheduleGridState> emit,
   ) async {
-    emit(state.copyWith(
-      status: StoreScheduleGridStatus.loading,
-      clearFailure: true,
-    ));
+    emit(
+      state.copyWith(
+        status: StoreScheduleGridStatus.loading,
+        clearFailure: true,
+      ),
+    );
 
     final result = await getStoreScheduleGridUseCase(
       storeId: event.storeId,
@@ -90,14 +92,18 @@ class StoreScheduleGridBloc
     );
 
     result.fold(
-      (failure) => emit(state.copyWith(
-        status: StoreScheduleGridStatus.failure,
-        failure: failure,
-      )),
-      (grid) => emit(StoreScheduleGridState(
-        status: StoreScheduleGridStatus.loaded,
-        grid: grid,
-      )),
+      (failure) => emit(
+        state.copyWith(
+          status: StoreScheduleGridStatus.failure,
+          failure: failure,
+        ),
+      ),
+      (grid) => emit(
+        StoreScheduleGridState(
+          status: StoreScheduleGridStatus.loaded,
+          grid: grid,
+        ),
+      ),
     );
   }
 }

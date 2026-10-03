@@ -156,4 +156,3 @@ class BookingRepositoryImpl implements BookingRepository {
     }
   }
 }
-

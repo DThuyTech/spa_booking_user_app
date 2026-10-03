@@ -12,9 +12,6 @@ class UpdateBookingNotesUseCase {
     required String bookingId,
     required String note,
   }) {
-    return repository.updateBookingNotes(
-      bookingId: bookingId,
-      note: note,
-    );
+    return repository.updateBookingNotes(bookingId: bookingId, note: note);
   }
 }

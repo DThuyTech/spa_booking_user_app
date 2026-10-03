@@ -11,7 +11,7 @@ class BookingDetailBloc extends Bloc<BookingDetailEvent, BookingDetailState> {
   final GetBookingDetailUseCase getBookingDetailUseCase;
 
   BookingDetailBloc({required this.getBookingDetailUseCase})
-      : super(const BookingDetailState()) {
+    : super(const BookingDetailState()) {
     on<LoadBookingDetailEvent>(_onLoadDetail);
     on<UpdateBookingEntityEvent>(_onUpdateBooking);
   }
@@ -20,22 +20,20 @@ class BookingDetailBloc extends Bloc<BookingDetailEvent, BookingDetailState> {
     LoadBookingDetailEvent event,
     Emitter<BookingDetailState> emit,
   ) async {
-    emit(state.copyWith(
-      status: BookingDetailStatus.loading,
-      failure: null,
-    ));
+    emit(state.copyWith(status: BookingDetailStatus.loading, failure: null));
 
     final result = await getBookingDetailUseCase(event.bookingId);
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: BookingDetailStatus.failure,
-        failure: failure,
-      )),
-      (booking) => emit(state.copyWith(
-        status: BookingDetailStatus.loaded,
-        booking: booking,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: BookingDetailStatus.failure, failure: failure),
+      ),
+      (booking) => emit(
+        state.copyWith(
+          status: BookingDetailStatus.loaded,
+          booking: booking,
+          failure: null,
+        ),
+      ),
     );
   }
 

@@ -137,12 +137,7 @@ void main() {
         'page': 1,
         'limit': 20,
         'totalPages': 1,
-        'summary': {
-          'total': 0,
-          'upcoming': 0,
-          'past': 0,
-          'cancelled': 0,
-        },
+        'summary': {'total': 0, 'upcoming': 0, 'past': 0, 'cancelled': 0},
       };
 
       final model = BookingListResponseModel.fromJson(json);
@@ -168,11 +163,15 @@ void main() {
         addTearDown(() => tester.view.resetPhysicalSize());
 
         final mockUseCase = MockGetCustomerBookingsUseCase();
-        when(() => mockUseCase(
-              tab: any(named: 'tab'),
-              page: any(named: 'page'),
-              limit: any(named: 'limit'),
-            )).thenAnswer((_) async => const Right(BookingListResponseEntity(
+        when(
+          () => mockUseCase(
+            tab: any(named: 'tab'),
+            page: any(named: 'page'),
+            limit: any(named: 'limit'),
+          ),
+        ).thenAnswer(
+          (_) async => const Right(
+            BookingListResponseEntity(
               items: [],
               summary: BookingSummaryEntity(
                 total: 0,
@@ -186,10 +185,13 @@ void main() {
                 limit: 20,
                 totalPages: 1,
               ),
-            )));
+            ),
+          ),
+        );
 
-        final bloc =
-            BookingDashboardBloc(getCustomerBookingsUseCase: mockUseCase);
+        final bloc = BookingDashboardBloc(
+          getCustomerBookingsUseCase: mockUseCase,
+        );
 
         await tester.pumpWidget(
           MaterialApp(
@@ -222,42 +224,43 @@ void main() {
       },
     );
 
-    testWidgets(
-      'displays smaller pinned overview on top when scrolling down',
-      (tester) async {
-        tester.view.physicalSize = const Size(800, 600);
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(() => tester.view.resetPhysicalSize());
+    testWidgets('displays smaller pinned overview on top when scrolling down', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(800, 600);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
 
-        await tester.pumpWidget(const MaterialApp(home: BookingDashboardView()));
-        await tester.pumpAndSettle();
+      await tester.pumpWidget(const MaterialApp(home: BookingDashboardView()));
+      await tester.pumpAndSettle();
 
-        // Initially at top: AnimatedOpacity has opacity 0.0
-        final opacityFinderBefore = find.ancestor(
-          of: find.byType(BookingDashboardSummaryShortBar),
-          matching: find.byType(AnimatedOpacity),
-        );
-        final AnimatedOpacity opacityWidgetBefore =
-            tester.widget(opacityFinderBefore);
-        expect(opacityWidgetBefore.opacity, 0.0);
+      // Initially at top: AnimatedOpacity has opacity 0.0
+      final opacityFinderBefore = find.ancestor(
+        of: find.byType(BookingDashboardSummaryShortBar),
+        matching: find.byType(AnimatedOpacity),
+      );
+      final AnimatedOpacity opacityWidgetBefore = tester.widget(
+        opacityFinderBefore,
+      );
+      expect(opacityWidgetBefore.opacity, 0.0);
 
-        // Scroll down past overview
-        await tester.drag(
-          find.byType(BookingSearchFilterBar),
-          const Offset(0, -300),
-        );
-        await tester.pumpAndSettle();
+      // Scroll down past overview
+      await tester.drag(
+        find.byType(BookingSearchFilterBar),
+        const Offset(0, -300),
+      );
+      await tester.pumpAndSettle();
 
-        // When scrolled: AnimatedOpacity has opacity 1.0 (pinned compact overview is visible)
-        final opacityFinderAfter = find.ancestor(
-          of: find.byType(BookingDashboardSummaryShortBar),
-          matching: find.byType(AnimatedOpacity),
-        );
-        final AnimatedOpacity opacityWidgetAfter =
-            tester.widget(opacityFinderAfter);
-        expect(opacityWidgetAfter.opacity, 1.0);
-      },
-    );
+      // When scrolled: AnimatedOpacity has opacity 1.0 (pinned compact overview is visible)
+      final opacityFinderAfter = find.ancestor(
+        of: find.byType(BookingDashboardSummaryShortBar),
+        matching: find.byType(AnimatedOpacity),
+      );
+      final AnimatedOpacity opacityWidgetAfter = tester.widget(
+        opacityFinderAfter,
+      );
+      expect(opacityWidgetAfter.opacity, 1.0);
+    });
   });
 
   group('Booking Dashboard Detail View Tests (Image 3)', () {

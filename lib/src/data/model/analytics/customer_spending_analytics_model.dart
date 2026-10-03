@@ -104,15 +104,15 @@ class SpendingSummaryModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        totalSpent,
-        totalVisits,
-        cancelledVisits,
-        averageSpendPerVisit,
-        favoriteSalonName,
-        visitCadence,
-        mostVisitedStore,
-        lastVisit,
-      ];
+    totalSpent,
+    totalVisits,
+    cancelledVisits,
+    averageSpendPerVisit,
+    favoriteSalonName,
+    visitCadence,
+    mostVisitedStore,
+    lastVisit,
+  ];
 }
 
 class SpendingTimelinePointModel extends Equatable {
@@ -247,9 +247,9 @@ class CustomerSpendingAnalyticsModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        summary,
-        timeline,
-        storesBreakdown,
-        servicesBreakdown,
-      ];
+    summary,
+    timeline,
+    storesBreakdown,
+    servicesBreakdown,
+  ];
 }

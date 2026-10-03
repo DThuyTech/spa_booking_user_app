@@ -25,7 +25,6 @@ class BookingActionBloc extends Bloc<BookingActionEvent, BookingActionState> {
     on<ResetBookingActionEvent>(_onReset);
   }
 
-
   Future<void> _onCancelBooking(
     CancelBookingEvent event,
     Emitter<BookingActionState> emit,
@@ -37,15 +36,16 @@ class BookingActionBloc extends Bloc<BookingActionEvent, BookingActionState> {
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: BookingActionStatus.failure,
-        failure: failure,
-      )),
-      (booking) => emit(state.copyWith(
-        status: BookingActionStatus.cancelledSuccess,
-        booking: booking,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: BookingActionStatus.failure, failure: failure),
+      ),
+      (booking) => emit(
+        state.copyWith(
+          status: BookingActionStatus.cancelledSuccess,
+          booking: booking,
+          failure: null,
+        ),
+      ),
     );
   }
 
@@ -60,15 +60,16 @@ class BookingActionBloc extends Bloc<BookingActionEvent, BookingActionState> {
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: BookingActionStatus.failure,
-        failure: failure,
-      )),
-      (booking) => emit(state.copyWith(
-        status: BookingActionStatus.rescheduledSuccess,
-        booking: booking,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: BookingActionStatus.failure, failure: failure),
+      ),
+      (booking) => emit(
+        state.copyWith(
+          status: BookingActionStatus.rescheduledSuccess,
+          booking: booking,
+          failure: null,
+        ),
+      ),
     );
   }
 
@@ -83,15 +84,16 @@ class BookingActionBloc extends Bloc<BookingActionEvent, BookingActionState> {
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: BookingActionStatus.failure,
-        failure: failure,
-      )),
-      (booking) => emit(state.copyWith(
-        status: BookingActionStatus.notesUpdatedSuccess,
-        booking: booking,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: BookingActionStatus.failure, failure: failure),
+      ),
+      (booking) => emit(
+        state.copyWith(
+          status: BookingActionStatus.notesUpdatedSuccess,
+          booking: booking,
+          failure: null,
+        ),
+      ),
     );
   }
 
@@ -102,4 +104,3 @@ class BookingActionBloc extends Bloc<BookingActionEvent, BookingActionState> {
     emit(const BookingActionState());
   }
 }
-

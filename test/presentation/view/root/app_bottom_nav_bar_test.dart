@@ -28,7 +28,9 @@ void main() {
       expect(find.byIcon(LucideIcons.user), findsOneWidget);
     });
 
-    testWidgets('triggers onCenterAction when center item tapped', (tester) async {
+    testWidgets('triggers onCenterAction when center item tapped', (
+      tester,
+    ) async {
       int selectedTab = 0;
       bool centerActionTriggered = false;
 
@@ -54,7 +56,9 @@ void main() {
       expect(selectedTab, equals(0));
     });
 
-    testWidgets('triggers onTabSelected with mapped page indices', (tester) async {
+    testWidgets('triggers onTabSelected with mapped page indices', (
+      tester,
+    ) async {
       int selectedTab = -1;
 
       await tester.pumpWidget(

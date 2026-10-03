@@ -55,16 +55,18 @@ abstract class BookingAvailabilityModel with _$BookingAvailabilityModel {
 
 extension BookingAvailabilityModelX on BookingAvailabilityModel {
   BookingAvailabilityEntity toEntity() => BookingAvailabilityEntity(
-        storeId: storeId,
-        date: date,
-        totalDurationMinutes: totalDurationMinutes,
-        slots: slots
-            .map((s) => BookingSlotEntity(
-                  time: s.time,
-                  available: s.available,
-                  availableStaffCount: s.availableStaffCount,
-                  reason: s.reason,
-                ))
-            .toList(),
-      );
+    storeId: storeId,
+    date: date,
+    totalDurationMinutes: totalDurationMinutes,
+    slots: slots
+        .map(
+          (s) => BookingSlotEntity(
+            time: s.time,
+            available: s.available,
+            availableStaffCount: s.availableStaffCount,
+            reason: s.reason,
+          ),
+        )
+        .toList(),
+  );
 }

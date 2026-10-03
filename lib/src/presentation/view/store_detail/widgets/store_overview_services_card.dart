@@ -114,11 +114,7 @@ class StoreOverviewServicesCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 4),
-                  Icon(
-                    LucideIcons.chevron_right,
-                    size: 16,
-                    color: _coralColor,
-                  ),
+                  Icon(LucideIcons.chevron_right, size: 16, color: _coralColor),
                 ],
               ),
             ),

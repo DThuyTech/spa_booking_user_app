@@ -51,15 +51,15 @@ abstract class StoreModel with _$StoreModel {
 
 extension StoreModelX on StoreModel {
   StoreEntity toEntity() => StoreEntity(
-        id: id,
-        name: name,
-        slug: slug,
-        logoUrl: logoUrl,
-        coverUrl: coverUrl,
-        address: address,
-        phoneNumber: phoneNumber,
-        rating: rating,
-        reviewCount: reviewCount,
-        priceRange: priceRange,
-      );
+    id: id,
+    name: name,
+    slug: slug,
+    logoUrl: logoUrl,
+    coverUrl: coverUrl,
+    address: address,
+    phoneNumber: phoneNumber,
+    rating: rating,
+    reviewCount: reviewCount,
+    priceRange: priceRange,
+  );
 }

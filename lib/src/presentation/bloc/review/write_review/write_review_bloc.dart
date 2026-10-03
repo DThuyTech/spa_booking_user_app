@@ -51,23 +51,28 @@ class WriteReviewBloc extends Bloc<WriteReviewEvent, WriteReviewState> {
         images: event.images,
       );
     } else {
-      emit(state.copyWith(
-        status: WriteReviewStatus.failure,
-        failure: const ServerFailure('No use case available to submit review'),
-      ));
+      emit(
+        state.copyWith(
+          status: WriteReviewStatus.failure,
+          failure: const ServerFailure(
+            'No use case available to submit review',
+          ),
+        ),
+      );
       return;
     }
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: WriteReviewStatus.failure,
-        failure: failure,
-      )),
-      (submitted) => emit(state.copyWith(
-        status: WriteReviewStatus.success,
-        submittedReview: submitted,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: WriteReviewStatus.failure, failure: failure),
+      ),
+      (submitted) => emit(
+        state.copyWith(
+          status: WriteReviewStatus.success,
+          submittedReview: submitted,
+          failure: null,
+        ),
+      ),
     );
   }
 }

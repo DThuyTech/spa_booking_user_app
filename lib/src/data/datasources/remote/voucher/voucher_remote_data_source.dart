@@ -68,11 +68,7 @@ class VoucherRemoteDataSourceImpl implements VoucherRemoteDataSource {
   }) async {
     final response = await _client.post<Map<String, dynamic>>(
       '/customer/vouchers/apply',
-      data: {
-        'code': code,
-        'storeId': storeId,
-        'orderAmount': orderAmount,
-      },
+      data: {'code': code, 'storeId': storeId, 'orderAmount': orderAmount},
     );
 
     final data = response.data;

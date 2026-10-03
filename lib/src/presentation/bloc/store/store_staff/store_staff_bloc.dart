@@ -11,7 +11,7 @@ class StoreStaffBloc extends Bloc<StoreStaffEvent, StoreStaffState> {
   final GetStoreStaffUseCase getStoreStaffUseCase;
 
   StoreStaffBloc({required this.getStoreStaffUseCase})
-      : super(const StoreStaffState()) {
+    : super(const StoreStaffState()) {
     on<FetchStaffEvent>(_onFetchStaff);
   }
 
@@ -26,15 +26,16 @@ class StoreStaffBloc extends Bloc<StoreStaffEvent, StoreStaffState> {
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: StoreStaffStatus.failure,
-        failure: failure,
-      )),
-      (staffList) => emit(state.copyWith(
-        status: StoreStaffStatus.loaded,
-        staffList: staffList,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: StoreStaffStatus.failure, failure: failure),
+      ),
+      (staffList) => emit(
+        state.copyWith(
+          status: StoreStaffStatus.loaded,
+          staffList: staffList,
+          failure: null,
+        ),
+      ),
     );
   }
 }

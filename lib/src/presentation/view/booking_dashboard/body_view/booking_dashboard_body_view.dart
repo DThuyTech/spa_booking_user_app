@@ -119,30 +119,33 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
                 Wrap(
                   spacing: 10,
                   runSpacing: 10,
-                  children: [
-                    'All',
-                    'UPCOMING',
-                    'TODAY',
-                    'COMPLETED',
-                    'CANCELLED',
-                  ].map((filter) {
-                    final isSel = _selectedFilter == filter;
-                    return ChoiceChip(
-                      label: Text(filter),
-                      selected: isSel,
-                      selectedColor: const Color(0xFFFA7762),
-                      backgroundColor: const Color(0xFFF1F5F9),
-                      labelStyle: TextStyle(
-                        color: isSel ? Colors.white : const Color(0xFF475569),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
-                      onSelected: (val) {
-                        Navigator.of(sheetCtx).pop();
-                        _onFilterSelect(filter);
-                      },
-                    );
-                  }).toList(),
+                  children:
+                      [
+                        'All',
+                        'UPCOMING',
+                        'TODAY',
+                        'COMPLETED',
+                        'CANCELLED',
+                      ].map((filter) {
+                        final isSel = _selectedFilter == filter;
+                        return ChoiceChip(
+                          label: Text(filter),
+                          selected: isSel,
+                          selectedColor: const Color(0xFFFA7762),
+                          backgroundColor: const Color(0xFFF1F5F9),
+                          labelStyle: TextStyle(
+                            color: isSel
+                                ? Colors.white
+                                : const Color(0xFF475569),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                          onSelected: (val) {
+                            Navigator.of(sheetCtx).pop();
+                            _onFilterSelect(filter);
+                          },
+                        );
+                      }).toList(),
                 ),
                 const SizedBox(height: 20),
               ],
@@ -177,7 +180,8 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
           return b.status == 'CONFIRMED' || b.status == 'PENDING';
         } else if (_selectedFilter == 'TODAY') {
           return bDateStr == todayStr;
-        } else if (_selectedFilter == 'COMPLETED' || _selectedFilter == 'PAST') {
+        } else if (_selectedFilter == 'COMPLETED' ||
+            _selectedFilter == 'PAST') {
           return b.status == 'COMPLETED';
         } else if (_selectedFilter == 'CANCELLED') {
           return b.status == 'CANCELLED';
@@ -214,8 +218,9 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
         storeName: b.store?.name,
         timeRange: '$startTimeStr - $endTimeStr',
         duration: '${b.totalDuration} min',
-        staffName:
-            b.staffSnapshot != null ? 'Staff: ${b.staffSnapshot!.name}' : null,
+        staffName: b.staffSnapshot != null
+            ? 'Staff: ${b.staffSnapshot!.name}'
+            : null,
         status: b.status,
         isHighlighted: b.status == 'CONFIRMED',
       );
@@ -328,8 +333,7 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
           AppToastHelper.showError(context, error: state.failure);
         }
       },
-      builder: (context, state) =>
-          _buildContent(context, state, hasBloc: true),
+      builder: (context, state) => _buildContent(context, state, hasBloc: true),
     );
   }
 
@@ -387,11 +391,8 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
                   ? 'PAST'
                   : (_selectedFilter == 'All' ? 'ALL' : _selectedFilter);
               context.read<BookingDashboardBloc>().add(
-                    FetchCustomerBookingsEvent(
-                      tab: apiTab,
-                      isRefresh: true,
-                    ),
-                  );
+                FetchCustomerBookingsEvent(tab: apiTab, isRefresh: true),
+              );
             } catch (_) {}
           },
           child: SingleChildScrollView(
@@ -444,16 +445,14 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
                   ...groups.map((group) {
                     final filteredItems = group.items.where((item) {
                       if (_searchQuery.isEmpty) return true;
-                      return item.title
-                              .toLowerCase()
-                              .contains(_searchQuery) ||
-                          (item.storeName
-                                  ?.toLowerCase()
-                                  .contains(_searchQuery) ??
+                      return item.title.toLowerCase().contains(_searchQuery) ||
+                          (item.storeName?.toLowerCase().contains(
+                                _searchQuery,
+                              ) ??
                               false) ||
-                          (item.staffName
-                                  ?.toLowerCase()
-                                  .contains(_searchQuery) ??
+                          (item.staffName?.toLowerCase().contains(
+                                _searchQuery,
+                              ) ??
                               false);
                     }).toList();
 
@@ -489,10 +488,8 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
                               final item = filteredItems[index];
                               return BookingDashboardCard(
                                 item: item,
-                                onView: () => _navigateToDetail(
-                                  context,
-                                  item.id,
-                                ),
+                                onView: () =>
+                                    _navigateToDetail(context, item.id),
                                 onReschedule: () {
                                   AppToastHelper.showInfo(
                                     context,
@@ -562,4 +559,3 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
     );
   }
 }
-

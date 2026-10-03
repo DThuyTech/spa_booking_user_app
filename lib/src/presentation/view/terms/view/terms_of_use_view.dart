@@ -75,7 +75,11 @@ class _TermsOfUseViewState extends State<TermsOfUseView> {
           ),
           child: AppButton(
             text: 'Accept & Continue',
-            trailingIcon: const Icon(LucideIcons.circle_check, size: 18, color: Colors.white),
+            trailingIcon: const Icon(
+              LucideIcons.circle_check,
+              size: 18,
+              color: Colors.white,
+            ),
             onPressed: () => Navigator.of(context).pop(true),
             backgroundColor: const Color(0xFFFA7762),
             textColor: Colors.white,

@@ -98,12 +98,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             status: ProfileStatus.success,
             user: () => mergedUser,
             errorMessage: () => null,
-            upcomingCount:
-                stats != null ? stats.upcomingBookings : state.upcomingCount,
-            completedCount:
-                stats != null ? stats.completedBookings : state.completedCount,
-            cancelledCount:
-                stats != null ? stats.cancelledBookings : state.cancelledCount,
+            upcomingCount: stats != null
+                ? stats.upcomingBookings
+                : state.upcomingCount,
+            completedCount: stats != null
+                ? stats.completedBookings
+                : state.completedCount,
+            cancelledCount: stats != null
+                ? stats.cancelledBookings
+                : state.cancelledCount,
           ),
         );
       },
@@ -111,18 +114,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     if (getCustomerBookingsUseCase != null) {
       final bookingsResult = await getCustomerBookingsUseCase!();
-      bookingsResult.fold(
-        (_) {},
-        (bookingData) {
-          emit(
-            state.copyWith(
-              upcomingCount: bookingData.summary.upcoming,
-              completedCount: bookingData.summary.past,
-              cancelledCount: bookingData.summary.cancelled,
-            ),
-          );
-        },
-      );
+      bookingsResult.fold((_) {}, (bookingData) {
+        emit(
+          state.copyWith(
+            upcomingCount: bookingData.summary.upcoming,
+            completedCount: bookingData.summary.past,
+            cancelledCount: bookingData.summary.cancelled,
+          ),
+        );
+      });
     }
   }
 

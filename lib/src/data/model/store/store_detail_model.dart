@@ -114,21 +114,23 @@ abstract class StoreBookingSettingsModel with _$StoreBookingSettingsModel {
 
   factory StoreBookingSettingsModel.fromJson(Map<String, dynamic> json) {
     return StoreBookingSettingsModel(
-      minBookingNoticeMinutes: (json['minBookingNoticeMinutes'] ??
-              json['minimumNoticeMinutes'] ??
-              json['bookingIntervalMinutes'] ??
-              60) as int? ??
+      minBookingNoticeMinutes:
+          (json['minBookingNoticeMinutes'] ??
+                  json['minimumNoticeMinutes'] ??
+                  json['bookingIntervalMinutes'] ??
+                  60)
+              as int? ??
           60,
-      maxBookingAdvanceDays: (json['maxBookingAdvanceDays'] ??
-              json['maximumAdvanceDays'] ??
-              30) as int? ??
+      maxBookingAdvanceDays:
+          (json['maxBookingAdvanceDays'] ?? json['maximumAdvanceDays'] ?? 30)
+              as int? ??
           30,
       minCancellationNoticeMinutes:
           (json['minCancellationNoticeMinutes'] as num?)?.toInt() ?? 120,
       minRescheduleNoticeMinutes:
           (json['minRescheduleNoticeMinutes'] as num?)?.toInt() ?? 120,
-      autoConfirm: (json['autoConfirm'] ?? json['allowUnassignedBooking'])
-              as bool? ??
+      autoConfirm:
+          (json['autoConfirm'] ?? json['allowUnassignedBooking']) as bool? ??
           true,
     );
   }
@@ -192,14 +194,18 @@ abstract class StoreDetailModel with _$StoreDetailModel {
       address: (storeObj['address'] ?? json['address'] ?? '') as String,
       phoneNumber:
           (storeObj['phoneNumber'] ?? json['phoneNumber'] ?? '') as String,
-      logoUrl: (storeObj['logoUrl'] ??
-          storeObj['avatarUrl'] ??
-          json['logoUrl'] ??
-          json['avatarUrl']) as String?,
-      coverUrl: (storeObj['coverUrl'] ??
-          storeObj['coverImageUrl'] ??
-          json['coverUrl'] ??
-          json['coverImageUrl']) as String?,
+      logoUrl:
+          (storeObj['logoUrl'] ??
+                  storeObj['avatarUrl'] ??
+                  json['logoUrl'] ??
+                  json['avatarUrl'])
+              as String?,
+      coverUrl:
+          (storeObj['coverUrl'] ??
+                  storeObj['coverImageUrl'] ??
+                  json['coverUrl'] ??
+                  json['coverImageUrl'])
+              as String?,
       images: parsedImages,
       businessHours: parsedHours,
       bookingSettings: settings,
@@ -209,36 +215,36 @@ abstract class StoreDetailModel with _$StoreDetailModel {
 
 extension StoreDetailModelX on StoreDetailModel {
   StoreDetailEntity toEntity() => StoreDetailEntity(
-        id: id,
-        name: name,
-        slug: slug,
-        description: description,
-        address: address,
-        phoneNumber: phoneNumber,
-        logoUrl: logoUrl,
-        coverUrl: coverUrl,
-        images: images,
-        businessHours: businessHours
-            .map((b) => StoreBusinessHourEntity(
-                  dayOfWeek: b.dayOfWeek,
-                  dayName: b.dayName,
-                  isOpen: b.isOpen,
-                  openTime: b.openTime,
-                  closeTime: b.closeTime,
-                ))
-            .toList(),
-        bookingSettings: bookingSettings != null
-            ? StoreBookingSettingsEntity(
-                minBookingNoticeMinutes:
-                    bookingSettings!.minBookingNoticeMinutes,
-                maxBookingAdvanceDays:
-                    bookingSettings!.maxBookingAdvanceDays,
-                minCancellationNoticeMinutes:
-                    bookingSettings!.minCancellationNoticeMinutes,
-                minRescheduleNoticeMinutes:
-                    bookingSettings!.minRescheduleNoticeMinutes,
-                autoConfirm: bookingSettings!.autoConfirm,
-              )
-            : null,
-      );
+    id: id,
+    name: name,
+    slug: slug,
+    description: description,
+    address: address,
+    phoneNumber: phoneNumber,
+    logoUrl: logoUrl,
+    coverUrl: coverUrl,
+    images: images,
+    businessHours: businessHours
+        .map(
+          (b) => StoreBusinessHourEntity(
+            dayOfWeek: b.dayOfWeek,
+            dayName: b.dayName,
+            isOpen: b.isOpen,
+            openTime: b.openTime,
+            closeTime: b.closeTime,
+          ),
+        )
+        .toList(),
+    bookingSettings: bookingSettings != null
+        ? StoreBookingSettingsEntity(
+            minBookingNoticeMinutes: bookingSettings!.minBookingNoticeMinutes,
+            maxBookingAdvanceDays: bookingSettings!.maxBookingAdvanceDays,
+            minCancellationNoticeMinutes:
+                bookingSettings!.minCancellationNoticeMinutes,
+            minRescheduleNoticeMinutes:
+                bookingSettings!.minRescheduleNoticeMinutes,
+            autoConfirm: bookingSettings!.autoConfirm,
+          )
+        : null,
+  );
 }

@@ -37,10 +37,7 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
     int limit = 10,
     int? rating,
   }) async {
-    final queryParams = <String, dynamic>{
-      'page': page,
-      'limit': limit,
-    };
+    final queryParams = <String, dynamic>{'page': page, 'limit': limit};
     if (rating != null) {
       queryParams['rating'] = rating;
     }
@@ -62,7 +59,7 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
           totalReviews: items.length,
           averageRating: items.isNotEmpty
               ? items.map((e) => e.rating).reduce((a, b) => a + b) /
-                  items.length
+                    items.length
               : 5.0,
           items: items,
         );
@@ -80,7 +77,7 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
             totalReviews: items.length,
             averageRating: items.isNotEmpty
                 ? items.map((e) => e.rating).reduce((a, b) => a + b) /
-                    items.length
+                      items.length
                 : 5.0,
             items: items,
           );
@@ -130,11 +127,7 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
   }) async {
     final response = await _client.post<Map<String, dynamic>>(
       '/customer/bookings/$bookingId/reviews',
-      data: {
-        'rating': rating,
-        'comment': comment,
-        'images': images,
-      },
+      data: {'rating': rating, 'comment': comment, 'images': images},
     );
 
     final data = response.data;
@@ -142,6 +135,8 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
       final payload = (data['data'] as Map<String, dynamic>?) ?? data;
       return ReviewModel.fromJson(payload);
     }
-    throw const FormatException('Empty response received for create booking review');
+    throw const FormatException(
+      'Empty response received for create booking review',
+    );
   }
 }

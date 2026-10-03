@@ -30,21 +30,23 @@ class StoreDetailPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<StoreDetailBloc>(
-          create: (_) => sl<StoreDetailBloc>()
-            ..add(FetchStoreDetailEvent(effectiveId)),
+          create: (_) =>
+              sl<StoreDetailBloc>()..add(FetchStoreDetailEvent(effectiveId)),
         ),
         BlocProvider<StoreServicesBloc>(
-          create: (_) => sl<StoreServicesBloc>()
-            ..add(LoadCategoriesAndServicesEvent(storeId: effectiveId)),
+          create: (_) =>
+              sl<StoreServicesBloc>()
+                ..add(LoadCategoriesAndServicesEvent(storeId: effectiveId)),
         ),
         BlocProvider<StoreStaffBloc>(
-          create: (_) => sl<StoreStaffBloc>()
-            ..add(FetchStaffEvent(storeId: effectiveId)),
+          create: (_) =>
+              sl<StoreStaffBloc>()..add(FetchStaffEvent(storeId: effectiveId)),
         ),
         if (sl.isRegistered<StoreReviewsBloc>())
           BlocProvider<StoreReviewsBloc>(
-            create: (_) => sl<StoreReviewsBloc>()
-              ..add(FetchStoreReviewsEvent(storeId: effectiveId)),
+            create: (_) =>
+                sl<StoreReviewsBloc>()
+                  ..add(FetchStoreReviewsEvent(storeId: effectiveId)),
           ),
       ],
       child: StoreDetailView(storeId: effectiveId, initialStore: initialStore),
@@ -62,29 +64,36 @@ class StoreDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     final effectiveId = storeId ?? initialStore?.id;
     final hasBloc =
-        context.findAncestorWidgetOfExactType<BlocProvider<StoreDetailBloc>>() !=
-            null;
+        context
+            .findAncestorWidgetOfExactType<BlocProvider<StoreDetailBloc>>() !=
+        null;
     final canResolveBloc = sl.isRegistered<StoreDetailBloc>();
 
-    if (!hasBloc && effectiveId != null && effectiveId.isNotEmpty && canResolveBloc) {
+    if (!hasBloc &&
+        effectiveId != null &&
+        effectiveId.isNotEmpty &&
+        canResolveBloc) {
       return MultiBlocProvider(
         providers: [
           BlocProvider<StoreDetailBloc>(
-            create: (_) => sl<StoreDetailBloc>()
-              ..add(FetchStoreDetailEvent(effectiveId)),
+            create: (_) =>
+                sl<StoreDetailBloc>()..add(FetchStoreDetailEvent(effectiveId)),
           ),
           BlocProvider<StoreServicesBloc>(
-            create: (_) => sl<StoreServicesBloc>()
-              ..add(LoadCategoriesAndServicesEvent(storeId: effectiveId)),
+            create: (_) =>
+                sl<StoreServicesBloc>()
+                  ..add(LoadCategoriesAndServicesEvent(storeId: effectiveId)),
           ),
           BlocProvider<StoreStaffBloc>(
-            create: (_) => sl<StoreStaffBloc>()
-              ..add(FetchStaffEvent(storeId: effectiveId)),
+            create: (_) =>
+                sl<StoreStaffBloc>()
+                  ..add(FetchStaffEvent(storeId: effectiveId)),
           ),
           if (sl.isRegistered<StoreReviewsBloc>())
             BlocProvider<StoreReviewsBloc>(
-              create: (_) => sl<StoreReviewsBloc>()
-                ..add(FetchStoreReviewsEvent(storeId: effectiveId)),
+              create: (_) =>
+                  sl<StoreReviewsBloc>()
+                    ..add(FetchStoreReviewsEvent(storeId: effectiveId)),
             ),
         ],
         child: _StoreDetailContentView(
@@ -141,16 +150,17 @@ class _StoreDetailContentViewState extends State<_StoreDetailContentView> {
     );
   }
 
-  List<BookingServiceItem>? _getInitialBookingServices([String? selectedServiceId]) {
+  List<BookingServiceItem>? _getInitialBookingServices([
+    String? selectedServiceId,
+  ]) {
     try {
       final servicesBloc = context.read<StoreServicesBloc>();
       final state = servicesBloc.state;
       if (state.isLoaded && state.services.isNotEmpty) {
-        final categoryNames = {
-          for (final c in state.categories) c.id: c.name,
-        };
+        final categoryNames = {for (final c in state.categories) c.id: c.name};
         return state.services.map((s) {
-          final cat = (s.categoryId != null && categoryNames.containsKey(s.categoryId))
+          final cat =
+              (s.categoryId != null && categoryNames.containsKey(s.categoryId))
               ? categoryNames[s.categoryId]!
               : 'Services';
           final formattedPrice = s.price >= 1000
@@ -164,7 +174,9 @@ class _StoreDetailContentViewState extends State<_StoreDetailContentView> {
             durationMinutes: s.durationMinutes,
             price: s.price,
             priceDisplay: formattedPrice,
-            isSelected: selectedServiceId != null ? (s.id == selectedServiceId) : false,
+            isSelected: selectedServiceId != null
+                ? (s.id == selectedServiceId)
+                : false,
           );
         }).toList();
       }
@@ -175,7 +187,9 @@ class _StoreDetailContentViewState extends State<_StoreDetailContentView> {
       for (final group in _store.serviceGroups) {
         for (final s in group.services) {
           final match = RegExp(r'(\d+)').firstMatch(s.duration);
-          final mins = match != null ? int.tryParse(match.group(1) ?? '0') : null;
+          final mins = match != null
+              ? int.tryParse(match.group(1) ?? '0')
+              : null;
           list.add(
             BookingServiceItem(
               id: s.id,
@@ -185,7 +199,9 @@ class _StoreDetailContentViewState extends State<_StoreDetailContentView> {
               durationMinutes: mins,
               price: s.price.toInt(),
               priceDisplay: s.priceDisplay,
-              isSelected: selectedServiceId != null ? (s.id == selectedServiceId) : false,
+              isSelected: selectedServiceId != null
+                  ? (s.id == selectedServiceId)
+                  : false,
             ),
           );
         }
@@ -338,8 +354,8 @@ class _StoreDetailContentViewState extends State<_StoreDetailContentView> {
       if (mounted) {
         try {
           context.read<StoreReviewsBloc>().add(
-                FetchStoreReviewsEvent(storeId: effectiveId, isRefresh: true),
-              );
+            FetchStoreReviewsEvent(storeId: effectiveId, isRefresh: true),
+          );
         } catch (_) {}
       }
     }
@@ -347,33 +363,35 @@ class _StoreDetailContentViewState extends State<_StoreDetailContentView> {
 
   @override
   Widget build(BuildContext context) {
-    final hasBloc = context.findAncestorWidgetOfExactType<BlocProvider<StoreDetailBloc>>() != null;
+    final hasBloc =
+        context
+            .findAncestorWidgetOfExactType<BlocProvider<StoreDetailBloc>>() !=
+        null;
     if (!hasBloc) {
       return _buildScaffold(context, _store, false);
     }
 
-    final hasReviewsBloc = sl.isRegistered<StoreReviewsBloc>() &&
-        context.findAncestorWidgetOfExactType<BlocProvider<StoreReviewsBloc>>() != null;
+    final hasReviewsBloc =
+        sl.isRegistered<StoreReviewsBloc>() &&
+        context
+                .findAncestorWidgetOfExactType<
+                  BlocProvider<StoreReviewsBloc>
+                >() !=
+            null;
 
     return MultiBlocListener(
       listeners: [
         BlocListener<StoreDetailBloc, StoreDetailState>(
           listener: (context, state) {
             if (state.isFailure && state.failure != null) {
-              AppToastHelper.showError(
-                context,
-                error: state.failure,
-              );
+              AppToastHelper.showError(context, error: state.failure);
             }
           },
         ),
         BlocListener<StoreServicesBloc, StoreServicesState>(
           listener: (context, state) {
             if (state.isFailure && state.failure != null) {
-              AppToastHelper.showError(
-                context,
-                error: state.failure,
-              );
+              AppToastHelper.showError(context, error: state.failure);
             }
           },
         ),
@@ -381,10 +399,7 @@ class _StoreDetailContentViewState extends State<_StoreDetailContentView> {
           BlocListener<StoreReviewsBloc, StoreReviewsState>(
             listener: (context, state) {
               if (state.isFailure && state.failure != null) {
-                AppToastHelper.showError(
-                  context,
-                  error: state.failure,
-                );
+                AppToastHelper.showError(context, error: state.failure);
               }
             },
           ),
@@ -431,12 +446,14 @@ class _StoreDetailContentViewState extends State<_StoreDetailContentView> {
                   : displayStore.openingHours,
               galleryPhotos: real.images.isNotEmpty
                   ? real.images
-                      .map((url) => StoreGalleryPhotoItem(
+                        .map(
+                          (url) => StoreGalleryPhotoItem(
                             id: url,
                             imageUrl: url,
                             category: 'Interior',
-                          ))
-                      .toList()
+                          ),
+                        )
+                        .toList()
                   : displayStore.galleryPhotos,
             );
           }
@@ -444,11 +461,12 @@ class _StoreDetailContentViewState extends State<_StoreDetailContentView> {
           if (servicesState.isLoaded && servicesState.services.isNotEmpty) {
             final catMap = <String, List<StoreServiceItem>>{};
             final categoryNameMap = {
-              for (final cat in servicesState.categories) cat.id: cat.name
+              for (final cat in servicesState.categories) cat.id: cat.name,
             };
 
             for (final s in servicesState.services) {
-              final catName = (s.categoryId != null &&
+              final catName =
+                  (s.categoryId != null &&
                       categoryNameMap.containsKey(s.categoryId))
                   ? categoryNameMap[s.categoryId]!
                   : 'Services';
@@ -469,10 +487,12 @@ class _StoreDetailContentViewState extends State<_StoreDetailContentView> {
               catMap.putIfAbsent(catName, () => []).add(item);
             }
             final groups = catMap.entries
-                .map((e) => StoreServiceCategoryGroup(
-                      categoryName: e.key,
-                      services: e.value,
-                    ))
+                .map(
+                  (e) => StoreServiceCategoryGroup(
+                    categoryName: e.key,
+                    services: e.value,
+                  ),
+                )
                 .toList();
 
             final overviewServices = servicesState.services.take(4).map((s) {
@@ -509,7 +529,9 @@ class _StoreDetailContentViewState extends State<_StoreDetailContentView> {
               reviewsState.isLoaded &&
               reviewsState.reviewData != null) {
             final reviewData = reviewsState.reviewData!;
-            final total = reviewData.totalReviews > 0 ? reviewData.totalReviews : 1;
+            final total = reviewData.totalReviews > 0
+                ? reviewData.totalReviews
+                : 1;
             final starRatios = {
               5: reviewData.ratingDistribution.star5 / total,
               4: reviewData.ratingDistribution.star4 / total,
@@ -519,15 +541,17 @@ class _StoreDetailContentViewState extends State<_StoreDetailContentView> {
             };
 
             final convertedReviews = reviewData.items
-                .map((r) => StoreReviewItem(
-                      id: r.id,
-                      author: r.customerName,
-                      authorInitials: _getInitials(r.customerName),
-                      avatarBgColor: _getAvatarColor(r.id),
-                      timeAgo: _formatTimeAgo(r.createdAt),
-                      rating: r.rating,
-                      content: r.comment,
-                    ))
+                .map(
+                  (r) => StoreReviewItem(
+                    id: r.id,
+                    author: r.customerName,
+                    authorInitials: _getInitials(r.customerName),
+                    avatarBgColor: _getAvatarColor(r.id),
+                    timeAgo: _formatTimeAgo(r.createdAt),
+                    rating: r.rating,
+                    content: r.comment,
+                  ),
+                )
                 .toList();
 
             displayStore = displayStore.copyWith(
@@ -596,5 +620,3 @@ class _StoreDetailContentViewState extends State<_StoreDetailContentView> {
     );
   }
 }
-
-

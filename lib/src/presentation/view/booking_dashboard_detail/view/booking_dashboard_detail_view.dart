@@ -16,19 +16,18 @@ class BookingDashboardDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     final effectiveId = bookingId ?? 'BK-TODAY-01';
     final hasBlocs =
-        sl.isRegistered<BookingDetailBloc>() && sl.isRegistered<BookingActionBloc>();
+        sl.isRegistered<BookingDetailBloc>() &&
+        sl.isRegistered<BookingActionBloc>();
     if (!hasBlocs) {
       return _BookingDashboardDetailContent(bookingId: effectiveId);
     }
     return MultiBlocProvider(
       providers: [
         BlocProvider<BookingDetailBloc>(
-          create: (_) => sl<BookingDetailBloc>()
-            ..add(LoadBookingDetailEvent(effectiveId)),
+          create: (_) =>
+              sl<BookingDetailBloc>()..add(LoadBookingDetailEvent(effectiveId)),
         ),
-        BlocProvider<BookingActionBloc>(
-          create: (_) => sl<BookingActionBloc>(),
-        ),
+        BlocProvider<BookingActionBloc>(create: (_) => sl<BookingActionBloc>()),
       ],
       child: _BookingDashboardDetailContent(bookingId: effectiveId),
     );
@@ -97,11 +96,11 @@ class _BookingDashboardDetailContent extends StatelessWidget {
                 final reason = reasonController.text.trim();
                 Navigator.of(dialogCtx).pop();
                 parentContext.read<BookingActionBloc>().add(
-                      CancelBookingEvent(
-                        bookingId: bookingId,
-                        reason: reason.isNotEmpty ? reason : 'Customer cancelled',
-                      ),
-                    );
+                  CancelBookingEvent(
+                    bookingId: bookingId,
+                    reason: reason.isNotEmpty ? reason : 'Customer cancelled',
+                  ),
+                );
               },
               variant: AppButtonVariant.destructive,
               borderRadius: BorderRadius.circular(10),
@@ -116,7 +115,8 @@ class _BookingDashboardDetailContent extends StatelessWidget {
   void _connectSalon(BuildContext context, String? phone, String? storeName) {
     AppToastHelper.showInfo(
       context,
-      message: 'Connecting to ${storeName ?? 'Salon'} (${phone ?? '+84 912 345 678'})...',
+      message:
+          'Connecting to ${storeName ?? 'Salon'} (${phone ?? '+84 912 345 678'})...',
     );
   }
 
@@ -157,28 +157,24 @@ class _BookingDashboardDetailContent extends StatelessWidget {
                 message: 'Note updated successfully',
               );
             } else if (state.isFailure && state.failure != null) {
-              AppToastHelper.showError(
-                context,
-                error: state.failure,
-              );
+              AppToastHelper.showError(context, error: state.failure);
             }
           },
         ),
         BlocListener<BookingDetailBloc, BookingDetailState>(
           listener: (context, state) {
             if (state.isFailure && state.failure != null) {
-              AppToastHelper.showError(
-                context,
-                error: state.failure,
-              );
+              AppToastHelper.showError(context, error: state.failure);
             }
           },
         ),
       ],
       child: BlocBuilder<BookingDetailBloc, BookingDetailState>(
         builder: (context, detailState) {
-          final isSubmittingAction =
-              context.watch<BookingActionBloc>().state.isLoading;
+          final isSubmittingAction = context
+              .watch<BookingActionBloc>()
+              .state
+              .isLoading;
           final booking = detailState.booking;
           final canCancel = booking?.actions?.canCancel ?? true;
 
@@ -209,66 +205,65 @@ class _BookingDashboardDetailContent extends StatelessWidget {
           AppToastHelper.showInfo(context, message: 'More options');
         },
       ),
-            bottomNavigationBar: SafeArea(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, -3),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    // Cancel Button
-                    Expanded(
-                      child: AppButton(
-                        text: 'Cancel',
-                        onPressed: (canCancel && !isSubmittingAction)
-                            ? () => _showCancelDialog(context)
-                            : null,
-                        variant: AppButtonVariant.outline,
-                        isLoading: isSubmittingAction,
-                        textColor: canCancel ? const Color(0xFFFA7762) : Colors.grey,
-                        borderRadius: BorderRadius.circular(24),
-                        height: 48,
-                      ),
-                    ),
-
-                    const SizedBox(width: 14),
-
-                    // Connect Button
-                    Expanded(
-                      child: AppButton(
-                        text: 'Connect',
-                        onPressed: () => _connectSalon(
-                          context,
-                          booking?.store?.address,
-                          booking?.store?.name,
-                        ),
-                        backgroundColor: const Color(0xFFFA7762),
-                        textColor: Colors.white,
-                        borderRadius: BorderRadius.circular(24),
-                        height: 48,
-                      ),
-                    ),
-                  ],
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, -3),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              // Cancel Button
+              Expanded(
+                child: AppButton(
+                  text: 'Cancel',
+                  onPressed: (canCancel && !isSubmittingAction)
+                      ? () => _showCancelDialog(context)
+                      : null,
+                  variant: AppButtonVariant.outline,
+                  isLoading: isSubmittingAction,
+                  textColor: canCancel ? const Color(0xFFFA7762) : Colors.grey,
+                  borderRadius: BorderRadius.circular(24),
+                  height: 48,
                 ),
               ),
-            ),
-            body: SafeArea(
-              top: false,
-              child: isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(color: Color(0xFFFA7762)),
-                    )
-                  : BookingDashboardDetailBodyView(booking: booking),
-            ),
-          );
+
+              const SizedBox(width: 14),
+
+              // Connect Button
+              Expanded(
+                child: AppButton(
+                  text: 'Connect',
+                  onPressed: () => _connectSalon(
+                    context,
+                    booking?.store?.address,
+                    booking?.store?.name,
+                  ),
+                  backgroundColor: const Color(0xFFFA7762),
+                  textColor: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  height: 48,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: SafeArea(
+        top: false,
+        child: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(color: Color(0xFFFA7762)),
+              )
+            : BookingDashboardDetailBodyView(booking: booking),
+      ),
+    );
   }
 }
-

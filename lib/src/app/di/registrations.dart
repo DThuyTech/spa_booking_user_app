@@ -332,7 +332,8 @@ Future<void> registerDependencies({
     () => StoreStaffBloc(getStoreStaffUseCase: sl<GetStoreStaffUseCase>()),
   );
   sl.registerFactory<StoreGalleryBloc>(
-    () => StoreGalleryBloc(getStoreGalleryUseCase: sl<GetStoreGalleryUseCase>()),
+    () =>
+        StoreGalleryBloc(getStoreGalleryUseCase: sl<GetStoreGalleryUseCase>()),
   );
   sl.registerFactory<GetStoreScheduleGridUseCase>(
     () => GetStoreScheduleGridUseCase(sl<StoreRepository>()),
@@ -381,9 +382,7 @@ Future<void> registerDependencies({
     ),
   );
   sl.registerFactory<CreateBookingBloc>(
-    () => CreateBookingBloc(
-      createBookingUseCase: sl<CreateBookingUseCase>(),
-    ),
+    () => CreateBookingBloc(createBookingUseCase: sl<CreateBookingUseCase>()),
   );
   sl.registerFactory<BookingDashboardBloc>(
     () => BookingDashboardBloc(
@@ -403,9 +402,7 @@ Future<void> registerDependencies({
     ),
   );
   sl.registerFactory<SpendingAnalyticsBloc>(
-    () => SpendingAnalyticsBloc(
-      sl<GetCustomerSpendingAnalyticsUseCase>(),
-    ),
+    () => SpendingAnalyticsBloc(sl<GetCustomerSpendingAnalyticsUseCase>()),
   );
 
   // 11. Feature - Reviews & Ratings
@@ -425,7 +422,8 @@ Future<void> registerDependencies({
     () => CreateBookingReviewUseCase(sl<ReviewRepository>()),
   );
   sl.registerFactory<StoreReviewsBloc>(
-    () => StoreReviewsBloc(getStoreReviewsUseCase: sl<GetStoreReviewsUseCase>()),
+    () =>
+        StoreReviewsBloc(getStoreReviewsUseCase: sl<GetStoreReviewsUseCase>()),
   );
   sl.registerFactory<WriteReviewBloc>(
     () => WriteReviewBloc(
@@ -439,7 +437,9 @@ Future<void> registerDependencies({
     () => FavoriteRemoteDataSourceImpl(sl<NetworkClient>()),
   );
   sl.registerLazySingleton<FavoriteRepository>(
-    () => FavoriteRepositoryImpl(remoteDataSource: sl<FavoriteRemoteDataSource>()),
+    () => FavoriteRepositoryImpl(
+      remoteDataSource: sl<FavoriteRemoteDataSource>(),
+    ),
   );
   sl.registerFactory<GetFavoritesUseCase>(
     () => GetFavoritesUseCase(sl<FavoriteRepository>()),
@@ -459,7 +459,8 @@ Future<void> registerDependencies({
     () => VoucherRemoteDataSourceImpl(sl<NetworkClient>()),
   );
   sl.registerLazySingleton<VoucherRepository>(
-    () => VoucherRepositoryImpl(remoteDataSource: sl<VoucherRemoteDataSource>()),
+    () =>
+        VoucherRepositoryImpl(remoteDataSource: sl<VoucherRemoteDataSource>()),
   );
   sl.registerFactory<GetStoreVouchersUseCase>(
     () => GetStoreVouchersUseCase(sl<VoucherRepository>()),
@@ -483,7 +484,9 @@ Future<void> registerDependencies({
     () => NotificationRemoteDataSourceImpl(sl<NetworkClient>()),
   );
   sl.registerLazySingleton<NotificationRepository>(
-    () => NotificationRepositoryImpl(remoteDataSource: sl<NotificationRemoteDataSource>()),
+    () => NotificationRepositoryImpl(
+      remoteDataSource: sl<NotificationRemoteDataSource>(),
+    ),
   );
   sl.registerFactory<GetNotificationsUseCase>(
     () => GetNotificationsUseCase(sl<NotificationRepository>()),
@@ -500,7 +503,8 @@ Future<void> registerDependencies({
   sl.registerFactory<NotificationBloc>(
     () => NotificationBloc(
       getNotificationsUseCase: sl<GetNotificationsUseCase>(),
-      getUnreadNotificationCountUseCase: sl<GetUnreadNotificationCountUseCase>(),
+      getUnreadNotificationCountUseCase:
+          sl<GetUnreadNotificationCountUseCase>(),
       markNotificationReadUseCase: sl<MarkNotificationReadUseCase>(),
       markAllNotificationsReadUseCase: sl<MarkAllNotificationsReadUseCase>(),
     ),

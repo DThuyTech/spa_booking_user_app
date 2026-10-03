@@ -56,9 +56,7 @@ class _HomeViewState extends State<HomeView> {
     });
     AppToast.info(
       context,
-      message: willBeFavorite
-          ? 'Added to favorites'
-          : 'Removed from favorites',
+      message: willBeFavorite ? 'Added to favorites' : 'Removed from favorites',
     );
   }
 
@@ -92,8 +90,8 @@ class _HomeViewState extends State<HomeView> {
         imageUrl: (s.coverUrl != null && s.coverUrl!.isNotEmpty)
             ? s.coverUrl!
             : (s.logoUrl != null && s.logoUrl!.isNotEmpty)
-                ? s.logoUrl!
-                : 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=600&q=80',
+            ? s.logoUrl!
+            : 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=600&q=80',
       );
     }).toList();
   }
@@ -124,8 +122,8 @@ class _HomeViewState extends State<HomeView> {
         imageUrl: (s.coverUrl != null && s.coverUrl!.isNotEmpty)
             ? s.coverUrl!
             : (s.logoUrl != null && s.logoUrl!.isNotEmpty)
-                ? s.logoUrl!
-                : 'https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?auto=format&fit=crop&w=400&q=80',
+            ? s.logoUrl!
+            : 'https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?auto=format&fit=crop&w=400&q=80',
         isFavorite: _favoriteStoreIds.contains(s.id),
       );
     }).toList();

@@ -12,7 +12,7 @@ class BookingDashboardBloc
   final GetCustomerBookingsUseCase getCustomerBookingsUseCase;
 
   BookingDashboardBloc({required this.getCustomerBookingsUseCase})
-      : super(const BookingDashboardState()) {
+    : super(const BookingDashboardState()) {
     on<FetchCustomerBookingsEvent>(_onFetchBookings);
     on<ChangeBookingTabEvent>(_onChangeTab);
     on<LoadMoreBookingsEvent>(_onLoadMore);
@@ -24,10 +24,9 @@ class BookingDashboardBloc
   ) async {
     final tab = event.tab ?? state.currentTab;
     if (!event.isRefresh) {
-      emit(state.copyWith(
-        status: BookingDashboardStatus.loading,
-        failure: null,
-      ));
+      emit(
+        state.copyWith(status: BookingDashboardStatus.loading, failure: null),
+      );
     }
 
     final result = await getCustomerBookingsUseCase(
@@ -37,19 +36,23 @@ class BookingDashboardBloc
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: BookingDashboardStatus.failure,
-        failure: failure,
-      )),
-      (response) => emit(state.copyWith(
-        status: BookingDashboardStatus.loaded,
-        summary: response.summary,
-        items: response.items,
-        currentTab: tab,
-        page: 1,
-        hasMore: response.pagination.page < response.pagination.totalPages,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(
+          status: BookingDashboardStatus.failure,
+          failure: failure,
+        ),
+      ),
+      (response) => emit(
+        state.copyWith(
+          status: BookingDashboardStatus.loaded,
+          summary: response.summary,
+          items: response.items,
+          currentTab: tab,
+          page: 1,
+          hasMore: response.pagination.page < response.pagination.totalPages,
+          failure: null,
+        ),
+      ),
     );
   }
 
@@ -57,11 +60,13 @@ class BookingDashboardBloc
     ChangeBookingTabEvent event,
     Emitter<BookingDashboardState> emit,
   ) async {
-    emit(state.copyWith(
-      status: BookingDashboardStatus.loading,
-      currentTab: event.tab,
-      failure: null,
-    ));
+    emit(
+      state.copyWith(
+        status: BookingDashboardStatus.loading,
+        currentTab: event.tab,
+        failure: null,
+      ),
+    );
 
     final result = await getCustomerBookingsUseCase(
       tab: event.tab,
@@ -70,19 +75,23 @@ class BookingDashboardBloc
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: BookingDashboardStatus.failure,
-        failure: failure,
-      )),
-      (response) => emit(state.copyWith(
-        status: BookingDashboardStatus.loaded,
-        summary: response.summary,
-        items: response.items,
-        currentTab: event.tab,
-        page: 1,
-        hasMore: response.pagination.page < response.pagination.totalPages,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(
+          status: BookingDashboardStatus.failure,
+          failure: failure,
+        ),
+      ),
+      (response) => emit(
+        state.copyWith(
+          status: BookingDashboardStatus.loaded,
+          summary: response.summary,
+          items: response.items,
+          currentTab: event.tab,
+          page: 1,
+          hasMore: response.pagination.page < response.pagination.totalPages,
+          failure: null,
+        ),
+      ),
     );
   }
 
@@ -101,12 +110,14 @@ class BookingDashboardBloc
 
     result.fold(
       (Failure failure) => emit(state.copyWith(failure: failure)),
-      (response) => emit(state.copyWith(
-        summary: response.summary,
-        items: [...state.items, ...response.items],
-        page: nextPage,
-        hasMore: response.pagination.page < response.pagination.totalPages,
-      )),
+      (response) => emit(
+        state.copyWith(
+          summary: response.summary,
+          items: [...state.items, ...response.items],
+          page: nextPage,
+          hasMore: response.pagination.page < response.pagination.totalPages,
+        ),
+      ),
     );
   }
 }

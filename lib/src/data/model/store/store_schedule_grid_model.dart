@@ -3,40 +3,46 @@ import 'package:spa_booking/src/domain/entities/store/schedule_grid_entity.dart'
 
 extension StoreScheduleGridModelX on StoreScheduleGridModel {
   ScheduleGridEntity toEntity() => ScheduleGridEntity(
-        storeId: storeId,
-        date: date,
-        isOpen: operatingHours?.isOpen ?? true,
-        openTime: operatingHours?.openTime ?? '09:00',
-        closeTime: operatingHours?.closeTime ?? '21:00',
-        bookingPolicy: bookingPolicy?.toEntity() ?? const BookingPolicyEntity(),
-        staffShifts: staffShifts
-            .map((s) => StaffShiftEntity(
-                  staffProfileId: s.staffProfileId,
-                  staffName: s.staffName,
-                  shiftStart: s.shiftStart,
-                  shiftEnd: s.shiftEnd,
-                ))
-            .toList(),
-        bookedIntervals: bookedIntervals
-            .map((b) => BookedIntervalEntity(
-                  startAt: b.startAt,
-                  endAt: b.endAt,
-                  staffProfileId: b.staffProfileId,
-                ))
-            .toList(),
-        slots: slots
-            .map((s) => ScheduleSlotEntity(
-                  time: s.time,
-                  isAvailable: s.isAvailable,
-                  availableStaffCount: s.availableStaffCount,
-                  maxCapacity: s.maxCapacity,
-                  availableStaffIds: s.availableStaffIds,
-                  canBookUnassigned: s.canBookUnassigned,
-                  unassignedBookedCount: s.unassignedBookedCount,
-                  unassignedRemaining: s.unassignedRemaining,
-                ))
-            .toList(),
-      );
+    storeId: storeId,
+    date: date,
+    isOpen: operatingHours?.isOpen ?? true,
+    openTime: operatingHours?.openTime ?? '09:00',
+    closeTime: operatingHours?.closeTime ?? '21:00',
+    bookingPolicy: bookingPolicy?.toEntity() ?? const BookingPolicyEntity(),
+    staffShifts: staffShifts
+        .map(
+          (s) => StaffShiftEntity(
+            staffProfileId: s.staffProfileId,
+            staffName: s.staffName,
+            shiftStart: s.shiftStart,
+            shiftEnd: s.shiftEnd,
+          ),
+        )
+        .toList(),
+    bookedIntervals: bookedIntervals
+        .map(
+          (b) => BookedIntervalEntity(
+            startAt: b.startAt,
+            endAt: b.endAt,
+            staffProfileId: b.staffProfileId,
+          ),
+        )
+        .toList(),
+    slots: slots
+        .map(
+          (s) => ScheduleSlotEntity(
+            time: s.time,
+            isAvailable: s.isAvailable,
+            availableStaffCount: s.availableStaffCount,
+            maxCapacity: s.maxCapacity,
+            availableStaffIds: s.availableStaffIds,
+            canBookUnassigned: s.canBookUnassigned,
+            unassignedBookedCount: s.unassignedBookedCount,
+            unassignedRemaining: s.unassignedRemaining,
+          ),
+        )
+        .toList(),
+  );
 }
 
 class StoreBookingPolicyModel extends Equatable {
@@ -60,17 +66,17 @@ class StoreBookingPolicyModel extends Equatable {
   }
 
   BookingPolicyEntity toEntity() => BookingPolicyEntity(
-        allowUnassignedBooking: allowUnassignedBooking,
-        maxConcurrentUnassignedBookings: maxConcurrentUnassignedBookings,
-        isUnlimitedUnassigned: isUnlimitedUnassigned,
-      );
+    allowUnassignedBooking: allowUnassignedBooking,
+    maxConcurrentUnassignedBookings: maxConcurrentUnassignedBookings,
+    isUnlimitedUnassigned: isUnlimitedUnassigned,
+  );
 
   @override
   List<Object?> get props => [
-        allowUnassignedBooking,
-        maxConcurrentUnassignedBookings,
-        isUnlimitedUnassigned,
-      ];
+    allowUnassignedBooking,
+    maxConcurrentUnassignedBookings,
+    isUnlimitedUnassigned,
+  ];
 }
 
 class StoreOperatingHoursModel extends Equatable {
@@ -197,15 +203,15 @@ class StoreScheduleSlotModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        time,
-        isAvailable,
-        availableStaffCount,
-        maxCapacity,
-        availableStaffIds,
-        canBookUnassigned,
-        unassignedBookedCount,
-        unassignedRemaining,
-      ];
+    time,
+    isAvailable,
+    availableStaffCount,
+    maxCapacity,
+    availableStaffIds,
+    canBookUnassigned,
+    unassignedBookedCount,
+    unassignedRemaining,
+  ];
 }
 
 class StoreScheduleGridModel extends Equatable {
@@ -280,12 +286,12 @@ class StoreScheduleGridModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        storeId,
-        date,
-        operatingHours,
-        bookingPolicy,
-        staffShifts,
-        bookedIntervals,
-        slots,
-      ];
+    storeId,
+    date,
+    operatingHours,
+    bookingPolicy,
+    staffShifts,
+    bookedIntervals,
+    slots,
+  ];
 }

@@ -109,7 +109,8 @@ class ScheduleGridMapper {
     final columnMinutes = <int>[];
     final allTimeStrings = <String>[
       for (final s in grid.slots) s.time,
-      for (final s in availability?.slots ?? const <BookingSlotEntity>[]) s.time,
+      for (final s in availability?.slots ?? const <BookingSlotEntity>[])
+        s.time,
     ];
 
     if (allTimeStrings.isNotEmpty) {
@@ -146,7 +147,8 @@ class ScheduleGridMapper {
       final slot = storeSlotMap[m];
       if (slot != null) {
         if (!slot.canBookUnassigned && !slot.isAvailable) return false;
-        if (slot.unassignedRemaining != null && slot.unassignedRemaining! <= 0) {
+        if (slot.unassignedRemaining != null &&
+            slot.unassignedRemaining! <= 0) {
           return false;
         }
         return slot.isAvailable;
@@ -185,14 +187,16 @@ class ScheduleGridMapper {
       final shiftEnd = toMinutes(shift.shiftEnd);
       final isOffAllDay = shiftStart == null || shiftEnd == null;
 
-      staffMembers.add(BookingStaffItem(
-        id: shift.staffProfileId,
-        name: shift.staffName,
-        initials: initials(shift.staffName),
-        avatarBgColor: _avatarColors[i % _avatarColors.length],
-        photoUrl: staffAvatarUrls[shift.staffProfileId],
-        isOff: isOffAllDay,
-      ));
+      staffMembers.add(
+        BookingStaffItem(
+          id: shift.staffProfileId,
+          name: shift.staffName,
+          initials: initials(shift.staffName),
+          avatarBgColor: _avatarColors[i % _avatarColors.length],
+          photoUrl: staffAvatarUrls[shift.staffProfileId],
+          isOff: isOffAllDay,
+        ),
+      );
       if (isOffAllDay) continue;
 
       for (final m in columnMinutes) {
@@ -203,45 +207,56 @@ class ScheduleGridMapper {
         final slot = storeSlotMap[m];
 
         if (m < shiftStart || m >= shiftEnd) {
-          slots.add(BookingTimeSlotItem(
-            staffId: shift.staffProfileId,
-            time: time,
-            isOff: true,
-          ));
+          slots.add(
+            BookingTimeSlotItem(
+              staffId: shift.staffProfileId,
+              time: time,
+              isOff: true,
+            ),
+          );
         } else if (overlapsBooking(shift.staffProfileId, m, cellEnd)) {
-          slots.add(BookingTimeSlotItem(
-            staffId: shift.staffProfileId,
-            time: time,
-            bookedTitle: bookedLabel,
-            color: const Color(0xFFDBEAFE),
-          ));
+          slots.add(
+            BookingTimeSlotItem(
+              staffId: shift.staffProfileId,
+              time: time,
+              bookedTitle: bookedLabel,
+              color: const Color(0xFFDBEAFE),
+            ),
+          );
         } else if (slot != null &&
             slot.availableStaffIds.isNotEmpty &&
             !slot.availableStaffIds.contains(shift.staffProfileId)) {
           // Staff is busy/not available for this slot
-          slots.add(BookingTimeSlotItem(
-            staffId: shift.staffProfileId,
-            time: time,
-            isOff: true,
-            bookedTitle: fullLabel,
-          ));
+          slots.add(
+            BookingTimeSlotItem(
+              staffId: shift.staffProfileId,
+              time: time,
+              isOff: true,
+              bookedTitle: fullLabel,
+            ),
+          );
         } else if (storeSlotAvailable[m] == false &&
-            (slot == null || !slot.availableStaffIds.contains(shift.staffProfileId))) {
-          slots.add(BookingTimeSlotItem(
-            staffId: shift.staffProfileId,
-            time: time,
-            isOff: true,
-            bookedTitle: fullLabel,
-          ));
+            (slot == null ||
+                !slot.availableStaffIds.contains(shift.staffProfileId))) {
+          slots.add(
+            BookingTimeSlotItem(
+              staffId: shift.staffProfileId,
+              time: time,
+              isOff: true,
+              bookedTitle: fullLabel,
+            ),
+          );
         } else if (serviceSlotAvailable[m] == false ||
             m + duration > shiftEnd ||
             overlapsBooking(shift.staffProfileId, m, m + duration)) {
-          slots.add(BookingTimeSlotItem(
-            staffId: shift.staffProfileId,
-            time: time,
-            isOff: true,
-            bookedTitle: notFitLabel,
-          ));
+          slots.add(
+            BookingTimeSlotItem(
+              staffId: shift.staffProfileId,
+              time: time,
+              isOff: true,
+              bookedTitle: notFitLabel,
+            ),
+          );
         }
         // else: free cell → no item, rendered as tappable empty slot.
       }
@@ -253,7 +268,8 @@ class ScheduleGridMapper {
         policy.allowUnassignedBooking || grid.staffShifts.isEmpty;
 
     if (showUnassigned) {
-      final isUnlimited = policy.isUnlimitedUnassigned ||
+      final isUnlimited =
+          policy.isUnlimitedUnassigned ||
           (policy.maxConcurrentUnassignedBookings == null &&
               grid.staffShifts.isEmpty &&
               !policy.allowUnassignedBooking);
@@ -261,12 +277,14 @@ class ScheduleGridMapper {
       if (isUnlimited) {
         // Unlimited: Hide existing bookings and show a single open row for the user to book.
         final openRowId = 'unassigned_open';
-        staffMembers.add(BookingStaffItem(
-          id: openRowId,
-          name: grid.staffShifts.isEmpty ? 'Available' : 'Any Staff',
-          initials: grid.staffShifts.isEmpty ? 'AV' : 'ANY',
-          avatarBgColor: const Color(0xFFD1FAE5),
-        ));
+        staffMembers.add(
+          BookingStaffItem(
+            id: openRowId,
+            name: grid.staffShifts.isEmpty ? 'Available' : 'Any Staff',
+            initials: grid.staffShifts.isEmpty ? 'AV' : 'ANY',
+            avatarBgColor: const Color(0xFFD1FAE5),
+          ),
+        );
 
         for (final m in columnMinutes) {
           final time = toDisplay(
@@ -274,12 +292,14 @@ class ScheduleGridMapper {
           );
 
           if (!isSlotBookable(m)) {
-            slots.add(BookingTimeSlotItem(
-              staffId: openRowId,
-              time: time,
-              isOff: true,
-              bookedTitle: fullLabel,
-            ));
+            slots.add(
+              BookingTimeSlotItem(
+                staffId: openRowId,
+                time: time,
+                isOff: true,
+                bookedTitle: fullLabel,
+              ),
+            );
           } else {
             // If availability API already validated this start time, it fits.
             // Otherwise verify remaining time within operating hours.
@@ -298,12 +318,14 @@ class ScheduleGridMapper {
               }
             }
             if (!fits) {
-              slots.add(BookingTimeSlotItem(
-                staffId: openRowId,
-                time: time,
-                isOff: true,
-                bookedTitle: notFitLabel,
-              ));
+              slots.add(
+                BookingTimeSlotItem(
+                  staffId: openRowId,
+                  time: time,
+                  isOff: true,
+                  bookedTitle: notFitLabel,
+                ),
+              );
             }
           }
         }
@@ -334,8 +356,9 @@ class ScheduleGridMapper {
         for (final interval in intervals) {
           var placed = false;
           for (final lane in lanes) {
-            final overlaps =
-                lane.any((i) => interval.$1 < i.$2 && interval.$2 > i.$1);
+            final overlaps = lane.any(
+              (i) => interval.$1 < i.$2 && interval.$2 > i.$1,
+            );
             if (!overlaps) {
               lane.add(interval);
               placed = true;
@@ -353,45 +376,54 @@ class ScheduleGridMapper {
           final laneId = 'unassigned_lane_${i + 1}';
           final laneName = 'Slot ${i + 1}';
 
-          staffMembers.add(BookingStaffItem(
-            id: laneId,
-            name: laneName,
-            initials: 'S${i + 1}',
-            avatarBgColor: _avatarColors[i % _avatarColors.length],
-          ));
+          staffMembers.add(
+            BookingStaffItem(
+              id: laneId,
+              name: laneName,
+              initials: 'S${i + 1}',
+              avatarBgColor: _avatarColors[i % _avatarColors.length],
+            ),
+          );
 
           for (final m in columnMinutes) {
             final time = toDisplay(
               '${(m ~/ 60).toString().padLeft(2, '0')}:${(m % 60).toString().padLeft(2, '0')}',
             );
             final cellEnd = m + stepMinutes;
-            final isBookedInLane =
-                lane.any((item) => m < item.$2 && cellEnd > item.$1);
+            final isBookedInLane = lane.any(
+              (item) => m < item.$2 && cellEnd > item.$1,
+            );
 
             if (isBookedInLane) {
-              slots.add(BookingTimeSlotItem(
-                staffId: laneId,
-                time: time,
-                bookedTitle: bookedLabel,
-                color: const Color(0xFFDBEAFE),
-              ));
-            } else {
-              if (!isSlotBookable(m)) {
-                slots.add(BookingTimeSlotItem(
+              slots.add(
+                BookingTimeSlotItem(
                   staffId: laneId,
                   time: time,
-                  isOff: true,
-                  bookedTitle: fullLabel,
-                ));
+                  bookedTitle: bookedLabel,
+                  color: const Color(0xFFDBEAFE),
+                ),
+              );
+            } else {
+              if (!isSlotBookable(m)) {
+                slots.add(
+                  BookingTimeSlotItem(
+                    staffId: laneId,
+                    time: time,
+                    isOff: true,
+                    bookedTitle: fullLabel,
+                  ),
+                );
               } else if (serviceSlotAvailable[m] == false ||
                   m + duration > closeMin ||
                   lane.any((item) => m < item.$2 && m + duration > item.$1)) {
-                slots.add(BookingTimeSlotItem(
-                  staffId: laneId,
-                  time: time,
-                  isOff: true,
-                  bookedTitle: notFitLabel,
-                ));
+                slots.add(
+                  BookingTimeSlotItem(
+                    staffId: laneId,
+                    time: time,
+                    isOff: true,
+                    bookedTitle: notFitLabel,
+                  ),
+                );
               }
               // else: available empty cell
             }
@@ -400,12 +432,14 @@ class ScheduleGridMapper {
 
         // Always show 1 open row for customer booking
         final openRowId = 'unassigned_open';
-        staffMembers.add(BookingStaffItem(
-          id: openRowId,
-          name: grid.staffShifts.isEmpty ? 'Available' : 'Any Staff',
-          initials: grid.staffShifts.isEmpty ? 'AV' : 'ANY',
-          avatarBgColor: const Color(0xFFD1FAE5),
-        ));
+        staffMembers.add(
+          BookingStaffItem(
+            id: openRowId,
+            name: grid.staffShifts.isEmpty ? 'Available' : 'Any Staff',
+            initials: grid.staffShifts.isEmpty ? 'AV' : 'ANY',
+            avatarBgColor: const Color(0xFFD1FAE5),
+          ),
+        );
 
         for (final m in columnMinutes) {
           final time = toDisplay(
@@ -413,12 +447,14 @@ class ScheduleGridMapper {
           );
 
           if (!isSlotBookable(m)) {
-            slots.add(BookingTimeSlotItem(
-              staffId: openRowId,
-              time: time,
-              isOff: true,
-              bookedTitle: fullLabel,
-            ));
+            slots.add(
+              BookingTimeSlotItem(
+                staffId: openRowId,
+                time: time,
+                isOff: true,
+                bookedTitle: fullLabel,
+              ),
+            );
           } else {
             final hasAvailability = serviceSlotAvailable.containsKey(m);
             var fits = true;
@@ -435,12 +471,14 @@ class ScheduleGridMapper {
               }
             }
             if (!fits) {
-              slots.add(BookingTimeSlotItem(
-                staffId: openRowId,
-                time: time,
-                isOff: true,
-                bookedTitle: notFitLabel,
-              ));
+              slots.add(
+                BookingTimeSlotItem(
+                  staffId: openRowId,
+                  time: time,
+                  isOff: true,
+                  bookedTitle: notFitLabel,
+                ),
+              );
             }
             // else: available empty cell
           }

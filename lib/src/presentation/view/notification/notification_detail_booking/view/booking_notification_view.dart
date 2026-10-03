@@ -10,10 +10,7 @@ import '../mockup_data/booking_notification_mock_data.dart';
 class BookingNotificationPage extends StatelessWidget {
   final BookingNotificationData? booking;
 
-  const BookingNotificationPage({
-    super.key,
-    this.booking,
-  });
+  const BookingNotificationPage({super.key, this.booking});
 
   @override
   Widget build(BuildContext context) {

@@ -30,11 +30,13 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     FetchNotificationsEvent event,
     Emitter<NotificationState> emit,
   ) async {
-    emit(state.copyWith(
-      status: NotificationStatus.loading,
-      currentFilter: event.type ?? event.status ?? 'ALL',
-      failure: null,
-    ));
+    emit(
+      state.copyWith(
+        status: NotificationStatus.loading,
+        currentFilter: event.type ?? event.status ?? 'ALL',
+        failure: null,
+      ),
+    );
 
     final result = await getNotificationsUseCase(
       page: event.page,
@@ -44,18 +46,19 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     );
 
     result.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: NotificationStatus.failure,
-        failure: failure,
-      )),
-      (NotificationListEntity entity) => emit(state.copyWith(
-        status: NotificationStatus.loaded,
-        items: entity.items,
-        page: entity.page,
-        total: entity.total,
-        totalPages: entity.totalPages,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: NotificationStatus.failure, failure: failure),
+      ),
+      (NotificationListEntity entity) => emit(
+        state.copyWith(
+          status: NotificationStatus.loaded,
+          items: entity.items,
+          page: entity.page,
+          total: entity.total,
+          totalPages: entity.totalPages,
+          failure: null,
+        ),
+      ),
     );
   }
 

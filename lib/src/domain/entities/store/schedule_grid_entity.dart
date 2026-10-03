@@ -13,10 +13,10 @@ class BookingPolicyEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        allowUnassignedBooking,
-        maxConcurrentUnassignedBookings,
-        isUnlimitedUnassigned,
-      ];
+    allowUnassignedBooking,
+    maxConcurrentUnassignedBookings,
+    isUnlimitedUnassigned,
+  ];
 }
 
 /// Anonymized store schedule grid (Excel table view) for a single day.
@@ -46,16 +46,16 @@ class ScheduleGridEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        storeId,
-        date,
-        isOpen,
-        openTime,
-        closeTime,
-        bookingPolicy,
-        staffShifts,
-        bookedIntervals,
-        slots,
-      ];
+    storeId,
+    date,
+    isOpen,
+    openTime,
+    closeTime,
+    bookingPolicy,
+    staffShifts,
+    bookedIntervals,
+    slots,
+  ];
 }
 
 class StaffShiftEntity extends Equatable {
@@ -118,13 +118,13 @@ class ScheduleSlotEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        time,
-        isAvailable,
-        availableStaffCount,
-        maxCapacity,
-        availableStaffIds,
-        canBookUnassigned,
-        unassignedBookedCount,
-        unassignedRemaining,
-      ];
+    time,
+    isAvailable,
+    availableStaffCount,
+    maxCapacity,
+    availableStaffIds,
+    canBookUnassigned,
+    unassignedBookedCount,
+    unassignedRemaining,
+  ];
 }

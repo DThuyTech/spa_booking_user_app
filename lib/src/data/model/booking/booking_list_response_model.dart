@@ -41,7 +41,8 @@ abstract class BookingListResponseModel with _$BookingListResponseModel {
 
   factory BookingListResponseModel.fromJson(Map<String, dynamic> json) {
     final Map<String, dynamic> normalized = Map<String, dynamic>.from(json);
-    if (!normalized.containsKey('pagination') || normalized['pagination'] == null) {
+    if (!normalized.containsKey('pagination') ||
+        normalized['pagination'] == null) {
       normalized['pagination'] = json;
     }
     final rawSummary = normalized['summary'];
@@ -54,9 +55,9 @@ abstract class BookingListResponseModel with _$BookingListResponseModel {
           : null,
       items: rawItems is List
           ? rawItems
-              .whereType<Map<String, dynamic>>()
-              .map(BookingModel.fromJson)
-              .toList()
+                .whereType<Map<String, dynamic>>()
+                .map(BookingModel.fromJson)
+                .toList()
           : const [],
       pagination: rawPagination is Map<String, dynamic>
           ? BookingPaginationModel.fromJson(rawPagination)
@@ -67,18 +68,18 @@ abstract class BookingListResponseModel with _$BookingListResponseModel {
 
 extension BookingListResponseModelX on BookingListResponseModel {
   BookingListResponseEntity toEntity() => BookingListResponseEntity(
-        summary: BookingSummaryEntity(
-          total: summary?.total ?? 0,
-          upcoming: summary?.upcoming ?? 0,
-          past: summary?.past ?? 0,
-          cancelled: summary?.cancelled ?? 0,
-        ),
-        items: items.map((m) => m.toEntity()).toList(),
-        pagination: BookingPaginationEntity(
-          total: pagination?.total ?? 0,
-          page: pagination?.page ?? 1,
-          limit: pagination?.limit ?? 20,
-          totalPages: pagination?.totalPages ?? 1,
-        ),
-      );
+    summary: BookingSummaryEntity(
+      total: summary?.total ?? 0,
+      upcoming: summary?.upcoming ?? 0,
+      past: summary?.past ?? 0,
+      cancelled: summary?.cancelled ?? 0,
+    ),
+    items: items.map((m) => m.toEntity()).toList(),
+    pagination: BookingPaginationEntity(
+      total: pagination?.total ?? 0,
+      page: pagination?.page ?? 1,
+      limit: pagination?.limit ?? 20,
+      totalPages: pagination?.totalPages ?? 1,
+    ),
+  );
 }

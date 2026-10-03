@@ -50,16 +50,16 @@ class EnvironmentLoader {
     final resolvedApiBase = cliApiBase.isNotEmpty
         ? cliApiBase
         : (cliBase.isNotEmpty
-            ? cliBase
-            : (envMap['BASE_URL'] ?? envMap['API_BASE_URL'] ?? defaultHost));
+              ? cliBase
+              : (envMap['BASE_URL'] ?? envMap['API_BASE_URL'] ?? defaultHost));
 
     const cliSocket = String.fromEnvironment('SOCKET_URL');
     final resolvedSocket = cliSocket.isNotEmpty
         ? cliSocket
         : (envMap['SOCKET_URL'] ??
-            (resolvedApiBase.startsWith('http')
-                ? resolvedApiBase
-                : defaultHost));
+              (resolvedApiBase.startsWith('http')
+                  ? resolvedApiBase
+                  : defaultHost));
 
     final xToken = envMap['X_TOKEN_ACCESS'];
     final appName = envMap['APP_NAME'] ?? 'Aura Spa & Salon';

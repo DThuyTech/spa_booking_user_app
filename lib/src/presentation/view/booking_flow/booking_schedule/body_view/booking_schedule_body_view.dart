@@ -78,15 +78,15 @@ class BookingScheduleBodyView extends StatelessWidget {
                     ),
                   )
                 : (staffMembers.isEmpty || timeColumns.isEmpty)
-                    ? _buildEmptyState()
-                    : BookingScheduleMatrixGrid(
-                        staffMembers: staffMembers,
-                        timeColumns: timeColumns,
-                        slots: slots,
-                        selectedStaffId: selectedStaffId,
-                        selectedTime: selectedTime,
-                        onSlotTap: onSelectSlot,
-                      ),
+                ? _buildEmptyState()
+                : BookingScheduleMatrixGrid(
+                    staffMembers: staffMembers,
+                    timeColumns: timeColumns,
+                    slots: slots,
+                    selectedStaffId: selectedStaffId,
+                    selectedTime: selectedTime,
+                    onSlotTap: onSelectSlot,
+                  ),
           ),
 
           const SizedBox(height: 32),
@@ -106,7 +106,11 @@ class BookingScheduleBodyView extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Icon(LucideIcons.calendar_x, size: 36, color: Color(0xFFCBD5E1)),
+          const Icon(
+            LucideIcons.calendar_x,
+            size: 36,
+            color: Color(0xFFCBD5E1),
+          ),
           const SizedBox(height: 10),
           Text(
             emptyMessage ?? 'No schedule available for this day',
@@ -163,9 +167,7 @@ class BookingScheduleBodyView extends StatelessWidget {
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: isToday
-                        ? const Color(0xFFF1F5F9)
-                        : Colors.white,
+                    color: isToday ? const Color(0xFFF1F5F9) : Colors.white,
                     borderRadius: BorderRadius.circular(20),
                     border: isToday
                         ? null
@@ -188,41 +190,41 @@ class BookingScheduleBodyView extends StatelessWidget {
                 child: GestureDetector(
                   onTap: onDateTap,
                   child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF8FAFC),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0xFFE2E8F0)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        LucideIcons.calendar,
-                        size: 14,
-                        color: _textDark,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        selectedDate,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF8FAFC),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          LucideIcons.calendar,
+                          size: 14,
                           color: _textDark,
                         ),
-                      ),
-                      const Spacer(),
-                      const Icon(
-                        LucideIcons.chevron_down,
-                        size: 14,
-                        color: Color(0xFF64748B),
-                      ),
-                    ],
+                        const SizedBox(width: 6),
+                        Text(
+                          selectedDate,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: _textDark,
+                          ),
+                        ),
+                        const Spacer(),
+                        const Icon(
+                          LucideIcons.chevron_down,
+                          size: 14,
+                          color: Color(0xFF64748B),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
                 ),
               ),
               const SizedBox(width: 8),

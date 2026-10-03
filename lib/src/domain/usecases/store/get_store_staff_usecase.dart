@@ -12,9 +12,6 @@ class GetStoreStaffUseCase {
     String storeId, {
     String? serviceId,
   }) {
-    return _repository.getStoreStaff(
-      storeId,
-      serviceId: serviceId,
-    );
+    return _repository.getStoreStaff(storeId, serviceId: serviceId);
   }
 }

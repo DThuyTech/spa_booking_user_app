@@ -18,7 +18,8 @@ abstract class ReviewEntity with _$ReviewEntity {
 }
 
 @freezed
-abstract class StoreRatingDistributionEntity with _$StoreRatingDistributionEntity {
+abstract class StoreRatingDistributionEntity
+    with _$StoreRatingDistributionEntity {
   const factory StoreRatingDistributionEntity({
     @Default(0) int star5,
     @Default(0) int star4,

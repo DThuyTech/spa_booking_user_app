@@ -136,13 +136,11 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
     int page = 1,
     int limit = 20,
   }) async {
-    final queryParams = <String, dynamic>{
-      'page': page,
-      'limit': limit,
-    };
+    final queryParams = <String, dynamic>{'page': page, 'limit': limit};
     if (tab != null && tab.isNotEmpty && tab.toUpperCase() != 'ALL') {
-      final normalizedTab =
-          tab.toUpperCase() == 'COMPLETED' ? 'PAST' : tab.toUpperCase();
+      final normalizedTab = tab.toUpperCase() == 'COMPLETED'
+          ? 'PAST'
+          : tab.toUpperCase();
       queryParams['tab'] = normalizedTab;
     }
     if (search != null && search.trim().isNotEmpty) {
@@ -209,7 +207,9 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
       final payload = (data['data'] as Map<String, dynamic>?) ?? data;
       return BookingModel.fromJson(payload);
     }
-    throw const FormatException('Empty response received for reschedule booking');
+    throw const FormatException(
+      'Empty response received for reschedule booking',
+    );
   }
 
   @override
@@ -250,7 +250,9 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
       final payload = (data['data'] as Map<String, dynamic>?) ?? data;
       return BookingModel.fromJson(payload);
     }
-    throw const FormatException('Empty response received for update booking notes');
+    throw const FormatException(
+      'Empty response received for update booking notes',
+    );
   }
 
   @override

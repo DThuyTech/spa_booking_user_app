@@ -41,10 +41,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
     String? status,
     String? type,
   }) async {
-    final queryParams = <String, dynamic>{
-      'page': page,
-      'limit': limit,
-    };
+    final queryParams = <String, dynamic>{'page': page, 'limit': limit};
     if (status != null && status.isNotEmpty && status != 'ALL') {
       queryParams['status'] = status;
     }

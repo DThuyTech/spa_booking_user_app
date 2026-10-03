@@ -35,25 +35,28 @@ class StoreServicesBloc extends Bloc<StoreServicesEvent, StoreServicesState> {
     );
 
     categoriesResult.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: StoreServicesStatus.failure,
-        failure: failure,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: StoreServicesStatus.failure, failure: failure),
+      ),
       (categories) {
         servicesResult.fold(
-          (Failure failure) => emit(state.copyWith(
-            status: StoreServicesStatus.failure,
-            failure: failure,
-          )),
-          (services) => emit(state.copyWith(
-            status: StoreServicesStatus.loaded,
-            categories: categories,
-            services: services,
-            storeId: event.storeId,
-            selectedCategoryId: event.categoryId,
-            searchQuery: event.search ?? '',
-            failure: null,
-          )),
+          (Failure failure) => emit(
+            state.copyWith(
+              status: StoreServicesStatus.failure,
+              failure: failure,
+            ),
+          ),
+          (services) => emit(
+            state.copyWith(
+              status: StoreServicesStatus.loaded,
+              categories: categories,
+              services: services,
+              storeId: event.storeId,
+              selectedCategoryId: event.categoryId,
+              searchQuery: event.search ?? '',
+              failure: null,
+            ),
+          ),
         );
       },
     );
@@ -72,15 +75,16 @@ class StoreServicesBloc extends Bloc<StoreServicesEvent, StoreServicesState> {
     );
 
     servicesResult.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: StoreServicesStatus.failure,
-        failure: failure,
-      )),
-      (services) => emit(state.copyWith(
-        services: services,
-        selectedCategoryId: event.categoryId,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: StoreServicesStatus.failure, failure: failure),
+      ),
+      (services) => emit(
+        state.copyWith(
+          services: services,
+          selectedCategoryId: event.categoryId,
+          failure: null,
+        ),
+      ),
     );
   }
 
@@ -97,15 +101,16 @@ class StoreServicesBloc extends Bloc<StoreServicesEvent, StoreServicesState> {
     );
 
     servicesResult.fold(
-      (Failure failure) => emit(state.copyWith(
-        status: StoreServicesStatus.failure,
-        failure: failure,
-      )),
-      (services) => emit(state.copyWith(
-        services: services,
-        searchQuery: event.search,
-        failure: null,
-      )),
+      (Failure failure) => emit(
+        state.copyWith(status: StoreServicesStatus.failure, failure: failure),
+      ),
+      (services) => emit(
+        state.copyWith(
+          services: services,
+          searchQuery: event.search,
+          failure: null,
+        ),
+      ),
     );
   }
 }
