@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
 import '../widgets/search_store_card.dart';
 
 class SearchContentSection extends StatelessWidget {
@@ -61,23 +61,16 @@ class SearchContentSection extends StatelessWidget {
               ),
               if (onResetFilters != null) ...[
                 const SizedBox(height: 18),
-                ElevatedButton(
+                AppButton(
+                  text: 'Reset Filters',
                   onPressed: onResetFilters,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFC6E58),
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
-                  ),
-                  child: const Text(
-                    'Reset Filters',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  backgroundColor: const Color(0xFFFC6E58),
+                  textColor: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  size: AppButtonSize.sm,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
                   ),
                 ),
               ],

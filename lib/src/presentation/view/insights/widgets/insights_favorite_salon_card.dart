@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
 
 class InsightsFavoriteSalonCard extends StatelessWidget {
   final String salonName;
@@ -79,32 +79,15 @@ class InsightsFavoriteSalonCard extends StatelessWidget {
           const SizedBox(height: 14),
 
           // "View Salon ->" Button (matching Image 4)
-          SizedBox(
-            width: double.infinity,
+          AppButton(
+            text: 'View Salon',
+            trailingIcon: const Icon(LucideIcons.arrow_right, size: 14),
+            onPressed: onViewSalon,
+            backgroundColor: const Color(0xFFE2E8F0),
+            textColor: const Color(0xFF334155),
+            borderRadius: BorderRadius.circular(12),
             height: 42,
-            child: ElevatedButton(
-              onPressed: onViewSalon,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFE2E8F0),
-                foregroundColor: const Color(0xFF334155),
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                textStyle: const TextStyle(
-                  fontSize: 13.5,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('View Salon'),
-                  SizedBox(width: 6),
-                  Icon(LucideIcons.arrow_right, size: 14),
-                ],
-              ),
-            ),
+            fullWidth: true,
           ),
         ],
       ),

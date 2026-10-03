@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 
@@ -13,156 +14,113 @@ class AppBottomNavBar extends StatelessWidget {
     required this.onCenterAction,
   });
 
+  /// Map page index (0: Home, 1: Search, 2: Bookings, 3: Profile)
+  /// to 5-item curved bar index (0: Home, 1: Search, 2: Center Action, 3: Bookings, 4: Profile)
+  int _toBarIndex(int pageIndex) {
+    switch (pageIndex) {
+      case 0:
+        return 0;
+      case 1:
+        return 1;
+      case 2:
+        return 3;
+      case 3:
+        return 4;
+      default:
+        return 0;
+    }
+  }
+
+  int _toPageIndex(int barIndex) {
+    switch (barIndex) {
+      case 0:
+        return 0;
+      case 1:
+        return 1;
+      case 3:
+        return 2;
+      case 4:
+        return 3;
+      default:
+        return 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).padding.bottom;
+    final barIndex = _toBarIndex(currentIndex);
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        20,
-        0,
-        20,
-        bottomInset > 0 ? bottomInset + 8 : 16,
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        clipBehavior: Clip.none,
-        children: [
-          // The Island Navigation Bar
-          Container(
-            height: 66,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(33),
-              border: Border.all(color: const Color(0xFFF0EBE6), width: 1.2),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
-                  blurRadius: 20,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                // Tab 0: Home
-                Expanded(
-                  child: _NavItem(
-                    icon: LucideIcons.house,
-                    isSelected: currentIndex == 0,
-                    onTap: () => onTabSelected(0),
-                  ),
-                ),
-
-                // Tab 1: Search
-                Expanded(
-                  child: _NavItem(
-                    icon: LucideIcons.search,
-                    isSelected: currentIndex == 1,
-                    onTap: () => onTabSelected(1),
-                  ),
-                ),
-
-                // Gap for the center floating button
-                const SizedBox(width: 58),
-
-                // Tab 2: Booking
-                Expanded(
-                  child: _NavItem(
-                    icon: LucideIcons.calendar,
-                    isSelected: currentIndex == 2,
-                    onTap: () => onTabSelected(2),
-                  ),
-                ),
-
-                // Tab 3: Profile
-                Expanded(
-                  child: _NavItem(
-                    icon: LucideIcons.user,
-                    isSelected: currentIndex == 3,
-                    onTap: () => onTabSelected(3),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Center Floating Coral Action Button
-          Positioned(
-            top: -14,
-            child: GestureDetector(
-              onTap: onCenterAction,
-              child: Container(
-                width: 54,
-                height: 54,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xFFF2725A), Color(0xFFE55D47)],
-                  ),
-                  border: Border.all(color: Colors.white, width: 3.5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFFE55D47).withValues(alpha: 0.45),
-                      blurRadius: 14,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: const Center(
-                  child: Icon(
-                    LucideIcons.sparkles,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return CurvedNavigationBar(
+      index: barIndex,
+      height: 65.0,
+      items: <Widget>[
+        _CurvedBarIcon(
+          icon: LucideIcons.house,
+          isSelected: barIndex == 0,
+        ),
+        _CurvedBarIcon(
+          icon: LucideIcons.search,
+          isSelected: barIndex == 1,
+        ),
+        const _CurvedBarIcon(
+          icon: LucideIcons.sparkles,
+          isSelected: false,
+          inactiveColor: Color(0xFFFA7762),
+          size: 26,
+        ),
+        _CurvedBarIcon(
+          icon: LucideIcons.calendar,
+          isSelected: barIndex == 3,
+        ),
+        _CurvedBarIcon(
+          icon: LucideIcons.user,
+          isSelected: barIndex == 4,
+        ),
+      ],
+      color: Colors.white,
+      buttonBackgroundColor: const Color(0xFFFA7762),
+      backgroundColor: Colors.transparent,
+      animationCurve: Curves.easeInOutCubic,
+      animationDuration: const Duration(milliseconds: 350),
+      onTap: (index) {
+        if (index == 2) {
+          onCenterAction();
+        } else {
+          onTabSelected(_toPageIndex(index));
+        }
+      },
+      letIndexChange: (index) {
+        if (index == 2) {
+          onCenterAction();
+          return false;
+        }
+        return true;
+      },
     );
   }
 }
 
-class _NavItem extends StatelessWidget {
+class _CurvedBarIcon extends StatelessWidget {
   final IconData icon;
   final bool isSelected;
-  final VoidCallback onTap;
+  final Color? inactiveColor;
+  final double size;
 
-  const _NavItem({
+  const _CurvedBarIcon({
     required this.icon,
     required this.isSelected,
-    required this.onTap,
+    this.inactiveColor,
+    this.size = 24,
   });
 
   @override
   Widget build(BuildContext context) {
-    const activeColor = Color(0xFFFC6E58);
-    const inactiveColor = Color(0xFF6B7280);
-
-    return InkWell(
-      onTap: onTap,
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 23, color: isSelected ? activeColor : inactiveColor),
-          const SizedBox(height: 3),
-          // Active dot indicator matching design
-          Container(
-            width: 4,
-            height: 4,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isSelected ? activeColor : Colors.transparent,
-            ),
-          ),
-        ],
-      ),
+    return Icon(
+      icon,
+      size: size,
+      color: isSelected
+          ? Colors.white
+          : (inactiveColor ?? const Color(0xFF64748B)),
     );
   }
 }

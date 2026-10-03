@@ -53,11 +53,15 @@ class _RegisterViewState extends State<RegisterView> {
   final _fullNameController = TextEditingController();
   final _identifierController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   final _fullNameFocus = FocusNode();
   final _identifierFocus = FocusNode();
   final _passwordFocus = FocusNode();
+  final _confirmPasswordFocus = FocusNode();
 
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
   bool _isAgreedToTerms = false;
 
   @override
@@ -78,6 +82,11 @@ class _RegisterViewState extends State<RegisterView> {
         RegisterPasswordChanged(_passwordController.text),
       );
     });
+    _confirmPasswordController.addListener(() {
+      context.read<RegisterBloc>().add(
+        RegisterConfirmPasswordChanged(_confirmPasswordController.text),
+      );
+    });
   }
 
   @override
@@ -85,9 +94,11 @@ class _RegisterViewState extends State<RegisterView> {
     _fullNameController.dispose();
     _identifierController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     _fullNameFocus.dispose();
     _identifierFocus.dispose();
     _passwordFocus.dispose();
+    _confirmPasswordFocus.dispose();
     super.dispose();
   }
 
@@ -95,6 +106,15 @@ class _RegisterViewState extends State<RegisterView> {
     _fullNameFocus.unfocus();
     _identifierFocus.unfocus();
     _passwordFocus.unfocus();
+    _confirmPasswordFocus.unfocus();
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      AppToast.error(
+        context,
+        message: 'Passwords do not match. Please verify your password.',
+      );
+      return;
+    }
 
     if (!_isAgreedToTerms) {
       AppToast.error(
@@ -259,11 +279,66 @@ class _RegisterViewState extends State<RegisterView> {
 
                                     // Password
                                     GlassmorphicTextField(
+                                      textFieldKey: const Key(
+                                        'register_password_field',
+                                      ),
                                       controller: _passwordController,
                                       focusNode: _passwordFocus,
                                       hintText: l10n.enterPassword,
                                       prefixIcon: LucideIcons.key,
-                                      obscureText: true,
+                                      obscureText: _obscurePassword,
+                                      suffixIcon: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        splashRadius: 18,
+                                        icon: Icon(
+                                          _obscurePassword
+                                              ? LucideIcons.eye_off
+                                              : LucideIcons.eye,
+                                          size: 19,
+                                          color: const Color(0xFF8A7D75),
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _obscurePassword =
+                                                !_obscurePassword;
+                                          });
+                                        },
+                                      ),
+                                      keyboardType:
+                                          TextInputType.visiblePassword,
+                                      textInputAction: TextInputAction.next,
+                                      onSubmitted: (_) =>
+                                          _confirmPasswordFocus.requestFocus(),
+                                    ),
+                                    const SizedBox(height: 14),
+
+                                    // Confirm Password
+                                    GlassmorphicTextField(
+                                      textFieldKey: const Key(
+                                        'register_confirm_password_field',
+                                      ),
+                                      controller: _confirmPasswordController,
+                                      focusNode: _confirmPasswordFocus,
+                                      hintText: 'Confirm password',
+                                      prefixIcon: LucideIcons.shield_check,
+                                      obscureText: _obscureConfirmPassword,
+                                      suffixIcon: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        splashRadius: 18,
+                                        icon: Icon(
+                                          _obscureConfirmPassword
+                                              ? LucideIcons.eye_off
+                                              : LucideIcons.eye,
+                                          size: 19,
+                                          color: const Color(0xFF8A7D75),
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _obscureConfirmPassword =
+                                                !_obscureConfirmPassword;
+                                          });
+                                        },
+                                      ),
                                       keyboardType:
                                           TextInputType.visiblePassword,
                                       textInputAction: TextInputAction.done,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
 import 'store_detail_tab_bar_section.dart';
 
 class StoreDetailBottomBarSection extends StatelessWidget {
@@ -77,48 +77,29 @@ class StoreDetailBottomBarSection extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(
+        AppButton(
+          text: 'Book now',
+          onPressed: onBookNow,
+          backgroundColor: _coralColor,
+          textColor: Colors.white,
+          borderRadius: BorderRadius.circular(22),
           height: 44,
-          child: ElevatedButton(
-            onPressed: onBookNow,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _coralColor,
-              foregroundColor: Colors.white,
-              elevation: 0,
-              padding: const EdgeInsets.symmetric(horizontal: 28),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(22),
-              ),
-              textStyle: const TextStyle(
-                fontSize: 14.5,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            child: const Text('Book now'),
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 28),
         ),
       ],
     );
   }
 
   Widget _buildFullAppointmentBar() {
-    return SizedBox(
+    return AppButton(
+      text: 'Book Appointment',
+      leadingIcon: const Icon(LucideIcons.calendar, size: 18, color: Colors.white),
+      onPressed: onBookAppointment ?? onBookNow,
+      backgroundColor: _appointmentBtnColor,
+      textColor: Colors.white,
+      borderRadius: BorderRadius.circular(24),
       height: 48,
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: onBookAppointment ?? onBookNow,
-        icon: const Icon(LucideIcons.calendar, size: 18, color: Colors.white),
-        label: const Text('Book Appointment'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: _appointmentBtnColor,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
-        ),
-      ),
+      fullWidth: true,
     );
   }
 }

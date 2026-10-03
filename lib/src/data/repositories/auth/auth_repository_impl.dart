@@ -148,13 +148,15 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, User>> createCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
   }) async {
     try {
       final model = await remote.createCustomerProfile(
+        name: name,
         firstName: firstName,
         lastName: lastName,
         phoneNumber: phoneNumber,
@@ -170,13 +172,15 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, User>> updateCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
   }) async {
     try {
       final model = await remote.updateCustomerProfile(
+        name: name,
         firstName: firstName,
         lastName: lastName,
         phoneNumber: phoneNumber,
@@ -192,14 +196,16 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, User>> saveCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
     bool isCreate = false,
   }) async {
     if (isCreate) {
       final createResult = await createCustomerProfile(
+        name: name,
         firstName: firstName,
         lastName: lastName,
         phoneNumber: phoneNumber,
@@ -208,6 +214,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return createResult.fold((failure) async {
         if (failure is ConflictFailure) {
           return updateCustomerProfile(
+            name: name,
             firstName: firstName,
             lastName: lastName,
             phoneNumber: phoneNumber,
@@ -218,6 +225,7 @@ class AuthRepositoryImpl implements AuthRepository {
       }, (user) => Right(user));
     } else {
       final updateResult = await updateCustomerProfile(
+        name: name,
         firstName: firstName,
         lastName: lastName,
         phoneNumber: phoneNumber,
@@ -226,6 +234,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return updateResult.fold((failure) async {
         if (failure is NotFoundFailure) {
           return createCustomerProfile(
+            name: name,
             firstName: firstName,
             lastName: lastName,
             phoneNumber: phoneNumber,

@@ -111,7 +111,7 @@ class ProfileEditBloc extends Bloc<ProfileEditEvent, ProfileEditState> {
       emit(
         state.copyWith(
           status: ProfileEditStatus.failure,
-          errorMessage: () => 'Please enter your full name',
+          errorMessage: () => 'Please enter your name',
         ),
       );
       return;
@@ -138,24 +138,11 @@ class ProfileEditBloc extends Bloc<ProfileEditEvent, ProfileEditState> {
       return;
     }
 
-    // Split fullName into firstName and lastName
-    final parts = trimmedName.split(' ').where((s) => s.isNotEmpty).toList();
-    final String firstName;
-    final String lastName;
-    if (parts.length == 1) {
-      firstName = parts.first;
-      lastName = parts.first;
-    } else {
-      firstName = parts.first;
-      lastName = parts.sublist(1).join(' ');
-    }
-
     emit(state.copyWith(status: ProfileEditStatus.submitting));
 
     final result = await saveCustomerProfileUseCase(
       SaveCustomerProfileParams(
-        firstName: firstName,
-        lastName: lastName,
+        name: trimmedName,
         phoneNumber: trimmedPhone,
         dateOfBirth: trimmedDob,
         isCreate: state.isInitialSetup,

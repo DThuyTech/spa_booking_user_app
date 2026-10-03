@@ -1,25 +1,26 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:spa_booking/src/presentation/view/booking_flow/select_services/view/select_services_view.dart';
-import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
-import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
+import '../../../booking_flow/select_services/view/select_services_view.dart';
+import 'package:spa_booking/src/shared/shared.dart';
 import '../../models/notification_models.dart';
 import '../body_view/voucher_detail_body_view.dart';
 import '../mockup_data/voucher_detail_mock_data.dart';
 
 @RoutePage()
 class VoucherDetailPage extends StatelessWidget {
-  final VoucherNotificationData voucher;
+  final VoucherNotificationData? voucher;
 
   const VoucherDetailPage({
     super.key,
-    this.voucher = VoucherDetailMockData.defaultVoucher,
+    this.voucher,
   });
 
   @override
   Widget build(BuildContext context) {
-    return VoucherDetailView(voucher: voucher);
+    return VoucherDetailView(
+      voucher: voucher ?? VoucherDetailMockData.defaultVoucher,
+    );
   }
 }
 
@@ -80,24 +81,13 @@ class VoucherDetailView extends StatelessWidget {
           children: [
             // Coral "Book Now" Button
             Expanded(
-              child: SizedBox(
+              child: AppButton(
+                text: 'Book Now',
+                onPressed: () => _onBookNow(context),
+                backgroundColor: _coralColor,
+                textColor: Colors.white,
+                borderRadius: BorderRadius.circular(24),
                 height: 48,
-                child: ElevatedButton(
-                  onPressed: () => _onBookNow(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _coralColor,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  child: const Text('Book Now'),
-                ),
               ),
             ),
 
@@ -105,26 +95,13 @@ class VoucherDetailView extends StatelessWidget {
 
             // Outlined "View Coupon" Button
             Expanded(
-              child: SizedBox(
+              child: AppButton(
+                text: 'View Coupon',
+                onPressed: () => _onViewCoupon(context),
+                variant: AppButtonVariant.outline,
+                textColor: _textDark,
+                borderRadius: BorderRadius.circular(24),
                 height: 48,
-                child: OutlinedButton(
-                  onPressed: () => _onViewCoupon(context),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: _textDark,
-                    side: const BorderSide(
-                      color: Color(0xFF475569),
-                      width: 1.2,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  child: const Text('View Coupon'),
-                ),
               ),
             ),
           ],

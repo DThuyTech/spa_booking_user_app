@@ -25,9 +25,9 @@ class ProfileState extends Equatable {
     this.status = ProfileStatus.initial,
     this.user,
     this.errorMessage,
-    this.upcomingCount = 2,
-    this.completedCount = 12,
-    this.cancelledCount = 1,
+    this.upcomingCount = 0,
+    this.completedCount = 0,
+    this.cancelledCount = 0,
   });
 
   bool get isLoading => status == ProfileStatus.loading;

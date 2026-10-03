@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
 
 class FavoriteStoresSearchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -25,57 +25,39 @@ class FavoriteStoresSearchBar extends StatelessWidget {
       children: [
         // Pill search text field
         Expanded(
-          child: Container(
-            height: 48,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF1F5F9),
-              borderRadius: BorderRadius.circular(24),
+          child: AppTextField(
+            controller: controller,
+            onChanged: onChanged,
+            hint: 'Search salons, services...',
+            hintStyle: const TextStyle(
+              fontSize: 14,
+              color: Color(0xFF94A3B8),
+              fontWeight: FontWeight.w400,
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                const Icon(
-                  LucideIcons.search,
-                  size: 20,
-                  color: Color(0xFF94A3B8),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: TextField(
-                    controller: controller,
-                    onChanged: onChanged,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Color(0xFF1E2022),
-                      fontWeight: FontWeight.w500,
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: 'Search salons, services...',
-                      hintStyle: TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF94A3B8),
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: InputBorder.none,
-                      isDense: true,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                  ),
-                ),
-                if (controller.text.isNotEmpty)
-                  GestureDetector(
-                    onTap: () {
+            style: const TextStyle(
+              fontSize: 14,
+              color: Color(0xFF1E2022),
+              fontWeight: FontWeight.w500,
+            ),
+            prefixIcon: const Icon(
+              LucideIcons.search,
+              size: 20,
+              color: Color(0xFF94A3B8),
+            ),
+            suffixIcon: controller.text.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(LucideIcons.x, size: 18, color: Color(0xFF94A3B8)),
+                    onPressed: () {
                       controller.clear();
                       onChanged('');
                       onClear?.call();
                     },
-                    child: const Icon(
-                      LucideIcons.x,
-                      size: 18,
-                      color: Color(0xFF94A3B8),
-                    ),
-                  ),
-              ],
+                  )
+                : null,
+            fillColor: const Color(0xFFF1F5F9),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(24),
+              borderSide: BorderSide.none,
             ),
           ),
         ),

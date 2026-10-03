@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../shared/shared.dart';
 import '../../change_password/widgets/change_password_field.dart';
 import '../widgets/password_strength_checklist_card.dart';
 
@@ -94,25 +95,14 @@ class ResetPasswordBodyView extends StatelessWidget {
                 // Bottom Action Button
                 Padding(
                   padding: const EdgeInsets.only(top: 36, bottom: 20),
-                  child: SizedBox(
-                    width: double.infinity,
+                  child: AppButton(
+                    text: 'Update Password',
+                    onPressed: onUpdatePassword,
+                    backgroundColor: _coralColor,
+                    textColor: Colors.white,
+                    borderRadius: BorderRadius.circular(28),
                     height: 54,
-                    child: ElevatedButton(
-                      onPressed: onUpdatePassword,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _coralColor,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28),
-                        ),
-                        textStyle: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      child: const Text('Update Password'),
-                    ),
+                    fullWidth: true,
                   ),
                 ),
               ],

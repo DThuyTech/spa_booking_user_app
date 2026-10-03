@@ -2,6 +2,7 @@ import '../../../app/session/session_manager.dart';
 import '../../../core/error/failure.dart';
 import '../../../domain/usecases/auth/get_current_user.dart';
 import '../../../domain/usecases/auth/logout_usecase.dart';
+import '../../../domain/usecases/booking/get_customer_bookings_usecase.dart';
 import '../auth_session/auth_session_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'profile_event.dart';
@@ -15,12 +16,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final LogoutUseCase logoutUseCase;
   final SessionManager sessionManager;
   final AuthSessionBloc? authSessionBloc;
+  final GetCustomerBookingsUseCase? getCustomerBookingsUseCase;
 
   ProfileBloc({
     required this.getCurrentUserUseCase,
     required this.logoutUseCase,
     required this.sessionManager,
     this.authSessionBloc,
+    this.getCustomerBookingsUseCase,
   }) : super(ProfileState(user: authSessionBloc?.state.user)) {
     on<ProfileStarted>(_onStarted);
     on<ProfileRefreshed>(_onRefreshed);
@@ -89,15 +92,38 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           email: user.email.isNotEmpty ? user.email : existing?.email,
           phone: user.phone.isNotEmpty ? user.phone : existing?.phone,
         );
+        final stats = mergedUser.bookingStats;
         emit(
           state.copyWith(
             status: ProfileStatus.success,
             user: () => mergedUser,
             errorMessage: () => null,
+            upcomingCount:
+                stats != null ? stats.upcomingBookings : state.upcomingCount,
+            completedCount:
+                stats != null ? stats.completedBookings : state.completedCount,
+            cancelledCount:
+                stats != null ? stats.cancelledBookings : state.cancelledCount,
           ),
         );
       },
     );
+
+    if (getCustomerBookingsUseCase != null) {
+      final bookingsResult = await getCustomerBookingsUseCase!();
+      bookingsResult.fold(
+        (_) {},
+        (bookingData) {
+          emit(
+            state.copyWith(
+              upcomingCount: bookingData.summary.upcoming,
+              completedCount: bookingData.summary.past,
+              cancelledCount: bookingData.summary.cancelled,
+            ),
+          );
+        },
+      );
+    }
   }
 
   Future<void> _onLogoutRequested(

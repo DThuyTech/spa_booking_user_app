@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../shared/shared.dart';
 import '../../../bloc/home/home_bloc.dart';
 import '../../../bloc/home/home_event.dart';
 import '../../../bloc/home/home_state.dart';
@@ -10,11 +11,9 @@ import '../sections/home_header_section.dart';
 import '../sections/home_recommended_for_you_section.dart';
 import '../sections/home_salons_near_you_section.dart';
 import '../sections/home_special_offers_section.dart';
-import '../sections/home_upcoming_appointment_section.dart';
 import '../widgets/home_near_salon_card.dart';
 import '../widgets/home_recommended_salon_card.dart';
 import '../widgets/home_special_offer_card.dart';
-import '../widgets/home_upcoming_appointment_card.dart';
 
 class HomeBodyView extends StatelessWidget {
   final String greetingText;
@@ -33,9 +32,6 @@ class HomeBodyView extends StatelessWidget {
   final List<ServiceCategoryItem> categories;
   final String selectedCategoryId;
   final ValueChanged<ServiceCategoryItem>? onCategorySelected;
-
-  final HomeAppointmentItem? upcomingAppointment;
-  final VoidCallback? onAppointmentTap;
 
   final List<HomeNearSalonItem> nearSalons;
   final VoidCallback? onSeeAllNearSalons;
@@ -65,8 +61,6 @@ class HomeBodyView extends StatelessWidget {
     this.categories = HomeMockData.categories,
     this.selectedCategoryId = 'haircuts',
     this.onCategorySelected,
-    this.upcomingAppointment = HomeMockData.upcomingAppointment,
-    this.onAppointmentTap,
     this.nearSalons = HomeMockData.nearSalons,
     this.onSeeAllNearSalons,
     this.onNearSalonTap,
@@ -100,10 +94,11 @@ class HomeBodyView extends StatelessWidget {
                   children: [
                     Text(state.errorMessage ?? 'An error occurred'),
                     const SizedBox(height: 12),
-                    ElevatedButton(
+                    AppButton(
+                      text: 'Retry',
                       onPressed: () =>
                           context.read<HomeBloc>().add(HomeRetried()),
-                      child: const Text('Retry'),
+                      size: AppButtonSize.sm,
                     ),
                   ],
                 ),
@@ -156,16 +151,7 @@ class HomeBodyView extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              // 4. Upcoming Appointment Section
-              if (upcomingAppointment != null) ...[
-                HomeUpcomingAppointmentSection(
-                  appointment: upcomingAppointment,
-                  onAppointmentTap: onAppointmentTap,
-                ),
-                const SizedBox(height: 24),
-              ],
-
-              // 5. Salons Near You Section
+              // 4. Salons Near You Section
               HomeSalonsNearYouSection(
                 salons: nearSalons,
                 onSeeAllTap: onSeeAllNearSalons,
@@ -175,7 +161,7 @@ class HomeBodyView extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              // 6. Recommended for You Section
+              // 5. Recommended for You Section
               HomeRecommendedForYouSection(
                 salons: recommendedSalons,
                 onSeeAllTap: onSeeAllRecommended,

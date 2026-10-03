@@ -1,7 +1,6 @@
-import 'package:spa_booking/src/presentation/view/terms/mockup_data/terms_of_use_mock_data.dart';
-import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
+import '../mockup_data/terms_of_use_mock_data.dart';
 
 class TermsOfUseView extends StatefulWidget {
   const TermsOfUseView({super.key});
@@ -74,31 +73,15 @@ class _TermsOfUseViewState extends State<TermsOfUseView> {
               ),
             ],
           ),
-          child: SizedBox(
+          child: AppButton(
+            text: 'Accept & Continue',
+            trailingIcon: const Icon(LucideIcons.circle_check, size: 18, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(true),
+            backgroundColor: const Color(0xFFFA7762),
+            textColor: Colors.white,
+            borderRadius: BorderRadius.circular(25),
             height: 50,
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFA7762),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                elevation: 0,
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Accept & Continue',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
-                  ),
-                  SizedBox(width: 8),
-                  Icon(LucideIcons.circle_check, size: 18),
-                ],
-              ),
-            ),
+            fullWidth: true,
           ),
         ),
       ),

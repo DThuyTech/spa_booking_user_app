@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
 import '../mockup_data/store_detail_mock_data.dart';
 import '../widgets/store_rating_summary_card.dart';
 import '../widgets/store_review_item_card.dart';
@@ -81,41 +81,60 @@ class StoreReviewsTabView extends StatelessWidget {
           const SizedBox(height: 16),
 
           // List of customer reviews
-          ...reviews.map((review) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: StoreReviewItemCard(review: review),
-            );
-          }),
-          const SizedBox(height: 8),
-
-          // View all reviews button
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: OutlinedButton(
-              onPressed: onViewAllReviews,
-              style: OutlinedButton.styleFrom(
-                foregroundColor: const Color(0xFFFF6F59),
-                side: const BorderSide(color: Color(0xFFFFD4CC), width: 1.2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                textStyle: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                ),
+          if (reviews.isEmpty)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 32),
+              margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFECEFF1)),
               ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: const Column(
                 children: [
-                  Text('View all reviews'),
-                  SizedBox(width: 4),
-                  Icon(LucideIcons.chevron_right, size: 16),
+                  Icon(LucideIcons.message_square_dashed,
+                      size: 36, color: Color(0xFF90A4AE)),
+                  SizedBox(height: 8),
+                  Text(
+                    'No reviews yet',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF455A64),
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Be the first to share your experience!',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF90A4AE),
+                    ),
+                  ),
                 ],
               ),
+            )
+          else ...[
+            ...reviews.map((review) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: StoreReviewItemCard(review: review),
+              );
+            }),
+            const SizedBox(height: 8),
+            // View all reviews button
+            AppButton(
+              text: 'View all reviews',
+              trailingIcon: const Icon(LucideIcons.chevron_right, size: 16),
+              onPressed: onViewAllReviews,
+              variant: AppButtonVariant.outline,
+              textColor: const Color(0xFFFF6F59),
+              borderRadius: BorderRadius.circular(24),
+              height: 48,
+              fullWidth: true,
             ),
-          ),
+          ],
           const SizedBox(height: 24),
         ],
       ),

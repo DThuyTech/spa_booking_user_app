@@ -37,7 +37,7 @@ class HomeNearSalonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 195,
+      width: 290,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
@@ -67,7 +67,7 @@ class HomeNearSalonCard extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(14),
                       child: SizedBox(
-                        height: 100,
+                        height: 110,
                         width: double.infinity,
                         child: Image.network(
                           salon.imageUrl,
@@ -157,28 +157,35 @@ class HomeNearSalonCard extends StatelessWidget {
 
                 const SizedBox(height: 8),
 
-                // Distance + Book Button
+                // Distance/Location + Book Button
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          LucideIcons.map_pin,
-                          size: 13,
-                          color: _coralColor,
-                        ),
-                        const SizedBox(width: 3),
-                        Text(
-                          salon.distance,
-                          style: const TextStyle(
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.w500,
+                    Expanded(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            LucideIcons.map_pin,
+                            size: 13,
                             color: _coralColor,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              salon.distance,
+                              style: const TextStyle(
+                                fontSize: 11.5,
+                                fontWeight: FontWeight.w500,
+                                color: _coralColor,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     InkWell(
                       onTap: onBook ?? onTap,
                       borderRadius: BorderRadius.circular(12),

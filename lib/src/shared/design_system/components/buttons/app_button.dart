@@ -7,11 +7,11 @@ import '../../tokens/app_shadows.dart';
 import '../../tokens/app_spacing.dart';
 import '../../tokens/app_typography.dart';
 
-enum AppButtonVariant { primary, secondary, outline, ghost }
+enum AppButtonVariant { primary, secondary, outline, ghost, destructive }
 
 enum AppButtonSize { sm, md, lg }
 
-/// Board Ơi Tactile Button
+/// Tactile Button
 ///
 /// Design: Premium minimalism with tactile press feedback.
 /// Press animation: 1.0 → 0.97 → 1.0 over 150ms.
@@ -25,7 +25,12 @@ class AppButton extends StatefulWidget {
   final Widget? leadingIcon;
   final Widget? trailingIcon;
   final double? width;
+  final double? height;
   final bool fullWidth;
+  final Color? backgroundColor;
+  final Color? textColor;
+  final BorderRadius? borderRadius;
+  final EdgeInsets? padding;
 
   const AppButton({
     super.key,
@@ -37,7 +42,12 @@ class AppButton extends StatefulWidget {
     this.leadingIcon,
     this.trailingIcon,
     this.width,
+    this.height,
     this.fullWidth = false,
+    this.backgroundColor,
+    this.textColor,
+    this.borderRadius,
+    this.padding,
   });
 
   @override
@@ -89,6 +99,10 @@ class _AppButtonState extends State<AppButton>
   @override
   Widget build(BuildContext context) {
     final cfg = _ButtonConfig.of(widget.variant, widget.size);
+    final effectiveBg = widget.backgroundColor ?? cfg.background;
+    final effectiveFg = widget.textColor ?? cfg.foreground;
+    final effectivePadding = widget.padding ?? cfg.padding;
+    final effectiveBr = widget.borderRadius ?? cfg.borderRadius;
 
     Widget content = Row(
       mainAxisSize: MainAxisSize.min,
@@ -100,7 +114,7 @@ class _AppButtonState extends State<AppButton>
             height: cfg.fontSize + 2,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(cfg.foreground),
+              valueColor: AlwaysStoppedAnimation<Color>(effectiveFg),
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
@@ -116,7 +130,7 @@ class _AppButtonState extends State<AppButton>
             style: AppTypography.labelLarge.copyWith(
               fontSize: cfg.fontSize,
               fontWeight: FontWeight.w600,
-              color: cfg.foreground,
+              color: effectiveFg,
               letterSpacing: 0.1,
             ),
           ),
@@ -138,12 +152,12 @@ class _AppButtonState extends State<AppButton>
         child: AnimatedContainer(
           duration: AppMotion.fast,
           curve: AppMotion.spring,
-          padding: cfg.padding,
+          padding: effectivePadding,
           decoration: BoxDecoration(
             color: _isEnabled
-                ? cfg.background
-                : cfg.background.withValues(alpha: 0.5),
-            borderRadius: cfg.borderRadius,
+                ? effectiveBg
+                : effectiveBg.withValues(alpha: 0.5),
+            borderRadius: effectiveBr,
             border: cfg.border,
             boxShadow: _isEnabled ? cfg.shadows : null,
           ),
@@ -152,9 +166,10 @@ class _AppButtonState extends State<AppButton>
       ),
     );
 
-    if (widget.fullWidth || widget.width != null) {
+    if (widget.fullWidth || widget.width != null || widget.height != null) {
       return SizedBox(
         width: widget.fullWidth ? double.infinity : widget.width,
+        height: widget.height,
         child: button,
       );
     }
@@ -239,6 +254,14 @@ class _ButtonConfig {
         padding: padding,
         borderRadius: br,
         fontSize: fontSize,
+      ),
+      AppButtonVariant.destructive => _ButtonConfig(
+        background: AppColors.error,
+        foreground: AppColors.white,
+        padding: padding,
+        borderRadius: br,
+        fontSize: fontSize,
+        shadows: AppShadows.accentGlow(AppColors.error),
       ),
     };
   }

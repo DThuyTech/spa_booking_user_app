@@ -1,9 +1,10 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
-import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
+import '../../../../shared/shared.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
 import '../../store_detail/view/store_detail_view.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../app/di/dependency_injection.dart';
+import '../../../bloc/favorite/favorite_stores_bloc.dart';
 import '../body_view/favorite_stores_body_view.dart';
 import '../mockup_data/favorite_stores_mock_data.dart';
 import '../models/favorite_store_item.dart';
@@ -14,7 +15,11 @@ class FavoriteStoresPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const FavoriteStoresView();
+    return BlocProvider<FavoriteStoresBloc>(
+      create: (_) =>
+          sl<FavoriteStoresBloc>()..add(const FetchFavoriteStoresEvent()),
+      child: const FavoriteStoresView(),
+    );
   }
 }
 
@@ -33,6 +38,15 @@ class _FavoriteStoresViewState extends State<FavoriteStoresView> {
 
   static const Color _coralColor = Color(0xFFFF6F59);
   static const Color _textDark = Color(0xFF1E2022);
+
+  bool get _hasBloc {
+    try {
+      BlocProvider.of<FavoriteStoresBloc>(context);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
 
   @override
   void initState() {
@@ -70,6 +84,15 @@ class _FavoriteStoresViewState extends State<FavoriteStoresView> {
   void _onFavoriteToggle(FavoriteStoreItem store) {
     final nextFavoriteState = !store.isFavorite;
 
+    if (_hasBloc) {
+      context.read<FavoriteStoresBloc>().add(
+            ToggleFavoriteStoreEvent(
+              storeId: store.id,
+              isFavorite: store.isFavorite,
+            ),
+          );
+    }
+
     setState(() {
       final index = _allStores.indexWhere((s) => s.id == store.id);
       if (index != -1) {
@@ -80,26 +103,28 @@ class _FavoriteStoresViewState extends State<FavoriteStoresView> {
     });
 
     if (!nextFavoriteState) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Removed ${store.name} from favorites'),
-          duration: const Duration(seconds: 4),
-          action: SnackBarAction(
-            label: 'Undo',
-            textColor: _coralColor,
-            onPressed: () {
-              setState(() {
-                final index = _allStores.indexWhere((s) => s.id == store.id);
-                if (index != -1) {
-                  _allStores[index] = _allStores[index].copyWith(
-                    isFavorite: true,
-                  );
-                }
-              });
-            },
-          ),
-        ),
+      AppToast.info(
+        context,
+        message: 'Removed ${store.name} from favorites',
+        actionLabel: 'Undo',
+        onAction: () {
+          if (_hasBloc) {
+            context.read<FavoriteStoresBloc>().add(
+                  ToggleFavoriteStoreEvent(
+                    storeId: store.id,
+                    isFavorite: false,
+                  ),
+                );
+          }
+          setState(() {
+            final index = _allStores.indexWhere((s) => s.id == store.id);
+            if (index != -1) {
+              _allStores[index] = _allStores[index].copyWith(
+                isFavorite: true,
+              );
+            }
+          });
+        },
       );
     } else {
       AppToast.success(context, message: 'Added ${store.name} to favorites');
@@ -184,24 +209,18 @@ class _FavoriteStoresViewState extends State<FavoriteStoresView> {
                     const SizedBox(height: 24),
 
                     // Reset button
-                    SizedBox(
-                      width: double.infinity,
+                    AppButton(
+                      text: 'Reset Category Filter',
+                      onPressed: () {
+                        setSheetState(() => _selectedCategory = 'All');
+                        setState(() => _selectedCategory = 'All');
+                        Navigator.of(sheetContext).pop();
+                      },
+                      variant: AppButtonVariant.outline,
+                      textColor: _textDark,
+                      borderRadius: BorderRadius.circular(14),
                       height: 46,
-                      child: OutlinedButton(
-                        onPressed: () {
-                          setSheetState(() => _selectedCategory = 'All');
-                          setState(() => _selectedCategory = 'All');
-                          Navigator.of(sheetContext).pop();
-                        },
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: _textDark,
-                          side: const BorderSide(color: Color(0xFFE2E8F0)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                        ),
-                        child: const Text('Reset Category Filter'),
-                      ),
+                      fullWidth: true,
                     ),
                   ],
                 ),
@@ -286,34 +305,76 @@ class _FavoriteStoresViewState extends State<FavoriteStoresView> {
     );
   }
 
+  Widget _buildContent() {
+    return FavoriteStoresBodyView(
+      searchController: _searchController,
+      onSearchChanged: (query) {
+        setState(() {
+          _searchQuery = query;
+        });
+      },
+      onFilterTap: _openFilterSheet,
+      hasActiveFilter: _selectedCategory != 'All',
+      stores: _filteredStores,
+      onFavoriteToggle: _onFavoriteToggle,
+      onViewSalon: _onViewSalon,
+      onClearSearch: () {
+        setState(() {
+          _searchController.clear();
+          _searchQuery = '';
+          _selectedCategory = 'All';
+        });
+      },
+      onExploreSalons: () {
+        Navigator.of(context).maybePop();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppAppBar(title: 'Favorites...', onMorePressed: _showMoreOptions),
-      body: FavoriteStoresBodyView(
-        searchController: _searchController,
-        onSearchChanged: (query) {
-          setState(() {
-            _searchQuery = query;
-          });
-        },
-        onFilterTap: _openFilterSheet,
-        hasActiveFilter: _selectedCategory != 'All',
-        stores: _filteredStores,
-        onFavoriteToggle: _onFavoriteToggle,
-        onViewSalon: _onViewSalon,
-        onClearSearch: () {
-          setState(() {
-            _searchController.clear();
-            _searchQuery = '';
-            _selectedCategory = 'All';
-          });
-        },
-        onExploreSalons: () {
-          Navigator.of(context).maybePop();
-        },
-      ),
+      body: _hasBloc
+          ? BlocConsumer<FavoriteStoresBloc, FavoriteStoresState>(
+              listener: (context, state) {
+                if (state.status == FavoriteStoresStatus.loaded) {
+                  setState(() {
+                    _allStores = state.items.map((e) {
+                      return FavoriteStoreItem(
+                        id: e.id,
+                        name: e.name,
+                        rating: 4.9,
+                        distance: '1.2 km',
+                        description: e.address,
+                        imageUrl: e.coverImageUrl ?? e.logoUrl ?? '',
+                        isFavorite: e.isFavorite,
+                        address: e.address,
+                      );
+                    }).toList();
+                  });
+                }
+              },
+              builder: (context, state) {
+                if (state.status == FavoriteStoresStatus.loading &&
+                    _allStores.isEmpty) {
+                  return const Center(
+                    child: CircularProgressIndicator(color: _coralColor),
+                  );
+                }
+                return RefreshIndicator(
+                  color: _coralColor,
+                  onRefresh: () async {
+                    context
+                        .read<FavoriteStoresBloc>()
+                        .add(const FetchFavoriteStoresEvent());
+                  },
+                  child: _buildContent(),
+                );
+              },
+            )
+          : _buildContent(),
     );
   }
 }

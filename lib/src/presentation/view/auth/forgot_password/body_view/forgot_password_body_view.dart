@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../../shared/shared.dart';
 
 class ForgotPasswordBodyView extends StatelessWidget {
   final TextEditingController emailOrPhoneController;
@@ -62,71 +62,45 @@ class ForgotPasswordBodyView extends StatelessWidget {
                     const SizedBox(height: 36),
 
                     // Input Field (matching Image 1)
-                    Container(
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF1F5F9),
-                        borderRadius: BorderRadius.circular(28),
+                    AppTextField(
+                      controller: emailOrPhoneController,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: (_) => onSendResetLink(),
+                      hint: 'Email or Phone',
+                      hintStyle: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF94A3B8),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      alignment: Alignment.center,
-                      child: TextField(
-                        controller: emailOrPhoneController,
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.done,
-                        onSubmitted: (_) => onSendResetLink(),
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: _textDark,
-                        ),
-                        decoration: const InputDecoration(
-                          isDense: true,
-                          border: InputBorder.none,
-                          hintText: 'Email or Phone',
-                          hintStyle: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFF94A3B8),
-                          ),
-                          prefixIcon: Padding(
-                            padding: EdgeInsets.only(right: 12),
-                            child: Icon(
-                              LucideIcons.mail,
-                              color: Color(0xFF94A3B8),
-                              size: 20,
-                            ),
-                          ),
-                          prefixIconConstraints: BoxConstraints(
-                            minWidth: 32,
-                            minHeight: 32,
-                          ),
-                        ),
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: _textDark,
+                      ),
+                      prefixIcon: const Icon(
+                        LucideIcons.mail,
+                        color: Color(0xFF94A3B8),
+                        size: 20,
+                      ),
+                      fillColor: const Color(0xFFF1F5F9),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(28),
+                        borderSide: BorderSide.none,
                       ),
                     ),
 
                     const SizedBox(height: 28),
 
                     // Send Reset Link Button
-                    SizedBox(
-                      width: double.infinity,
+                    AppButton(
+                      text: 'Send Reset Link',
+                      onPressed: onSendResetLink,
+                      backgroundColor: _coralColor,
+                      textColor: Colors.white,
+                      borderRadius: BorderRadius.circular(28),
                       height: 54,
-                      child: ElevatedButton(
-                        onPressed: onSendResetLink,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _coralColor,
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(28),
-                          ),
-                          textStyle: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        child: const Text('Send Reset Link'),
-                      ),
+                      fullWidth: true,
                     ),
                   ],
                 ),

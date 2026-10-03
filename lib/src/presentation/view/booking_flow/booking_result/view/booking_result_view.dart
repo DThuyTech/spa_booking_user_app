@@ -9,31 +9,31 @@ import '../mockup_data/booking_result_mock_data.dart';
 @RoutePage()
 class BookingResultPage extends StatelessWidget {
   final bool isSuccess;
-  final String bookingCode;
-  final String salonName;
-  final String dateDisplay;
-  final String timeDisplay;
-  final int totalAmount;
+  final String? bookingCode;
+  final String? salonName;
+  final String? dateDisplay;
+  final String? timeDisplay;
+  final int? totalAmount;
 
   const BookingResultPage({
     super.key,
     this.isSuccess = true,
-    this.bookingCode = BookingResultMockData.defaultBookingCode,
-    this.salonName = BookingResultMockData.defaultSalonName,
-    this.dateDisplay = BookingResultMockData.defaultDateDisplay,
-    this.timeDisplay = BookingResultMockData.defaultTimeDisplay,
-    this.totalAmount = BookingResultMockData.defaultTotalAmount,
+    this.bookingCode,
+    this.salonName,
+    this.dateDisplay,
+    this.timeDisplay,
+    this.totalAmount,
   });
 
   @override
   Widget build(BuildContext context) {
     return BookingResultView(
       isSuccess: isSuccess,
-      bookingCode: bookingCode,
-      salonName: salonName,
-      dateDisplay: dateDisplay,
-      timeDisplay: timeDisplay,
-      totalAmount: totalAmount,
+      bookingCode: bookingCode ?? BookingResultMockData.defaultBookingCode,
+      salonName: salonName ?? BookingResultMockData.defaultSalonName,
+      dateDisplay: dateDisplay ?? BookingResultMockData.defaultDateDisplay,
+      timeDisplay: timeDisplay ?? BookingResultMockData.defaultTimeDisplay,
+      totalAmount: totalAmount ?? BookingResultMockData.defaultTotalAmount,
     );
   }
 }

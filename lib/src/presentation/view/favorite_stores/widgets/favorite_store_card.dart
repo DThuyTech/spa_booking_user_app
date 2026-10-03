@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
 import '../models/favorite_store_item.dart';
 
 class FavoriteStoreCard extends StatelessWidget {
@@ -208,26 +208,12 @@ class FavoriteStoreCard extends StatelessWidget {
                 const SizedBox(height: 14),
 
                 // Coral "View Salon" Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 46,
-                  child: ElevatedButton(
-                    onPressed: onViewSalon,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _coralColor,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: 14.5,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.1,
-                      ),
-                    ),
-                    child: const Text('View Salon'),
-                  ),
+                AppButton(
+                  text: 'View Salon',
+                  backgroundColor: _coralColor,
+                  borderRadius: BorderRadius.circular(14),
+                  fullWidth: true,
+                  onPressed: onViewSalon,
                 ),
               ],
             ),

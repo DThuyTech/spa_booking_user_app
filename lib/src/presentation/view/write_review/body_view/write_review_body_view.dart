@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../shared/shared.dart';
 import '../mockup_data/write_review_mock_data.dart';
 import '../widgets/review_add_photos_section.dart';
 import '../widgets/review_criteria_card.dart';
@@ -72,25 +73,13 @@ class WriteReviewBodyView extends StatelessWidget {
           const SizedBox(height: 28),
 
           // 5. Submit Review Button
-          SizedBox(
-            width: double.infinity,
+          AppButton(
+            text: 'Submit Review',
+            onPressed: onSubmitReview,
+            backgroundColor: _coralColor,
+            textColor: Colors.white,
+            borderRadius: BorderRadius.circular(26),
             height: 52,
-            child: ElevatedButton(
-              onPressed: onSubmitReview,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _coralColor,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(26),
-                ),
-                textStyle: const TextStyle(
-                  fontSize: 15.5,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              child: const Text('Submit Review'),
-            ),
           ),
           const SizedBox(height: 24),
         ],

@@ -15,6 +15,12 @@ class BookingScheduleBodyView extends StatelessWidget {
   final String selectedTime;
   final void Function(String staffId, String time) onSelectSlot;
   final VoidCallback onAddCustomBooking;
+  final int bookingCount;
+  final bool isToday;
+  final bool isLoading;
+  final String? emptyMessage;
+  final VoidCallback? onTodayTap;
+  final VoidCallback? onDateTap;
 
   const BookingScheduleBodyView({
     super.key,
@@ -29,6 +35,12 @@ class BookingScheduleBodyView extends StatelessWidget {
     required this.selectedTime,
     required this.onSelectSlot,
     required this.onAddCustomBooking,
+    this.bookingCount = 3,
+    this.isToday = true,
+    this.isLoading = false,
+    this.emptyMessage,
+    this.onTodayTap,
+    this.onDateTap,
   });
 
   static const Color _coralColor = Color(0xFFFF6F59);
@@ -39,7 +51,9 @@ class BookingScheduleBodyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(
+        parent: BouncingScrollPhysics(),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -56,17 +70,53 @@ class BookingScheduleBodyView extends StatelessWidget {
           // 3. Timetable Matrix Grid (Staff Rows x Time Columns)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: BookingScheduleMatrixGrid(
-              staffMembers: staffMembers,
-              timeColumns: timeColumns,
-              slots: slots,
-              selectedStaffId: selectedStaffId,
-              selectedTime: selectedTime,
-              onSlotTap: onSelectSlot,
-            ),
+            child: isLoading
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 60),
+                    child: Center(
+                      child: CircularProgressIndicator(color: _coralColor),
+                    ),
+                  )
+                : (staffMembers.isEmpty || timeColumns.isEmpty)
+                    ? _buildEmptyState()
+                    : BookingScheduleMatrixGrid(
+                        staffMembers: staffMembers,
+                        timeColumns: timeColumns,
+                        slots: slots,
+                        selectedStaffId: selectedStaffId,
+                        selectedTime: selectedTime,
+                        onSlotTap: onSelectSlot,
+                      ),
           ),
 
           const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      child: Column(
+        children: [
+          const Icon(LucideIcons.calendar_x, size: 36, color: Color(0xFFCBD5E1)),
+          const SizedBox(height: 10),
+          Text(
+            emptyMessage ?? 'No schedule available for this day',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF64748B),
+            ),
+          ),
         ],
       ),
     );
@@ -105,21 +155,29 @@ class BookingScheduleBodyView extends StatelessWidget {
           Row(
             children: [
               // "Today" Pill
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF1F5F9),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Text(
-                  'Today',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF475569),
+              GestureDetector(
+                onTap: onTodayTap,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isToday
+                        ? const Color(0xFFF1F5F9)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: isToday
+                        ? null
+                        : Border.all(color: const Color(0xFFE2E8F0)),
+                  ),
+                  child: const Text(
+                    'Today',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF475569),
+                    ),
                   ),
                 ),
               ),
@@ -127,7 +185,9 @@ class BookingScheduleBodyView extends StatelessWidget {
 
               // Date Dropdown Pill
               Expanded(
-                child: Container(
+                child: GestureDetector(
+                  onTap: onDateTap,
+                  child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 8,
@@ -163,10 +223,11 @@ class BookingScheduleBodyView extends StatelessWidget {
                     ],
                   ),
                 ),
+                ),
               ),
               const SizedBox(width: 8),
 
-              // 3 booking pill
+              // booking count pill
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12,
@@ -176,8 +237,8 @@ class BookingScheduleBodyView extends StatelessWidget {
                   color: _coralColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Text(
-                  '3 booking',
+                child: Text(
+                  '$bookingCount booking',
                   style: TextStyle(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w700,

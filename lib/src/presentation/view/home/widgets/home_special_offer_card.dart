@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../../../../shared/shared.dart';
 
 class HomeSpecialOfferItem {
   final String id;
@@ -152,28 +153,16 @@ class HomeSpecialOfferCard extends StatelessWidget {
                         const SizedBox(width: 8),
 
                         // Book Now Button
-                        ElevatedButton(
+                        AppButton(
+                          text: 'Book Now',
                           onPressed: onBookNow ?? onTap,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _coralColor,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 8,
-                            ),
-                            elevation: 0,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            minimumSize: Size.zero,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text(
-                            'Book Now',
-                            style: TextStyle(
-                              fontSize: 12.5,
-                              fontWeight: FontWeight.w700,
-                            ),
+                          backgroundColor: _coralColor,
+                          textColor: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          size: AppButtonSize.sm,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 8,
                           ),
                         ),
                       ],

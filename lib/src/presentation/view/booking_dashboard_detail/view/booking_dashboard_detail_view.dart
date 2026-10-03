@@ -1,14 +1,50 @@
-import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/body_view/booking_dashboard_detail_body_view.dart';
-import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
-import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../app/di/dependency_injection.dart';
+import '../../../../domain/entities/booking/booking_entity.dart';
+import '../../../../shared/shared.dart';
+import '../../../bloc/booking/booking_action/booking_action_bloc.dart';
+import '../../../bloc/booking/booking_detail/booking_detail_bloc.dart';
+import '../body_view/booking_dashboard_detail_body_view.dart';
 
 class BookingDashboardDetailView extends StatelessWidget {
-  const BookingDashboardDetailView({super.key});
+  final String? bookingId;
 
-  void _showCancelDialog(BuildContext context) {
+  const BookingDashboardDetailView({super.key, this.bookingId});
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveId = bookingId ?? 'BK-TODAY-01';
+    final hasBlocs =
+        sl.isRegistered<BookingDetailBloc>() && sl.isRegistered<BookingActionBloc>();
+    if (!hasBlocs) {
+      return _BookingDashboardDetailContent(bookingId: effectiveId);
+    }
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<BookingDetailBloc>(
+          create: (_) => sl<BookingDetailBloc>()
+            ..add(LoadBookingDetailEvent(effectiveId)),
+        ),
+        BlocProvider<BookingActionBloc>(
+          create: (_) => sl<BookingActionBloc>(),
+        ),
+      ],
+      child: _BookingDashboardDetailContent(bookingId: effectiveId),
+    );
+  }
+}
+
+class _BookingDashboardDetailContent extends StatelessWidget {
+  final String bookingId;
+
+  const _BookingDashboardDetailContent({required this.bookingId});
+
+  void _showCancelDialog(BuildContext parentContext) {
+    final reasonController = TextEditingController(text: 'Change of schedule');
+
     showDialog(
-      context: context,
+      context: parentContext,
       builder: (dialogCtx) {
         return AlertDialog(
           backgroundColor: Colors.white,
@@ -23,9 +59,26 @@ class BookingDashboardDetailView extends StatelessWidget {
               color: Color(0xFF1E293B),
             ),
           ),
-          content: const Text(
-            'Are you sure you want to cancel this booking? This action cannot be undone.',
-            style: TextStyle(fontSize: 14, color: Color(0xFF64748B)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Please provide a reason for cancellation:',
+                style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+              ),
+              const SizedBox(height: 10),
+              AppTextField(
+                controller: reasonController,
+                maxLines: 2,
+                hint: 'Reason...',
+                fillColor: const Color(0xFFF8FAFC),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                ),
+              ),
+            ],
           ),
           actions: [
             TextButton(
@@ -38,21 +91,21 @@ class BookingDashboardDetailView extends StatelessWidget {
                 ),
               ),
             ),
-            ElevatedButton(
+            AppButton(
+              text: 'Yes, Cancel',
               onPressed: () {
+                final reason = reasonController.text.trim();
                 Navigator.of(dialogCtx).pop();
-                AppToast.info(context, message: 'Booking cancelled');
-                Navigator.of(context).pop();
+                parentContext.read<BookingActionBloc>().add(
+                      CancelBookingEvent(
+                        bookingId: bookingId,
+                        reason: reason.isNotEmpty ? reason : 'Customer cancelled',
+                      ),
+                    );
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFBA1A1A),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 0,
-              ),
-              child: const Text('Yes, Cancel'),
+              variant: AppButtonVariant.destructive,
+              borderRadius: BorderRadius.circular(10),
+              size: AppButtonSize.sm,
             ),
           ],
         );
@@ -60,93 +113,162 @@ class BookingDashboardDetailView extends StatelessWidget {
     );
   }
 
-  void _connectSalon(BuildContext context) {
-    AppToast.info(
+  void _connectSalon(BuildContext context, String? phone, String? storeName) {
+    AppToastHelper.showInfo(
       context,
-      message: 'Connecting to Aurus Salon (+84 912 345 678)...',
+      message: 'Connecting to ${storeName ?? 'Salon'} (${phone ?? '+84 912 345 678'})...',
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    bool hasBlocs = false;
+    try {
+      BlocProvider.of<BookingDetailBloc>(context);
+      BlocProvider.of<BookingActionBloc>(context);
+      hasBlocs = true;
+    } catch (_) {
+      hasBlocs = false;
+    }
+
+    if (!hasBlocs) {
+      return _buildScaffold(
+        context,
+        canCancel: true,
+        isSubmittingAction: false,
+        isLoading: false,
+        booking: null,
+      );
+    }
+
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<BookingActionBloc, BookingActionState>(
+          listener: (context, state) {
+            if (state.isCancelledSuccess) {
+              AppToastHelper.showSuccess(
+                context,
+                message: 'Booking cancelled successfully',
+              );
+              Navigator.of(context).pop(true);
+            } else if (state.isNotesUpdatedSuccess) {
+              AppToastHelper.showSuccess(
+                context,
+                message: 'Note updated successfully',
+              );
+            } else if (state.isFailure && state.failure != null) {
+              AppToastHelper.showError(
+                context,
+                error: state.failure,
+              );
+            }
+          },
+        ),
+        BlocListener<BookingDetailBloc, BookingDetailState>(
+          listener: (context, state) {
+            if (state.isFailure && state.failure != null) {
+              AppToastHelper.showError(
+                context,
+                error: state.failure,
+              );
+            }
+          },
+        ),
+      ],
+      child: BlocBuilder<BookingDetailBloc, BookingDetailState>(
+        builder: (context, detailState) {
+          final isSubmittingAction =
+              context.watch<BookingActionBloc>().state.isLoading;
+          final booking = detailState.booking;
+          final canCancel = booking?.actions?.canCancel ?? true;
+
+          return _buildScaffold(
+            context,
+            canCancel: canCancel,
+            isSubmittingAction: isSubmittingAction,
+            isLoading: detailState.isLoading,
+            booking: booking,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildScaffold(
+    BuildContext context, {
+    required bool canCancel,
+    required bool isSubmittingAction,
+    required bool isLoading,
+    required BookingEntity? booking,
+  }) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppAppBar(
         title: 'Booking detail',
         onMorePressed: () {
-          AppToast.info(context, message: 'More options');
+          AppToastHelper.showInfo(context, message: 'More options');
         },
       ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 10,
-                offset: const Offset(0, -3),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              // Cancel Button
-              Expanded(
-                child: SizedBox(
-                  height: 48,
-                  child: OutlinedButton(
-                    onPressed: () => _showCancelDialog(context),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFFFA7762),
-                      side: const BorderSide(color: Color(0xFFFA7762)),
-                      shape: RoundedRectangleBorder(
+            bottomNavigationBar: SafeArea(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, -3),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    // Cancel Button
+                    Expanded(
+                      child: AppButton(
+                        text: 'Cancel',
+                        onPressed: (canCancel && !isSubmittingAction)
+                            ? () => _showCancelDialog(context)
+                            : null,
+                        variant: AppButtonVariant.outline,
+                        isLoading: isSubmittingAction,
+                        textColor: canCancel ? const Color(0xFFFA7762) : Colors.grey,
                         borderRadius: BorderRadius.circular(24),
+                        height: 48,
                       ),
                     ),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
+
+                    const SizedBox(width: 14),
+
+                    // Connect Button
+                    Expanded(
+                      child: AppButton(
+                        text: 'Connect',
+                        onPressed: () => _connectSalon(
+                          context,
+                          booking?.store?.address,
+                          booking?.store?.name,
+                        ),
+                        backgroundColor: const Color(0xFFFA7762),
+                        textColor: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        height: 48,
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ),
-
-              const SizedBox(width: 14),
-
-              // Connect Button
-              Expanded(
-                child: SizedBox(
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: () => _connectSalon(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFA7762),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: const Text(
-                      'Connect',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      body: const SafeArea(top: false, child: BookingDashboardDetailBodyView()),
-    );
+            ),
+            body: SafeArea(
+              top: false,
+              child: isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(color: Color(0xFFFA7762)),
+                    )
+                  : BookingDashboardDetailBodyView(booking: booking),
+            ),
+          );
   }
 }
+

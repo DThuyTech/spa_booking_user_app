@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../../shared/shared.dart';
 import '../widgets/booking_result_summary_card.dart';
 
 class BookingResultBodyView extends StatelessWidget {
@@ -82,49 +82,22 @@ class BookingResultBodyView extends StatelessWidget {
           const SizedBox(height: 28),
 
           // 4. Action Buttons
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton(
-              onPressed: onPrimaryAction,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isSuccess
-                    ? _coralColor
-                    : const Color(0xFFEF4444),
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                textStyle: const TextStyle(
-                  fontSize: 15.5,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              child: Text(isSuccess ? 'View My Bookings' : 'Try Again'),
-            ),
+          AppButton(
+            text: isSuccess ? 'View My Bookings' : 'Try Again',
+            onPressed: onPrimaryAction,
+            backgroundColor: isSuccess ? _coralColor : const Color(0xFFEF4444),
+            textColor: Colors.white,
+            borderRadius: BorderRadius.circular(25),
           ),
 
           const SizedBox(height: 12),
 
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: OutlinedButton(
-              onPressed: onSecondaryAction,
-              style: OutlinedButton.styleFrom(
-                foregroundColor: const Color(0xFF475569),
-                side: const BorderSide(color: Color(0xFFCBD5E1), width: 1.2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                textStyle: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              child: const Text('Back to Home'),
-            ),
+          AppButton(
+            text: 'Back to Home',
+            onPressed: onSecondaryAction,
+            variant: AppButtonVariant.outline,
+            textColor: const Color(0xFF475569),
+            borderRadius: BorderRadius.circular(25),
           ),
 
           const SizedBox(height: 24),

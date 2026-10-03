@@ -63,7 +63,7 @@ class HomeSalonsNearYouSection extends StatelessWidget {
 
         // Horizontal List
         SizedBox(
-          height: 215,
+          height: 230,
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             scrollDirection: Axis.horizontal,

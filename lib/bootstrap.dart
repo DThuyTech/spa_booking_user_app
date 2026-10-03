@@ -30,7 +30,7 @@ abstract final class AppBootstrap {
     );
 
     // 1. Environment & Config
-    final appConfig = config ?? EnvironmentLoader.load();
+    final appConfig = config ?? await EnvironmentLoader.loadAsync();
 
     // 2. Logger & BLoC Observer
     final logger = AppLogger(

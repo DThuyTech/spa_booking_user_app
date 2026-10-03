@@ -2,6 +2,7 @@ import 'package:spa_booking/src/app/session/app_session_state.dart';
 import 'package:spa_booking/src/app/session/session_manager.dart';
 import 'package:spa_booking/src/core/constants/app_constants.dart';
 import 'package:spa_booking/src/core/logging/app_logger.dart';
+import 'package:spa_booking/src/core/logging/log_level.dart';
 import 'package:spa_booking/src/core/network/auth/token_pair.dart';
 import 'package:spa_booking/src/core/network/auth/token_storage.dart';
 import 'package:spa_booking/src/core/storage/preferences_storage.dart';
@@ -67,6 +68,8 @@ class NoopLogger implements Logger {
   void info(String message, [Object? error, StackTrace? stackTrace]) {}
   @override
   void warning(String message, [Object? error, StackTrace? stackTrace]) {}
+  @override
+  void json(dynamic data, {String? title, LogLevel level = LogLevel.debug}) {}
 }
 
 void main() {

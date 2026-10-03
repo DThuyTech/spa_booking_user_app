@@ -1,20 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../app/di/dependency_injection.dart';
+import '../../../../domain/entities/store/store_entity.dart';
 import '../../../../shared/design_system/components/sheets/app_filter_bottom_sheet.dart';
-import '../../../../shared/widgets/toast/app_toast.dart';
+import '../../../../shared/utils/app_toast_helper.dart';
+import '../../../bloc/store/store_list/store_list_bloc.dart';
 import '../../store_detail/view/store_detail_view.dart';
 import '../body_view/search_body_view.dart';
 import '../mockup_data/search_mock_data.dart';
 import '../widgets/search_store_card.dart';
 
-class SearchView extends StatefulWidget {
+class SearchView extends StatelessWidget {
   const SearchView({super.key});
 
   @override
-  State<SearchView> createState() => _SearchViewState();
+  Widget build(BuildContext context) {
+    return BlocProvider<StoreListBloc>(
+      create: (_) => sl<StoreListBloc>()..add(const FetchStoresEvent()),
+      child: const _SearchContent(),
+    );
+  }
 }
 
-class _SearchViewState extends State<SearchView> {
+class _SearchContent extends StatefulWidget {
+  const _SearchContent();
+
+  @override
+  State<_SearchContent> createState() => _SearchContentState();
+}
+
+class _SearchContentState extends State<_SearchContent> {
   late final TextEditingController _searchController;
   String _searchQuery = '';
   SpaFilterCriteria _filterCriteria = SearchMockData.defaultCriteria;
@@ -34,37 +50,6 @@ class _SearchViewState extends State<SearchView> {
     super.dispose();
   }
 
-  List<SearchStoreItem> get _filteredStores {
-    return _allStores.where((store) {
-      // 1. Search Query Filter
-      if (_searchQuery.isNotEmpty) {
-        final q = _searchQuery.toLowerCase();
-        final matchesName = store.name.toLowerCase().contains(q);
-        final matchesTags = store.tags.any((t) => t.toLowerCase().contains(q));
-        final matchesDesc = store.description.toLowerCase().contains(q);
-        if (!matchesName && !matchesTags && !matchesDesc) return false;
-      }
-
-      // 2. Service Filter
-      if (_filterCriteria.services.isNotEmpty) {
-        final matchesAnyService = _filterCriteria.services.any((svc) {
-          return store.tags.any(
-            (tag) => tag.toLowerCase().contains(svc.toLowerCase()),
-          );
-        });
-        if (!matchesAnyService) return false;
-      }
-
-      // 3. Distance Filter
-      final distVal =
-          double.tryParse(store.distance.replaceAll(RegExp(r'[^0-9.]'), '')) ??
-          0;
-      if (distVal > _filterCriteria.distanceKm) return false;
-
-      return true;
-    }).toList();
-  }
-
   void _onFavoriteToggle(SearchStoreItem store) {
     setState(() {
       final index = _allStores.indexWhere((s) => s.id == store.id);
@@ -72,7 +57,7 @@ class _SearchViewState extends State<SearchView> {
         _allStores[index] = store.copyWith(isFavorite: !store.isFavorite);
       }
     });
-    AppToast.info(
+    AppToastHelper.showInfo(
       context,
       message: store.isFavorite
           ? 'Removed from favorites'
@@ -88,7 +73,13 @@ class _SearchViewState extends State<SearchView> {
         setState(() {
           _filterCriteria = criteria;
         });
-        AppToast.success(context, message: 'Filters applied');
+        context.read<StoreListBloc>().add(
+              FetchStoresEvent(
+                search: _searchQuery.isNotEmpty ? _searchQuery : null,
+                province: criteria.location.isNotEmpty ? criteria.location : null,
+              ),
+            );
+        AppToastHelper.showSuccess(context, message: 'Filters applied');
       },
     );
   }
@@ -115,55 +106,105 @@ class _SearchViewState extends State<SearchView> {
       _searchController.clear();
       _searchQuery = '';
     });
-    AppToast.info(context, message: 'Filters reset');
+    context.read<StoreListBloc>().add(const FetchStoresEvent());
+    AppToastHelper.showInfo(context, message: 'Filters reset');
+  }
+
+  List<SearchStoreItem> _mapToSearchItems(List<StoreEntity> stores) {
+    if (stores.isEmpty) {
+      return _allStores;
+    }
+
+    return stores.map((s) {
+      return SearchStoreItem(
+        id: s.id,
+        name: s.name,
+        rating: s.rating,
+        distance: '1.2 km',
+        tags: const ['Spa & Wellness'],
+        description: s.address,
+        imageUrl: s.coverUrl ?? s.logoUrl ?? 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80',
+        isFavorite: false,
+      );
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          bottom: false,
-          child: SearchBodyView(
-            searchController: _searchController,
-            onQueryChanged: (q) {
-              setState(() {
-                _searchQuery = q.trim();
-              });
-            },
-            onClearQuery: () {
-              setState(() {
-                _searchController.clear();
-                _searchQuery = '';
-              });
-            },
-            onFilterTap: _openFilterBottomSheet,
-            activeFilters: _filterCriteria,
-            onRemoveServiceFilter: _onRemoveServiceFilter,
-            stores: _filteredStores,
-            onStoreTap: (store) {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => StoreDetailView(storeId: store.id),
-                ),
-              );
-            },
-            onFavoriteToggle: _onFavoriteToggle,
-            onResetFilters: _onResetFilters,
-            onRefresh: () async {
-              await Future.delayed(const Duration(milliseconds: 500));
-            },
+    return BlocConsumer<StoreListBloc, StoreListState>(
+      listener: (context, state) {
+        if (state.isFailure && state.failure != null) {
+          AppToastHelper.showError(context, error: state.failure);
+        }
+      },
+      builder: (context, state) {
+        final displayStores = _mapToSearchItems(state.stores);
+
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.light,
+            systemNavigationBarColor: Colors.white,
+            systemNavigationBarIconBrightness: Brightness.dark,
           ),
-        ),
-      ),
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              bottom: false,
+              child: SearchBodyView(
+                searchController: _searchController,
+                onQueryChanged: (q) {
+                  setState(() {
+                    _searchQuery = q.trim();
+                  });
+                  context.read<StoreListBloc>().add(
+                        FetchStoresEvent(
+                          search: _searchQuery.isNotEmpty ? _searchQuery : null,
+                          province: _filterCriteria.location.isNotEmpty
+                              ? _filterCriteria.location
+                              : null,
+                        ),
+                      );
+                },
+                onClearQuery: () {
+                  setState(() {
+                    _searchController.clear();
+                    _searchQuery = '';
+                  });
+                  context.read<StoreListBloc>().add(const FetchStoresEvent());
+                },
+                onFilterTap: _openFilterBottomSheet,
+                activeFilters: _filterCriteria,
+                onRemoveServiceFilter: _onRemoveServiceFilter,
+                stores: displayStores,
+                onStoreTap: (store) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => StoreDetailView(storeId: store.id),
+                    ),
+                  );
+                },
+                onFavoriteToggle: _onFavoriteToggle,
+                onResetFilters: _onResetFilters,
+                onRefresh: () async {
+                  context.read<StoreListBloc>().add(
+                        FetchStoresEvent(
+                          search: _searchQuery.isNotEmpty ? _searchQuery : null,
+                          province: _filterCriteria.location.isNotEmpty
+                              ? _filterCriteria.location
+                              : null,
+                          isRefresh: true,
+                        ),
+                      );
+                  await Future.delayed(const Duration(milliseconds: 400));
+                },
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
+

@@ -164,13 +164,16 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> createCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
   }) async {
     await Future.delayed(const Duration(milliseconds: 250));
-    final resolvedFullName = '$firstName $lastName'.trim();
+    final resolvedFullName = (name != null && name.trim().isNotEmpty)
+        ? name.trim()
+        : '${firstName ?? ''} ${lastName ?? ''}'.trim();
     _currentUser = _currentUser.copyWith(
       fullName: resolvedFullName.isNotEmpty
           ? resolvedFullName
@@ -183,13 +186,16 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> updateCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
   }) async {
     await Future.delayed(const Duration(milliseconds: 250));
-    final resolvedFullName = '$firstName $lastName'.trim();
+    final resolvedFullName = (name != null && name.trim().isNotEmpty)
+        ? name.trim()
+        : '${firstName ?? ''} ${lastName ?? ''}'.trim();
     _currentUser = _currentUser.copyWith(
       fullName: resolvedFullName.isNotEmpty
           ? resolvedFullName

@@ -33,15 +33,17 @@ abstract interface class AuthRemoteDataSource {
   Future<UserModel> getCurrentUser();
 
   Future<UserModel> createCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
   });
 
   Future<UserModel> updateCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
   });
@@ -101,12 +103,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> createCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
   }) {
     return _apiService.createCustomerProfile(
+      name: name,
       firstName: firstName,
       lastName: lastName,
       phoneNumber: phoneNumber,
@@ -116,12 +120,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> updateCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
   }) {
     return _apiService.updateCustomerProfile(
+      name: name,
       firstName: firstName,
       lastName: lastName,
       phoneNumber: phoneNumber,

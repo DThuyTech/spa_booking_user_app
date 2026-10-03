@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import '../buttons/app_button.dart';
 import '../chips/app_option_picker.dart';
 import '../feedback/app_filter_slider.dart';
 
@@ -459,63 +460,37 @@ class _AppFilterBottomSheetState extends State<AppFilterBottomSheet> {
               children: [
                 Expanded(
                   flex: 3,
-                  child: SizedBox(
+                  child: AppButton(
+                    text: 'Reset',
+                    onPressed: _onReset,
+                    backgroundColor: const Color(0xFFF3F4F6),
+                    textColor: const Color(0xFF4B5563),
+                    borderRadius: BorderRadius.circular(25),
                     height: 50,
-                    child: ElevatedButton(
-                      onPressed: _onReset,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF3F4F6),
-                        foregroundColor: const Color(0xFF4B5563),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
-                      child: const Text(
-                        'Reset',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
                   ),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
                   flex: 5,
-                  child: SizedBox(
+                  child: AppButton(
+                    text: 'Apply Filters',
+                    onPressed: () {
+                      widget.onApply(
+                        SpaFilterCriteria(
+                          location: _location,
+                          distanceKm: _distanceKm,
+                          services: _selectedServices,
+                          date: _selectedDate,
+                          time: _selectedTime,
+                          priceRange: _priceRange,
+                          rating: _selectedRating,
+                        ),
+                      );
+                    },
+                    backgroundColor: _coralColor,
+                    textColor: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
                     height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        widget.onApply(
-                          SpaFilterCriteria(
-                            location: _location,
-                            distanceKm: _distanceKm,
-                            services: _selectedServices,
-                            date: _selectedDate,
-                            time: _selectedTime,
-                            priceRange: _priceRange,
-                            rating: _selectedRating,
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _coralColor,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
-                      child: const Text(
-                        'Apply Filters',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
                   ),
                 ),
               ],

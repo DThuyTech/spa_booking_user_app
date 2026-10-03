@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../shared/shared.dart';
 import '../../otp_verification/widgets/otp_input.dart';
 
 class ForgotPasswordOtpBodyView extends StatelessWidget {
@@ -112,27 +113,14 @@ class ForgotPasswordOtpBodyView extends StatelessWidget {
           const SizedBox(height: 32),
 
           // Verify Button
-          SizedBox(
-            width: double.infinity,
+          AppButton(
+            text: 'Verify & Proceed',
+            onPressed: otpCode.length == 6 ? onVerify : null,
+            backgroundColor: _coralColor,
+            textColor: Colors.white,
+            borderRadius: BorderRadius.circular(28),
             height: 54,
-            child: ElevatedButton(
-              onPressed: otpCode.length == 6 ? onVerify : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _coralColor,
-                disabledBackgroundColor: const Color(0xFFFFD4CC),
-                foregroundColor: Colors.white,
-                disabledForegroundColor: Colors.white70,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(28),
-                ),
-                textStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              child: const Text('Verify & Proceed'),
-            ),
+            fullWidth: true,
           ),
         ],
       ),

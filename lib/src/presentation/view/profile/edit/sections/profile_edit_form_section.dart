@@ -54,12 +54,12 @@ class ProfileEditFormSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Full name Field
+        // Name Field
         AppTextField(
           controller: fullNameController,
-          label: 'Full name',
+          label: 'Name',
           labelStyle: labelStyle,
-          hint: 'Enter text here.....',
+          hint: 'Enter your name',
           hintStyle: hintStyle,
           style: inputStyle,
           fillColor: _inputFillColor,

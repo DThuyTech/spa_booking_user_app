@@ -22,6 +22,7 @@ class _LoginCardSectionState extends State<LoginCardSection> {
   late final TextEditingController _passwordController;
   final FocusNode _identifierFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
+  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -110,7 +111,21 @@ class _LoginCardSectionState extends State<LoginCardSection> {
                 focusNode: _passwordFocusNode,
                 hintText: l10n.enterPassword,
                 prefixIcon: LucideIcons.key,
-                obscureText: true,
+                obscureText: _obscurePassword,
+                suffixIcon: IconButton(
+                  padding: EdgeInsets.zero,
+                  splashRadius: 18,
+                  icon: Icon(
+                    _obscurePassword ? LucideIcons.eye_off : LucideIcons.eye,
+                    size: 19,
+                    color: const Color(0xFF8A7D75),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                ),
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.done,
                 onChanged: (value) {
@@ -171,55 +186,6 @@ class _LoginCardSectionState extends State<LoginCardSection> {
               _buildLoginButton(context, state),
 
               const SizedBox(height: 14),
-
-              // 5. Quick Fill Demo Account
-              Center(
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: () {
-                    _identifierController.text = 'demo@aura.com';
-                    _passwordController.text = 'password123';
-                    context.read<LoginBloc>().add(
-                      const LoginIdentifierChanged('demo@aura.com'),
-                    );
-                    context.read<LoginBloc>().add(
-                      const LoginPasswordChanged('password123'),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFA7762).withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: const Color(0xFFFA7762).withValues(alpha: 0.25),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          LucideIcons.sparkles,
-                          size: 13,
-                          color: Color(0xFFB85848),
-                        ),
-                        SizedBox(width: 6),
-                        Text(
-                          'Quick Demo: demo@aura.com',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFFB85848),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         );

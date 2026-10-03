@@ -6,6 +6,7 @@ import 'package:spa_booking/src/data/model/auth/refresh_token_response_model.dar
 import 'package:spa_booking/src/data/model/auth/request_otp_response_model.dart';
 import 'package:spa_booking/src/data/model/auth/user_model.dart';
 import 'package:spa_booking/src/data/model/auth/verify_otp_response_model.dart';
+import 'package:spa_booking/src/domain/entities/auth/user_role_enum.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -51,7 +52,7 @@ void main() {
       final entity = AuthMapper.toAuthSessionEntity(model);
       expect(entity.accessToken, equals('sample_access_jwt'));
       expect(entity.user.id, equals('usr_999'));
-      expect(entity.user.role, equals('CUSTOMER'));
+      expect(entity.user.role, equals(UserRoleEnum.customer));
     });
 
     test('RefreshTokenResponseModel parses backend JSON correctly', () {
@@ -74,7 +75,7 @@ void main() {
       final json1 = {'_id': 'usr_1', 'phone': '0901', 'name': 'User 1'};
       final model1 = UserModel.fromJson(json1);
       expect(model1.id, equals('usr_1'));
-      expect(model1.role, equals('CUSTOMER'));
+      expect(model1.role, equals(UserRoleEnum.customer));
       expect(model1.fullName, equals('User 1'));
 
       final json2 = {
@@ -85,7 +86,7 @@ void main() {
       };
       final model2 = UserModel.fromJson(json2);
       expect(model2.id, equals('usr_2'));
-      expect(model2.role, equals('ADMIN'));
+      expect(model2.role, equals(UserRoleEnum.admin));
       expect(model2.fullName, equals('User 2'));
     });
   });

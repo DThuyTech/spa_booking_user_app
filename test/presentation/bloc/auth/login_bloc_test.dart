@@ -17,7 +17,14 @@ class MockLoginUseCase extends Mock implements LoginUseCase {}
 
 class MockSessionManager extends Mock implements SessionManager {}
 
+class FakeTokenPair extends Fake implements TokenPair {}
+
 void main() {
+  setUpAll(() {
+    registerFallbackValue(FakeTokenPair());
+    registerFallbackValue(UserRoleEnum.customer);
+  });
+
   late MockLoginUseCase mockLoginUseCase;
   late MockSessionManager mockSessionManager;
   late LoginBloc loginBloc;

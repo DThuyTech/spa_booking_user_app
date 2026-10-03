@@ -35,6 +35,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       emit(state.copyWith(password: event.password));
     });
 
+    on<RegisterConfirmPasswordChanged>((event, emit) {
+      emit(state.copyWith(confirmPassword: event.confirmPassword));
+    });
+
     on<RegisterSubmitted>(_onSubmitted);
   }
 
@@ -46,6 +50,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
     final email = state.identifier.trim();
     final password = state.password;
+    final confirmPassword = state.confirmPassword;
 
     if (email.isEmpty) {
       emit(
@@ -72,6 +77,16 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         state.copyWith(
           status: RegisterStatus.failure,
           errorMessage: () => 'Password must be at least 8 characters long.',
+        ),
+      );
+      return;
+    }
+
+    if (confirmPassword.isNotEmpty && confirmPassword != password) {
+      emit(
+        state.copyWith(
+          status: RegisterStatus.failure,
+          errorMessage: () => 'Passwords do not match.',
         ),
       );
       return;

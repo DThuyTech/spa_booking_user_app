@@ -1,6 +1,6 @@
-import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/mockup_data/booking_dashboard_detail_mock_data.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
+import '../mockup_data/booking_dashboard_detail_mock_data.dart';
 
 class BookingDetailNotesCard extends StatefulWidget {
   final List<DetailUserNoteItem> notes;
@@ -130,32 +130,22 @@ class _BookingDetailNotesCardState extends State<BookingDetailNotesCard> {
                 const SizedBox(height: 4),
 
                 // Note input box
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 10,
+                AppTextField(
+                  controller: _noteController,
+                  maxLines: 3,
+                  hint: 'Write a description...',
+                  hintStyle: const TextStyle(
+                    fontSize: 12.5,
+                    color: Color(0xFF94A3B8),
                   ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF1F5F9),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF1E293B),
+                  ),
+                  fillColor: const Color(0xFFF1F5F9),
+                  border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: TextField(
-                    controller: _noteController,
-                    maxLines: 3,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Color(0xFF1E293B),
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: 'Write a description...',
-                      hintStyle: TextStyle(
-                        fontSize: 12.5,
-                        color: Color(0xFF94A3B8),
-                      ),
-                      border: InputBorder.none,
-                      isDense: true,
-                      contentPadding: EdgeInsets.zero,
-                    ),
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ],

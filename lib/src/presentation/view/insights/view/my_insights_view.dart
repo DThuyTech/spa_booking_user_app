@@ -4,13 +4,22 @@ import 'package:spa_booking/src/presentation/view/insights/body_view/my_insights
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../app/di/dependency_injection.dart';
+import '../../../bloc/insights/spending_analytics_bloc.dart';
+import '../../../bloc/insights/spending_analytics_event.dart';
+
 @RoutePage()
 class MyInsightsPage extends StatelessWidget {
   const MyInsightsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MyInsightsView();
+    return BlocProvider<SpendingAnalyticsBloc>(
+      create: (_) => sl<SpendingAnalyticsBloc>()
+        ..add(const ChangeSpendingAnalyticsPeriodEvent('This Month')),
+      child: const MyInsightsView(),
+    );
   }
 }
 
@@ -40,6 +49,11 @@ class _MyInsightsViewState extends State<MyInsightsView> {
                 setState(() {
                   _selectedPeriod = val;
                 });
+                try {
+                  context
+                      .read<SpendingAnalyticsBloc>()
+                      .add(ChangeSpendingAnalyticsPeriodEvent(val));
+                } catch (_) {}
               },
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(14),

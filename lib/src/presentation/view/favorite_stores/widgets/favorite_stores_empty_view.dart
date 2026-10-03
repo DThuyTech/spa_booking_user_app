@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
 
 class FavoriteStoresEmptyView extends StatelessWidget {
   final bool isSearching;
@@ -59,27 +59,10 @@ class FavoriteStoresEmptyView extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
+            AppButton(
+              text: isSearching ? 'Clear Search & Filter' : 'Explore Salons',
+              backgroundColor: _coralColor,
               onPressed: onAction,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _coralColor,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-              ),
-              child: Text(
-                isSearching ? 'Clear Search & Filter' : 'Explore Salons',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
             ),
           ],
         ),

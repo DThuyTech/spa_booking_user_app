@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
 import '../mockup_data/store_detail_mock_data.dart';
 
 class StoreLocationCard extends StatelessWidget {
@@ -115,24 +115,14 @@ class StoreLocationCard extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Get directions button
-          SizedBox(
-            width: double.infinity,
+          AppButton(
+            text: 'Get directions',
+            onPressed: onGetDirections,
+            variant: AppButtonVariant.outline,
+            textColor: _textDark,
+            borderRadius: BorderRadius.circular(20),
             height: 44,
-            child: OutlinedButton(
-              onPressed: onGetDirections,
-              style: OutlinedButton.styleFrom(
-                foregroundColor: _textDark,
-                side: const BorderSide(color: Color(0xFFE2E8F0)),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                textStyle: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              child: const Text('Get directions'),
-            ),
+            fullWidth: true,
           ),
         ],
       ),

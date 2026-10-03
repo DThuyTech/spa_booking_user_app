@@ -1,33 +1,52 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../app/di/dependency_injection.dart';
+import '../../../../shared/design_system/components/navigation/app_app_bar.dart';
 import '../../../../shared/widgets/toast/app_toast.dart';
+import '../../../bloc/review/write_review/write_review_bloc.dart';
 import '../body_view/write_review_body_view.dart';
 import '../mockup_data/write_review_mock_data.dart';
 
 @RoutePage()
 class WriteReviewPage extends StatelessWidget {
-  final String salonName;
-  final String logoUrl;
+  final String? storeId;
+  final String? bookingId;
+  final String? salonName;
+  final String? logoUrl;
 
   const WriteReviewPage({
     super.key,
-    this.salonName = WriteReviewMockData.defaultSalonName,
-    this.logoUrl = WriteReviewMockData.defaultLogoUrl,
+    this.storeId,
+    this.bookingId,
+    this.salonName,
+    this.logoUrl,
   });
 
   @override
   Widget build(BuildContext context) {
-    return WriteReviewView(salonName: salonName, logoUrl: logoUrl);
+    return BlocProvider<WriteReviewBloc>(
+      create: (_) => sl<WriteReviewBloc>(),
+      child: WriteReviewView(
+        storeId: storeId,
+        bookingId: bookingId,
+        salonName: salonName ?? WriteReviewMockData.defaultSalonName,
+        logoUrl: logoUrl ?? WriteReviewMockData.defaultLogoUrl,
+      ),
+    );
   }
 }
 
 class WriteReviewView extends StatefulWidget {
+  final String? storeId;
+  final String? bookingId;
   final String salonName;
   final String logoUrl;
 
   const WriteReviewView({
     super.key,
+    this.storeId,
+    this.bookingId,
     this.salonName = WriteReviewMockData.defaultSalonName,
     this.logoUrl = WriteReviewMockData.defaultLogoUrl,
   });
@@ -85,9 +104,31 @@ class _WriteReviewViewState extends State<WriteReviewView> {
     });
   }
 
+  bool get _hasBloc {
+    try {
+      BlocProvider.of<WriteReviewBloc>(context);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   void _onSubmit() {
     if (_selectedRating == 0) {
       AppToast.warning(context, message: 'Please select a star rating');
+      return;
+    }
+
+    if (_hasBloc) {
+      context.read<WriteReviewBloc>().add(
+            SubmitReviewEvent(
+              storeId: widget.storeId ?? '',
+              bookingId: widget.bookingId ?? '',
+              rating: _selectedRating,
+              comment: _reviewController.text.trim(),
+              images: _photoUrls,
+            ),
+          );
       return;
     }
 
@@ -100,7 +141,7 @@ class _WriteReviewViewState extends State<WriteReviewView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final scaffold = Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppAppBar(
         title: 'Write a Review',
@@ -138,6 +179,42 @@ class _WriteReviewViewState extends State<WriteReviewView> {
         onRemovePhoto: _onRemovePhoto,
         onSubmitReview: _onSubmit,
       ),
+    );
+
+    if (!_hasBloc) return scaffold;
+
+    return BlocConsumer<WriteReviewBloc, WriteReviewState>(
+      listener: (context, state) {
+        if (state.status == WriteReviewStatus.success) {
+          AppToast.success(
+            context,
+            message:
+                'Thank you! Your review for ${widget.salonName} was submitted.',
+          );
+          Navigator.of(context).maybePop(true);
+        } else if (state.status == WriteReviewStatus.failure) {
+          AppToast.error(
+            context,
+            message: state.failure?.message ?? 'Failed to submit review',
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state.status == WriteReviewStatus.loading) {
+          return Stack(
+            children: [
+              scaffold,
+              Container(
+                color: Colors.black.withValues(alpha: 0.2),
+                child: const Center(
+                  child: CircularProgressIndicator(color: _coralColor),
+                ),
+              ),
+            ],
+          );
+        }
+        return scaffold;
+      },
     );
   }
 }

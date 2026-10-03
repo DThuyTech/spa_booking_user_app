@@ -32,15 +32,17 @@ abstract interface class AuthApiService {
   Future<UserModel> getCurrentUser();
 
   Future<UserModel> createCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
   });
 
   Future<UserModel> updateCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
   });
@@ -212,16 +214,19 @@ class AuthApiServiceImpl implements AuthApiService {
 
   @override
   Future<UserModel> createCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
   }) async {
+    final resolvedName = (name != null && name.trim().isNotEmpty)
+        ? name.trim()
+        : '${firstName ?? ''} ${lastName ?? ''}'.trim();
     final response = await _client.post<Map<String, dynamic>>(
       UrlConstants.customerMeProfile,
       data: {
-        'firstName': firstName,
-        'lastName': lastName,
+        'name': resolvedName,
         'phoneNumber': phoneNumber,
         'dateOfBirth': dateOfBirth,
       },
@@ -239,16 +244,19 @@ class AuthApiServiceImpl implements AuthApiService {
 
   @override
   Future<UserModel> updateCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
   }) async {
+    final resolvedName = (name != null && name.trim().isNotEmpty)
+        ? name.trim()
+        : '${firstName ?? ''} ${lastName ?? ''}'.trim();
     final response = await _client.patch<Map<String, dynamic>>(
       UrlConstants.customerMeProfile,
       data: {
-        'firstName': firstName,
-        'lastName': lastName,
+        'name': resolvedName,
         'phoneNumber': phoneNumber,
         'dateOfBirth': dateOfBirth,
       },

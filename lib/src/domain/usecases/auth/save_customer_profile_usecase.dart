@@ -5,22 +5,33 @@ import '../../entities/auth/user.dart';
 import '../../repositories/auth/auth_repository.dart';
 
 class SaveCustomerProfileParams extends Equatable {
+  final String name;
   final String firstName;
   final String lastName;
   final String phoneNumber;
   final String dateOfBirth;
   final bool isCreate;
 
-  const SaveCustomerProfileParams({
-    required this.firstName,
-    required this.lastName,
+  SaveCustomerProfileParams({
+    String? name,
+    String? firstName,
+    String? lastName,
     required this.phoneNumber,
     required this.dateOfBirth,
     this.isCreate = false,
-  });
+  })  : name = name ?? '${firstName ?? ''} ${lastName ?? ''}'.trim(),
+        firstName = firstName ??
+            (name != null && name.trim().isNotEmpty
+                ? name.trim().split(' ').first
+                : ''),
+        lastName = lastName ??
+            (name != null && name.trim().split(' ').length > 1
+                ? name.trim().split(' ').sublist(1).join(' ')
+                : (name ?? ''));
 
   @override
   List<Object?> get props => [
+    name,
     firstName,
     lastName,
     phoneNumber,
@@ -36,6 +47,7 @@ class SaveCustomerProfileUseCase {
 
   Future<Either<Failure, User>> call(SaveCustomerProfileParams params) {
     return _repository.saveCustomerProfile(
+      name: params.name,
       firstName: params.firstName,
       lastName: params.lastName,
       phoneNumber: params.phoneNumber,

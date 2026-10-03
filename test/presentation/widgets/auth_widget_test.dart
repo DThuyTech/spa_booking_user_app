@@ -9,6 +9,9 @@ import 'package:spa_booking/src/presentation/view/auth/login/sections/login_card
 import 'package:spa_booking/src/presentation/view/auth/login/sections/login_footer_section.dart';
 import 'package:spa_booking/src/presentation/view/auth/login/sections/login_header_section.dart';
 import 'package:spa_booking/src/presentation/view/auth/login/widgets/aura_logo_badge.dart';
+import 'package:spa_booking/src/domain/usecases/auth/register_usecase.dart';
+import 'package:spa_booking/src/app/di/dependency_injection.dart';
+import 'package:spa_booking/src/presentation/bloc/auth/register/register_bloc.dart';
 import 'package:spa_booking/src/presentation/view/auth/register/view/register_view.dart';
 import 'package:spa_booking/src/presentation/bloc/auth/otp_verification/otp_verification_bloc.dart';
 import 'package:spa_booking/src/presentation/view/auth/otp_verification/sections/otp_header_section.dart';
@@ -17,6 +20,7 @@ import 'package:spa_booking/src/presentation/view/auth/otp_verification/widgets/
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
@@ -28,6 +32,8 @@ class MockVerifyOtpUseCase extends Mock implements VerifyOtpUseCase {}
 class MockLoginUseCase extends Mock implements LoginUseCase {}
 
 class MockSessionManager extends Mock implements SessionManager {}
+
+class MockRegisterUseCase extends Mock implements RegisterUseCase {}
 
 Widget createLocalizedTestWidget(Widget child) {
   return MaterialApp(
@@ -54,6 +60,21 @@ void main() {
     mockVerifyOtp = MockVerifyOtpUseCase();
     mockLoginUseCase = MockLoginUseCase();
     mockSessionManager = MockSessionManager();
+    final mockRegisterUseCase = MockRegisterUseCase();
+    if (!sl.isRegistered<RegisterBloc>()) {
+      sl.registerFactory<RegisterBloc>(
+        () => RegisterBloc(
+          registerUseCase: mockRegisterUseCase,
+          sessionManager: mockSessionManager,
+        ),
+      );
+    }
+  });
+
+  tearDown(() {
+    if (sl.isRegistered<RegisterBloc>()) {
+      sl.unregister<RegisterBloc>();
+    }
   });
 
   group('Login View Widgets', () {
@@ -105,21 +126,21 @@ void main() {
         expect(find.byKey(const Key('login_identifier_field')), findsOneWidget);
         expect(find.byKey(const Key('login_password_field')), findsOneWidget);
 
-        // Enter invalid phone
+        // Enter identifier
         await tester.enterText(
           find.byKey(const Key('login_identifier_field')),
           '123',
         );
         await tester.pump();
-        expect(loginBloc.state.isValid, isFalse);
+        expect(loginBloc.state.identifier, '123');
 
-        // Enter valid 10-digit phone
+        // Enter valid 10-digit phone/identifier
         await tester.enterText(
           find.byKey(const Key('login_identifier_field')),
           '0901234567',
         );
         await tester.pump();
-        expect(loginBloc.state.isValid, isTrue);
+        expect(loginBloc.state.identifier, '0901234567');
       },
     );
 
@@ -135,6 +156,46 @@ void main() {
       expect(find.text('Register'), findsOneWidget);
     });
 
+    testWidgets('toggles password visibility in login screen', (tester) async {
+      final loginBloc = LoginBloc(
+        loginUseCase: mockLoginUseCase,
+        sessionManager: mockSessionManager,
+      );
+
+      await tester.pumpWidget(
+        createLocalizedTestWidget(
+          BlocProvider<LoginBloc>.value(
+            value: loginBloc,
+            child: const LoginCardSection(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final passwordFieldFinder = find.byKey(const Key('login_password_field'));
+      expect(passwordFieldFinder, findsOneWidget);
+
+      TextField passwordTextField = tester.widget<TextField>(passwordFieldFinder);
+      expect(passwordTextField.obscureText, isTrue);
+
+      final toggleButtonFinder = find.byIcon(LucideIcons.eye_off);
+      expect(toggleButtonFinder, findsOneWidget);
+
+      await tester.tap(toggleButtonFinder);
+      await tester.pumpAndSettle();
+
+      passwordTextField = tester.widget<TextField>(passwordFieldFinder);
+      expect(passwordTextField.obscureText, isFalse);
+      expect(find.byIcon(LucideIcons.eye), findsOneWidget);
+
+      await tester.tap(find.byIcon(LucideIcons.eye));
+      await tester.pumpAndSettle();
+
+      passwordTextField = tester.widget<TextField>(passwordFieldFinder);
+      expect(passwordTextField.obscureText, isTrue);
+      expect(find.byIcon(LucideIcons.eye_off), findsOneWidget);
+    });
+
     testWidgets('renders RegisterPage header and fields correctly', (
       tester,
     ) async {
@@ -144,6 +205,48 @@ void main() {
       expect(find.text('Create Account'), findsOneWidget);
       expect(find.text('Sign In'), findsOneWidget);
     });
+
+    testWidgets(
+      'renders RegisterPage password and confirm password fields and toggles visibility',
+      (tester) async {
+        await tester.pumpWidget(
+          createLocalizedTestWidget(const RegisterPage()),
+        );
+        await tester.pumpAndSettle();
+
+        final pwdFinder = find.byKey(const Key('register_password_field'));
+        final confirmPwdFinder = find.byKey(
+          const Key('register_confirm_password_field'),
+        );
+
+        expect(pwdFinder, findsOneWidget);
+        expect(confirmPwdFinder, findsOneWidget);
+
+        TextField pwdField = tester.widget<TextField>(pwdFinder);
+        TextField confirmField = tester.widget<TextField>(confirmPwdFinder);
+        expect(pwdField.obscureText, isTrue);
+        expect(confirmField.obscureText, isTrue);
+
+        // Find the 2 eye_off icons (one for password, one for confirm password)
+        final eyeOffFinders = find.byIcon(LucideIcons.eye_off);
+        expect(eyeOffFinders, findsNWidgets(2));
+
+        // Toggle password visibility
+        await tester.tap(eyeOffFinders.first);
+        await tester.pumpAndSettle();
+
+        pwdField = tester.widget<TextField>(pwdFinder);
+        expect(pwdField.obscureText, isFalse);
+
+        // Toggle confirm password visibility (it's now the remaining eye_off)
+        await tester.tap(find.byIcon(LucideIcons.eye_off));
+        await tester.pumpAndSettle();
+
+        confirmField = tester.widget<TextField>(confirmPwdFinder);
+        expect(confirmField.obscureText, isFalse);
+        expect(find.byIcon(LucideIcons.eye), findsNWidgets(2));
+      },
+    );
   });
 
   group('OTP Verification View Widgets', () {

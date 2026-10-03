@@ -11,6 +11,7 @@ import 'package:spa_booking/src/presentation/view/home/body_view/home_body_view.
 import 'package:spa_booking/src/presentation/view/home/widgets/home_booking_card.dart';
 import 'package:spa_booking/src/presentation/view/home/widgets/home_category_item.dart';
 import 'package:spa_booking/src/presentation/view/home/widgets/home_greeting.dart';
+import 'package:spa_booking/src/presentation/view/home/widgets/home_near_salon_card.dart';
 import 'package:spa_booking/src/presentation/view/home/widgets/home_search_bar.dart';
 import 'package:spa_booking/src/presentation/view/home/widgets/home_skeleton.dart';
 import 'package:spa_booking/src/presentation/view/home/widgets/home_store_card.dart';
@@ -285,5 +286,38 @@ void main() {
         expect(find.text('Explore Services'), findsOneWidget);
       },
     );
+
+    testWidgets('HomeNearSalonCard renders with long location text without overflow', (
+      tester,
+    ) async {
+      const nearItem = HomeNearSalonItem(
+        id: 'salon-1',
+        name: 'Aura Luxury Spa & Clinic',
+        categories: 'Massage · Facial · Hair Care · Nail Design',
+        rating: 4.9,
+        distance: '123 Nguyen Hue Boulevard, Ben Nghe Ward, District 1, Ho Chi Minh City, Vietnam',
+        imageUrl: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=600&q=80',
+      );
+
+      bool bookTapped = false;
+      await tester.pumpWidget(
+        createHomeTestWidget(
+          child: Center(
+            child: HomeNearSalonCard(
+              salon: nearItem,
+              onBook: () => bookTapped = true,
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.text('Aura Luxury Spa & Clinic'), findsOneWidget);
+      expect(find.text('Book'), findsOneWidget);
+
+      await tester.tap(find.text('Book'));
+      await tester.pump();
+      expect(bookTapped, isTrue);
+    });
   });
 }

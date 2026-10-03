@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
 import '../mockup_data/store_detail_mock_data.dart';
 
 class StoreServiceItemCard extends StatelessWidget {
@@ -114,25 +114,14 @@ class StoreServiceItemCard extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(
+              AppButton(
+                text: 'Book',
+                onPressed: onBook,
+                backgroundColor: _coralColor,
+                textColor: Colors.white,
+                borderRadius: BorderRadius.circular(19),
                 height: 38,
-                child: ElevatedButton(
-                  onPressed: onBook,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _coralColor,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(horizontal: 22),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(19),
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  child: const Text('Book'),
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 22),
               ),
             ],
           ),

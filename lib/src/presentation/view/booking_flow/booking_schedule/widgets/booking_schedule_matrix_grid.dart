@@ -201,6 +201,7 @@ class BookingScheduleMatrixGrid extends StatelessWidget {
                   selectedStaffId == staff.id &&
                   selectedTime == time &&
                   !slot.isBreak &&
+                  !slot.isOff &&
                   slot.bookedTitle == null;
 
               return Container(
@@ -245,6 +246,26 @@ class BookingScheduleMatrixGrid extends StatelessWidget {
             fontWeight: FontWeight.w700,
             color: Color(0xFF64748B),
             letterSpacing: 0.8,
+          ),
+        ),
+      );
+    }
+
+    // 1b. Unavailable cell (outside shift / store full / services don't fit)
+    if (slot.isOff) {
+      return Container(
+        decoration: BoxDecoration(
+          color: _breakBg,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          slot.bookedTitle ?? 'OFF',
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF94A3B8),
+            letterSpacing: 0.6,
           ),
         ),
       );

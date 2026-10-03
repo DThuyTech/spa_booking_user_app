@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'customer_booking_stats.dart';
 import 'user_role_enum.dart';
 import 'user_status_enum.dart';
 
@@ -11,6 +12,7 @@ class User extends Equatable {
   final String? avatar;
   final UserStatusEnum status;
   final String? dateOfBirth;
+  final CustomerBookingStats? bookingStats;
 
   const User({
     required this.id,
@@ -21,6 +23,7 @@ class User extends Equatable {
     this.avatar,
     this.status = UserStatusEnum.active,
     this.dateOfBirth,
+    this.bookingStats,
   });
 
   User copyWith({
@@ -32,6 +35,7 @@ class User extends Equatable {
     String? Function()? avatar,
     UserStatusEnum? status,
     String? Function()? dateOfBirth,
+    CustomerBookingStats? Function()? bookingStats,
   }) {
     return User(
       id: id ?? this.id,
@@ -42,6 +46,7 @@ class User extends Equatable {
       avatar: avatar != null ? avatar() : this.avatar,
       status: status ?? this.status,
       dateOfBirth: dateOfBirth != null ? dateOfBirth() : this.dateOfBirth,
+      bookingStats: bookingStats != null ? bookingStats() : this.bookingStats,
     );
   }
 
@@ -55,5 +60,6 @@ class User extends Equatable {
     avatar,
     status,
     dateOfBirth,
+    bookingStats,
   ];
 }

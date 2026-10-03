@@ -1,6 +1,15 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:spa_booking/src/data/model/booking/booking_list_response_model.dart';
+import 'package:spa_booking/src/domain/entities/booking/booking_list_entity.dart';
+import 'package:spa_booking/src/domain/usecases/booking/get_customer_bookings_usecase.dart';
+import 'package:spa_booking/src/presentation/bloc/booking/booking_dashboard/booking_dashboard_bloc.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard/body_view/booking_dashboard_body_view.dart';
 import 'package:spa_booking/src/presentation/view/booking_dashboard/view/booking_dashboard_view.dart';
 import 'package:spa_booking/src/presentation/view/booking_dashboard/widgets/booking_dashboard_card.dart';
 import 'package:spa_booking/src/presentation/view/booking_dashboard/widgets/booking_dashboard_summary_grid.dart';
+import 'package:spa_booking/src/presentation/view/booking_dashboard/widgets/booking_dashboard_summary_short_bar.dart';
 import 'package:spa_booking/src/presentation/view/booking_dashboard/widgets/booking_search_filter_bar.dart';
 import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/view/booking_dashboard_detail_view.dart';
 import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/widgets/booking_detail_datetime_card.dart';
@@ -11,6 +20,9 @@ import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/widge
 import 'package:spa_booking/src/presentation/view/terms/view/terms_of_use_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+class MockGetCustomerBookingsUseCase extends Mock
+    implements GetCustomerBookingsUseCase {}
 
 void main() {
   setUp(() {
@@ -117,6 +129,135 @@ void main() {
       await tester.tap(find.byType(BookingSearchFilterBar));
       await tester.pumpAndSettle();
     });
+
+    test('BookingListResponseModel handles flat pagination correctly', () {
+      final json = {
+        'items': <dynamic>[],
+        'total': 0,
+        'page': 1,
+        'limit': 20,
+        'totalPages': 1,
+        'summary': {
+          'total': 0,
+          'upcoming': 0,
+          'past': 0,
+          'cancelled': 0,
+        },
+      };
+
+      final model = BookingListResponseModel.fromJson(json);
+      expect(model.items, isEmpty);
+      expect(model.summary?.upcoming, 0);
+      expect(model.pagination?.total, 0);
+      expect(model.pagination?.page, 1);
+      expect(model.pagination?.limit, 20);
+      expect(model.pagination?.totalPages, 1);
+
+      final entity = model.toEntity();
+      expect(entity.items, isEmpty);
+      expect(entity.summary.upcoming, 0);
+      expect(entity.pagination.total, 0);
+      expect(entity.pagination.totalPages, 1);
+    });
+
+    testWidgets(
+      'renders empty state and 0 counters when API returns 0 bookings',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 1600);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() => tester.view.resetPhysicalSize());
+
+        final mockUseCase = MockGetCustomerBookingsUseCase();
+        when(() => mockUseCase(
+              tab: any(named: 'tab'),
+              page: any(named: 'page'),
+              limit: any(named: 'limit'),
+            )).thenAnswer((_) async => const Right(BookingListResponseEntity(
+              items: [],
+              summary: BookingSummaryEntity(
+                total: 0,
+                upcoming: 0,
+                past: 0,
+                cancelled: 0,
+              ),
+              pagination: BookingPaginationEntity(
+                total: 0,
+                page: 1,
+                limit: 20,
+                totalPages: 1,
+              ),
+            )));
+
+        final bloc =
+            BookingDashboardBloc(getCustomerBookingsUseCase: mockUseCase);
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: BlocProvider<BookingDashboardBloc>.value(
+              value: bloc
+                ..add(const FetchCustomerBookingsEvent(tab: 'UPCOMING')),
+              child: const Scaffold(body: BookingDashboardBodyView()),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        // Counts in summary grid should all be 0 (NOT mock counts: 2, 1, 12, 2)
+        expect(
+          find.descendant(
+            of: find.byType(BookingDashboardSummaryGrid),
+            matching: find.text('0'),
+          ),
+          findsNWidgets(4),
+        );
+        // No mock cards
+        expect(find.text('Haircut, Dried'), findsNothing);
+        expect(find.byType(BookingDashboardCard), findsNothing);
+        // Empty state visible
+        expect(find.text('No upcoming bookings'), findsOneWidget);
+        expect(
+          find.text('You have no upcoming appointments scheduled.'),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      'displays smaller pinned overview on top when scrolling down',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 600);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() => tester.view.resetPhysicalSize());
+
+        await tester.pumpWidget(const MaterialApp(home: BookingDashboardView()));
+        await tester.pumpAndSettle();
+
+        // Initially at top: AnimatedOpacity has opacity 0.0
+        final opacityFinderBefore = find.ancestor(
+          of: find.byType(BookingDashboardSummaryShortBar),
+          matching: find.byType(AnimatedOpacity),
+        );
+        final AnimatedOpacity opacityWidgetBefore =
+            tester.widget(opacityFinderBefore);
+        expect(opacityWidgetBefore.opacity, 0.0);
+
+        // Scroll down past overview
+        await tester.drag(
+          find.byType(BookingSearchFilterBar),
+          const Offset(0, -300),
+        );
+        await tester.pumpAndSettle();
+
+        // When scrolled: AnimatedOpacity has opacity 1.0 (pinned compact overview is visible)
+        final opacityFinderAfter = find.ancestor(
+          of: find.byType(BookingDashboardSummaryShortBar),
+          matching: find.byType(AnimatedOpacity),
+        );
+        final AnimatedOpacity opacityWidgetAfter =
+            tester.widget(opacityFinderAfter);
+        expect(opacityWidgetAfter.opacity, 1.0);
+      },
+    );
   });
 
   group('Booking Dashboard Detail View Tests (Image 3)', () {

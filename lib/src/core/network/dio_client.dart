@@ -9,13 +9,21 @@ class DioClient implements NetworkClient {
 
   DioClient({required Dio dioClient, required AppConfig appConfig})
     : dio = dioClient {
+    final normalizedBaseUrl = appConfig.apiBaseUrl.endsWith('/')
+        ? appConfig.apiBaseUrl.substring(0, appConfig.apiBaseUrl.length - 1)
+        : appConfig.apiBaseUrl;
+
     dio.options = BaseOptions(
-      baseUrl: appConfig.apiBaseUrl,
+      baseUrl: normalizedBaseUrl,
       connectTimeout: appConfig.connectTimeout,
       receiveTimeout: appConfig.receiveTimeout,
       headers: {
         AppConstants.headerContentType: AppConstants.contentTypeJson,
         'Accept': AppConstants.contentTypeJson,
+        if (appConfig.xTokenAccess != null &&
+            appConfig.xTokenAccess!.isNotEmpty &&
+            appConfig.xTokenAccess != 'your_x_token_access_here')
+          'X-Token-Access': appConfig.xTokenAccess!,
       },
     );
   }

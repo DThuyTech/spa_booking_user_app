@@ -31,22 +31,25 @@ abstract interface class AuthRepository {
   Future<Either<Failure, User>> getCurrentUser();
 
   Future<Either<Failure, User>> createCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
   });
 
   Future<Either<Failure, User>> updateCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
   });
 
   Future<Either<Failure, User>> saveCustomerProfile({
-    required String firstName,
-    required String lastName,
+    String? name,
+    String? firstName,
+    String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
     bool isCreate = false,

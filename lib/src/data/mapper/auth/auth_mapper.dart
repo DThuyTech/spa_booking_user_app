@@ -28,6 +28,7 @@ class AuthMapper {
       avatar: model.avatar,
       status: model.status,
       dateOfBirth: model.dateOfBirth,
+      bookingStats: model.bookingStats?.toEntity(),
     );
   }
 

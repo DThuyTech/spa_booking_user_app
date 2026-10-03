@@ -1,17 +1,17 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:spa_booking/src/app/di/dependency_injection.dart';
-import 'package:spa_booking/src/app/router/app_router.gr.dart';
-import 'package:spa_booking/src/presentation/bloc/profile/profile_bloc.dart';
-import 'package:spa_booking/src/presentation/view/profile/widgets/profile_header_wave.dart';
-import 'package:spa_booking/src/presentation/view/profile/widgets/profile_menu_section.dart';
-import 'package:spa_booking/src/presentation/view/profile/widgets/profile_stats_row.dart';
-import 'package:spa_booking/src/presentation/view/auth/change_password/view/change_password_view.dart';
-import 'package:spa_booking/src/presentation/view/favorite_stores/view/favorite_stores_view.dart';
-import 'package:spa_booking/src/presentation/view/insights/view/my_insights_view.dart';
-import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
+import '../../../../app/di/dependency_injection.dart';
+import '../../../../app/router/app_router.gr.dart';
+import '../../../../shared/shared.dart';
+import '../../../bloc/profile/profile_bloc.dart';
+import '../widgets/profile_header_wave.dart';
+import '../widgets/profile_menu_section.dart';
+import '../widgets/profile_stats_row.dart';
+import '../../auth/change_password/view/change_password_view.dart';
+import '../../booking_dashboard/view/booking_dashboard_view.dart';
+import '../../favorite_stores/view/favorite_stores_view.dart';
+import '../../insights/view/my_insights_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
 
 @RoutePage()
 class ProfilePage extends StatelessWidget {
@@ -61,23 +61,15 @@ class ProfileView extends StatelessWidget {
                 ),
               ),
             ),
-            ElevatedButton(
+            AppButton(
+              text: 'Logout',
               onPressed: () {
                 Navigator.of(dialogContext).pop();
                 context.read<ProfileBloc>().add(const ProfileLogoutRequested());
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFBA1A1A),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
-              child: const Text(
-                'Logout',
-                style: TextStyle(fontWeight: FontWeight.w700),
-              ),
+              variant: AppButtonVariant.destructive,
+              borderRadius: BorderRadius.circular(12),
+              size: AppButtonSize.sm,
             ),
           ],
         );
@@ -153,22 +145,52 @@ class ProfileView extends StatelessWidget {
                           completedCount: state.completedCount,
                           cancelledCount: state.cancelledCount,
                           onUpcomingTap: () {
-                            AppToast.info(
-                              context,
-                              message: '2 Upcoming bookings',
-                            );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const BookingDashboardView(
+                                  showAppBar: true,
+                                  initialTab: 'UPCOMING',
+                                ),
+                              ),
+                            ).then((_) {
+                              if (context.mounted) {
+                                context.read<ProfileBloc>().add(
+                                  const ProfileRefreshed(),
+                                );
+                              }
+                            });
                           },
                           onCompletedTap: () {
-                            AppToast.info(
-                              context,
-                              message: '12 Completed bookings',
-                            );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const BookingDashboardView(
+                                  showAppBar: true,
+                                  initialTab: 'PAST',
+                                ),
+                              ),
+                            ).then((_) {
+                              if (context.mounted) {
+                                context.read<ProfileBloc>().add(
+                                  const ProfileRefreshed(),
+                                );
+                              }
+                            });
                           },
                           onCancelledTap: () {
-                            AppToast.info(
-                              context,
-                              message: '1 Cancelled booking',
-                            );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const BookingDashboardView(
+                                  showAppBar: true,
+                                  initialTab: 'CANCELLED',
+                                ),
+                              ),
+                            ).then((_) {
+                              if (context.mounted) {
+                                context.read<ProfileBloc>().add(
+                                  const ProfileRefreshed(),
+                                );
+                              }
+                            });
                           },
                         ),
 
@@ -191,6 +213,26 @@ class ProfileView extends StatelessWidget {
                                         );
                                       }
                                     });
+                              },
+                            ),
+                            ProfileMenuItemData(
+                              icon: LucideIcons.calendar,
+                              title: 'My Bookings',
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const BookingDashboardView(
+                                      showAppBar: true,
+                                      initialTab: 'UPCOMING',
+                                    ),
+                                  ),
+                                ).then((_) {
+                                  if (context.mounted) {
+                                    context.read<ProfileBloc>().add(
+                                      const ProfileRefreshed(),
+                                    );
+                                  }
+                                });
                               },
                             ),
                             ProfileMenuItemData(
@@ -277,56 +319,19 @@ class ProfileView extends StatelessWidget {
                         const SizedBox(height: 28),
 
                         // Logout Button
-                        SizedBox(
-                          width: double.infinity,
-                          height: 52,
-                          child: ElevatedButton(
-                            onPressed: state.isLoggingOut
-                                ? null
-                                : () => _showLogoutDialog(context),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFBA1A1A),
-                              foregroundColor: Colors.white,
-                              disabledBackgroundColor: const Color(
-                                0xFFBA1A1A,
-                              ).withValues(alpha: 0.6),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(26),
-                              ),
-                              elevation: 2,
-                              shadowColor: const Color(
-                                0xFFBA1A1A,
-                              ).withValues(alpha: 0.35),
-                            ),
-                            child: state.isLoggingOut
-                                ? const SizedBox(
-                                    width: 22,
-                                    height: 22,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2.2,
-                                    ),
-                                  )
-                                : const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        LucideIcons.log_out,
-                                        size: 18,
-                                        color: Colors.white,
-                                      ),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        'Logout',
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w700,
-                                          letterSpacing: 0.2,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                        AppButton(
+                          text: 'Logout',
+                          leadingIcon: const Icon(
+                            LucideIcons.log_out,
+                            size: 18,
+                            color: Colors.white,
                           ),
+                          onPressed: () => _showLogoutDialog(context),
+                          isLoading: state.isLoggingOut,
+                          variant: AppButtonVariant.destructive,
+                          borderRadius: BorderRadius.circular(26),
+                          height: 52,
+                          fullWidth: true,
                         ),
 
                         // Bottom space so content scrolls past floating island nav bar

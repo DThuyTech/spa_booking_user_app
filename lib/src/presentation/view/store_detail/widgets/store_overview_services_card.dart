@@ -46,69 +46,83 @@ class StoreOverviewServicesCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          ...services.map((item) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 14),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item.title,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: _textDark,
+          if (services.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                'No services available yet',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: _textMuted,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            )
+          else ...[
+            ...services.map((item) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.title,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: _textDark,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        item.duration,
-                        style: const TextStyle(
-                          fontSize: 12.5,
-                          color: _textMuted,
+                        const SizedBox(height: 2),
+                        Text(
+                          item.duration,
+                          style: const TextStyle(
+                            fontSize: 12.5,
+                            color: _textMuted,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    item.price,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: _textDark,
+                      ],
                     ),
+                    Text(
+                      item.price,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: _textDark,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+            const SizedBox(height: 4),
+            GestureDetector(
+              onTap: onViewAllServices,
+              behavior: HitTestBehavior.opaque,
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'View all services',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: _coralColor,
+                    ),
+                  ),
+                  SizedBox(width: 4),
+                  Icon(
+                    LucideIcons.chevron_right,
+                    size: 16,
+                    color: _coralColor,
                   ),
                 ],
               ),
-            );
-          }),
-          const SizedBox(height: 4),
-          GestureDetector(
-            onTap: onViewAllServices,
-            behavior: HitTestBehavior.opaque,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'View all services',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: _coralColor,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                const Icon(
-                  LucideIcons.chevron_right,
-                  size: 16,
-                  color: _coralColor,
-                ),
-              ],
             ),
-          ),
+          ],
         ],
       ),
     );

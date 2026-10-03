@@ -8,6 +8,7 @@ class BookingServiceItem {
   final int price;
   final String priceDisplay;
   final bool isSelected;
+  final int? durationMinutes;
 
   const BookingServiceItem({
     required this.id,
@@ -17,6 +18,7 @@ class BookingServiceItem {
     required this.price,
     required this.priceDisplay,
     this.isSelected = false,
+    this.durationMinutes,
   });
 
   BookingServiceItem copyWith({
@@ -27,6 +29,7 @@ class BookingServiceItem {
     int? price,
     String? priceDisplay,
     bool? isSelected,
+    int? durationMinutes,
   }) {
     return BookingServiceItem(
       id: id ?? this.id,
@@ -36,6 +39,7 @@ class BookingServiceItem {
       price: price ?? this.price,
       priceDisplay: priceDisplay ?? this.priceDisplay,
       isSelected: isSelected ?? this.isSelected,
+      durationMinutes: durationMinutes ?? this.durationMinutes,
     );
   }
 }

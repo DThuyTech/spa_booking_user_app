@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../shared/shared.dart';
 
 class StoreAvailableNowCard extends StatelessWidget {
   final int availableSeats;
@@ -72,25 +73,14 @@ class StoreAvailableNowCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 18),
-                  SizedBox(
-                    width: double.infinity,
+                  AppButton(
+                    text: 'Book a seat',
+                    onPressed: onBookSeat,
+                    backgroundColor: _coralColor,
+                    textColor: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
                     height: 48,
-                    child: ElevatedButton(
-                      onPressed: onBookSeat,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _coralColor,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        textStyle: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      child: const Text('Book a seat'),
-                    ),
+                    fullWidth: true,
                   ),
                 ],
               ),

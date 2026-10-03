@@ -17,6 +17,7 @@ class SelectServicesBodyView extends StatelessWidget {
   final List<BookingStaffItem> staffMembers;
   final String? selectedStaffId;
   final ValueChanged<BookingStaffItem> onStaffSelected;
+  final List<String>? categories;
 
   const SelectServicesBodyView({
     super.key,
@@ -31,32 +32,59 @@ class SelectServicesBodyView extends StatelessWidget {
     required this.staffMembers,
     required this.selectedStaffId,
     required this.onStaffSelected,
+    this.categories,
   });
 
   static const Color _coralColor = Color(0xFFFF6F59);
   static const Color _textDark = Color(0xFF1E2022);
   static const Color _textMuted = Color(0xFF64748B);
 
-  static const List<String> _categories = ['All', 'Hair', 'Beauty', 'Team'];
+  List<String> get _categoriesToDisplay {
+    final list = <String>['All'];
+    if (categories != null && categories!.isNotEmpty) {
+      for (final cat in categories!) {
+        final trimmed = cat.trim();
+        if (trimmed.isNotEmpty && !list.contains(trimmed)) {
+          list.add(trimmed);
+        }
+      }
+    } else {
+      for (final service in services) {
+        final trimmed = service.category.trim();
+        if (trimmed.isNotEmpty && !list.contains(trimmed)) {
+          list.add(trimmed);
+        }
+      }
+    }
+    return list;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final hairServices = services.where((s) => s.category == 'Hair').toList();
-    final beautyServices = services
-        .where((s) => s.category == 'Beauty')
-        .toList();
+    final filteredServices = (selectedCategory == 'All' || selectedCategory.isEmpty)
+        ? services
+        : services
+            .where((s) => s.category.toLowerCase() == selectedCategory.toLowerCase())
+            .toList();
+
+    // Group services by category
+    final Map<String, List<BookingServiceItem>> categoryGroups = {};
+    for (final service in filteredServices) {
+      final cat = service.category.isNotEmpty ? service.category : 'General';
+      categoryGroups.putIfAbsent(cat, () => []).add(service);
+    }
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. Summary Card (Matching Image 1 & 2)
+          // 1. Summary Card
           _buildSummaryCard(),
 
           const SizedBox(height: 20),
 
-          // 2. Customer Section (Matching Image 2)
+          // 2. Customer Section
           _buildCustomerSection(),
 
           const SizedBox(height: 22),
@@ -66,36 +94,50 @@ class SelectServicesBodyView extends StatelessWidget {
 
           const SizedBox(height: 24),
 
-          // 4. Hair Services Group
-          if (selectedCategory == 'All' || selectedCategory == 'Hair') ...[
-            _buildSectionHeader('Hair Service'),
-            const SizedBox(height: 12),
-            ...hairServices.map(
-              (service) => BookingServiceSelectionCard(
-                service: service,
-                onTap: () => onServiceToggle(service),
+          // 4. Dynamic Category Services Group
+          if (categoryGroups.isEmpty) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 36),
+              alignment: Alignment.center,
+              child: const Column(
+                children: [
+                  Icon(LucideIcons.scissors, size: 36, color: Color(0xFFCBD5E1)),
+                  SizedBox(height: 10),
+                  Text(
+                    'No services found in this category',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF64748B),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-          ],
-
-          // 5. Beauty Services Group
-          if (selectedCategory == 'All' || selectedCategory == 'Beauty') ...[
-            _buildSectionHeader('Beauty Service'),
-            const SizedBox(height: 12),
-            ...beautyServices.map(
-              (service) => BookingServiceSelectionCard(
-                service: service,
-                onTap: () => onServiceToggle(service),
+          ] else ...[
+            for (final entry in categoryGroups.entries) ...[
+              _buildSectionHeader(
+                entry.key.toLowerCase().contains('service')
+                    ? entry.key
+                    : '${entry.key} Service',
               ),
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 12),
+              ...entry.value.map(
+                (service) => BookingServiceSelectionCard(
+                  service: service,
+                  onTap: () => onServiceToggle(service),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
           ],
 
-          // 6. Select Staff Section (Matching Image 2 bottom)
-          _buildStaffSection(),
-
-          const SizedBox(height: 32),
+          // 5. Select Staff Section
+          if (staffMembers.isNotEmpty) ...[
+            _buildStaffSection(),
+            const SizedBox(height: 32),
+          ],
         ],
       ),
     );
@@ -212,6 +254,10 @@ class SelectServicesBodyView extends StatelessWidget {
   }
 
   Widget _buildCategoryChips() {
+    final cats = _categoriesToDisplay;
+    if (cats.length <= 1) {
+      return const SizedBox.shrink();
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -226,8 +272,10 @@ class SelectServicesBodyView extends StatelessWidget {
         const SizedBox(height: 12),
         Wrap(
           spacing: 10,
-          children: _categories.map((category) {
-            final isSelected = selectedCategory == category;
+          runSpacing: 8,
+          children: cats.map((category) {
+            final isSelected =
+                selectedCategory.toLowerCase() == category.toLowerCase();
             return ChoiceChip(
               label: Text(
                 category,
@@ -238,7 +286,7 @@ class SelectServicesBodyView extends StatelessWidget {
                 ),
               ),
               selected: isSelected,
-              selectedColor: isSelected && category == 'All'
+              selectedColor: isSelected && category.toLowerCase() == 'all'
                   ? const Color(0xFF8B2516)
                   : _coralColor,
               backgroundColor: const Color(0xFFE0F2FE),

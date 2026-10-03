@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../app/di/dependency_injection.dart';
+import '../../../../domain/entities/store/store_entity.dart';
 import '../../../../shared/design_system/components/sheets/app_filter_bottom_sheet.dart';
 import '../../../../shared/widgets/toast/app_toast.dart';
 import '../../../bloc/auth_session/auth_session_bloc.dart';
@@ -12,6 +13,7 @@ import '../../notification/notification_dashboard/view/notification_dashboard_vi
 import '../../store_detail/view/store_detail_view.dart';
 import '../body_view/home_body_view.dart';
 import '../mockup_data/home_mock_data.dart';
+import '../widgets/home_near_salon_card.dart';
 import '../widgets/home_recommended_salon_card.dart';
 
 @RoutePage()
@@ -41,36 +43,22 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   String _selectedCategoryId = 'haircuts';
   SpaFilterCriteria _filterCriteria = const SpaFilterCriteria();
-
-  late List<HomeRecommendedSalonItem> _recommendedSalons;
-
-  @override
-  void initState() {
-    super.initState();
-    _recommendedSalons = List.from(HomeMockData.recommendedSalons);
-  }
+  final Set<String> _favoriteStoreIds = {};
 
   void _onFavoriteToggle(HomeRecommendedSalonItem item) {
+    final willBeFavorite = !_favoriteStoreIds.contains(item.id);
     setState(() {
-      final index = _recommendedSalons.indexWhere((s) => s.id == item.id);
-      if (index != -1) {
-        final current = _recommendedSalons[index];
-        _recommendedSalons[index] = HomeRecommendedSalonItem(
-          id: current.id,
-          name: current.name,
-          categoryLocation: current.categoryLocation,
-          rating: current.rating,
-          reviewCount: current.reviewCount,
-          imageUrl: current.imageUrl,
-          isFavorite: !current.isFavorite,
-        );
+      if (willBeFavorite) {
+        _favoriteStoreIds.add(item.id);
+      } else {
+        _favoriteStoreIds.remove(item.id);
       }
     });
     AppToast.info(
       context,
-      message: item.isFavorite
-          ? 'Removed from favorites'
-          : 'Added to favorites',
+      message: willBeFavorite
+          ? 'Added to favorites'
+          : 'Removed from favorites',
     );
   }
 
@@ -90,9 +78,65 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  List<HomeNearSalonItem> _mapToNearSalons(List<StoreEntity> stores) {
+    if (stores.isEmpty) return HomeMockData.nearSalons;
+    return stores.map((s) {
+      return HomeNearSalonItem(
+        id: s.id,
+        name: s.name,
+        categories: s.address.isNotEmpty ? s.address : 'Spa & Salon',
+        rating: s.rating,
+        distance: s.address.contains(',')
+            ? s.address.split(',').last.trim()
+            : s.address,
+        imageUrl: (s.coverUrl != null && s.coverUrl!.isNotEmpty)
+            ? s.coverUrl!
+            : (s.logoUrl != null && s.logoUrl!.isNotEmpty)
+                ? s.logoUrl!
+                : 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=600&q=80',
+      );
+    }).toList();
+  }
+
+  List<HomeRecommendedSalonItem> _mapToRecommendedSalons(
+    List<StoreEntity> stores,
+  ) {
+    if (stores.isEmpty) {
+      return HomeMockData.recommendedSalons.map((s) {
+        return HomeRecommendedSalonItem(
+          id: s.id,
+          name: s.name,
+          categoryLocation: s.categoryLocation,
+          rating: s.rating,
+          reviewCount: s.reviewCount,
+          imageUrl: s.imageUrl,
+          isFavorite: _favoriteStoreIds.contains(s.id) || s.isFavorite,
+        );
+      }).toList();
+    }
+    return stores.map((s) {
+      return HomeRecommendedSalonItem(
+        id: s.id,
+        name: s.name,
+        categoryLocation: s.address,
+        rating: s.rating,
+        reviewCount: s.reviewCount,
+        imageUrl: (s.coverUrl != null && s.coverUrl!.isNotEmpty)
+            ? s.coverUrl!
+            : (s.logoUrl != null && s.logoUrl!.isNotEmpty)
+                ? s.logoUrl!
+                : 'https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?auto=format&fit=crop&w=400&q=80',
+        isFavorite: _favoriteStoreIds.contains(s.id),
+      );
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final authUser = context.watch<AuthSessionBloc>().state.user;
+    final homeState = context.watch<HomeBloc>().state;
+    final nearSalons = _mapToNearSalons(homeState.stores);
+    final recommendedSalons = _mapToRecommendedSalons(homeState.stores);
     final String avatarSeed = authUser?.fullName.isNotEmpty == true
         ? authUser!.fullName
         : 'JA';
@@ -143,15 +187,7 @@ class _HomeViewState extends State<HomeView> {
                 _selectedCategoryId = cat.id;
               });
             },
-            upcomingAppointment: HomeMockData.upcomingAppointment,
-            onAppointmentTap: () {
-              AppToast.info(
-                context,
-                message:
-                    'Appointment: ${HomeMockData.upcomingAppointment.salonName}',
-              );
-            },
-            nearSalons: HomeMockData.nearSalons,
+            nearSalons: nearSalons,
             onSeeAllNearSalons: () {
               AppToast.info(context, message: 'See all near salons');
             },
@@ -169,7 +205,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
               );
             },
-            recommendedSalons: _recommendedSalons,
+            recommendedSalons: recommendedSalons,
             onSeeAllRecommended: () {
               AppToast.info(context, message: 'See all recommendations');
             },

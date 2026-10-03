@@ -1,24 +1,25 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:spa_booking/src/presentation/view/booking_flow/booking_detail/view/booking_detail_view.dart';
-import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
-import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
+import '../../../booking_flow/booking_detail/view/booking_detail_view.dart';
+import 'package:spa_booking/src/shared/shared.dart';
 import '../../models/notification_models.dart';
 import '../body_view/booking_notification_body_view.dart';
 import '../mockup_data/booking_notification_mock_data.dart';
 
 @RoutePage()
 class BookingNotificationPage extends StatelessWidget {
-  final BookingNotificationData booking;
+  final BookingNotificationData? booking;
 
   const BookingNotificationPage({
     super.key,
-    this.booking = BookingNotificationMockData.defaultBooking,
+    this.booking,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BookingNotificationView(booking: booking);
+    return BookingNotificationView(
+      booking: booking ?? BookingNotificationMockData.defaultBooking,
+    );
   }
 }
 
@@ -82,24 +83,13 @@ class BookingNotificationView extends StatelessWidget {
           children: [
             // Coral "View Booking" Button
             Expanded(
-              child: SizedBox(
+              child: AppButton(
+                text: 'View Booking',
+                onPressed: () => _onViewBooking(context),
+                backgroundColor: _coralColor,
+                textColor: Colors.white,
+                borderRadius: BorderRadius.circular(24),
                 height: 48,
-                child: ElevatedButton(
-                  onPressed: () => _onViewBooking(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _coralColor,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  child: const Text('View Booking'),
-                ),
               ),
             ),
 
@@ -107,26 +97,13 @@ class BookingNotificationView extends StatelessWidget {
 
             // Outlined "Contact Salon" Button
             Expanded(
-              child: SizedBox(
+              child: AppButton(
+                text: 'Contact Salon',
+                onPressed: () => _onContactSalon(context),
+                variant: AppButtonVariant.outline,
+                textColor: _textDark,
+                borderRadius: BorderRadius.circular(24),
                 height: 48,
-                child: OutlinedButton(
-                  onPressed: () => _onContactSalon(context),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: _textDark,
-                    side: const BorderSide(
-                      color: Color(0xFFCBD5E1),
-                      width: 1.2,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    textStyle: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  child: const Text('Contact Salon'),
-                ),
               ),
             ),
           ],

@@ -1,6 +1,6 @@
-import 'package:spa_booking/src/presentation/view/booking_dashboard/mockup_data/booking_dashboard_mock_data.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
+import '../mockup_data/booking_dashboard_mock_data.dart';
 
 class BookingDashboardCard extends StatelessWidget {
   final BookingDashboardItem item;
@@ -154,50 +154,26 @@ class BookingDashboardCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: SizedBox(
+                child: AppButton(
+                  text: 'View',
+                  onPressed: onView,
+                  backgroundColor: Colors.white,
+                  textColor: const Color(0xFF334155),
+                  borderRadius: BorderRadius.circular(10),
                   height: 38,
-                  child: ElevatedButton(
-                    onPressed: onView,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF334155),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text(
-                      'View',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
+                  size: AppButtonSize.sm,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: SizedBox(
+                child: AppButton(
+                  text: 'Reschedule',
+                  onPressed: onReschedule,
+                  backgroundColor: Colors.white,
+                  textColor: const Color(0xFFFA7762),
+                  borderRadius: BorderRadius.circular(10),
                   height: 38,
-                  child: ElevatedButton(
-                    onPressed: onReschedule,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFFFA7762),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text(
-                      'Reschedule',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
+                  size: AppButtonSize.sm,
                 ),
               ),
             ],
@@ -358,49 +334,26 @@ class BookingDashboardCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: SizedBox(
+                child: AppButton(
+                  text: 'View',
+                  onPressed: onView,
+                  backgroundColor: const Color(0xFFF1F5F9),
+                  textColor: const Color(0xFF334155),
+                  borderRadius: BorderRadius.circular(10),
                   height: 38,
-                  child: ElevatedButton(
-                    onPressed: onView,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF1F5F9),
-                      foregroundColor: const Color(0xFF334155),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text(
-                      'View',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
+                  size: AppButtonSize.sm,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: SizedBox(
+                child: AppButton(
+                  text: 'Reschedule',
+                  onPressed: onReschedule,
+                  variant: AppButtonVariant.outline,
+                  textColor: const Color(0xFFE05243),
+                  borderRadius: BorderRadius.circular(10),
                   height: 38,
-                  child: OutlinedButton(
-                    onPressed: onReschedule,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFFE05243),
-                      side: const BorderSide(color: Color(0xFFFFECE8)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text(
-                      'Reschedule',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
+                  size: AppButtonSize.sm,
                 ),
               ),
             ],
