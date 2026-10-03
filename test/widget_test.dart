@@ -1,4 +1,4 @@
-import 'package:board_oi/src/shared/design_system/components/buttons/app_button.dart';
+import 'package:spa_booking/src/shared/design_system/components/buttons/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

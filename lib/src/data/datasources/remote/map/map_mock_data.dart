@@ -1,4 +1,4 @@
-import 'package:board_oi/src/domain/entities/map/map_marker_entity.dart';
+import 'package:spa_booking/src/domain/entities/map/map_marker_entity.dart';
 
 abstract final class MockMapData {
   static final List<MapMarkerEntity> sampleMarkers = [

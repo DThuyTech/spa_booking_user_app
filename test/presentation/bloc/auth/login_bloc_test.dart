@@ -1,23 +1,41 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:board_oi/src/core/error/failure.dart';
-import 'package:board_oi/src/domain/entities/auth/request_otp_result.dart';
-import 'package:board_oi/src/domain/usecases/auth/request_otp_usecase.dart';
-import 'package:board_oi/src/presentation/view/auth/login/bloc/login_bloc.dart';
-import 'package:board_oi/src/presentation/view/auth/login/bloc/login_event.dart';
-import 'package:board_oi/src/presentation/view/auth/login/bloc/login_state.dart';
+import 'package:spa_booking/src/app/session/session_manager.dart';
+import 'package:spa_booking/src/core/error/failure.dart';
+import 'package:spa_booking/src/core/network/auth/token_pair.dart';
+import 'package:spa_booking/src/domain/entities/auth/auth_session_entity.dart';
+import 'package:spa_booking/src/domain/entities/auth/user.dart';
+import 'package:spa_booking/src/domain/entities/auth/user_role_enum.dart';
+import 'package:spa_booking/src/domain/usecases/auth/login_usecase.dart';
+import 'package:spa_booking/src/presentation/bloc/auth/login/login_bloc.dart';
+import 'package:spa_booking/src/presentation/bloc/auth/login/login_event.dart';
+import 'package:spa_booking/src/presentation/bloc/auth/login/login_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockRequestOtpUseCase extends Mock implements RequestOtpUseCase {}
+class MockLoginUseCase extends Mock implements LoginUseCase {}
+
+class MockSessionManager extends Mock implements SessionManager {}
+
+class FakeTokenPair extends Fake implements TokenPair {}
 
 void main() {
-  late MockRequestOtpUseCase mockRequestOtpUseCase;
+  setUpAll(() {
+    registerFallbackValue(FakeTokenPair());
+    registerFallbackValue(UserRoleEnum.customer);
+  });
+
+  late MockLoginUseCase mockLoginUseCase;
+  late MockSessionManager mockSessionManager;
   late LoginBloc loginBloc;
 
   setUp(() {
-    mockRequestOtpUseCase = MockRequestOtpUseCase();
-    loginBloc = LoginBloc(requestOtpUseCase: mockRequestOtpUseCase);
+    mockLoginUseCase = MockLoginUseCase();
+    mockSessionManager = MockSessionManager();
+    loginBloc = LoginBloc(
+      loginUseCase: mockLoginUseCase,
+      sessionManager: mockSessionManager,
+    );
   });
 
   tearDown(() {
@@ -25,123 +43,149 @@ void main() {
   });
 
   group('LoginBloc', () {
-    const tPhone = '0900000001';
-    const tOtpResult = RequestOtpResult(
-      message: 'OTP sent successfully',
-      expiresInSeconds: 300,
+    const tEmail = 'test@example.com';
+    const tPassword = 'password123';
+    const tUser = User(
+      id: 'usr_001',
+      email: tEmail,
+      fullName: 'Customer Test',
+      role: UserRoleEnum.customer,
+    );
+    const tSession = AuthSessionEntity(
+      accessToken: 'access_123',
+      refreshToken: 'refresh_123',
+      expiresIn: 900,
+      user: tUser,
     );
 
-    test('initial state should be idle and invalid', () {
+    test('initial state should be idle and not loading', () {
       expect(loginBloc.state, const LoginState());
-      expect(loginBloc.state.isValid, isFalse);
       expect(loginBloc.state.isLoading, isFalse);
       expect(loginBloc.state.isSuccess, isFalse);
     });
 
     blocTest<LoginBloc, LoginState>(
-      'emits validating state with isValid true for a valid 10-digit phone',
+      'emits validating state when identifier changes',
       build: () => loginBloc,
-      act: (bloc) => bloc.add(const LoginPhoneChanged(tPhone)),
+      act: (bloc) => bloc.add(const LoginIdentifierChanged(tEmail)),
       expect: () => [
-        const LoginState(
-          phone: tPhone,
-          isValid: true,
-          status: LoginStatus.validating,
-        ),
+        const LoginState(identifier: tEmail, status: LoginStatus.validating),
       ],
     );
 
     blocTest<LoginBloc, LoginState>(
-      'emits validating state with isValid false for an invalid phone',
+      'emits validating state when password changes',
       build: () => loginBloc,
-      act: (bloc) => bloc.add(const LoginPhoneChanged('12345')),
+      act: (bloc) => bloc.add(const LoginPasswordChanged(tPassword)),
       expect: () => [
-        const LoginState(
-          phone: '12345',
-          isValid: false,
-          status: LoginStatus.validating,
-        ),
+        const LoginState(password: tPassword, status: LoginStatus.validating),
       ],
     );
 
     blocTest<LoginBloc, LoginState>(
-      'emits loading and success on valid phone submission and OTP request success',
-      build: () {
-        when(() => mockRequestOtpUseCase(tPhone))
-            .thenAnswer((_) async => const Right(tOtpResult));
-        return loginBloc;
+      'emits failure directly if submitted with invalid email format',
+      build: () => loginBloc,
+      seed: () =>
+          const LoginState(identifier: 'not-an-email', password: tPassword),
+      act: (bloc) => bloc.add(const LoginSubmitted()),
+      expect: () => [
+        const LoginState(
+          identifier: 'not-an-email',
+          password: tPassword,
+          identifierError: 'Please enter a valid email address.',
+          status: LoginStatus.failure,
+        ),
+      ],
+      verify: (_) {
+        verifyNever(
+          () => mockLoginUseCase(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        );
       },
+    );
+
+    blocTest<LoginBloc, LoginState>(
+      'emits loading and success on valid credentials submission',
+      setUp: () {
+        when(
+          () => mockLoginUseCase(email: tEmail, password: tPassword),
+        ).thenAnswer((_) async => const Right(tSession));
+        when(
+          () => mockSessionManager.login(
+            tokens: any(named: 'tokens'),
+            userId: any(named: 'userId'),
+            role: any(named: 'role'),
+          ),
+        ).thenAnswer((_) async {});
+      },
+      build: () => loginBloc,
       seed: () => const LoginState(
-        phone: tPhone,
-        isValid: true,
+        identifier: tEmail,
+        password: tPassword,
         status: LoginStatus.validating,
       ),
       act: (bloc) => bloc.add(const LoginSubmitted()),
       expect: () => [
         const LoginState(
-          phone: tPhone,
-          isValid: true,
+          identifier: tEmail,
+          password: tPassword,
           status: LoginStatus.loading,
         ),
         const LoginState(
-          phone: tPhone,
-          isValid: true,
+          identifier: tEmail,
+          password: tPassword,
           status: LoginStatus.success,
-          otpResult: tOtpResult,
+          authSession: tSession,
         ),
       ],
       verify: (_) {
-        verify(() => mockRequestOtpUseCase(tPhone)).called(1);
+        verify(
+          () => mockLoginUseCase(email: tEmail, password: tPassword),
+        ).called(1);
+        verify(
+          () => mockSessionManager.login(
+            tokens: const TokenPair(
+              accessToken: 'access_123',
+              refreshToken: 'refresh_123',
+            ),
+            userId: 'usr_001',
+            role: 'CUSTOMER',
+          ),
+        ).called(1);
       },
     );
 
     blocTest<LoginBloc, LoginState>(
-      'emits loading and failure on OTP request error',
-      build: () {
-        when(() => mockRequestOtpUseCase(tPhone))
-            .thenAnswer((_) async => const Left(NetworkFailure('Network error')));
-        return loginBloc;
+      'emits loading and failure on login error',
+      setUp: () {
+        when(
+          () => mockLoginUseCase(email: tEmail, password: tPassword),
+        ).thenAnswer(
+          (_) async => const Left(UnauthorizedFailure('Invalid credentials')),
+        );
       },
+      build: () => loginBloc,
       seed: () => const LoginState(
-        phone: tPhone,
-        isValid: true,
+        identifier: tEmail,
+        password: tPassword,
         status: LoginStatus.validating,
       ),
       act: (bloc) => bloc.add(const LoginSubmitted()),
       expect: () => [
         const LoginState(
-          phone: tPhone,
-          isValid: true,
+          identifier: tEmail,
+          password: tPassword,
           status: LoginStatus.loading,
         ),
         const LoginState(
-          phone: tPhone,
-          isValid: true,
+          identifier: tEmail,
+          password: tPassword,
           status: LoginStatus.failure,
-          errorMessage: 'Network error',
+          errorMessage: 'Invalid credentials',
         ),
       ],
-    );
-
-    blocTest<LoginBloc, LoginState>(
-      'emits failure directly if submitted with invalid phone',
-      build: () => loginBloc,
-      seed: () => const LoginState(
-        phone: '012',
-        isValid: false,
-      ),
-      act: (bloc) => bloc.add(const LoginSubmitted()),
-      expect: () => [
-        const LoginState(
-          phone: '012',
-          isValid: false,
-          phoneError: 'Invalid phone number. Must be 10 digits.',
-          status: LoginStatus.failure,
-        ),
-      ],
-      verify: (_) {
-        verifyNever(() => mockRequestOtpUseCase(any()));
-      },
     );
   });
 }

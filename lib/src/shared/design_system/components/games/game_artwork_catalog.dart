@@ -148,7 +148,10 @@ abstract final class GameArtworkCatalog {
 
   /// Find artwork data by matching game name intelligently.
   static GameArtworkData? findByGameName(String gameName) {
-    final normalized = gameName.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
+    final normalized = gameName.toLowerCase().replaceAll(
+      RegExp(r'[^a-z0-9]'),
+      '',
+    );
     if (normalized.isEmpty) return null;
     for (final entry in _games.entries) {
       if (normalized == entry.key || normalized.contains(entry.key)) {

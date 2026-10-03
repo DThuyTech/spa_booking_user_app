@@ -1,4 +1,4 @@
-import 'package:board_oi/src/core/localization/app_localizations.dart';
+import 'package:spa_booking/src/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import '../widgets/aura_logo_badge.dart';
 

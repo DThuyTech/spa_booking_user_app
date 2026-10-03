@@ -4,6 +4,8 @@ class AppConfig {
   final Environment environment;
   final String apiBaseUrl;
   final String socketUrl;
+  final String? xTokenAccess;
+  final String appName;
   final Duration connectTimeout;
   final Duration receiveTimeout;
 
@@ -11,6 +13,8 @@ class AppConfig {
     required this.environment,
     required this.apiBaseUrl,
     required this.socketUrl,
+    this.xTokenAccess,
+    this.appName = 'Aura Spa & Salon',
     this.connectTimeout = const Duration(seconds: 15),
     this.receiveTimeout = const Duration(seconds: 15),
   });

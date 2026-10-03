@@ -1,4 +1,5 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'src/config/app_config.dart';
 import 'src/config/di/injection.dart';
@@ -10,13 +11,26 @@ import 'src/presentation/bloc/auth_session/auth_session_bloc.dart';
 import 'main_app.dart';
 
 /// Bootstrap class initializing logging, crash reporting, async zone,
-/// storage, and dependency injection before starting [BoardOiApp].
+/// storage, and dependency injection before starting [SpaBookingApp].
 abstract final class AppBootstrap {
   static Future<void> run({AppConfig? config}) async {
     WidgetsFlutterBinding.ensureInitialized();
 
+    // Enable true edge-to-edge mode for status bar and navigation bar
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarContrastEnforced: false,
+      ),
+    );
+
     // 1. Environment & Config
-    final appConfig = config ?? EnvironmentLoader.load();
+    final appConfig = config ?? await EnvironmentLoader.loadAsync();
 
     // 2. Logger & BLoC Observer
     final logger = AppLogger(
@@ -44,6 +58,6 @@ abstract final class AppBootstrap {
     await authSessionBloc.restoreSession();
 
     // 6. Run Application
-    runApp(const BoardOiApp());
+    runApp(const SpaBookingApp());
   }
 }

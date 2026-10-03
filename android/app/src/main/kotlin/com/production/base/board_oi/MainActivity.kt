@@ -1,4 +1,4 @@
-package com.production.base.board_oi
+package com.production.base.spa_booking
 
 import io.flutter.embedding.android.FlutterActivity
 

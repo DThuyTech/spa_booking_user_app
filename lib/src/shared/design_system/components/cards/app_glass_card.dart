@@ -29,22 +29,26 @@ class AppGlassCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final borderCol = borderColor ?? Colors.white.withValues(alpha: 0.85);
-    final colors = gradientColors ?? [
-      Colors.white.withValues(alpha: 0.88),
-      Colors.white.withValues(alpha: 0.72),
-    ];
-    final boxShadows = shadows ?? [
-      BoxShadow(
-        color: const Color(0xFFC8754D).withValues(alpha: 0.10),
-        blurRadius: 30,
-        offset: const Offset(0, 10),
-      ),
-      BoxShadow(
-        color: Colors.white.withValues(alpha: 0.40),
-        blurRadius: 10,
-        offset: const Offset(0, -1),
-      ),
-    ];
+    final colors =
+        gradientColors ??
+        [
+          Colors.white.withValues(alpha: 0.88),
+          Colors.white.withValues(alpha: 0.72),
+        ];
+    final boxShadows =
+        shadows ??
+        [
+          BoxShadow(
+            color: const Color(0xFFC8754D).withValues(alpha: 0.10),
+            blurRadius: 30,
+            offset: const Offset(0, 10),
+          ),
+          BoxShadow(
+            color: Colors.white.withValues(alpha: 0.40),
+            blurRadius: 10,
+            offset: const Offset(0, -1),
+          ),
+        ];
 
     return Container(
       width: width,
@@ -66,10 +70,7 @@ class AppGlassCard extends StatelessWidget {
                 end: Alignment.bottomCenter,
                 colors: colors,
               ),
-              border: Border.all(
-                color: borderCol,
-                width: 1.5,
-              ),
+              border: Border.all(color: borderCol, width: 1.5),
             ),
             child: child,
           ),

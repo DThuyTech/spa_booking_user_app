@@ -15,17 +15,29 @@ abstract final class AppColors {
   static const Color surfaceWarm = Color(0xFFFAF8F5); // Soft Beige Surface
 
   // Brand Coffee Browns & Warm Accents (Section 1)
-  static const Color primaryBrown = Color(0xFF6B4F3A); // #6B4F3A Primary Brand Brown
-  static const Color darkBrown = Color(0xFF2C241F); // #2C241F Dark Brown Text / Buttons
+  static const Color primaryBrown = Color(
+    0xFF6B4F3A,
+  ); // #6B4F3A Primary Brand Brown
+  static const Color darkBrown = Color(
+    0xFF2C241F,
+  ); // #2C241F Dark Brown Text / Buttons
   static const Color darkText = Color(0xFF2C241F); // Dark Espresso Text
-  static const Color secondaryText = Color(0xFF756C64); // #756C64 Secondary Text
+  static const Color secondaryText = Color(
+    0xFF756C64,
+  ); // #756C64 Secondary Text
   static const Color softBrown = Color(0xFFA88F7A); // #A88F7A Soft Brown
   static const Color lightBrown = Color(0xFFA88F7A); // Soft Brown Accent
   static const Color lightBrownSoft = Color(0xFFEDE7DE); // Soft Brown Wash
-  static const Color lightBrownLight = Color(0xFFFAF7F2); // Pale Brown Tag Surface
-  static const Color warmBeige = Color(0xFFEDE7DE); // #EDE7DE Warm Neutral Beige
+  static const Color lightBrownLight = Color(
+    0xFFFAF7F2,
+  ); // Pale Brown Tag Surface
+  static const Color warmBeige = Color(
+    0xFFEDE7DE,
+  ); // #EDE7DE Warm Neutral Beige
   static const Color border = Color(0xFFE4DED6); // #E4DED6 Soft Border Line
-  static const Color accent = Color(0xFFC8754D); // #C8754D Muted Terracotta Accent
+  static const Color accent = Color(
+    0xFFC8754D,
+  ); // #C8754D Muted Terracotta Accent
   static const Color accentLight = Color(0xFFF7EDE8); // Pale Terracotta Wash
   static const Color accentHover = Color(0xFFB5633C);
 

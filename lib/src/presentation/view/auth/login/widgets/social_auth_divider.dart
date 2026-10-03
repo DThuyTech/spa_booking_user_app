@@ -4,11 +4,7 @@ class SocialAuthDivider extends StatelessWidget {
   final VoidCallback? onGoogleTap;
   final VoidCallback? onAppleTap;
 
-  const SocialAuthDivider({
-    super.key,
-    this.onGoogleTap,
-    this.onAppleTap,
-  });
+  const SocialAuthDivider({super.key, this.onGoogleTap, this.onAppleTap});
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +41,7 @@ class SocialAuthDivider extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildSocialCircle(
-              onTap: onGoogleTap,
-              child: _buildGoogleIcon(),
-            ),
+            _buildSocialCircle(onTap: onGoogleTap, child: _buildGoogleIcon()),
             const SizedBox(width: 22),
             _buildSocialCircle(
               onTap: onAppleTap,
@@ -64,10 +57,7 @@ class SocialAuthDivider extends StatelessWidget {
     );
   }
 
-  Widget _buildSocialCircle({
-    required Widget child,
-    VoidCallback? onTap,
-  }) {
+  Widget _buildSocialCircle({required Widget child, VoidCallback? onTap}) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(28),
@@ -94,9 +84,7 @@ class SocialAuthDivider extends StatelessWidget {
     return SizedBox(
       width: 22,
       height: 22,
-      child: CustomPaint(
-        painter: _GoogleLogoPainter(),
-      ),
+      child: CustomPaint(painter: _GoogleLogoPainter()),
     );
   }
 }

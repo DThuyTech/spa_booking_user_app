@@ -38,8 +38,7 @@ class AppChip extends StatefulWidget {
   State<AppChip> createState() => _AppChipState();
 }
 
-class _AppChipState extends State<AppChip>
-    with SingleTickerProviderStateMixin {
+class _AppChipState extends State<AppChip> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _scaleAnim;
   late final Animation<double> _opacityAnim;
@@ -52,12 +51,14 @@ class _AppChipState extends State<AppChip>
       duration: AppMotion.normal,
       value: widget.isSelected ? 1.0 : 0.0,
     );
-    _scaleAnim = Tween<double>(begin: 1.0, end: 1.03).animate(
-      CurvedAnimation(parent: _controller, curve: AppMotion.spring),
-    );
-    _opacityAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: AppMotion.spring),
-    );
+    _scaleAnim = Tween<double>(
+      begin: 1.0,
+      end: 1.03,
+    ).animate(CurvedAnimation(parent: _controller, curve: AppMotion.spring));
+    _opacityAnim = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: AppMotion.spring));
   }
 
   @override
@@ -201,8 +202,8 @@ class _AppChipFilterBarState extends State<AppChipFilterBar> {
           return AppChip(
             label: opt,
             isSelected: _selected == opt,
-            leadingIcon: widget.leadingIcons != null &&
-                    i < widget.leadingIcons!.length
+            leadingIcon:
+                widget.leadingIcons != null && i < widget.leadingIcons!.length
                 ? widget.leadingIcons![i]
                 : null,
             onSelected: (_) {

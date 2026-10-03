@@ -1,7 +1,7 @@
-import 'package:board_oi/src/core/localization/app_localizations.dart';
-import 'package:board_oi/src/domain/entities/auth/user.dart';
-import 'package:board_oi/src/shared/design_system/tokens/app_colors.dart';
-import 'package:board_oi/src/shared/design_system/tokens/app_typography.dart';
+import 'package:spa_booking/src/core/localization/app_localizations.dart';
+import 'package:spa_booking/src/domain/entities/auth/user.dart';
+import 'package:spa_booking/src/shared/design_system/tokens/app_colors.dart';
+import 'package:spa_booking/src/shared/design_system/tokens/app_typography.dart';
 import 'package:flutter/material.dart';
 
 /// Clean, editorial greeting displaying customer greeting and calm beauty tagline.
@@ -9,11 +9,7 @@ class HomeGreeting extends StatelessWidget {
   final User? user;
   final String? subtitle;
 
-  const HomeGreeting({
-    super.key,
-    this.user,
-    this.subtitle,
-  });
+  const HomeGreeting({super.key, this.user, this.subtitle});
 
   String _getTimeGreeting(BuildContext context) {
     final l10n = context.l10n;

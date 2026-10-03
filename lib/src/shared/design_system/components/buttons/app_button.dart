@@ -7,11 +7,11 @@ import '../../tokens/app_shadows.dart';
 import '../../tokens/app_spacing.dart';
 import '../../tokens/app_typography.dart';
 
-enum AppButtonVariant { primary, secondary, outline, ghost }
+enum AppButtonVariant { primary, secondary, outline, ghost, destructive }
 
 enum AppButtonSize { sm, md, lg }
 
-/// Board Ơi Tactile Button
+/// Tactile Button
 ///
 /// Design: Premium minimalism with tactile press feedback.
 /// Press animation: 1.0 → 0.97 → 1.0 over 150ms.
@@ -25,7 +25,12 @@ class AppButton extends StatefulWidget {
   final Widget? leadingIcon;
   final Widget? trailingIcon;
   final double? width;
+  final double? height;
   final bool fullWidth;
+  final Color? backgroundColor;
+  final Color? textColor;
+  final BorderRadius? borderRadius;
+  final EdgeInsets? padding;
 
   const AppButton({
     super.key,
@@ -37,7 +42,12 @@ class AppButton extends StatefulWidget {
     this.leadingIcon,
     this.trailingIcon,
     this.width,
+    this.height,
     this.fullWidth = false,
+    this.backgroundColor,
+    this.textColor,
+    this.borderRadius,
+    this.padding,
   });
 
   @override
@@ -89,6 +99,10 @@ class _AppButtonState extends State<AppButton>
   @override
   Widget build(BuildContext context) {
     final cfg = _ButtonConfig.of(widget.variant, widget.size);
+    final effectiveBg = widget.backgroundColor ?? cfg.background;
+    final effectiveFg = widget.textColor ?? cfg.foreground;
+    final effectivePadding = widget.padding ?? cfg.padding;
+    final effectiveBr = widget.borderRadius ?? cfg.borderRadius;
 
     Widget content = Row(
       mainAxisSize: MainAxisSize.min,
@@ -100,7 +114,7 @@ class _AppButtonState extends State<AppButton>
             height: cfg.fontSize + 2,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(cfg.foreground),
+              valueColor: AlwaysStoppedAnimation<Color>(effectiveFg),
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
@@ -116,7 +130,7 @@ class _AppButtonState extends State<AppButton>
             style: AppTypography.labelLarge.copyWith(
               fontSize: cfg.fontSize,
               fontWeight: FontWeight.w600,
-              color: cfg.foreground,
+              color: effectiveFg,
               letterSpacing: 0.1,
             ),
           ),
@@ -138,10 +152,12 @@ class _AppButtonState extends State<AppButton>
         child: AnimatedContainer(
           duration: AppMotion.fast,
           curve: AppMotion.spring,
-          padding: cfg.padding,
+          padding: effectivePadding,
           decoration: BoxDecoration(
-            color: _isEnabled ? cfg.background : cfg.background.withValues(alpha: 0.5),
-            borderRadius: cfg.borderRadius,
+            color: _isEnabled
+                ? effectiveBg
+                : effectiveBg.withValues(alpha: 0.5),
+            borderRadius: effectiveBr,
             border: cfg.border,
             boxShadow: _isEnabled ? cfg.shadows : null,
           ),
@@ -150,9 +166,10 @@ class _AppButtonState extends State<AppButton>
       ),
     );
 
-    if (widget.fullWidth || widget.width != null) {
+    if (widget.fullWidth || widget.width != null || widget.height != null) {
       return SizedBox(
         width: widget.fullWidth ? double.infinity : widget.width,
+        height: widget.height,
         child: button,
       );
     }
@@ -186,55 +203,66 @@ class _ButtonConfig {
   static _ButtonConfig of(AppButtonVariant variant, AppButtonSize size) {
     final (padding, fontSize, br) = switch (size) {
       AppButtonSize.sm => (
-          const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-          12.0,
-          BorderRadius.circular(AppRadius.button - 2),
-        ),
+        const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+        12.0,
+        BorderRadius.circular(AppRadius.button - 2),
+      ),
       AppButtonSize.md => (
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          14.0,
-          BorderRadius.circular(AppRadius.button),
-        ),
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        14.0,
+        BorderRadius.circular(AppRadius.button),
+      ),
       AppButtonSize.lg => (
-          const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
-          16.0,
-          BorderRadius.circular(AppRadius.button + 2),
-        ),
+        const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+        16.0,
+        BorderRadius.circular(AppRadius.button + 2),
+      ),
     };
 
     return switch (variant) {
       AppButtonVariant.primary => _ButtonConfig(
-          background: AppColors.darkBrown,
-          foreground: AppColors.white,
-          padding: padding,
-          borderRadius: br,
-          fontSize: fontSize,
-          shadows: AppShadows.accentGlow(AppColors.darkBrown),
-        ),
+        background: AppColors.darkBrown,
+        foreground: AppColors.white,
+        padding: padding,
+        borderRadius: br,
+        fontSize: fontSize,
+        shadows: AppShadows.accentGlow(AppColors.darkBrown),
+      ),
       AppButtonVariant.secondary => _ButtonConfig(
-          background: AppColors.surfaceWarm,
-          foreground: AppColors.darkBrown,
-          padding: padding,
-          borderRadius: br,
-          fontSize: fontSize,
-          border: Border.all(color: AppColors.border, width: 1),
-          shadows: AppShadows.neuLow,
-        ),
+        background: AppColors.surfaceWarm,
+        foreground: AppColors.darkBrown,
+        padding: padding,
+        borderRadius: br,
+        fontSize: fontSize,
+        border: Border.all(color: AppColors.border, width: 1),
+        shadows: AppShadows.neuLow,
+      ),
       AppButtonVariant.outline => _ButtonConfig(
-          background: AppColors.white,
-          foreground: AppColors.primaryBrown,
-          padding: padding,
-          borderRadius: br,
-          fontSize: fontSize,
-          border: Border.all(color: AppColors.primaryBrown.withValues(alpha: 0.5), width: 1.2),
+        background: AppColors.white,
+        foreground: AppColors.primaryBrown,
+        padding: padding,
+        borderRadius: br,
+        fontSize: fontSize,
+        border: Border.all(
+          color: AppColors.primaryBrown.withValues(alpha: 0.5),
+          width: 1.2,
         ),
+      ),
       AppButtonVariant.ghost => _ButtonConfig(
-          background: AppColors.transparent,
-          foreground: AppColors.primaryBrown,
-          padding: padding,
-          borderRadius: br,
-          fontSize: fontSize,
-        ),
+        background: AppColors.transparent,
+        foreground: AppColors.primaryBrown,
+        padding: padding,
+        borderRadius: br,
+        fontSize: fontSize,
+      ),
+      AppButtonVariant.destructive => _ButtonConfig(
+        background: AppColors.error,
+        foreground: AppColors.white,
+        padding: padding,
+        borderRadius: br,
+        fontSize: fontSize,
+        shadows: AppShadows.accentGlow(AppColors.error),
+      ),
     };
   }
 }

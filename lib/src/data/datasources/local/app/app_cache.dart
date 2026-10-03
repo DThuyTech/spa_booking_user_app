@@ -6,12 +6,12 @@ class AppCache {
   final PreferencesStorage preferences;
   final SecureStorage secureStorage;
 
-  const AppCache({
-    required this.preferences,
-    required this.secureStorage,
-  });
+  const AppCache({required this.preferences, required this.secureStorage});
 
-  Future<void> saveToken({required String accessToken, String? refreshToken}) async {
+  Future<void> saveToken({
+    required String accessToken,
+    String? refreshToken,
+  }) async {
     await secureStorage.write('access_token', accessToken);
     if (refreshToken != null) {
       await secureStorage.write('refresh_token', refreshToken);

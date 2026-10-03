@@ -32,6 +32,9 @@ class AuthSessionBloc extends Bloc<AuthSessionEvent, AuthSessionState> {
     on<TokenRefreshRequested>(_onTokenRefreshRequested);
     on<LogoutRequested>(_onLogoutRequested);
     on<SessionExpiredReceived>(_onSessionExpiredReceived);
+    on<AuthSessionUserUpdated>((event, emit) {
+      emit(AuthSessionState.authenticated(event.user));
+    });
 
     // Synchronize if SessionManager marks session expired (e.g. from 401 interceptor)
     _sessionSubscription = sessionManager.sessionStream.listen((session) {
@@ -43,9 +46,7 @@ class AuthSessionBloc extends Bloc<AuthSessionEvent, AuthSessionState> {
 
   Future<void> restoreSession() async {
     add(const RestoreSessionRequested());
-    await stream.firstWhere(
-      (s) => s.status != AuthSessionStatus.bootstrapping,
-    );
+    await stream.firstWhere((s) => s.status != AuthSessionStatus.bootstrapping);
   }
 
   Future<void> _onRestoreSessionRequested(
@@ -97,7 +98,7 @@ class AuthSessionBloc extends Bloc<AuthSessionEvent, AuthSessionState> {
                   await sessionManager.login(
                     tokens: tokens,
                     userId: user.id,
-                    role: user.role,
+                    role: user.role.value,
                   );
                   emit(AuthSessionState.authenticated(user));
                 } else {
@@ -147,7 +148,7 @@ class AuthSessionBloc extends Bloc<AuthSessionEvent, AuthSessionState> {
     await sessionManager.login(
       tokens: event.tokens,
       userId: event.user.id,
-      role: event.user.role,
+      role: event.user.role.value,
     );
     emit(AuthSessionState.authenticated(event.user));
   }

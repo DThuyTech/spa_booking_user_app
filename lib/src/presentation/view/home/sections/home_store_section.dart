@@ -1,4 +1,4 @@
-import 'package:board_oi/src/core/localization/app_localizations.dart';
+import 'package:spa_booking/src/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import '../widgets/home_section_header.dart';
 import '../widgets/home_store_card.dart';
@@ -7,10 +7,7 @@ import '../widgets/home_store_card.dart';
 class HomeStoreSection extends StatelessWidget {
   final VoidCallback? onStoreTap;
 
-  const HomeStoreSection({
-    super.key,
-    this.onStoreTap,
-  });
+  const HomeStoreSection({super.key, this.onStoreTap});
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +16,9 @@ class HomeStoreSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HomeSectionHeader(
-          title: l10n.recommendedSalons,
-        ),
+        HomeSectionHeader(title: l10n.recommendedSalons),
         const SizedBox(height: 8),
-        HomeStoreCard(
-          onTap: onStoreTap,
-        ),
+        HomeStoreCard(onTap: onStoreTap),
       ],
     );
   }

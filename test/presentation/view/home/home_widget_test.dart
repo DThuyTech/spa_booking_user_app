@@ -1,18 +1,20 @@
-import 'package:board_oi/src/core/error/failure.dart';
-import 'package:board_oi/src/core/localization/app_localizations.dart';
-import 'package:board_oi/src/domain/entities/auth/user.dart';
-import 'package:board_oi/src/domain/entities/home/greeting.dart';
-import 'package:board_oi/src/domain/usecases/home/get_greeting_usecase.dart';
-import 'package:board_oi/src/presentation/bloc/auth_session/auth_session_bloc.dart';
-import 'package:board_oi/src/presentation/view/home/bloc/home_bloc.dart';
-import 'package:board_oi/src/presentation/view/home/bloc/home_state.dart';
-import 'package:board_oi/src/presentation/view/home/body_view/home_body_view.dart';
-import 'package:board_oi/src/presentation/view/home/widgets/home_booking_card.dart';
-import 'package:board_oi/src/presentation/view/home/widgets/home_category_item.dart';
-import 'package:board_oi/src/presentation/view/home/widgets/home_greeting.dart';
-import 'package:board_oi/src/presentation/view/home/widgets/home_search_bar.dart';
-import 'package:board_oi/src/presentation/view/home/widgets/home_skeleton.dart';
-import 'package:board_oi/src/presentation/view/home/widgets/home_store_card.dart';
+import 'package:spa_booking/src/core/error/failure.dart';
+import 'package:spa_booking/src/core/localization/app_localizations.dart';
+import 'package:spa_booking/src/domain/entities/auth/user.dart';
+import 'package:spa_booking/src/domain/entities/auth/user_role_enum.dart';
+import 'package:spa_booking/src/domain/entities/home/greeting.dart';
+import 'package:spa_booking/src/domain/usecases/home/get_greeting_usecase.dart';
+import 'package:spa_booking/src/presentation/bloc/auth_session/auth_session_bloc.dart';
+import 'package:spa_booking/src/presentation/bloc/home/home_bloc.dart';
+import 'package:spa_booking/src/presentation/bloc/home/home_state.dart';
+import 'package:spa_booking/src/presentation/view/home/body_view/home_body_view.dart';
+import 'package:spa_booking/src/presentation/view/home/widgets/home_booking_card.dart';
+import 'package:spa_booking/src/presentation/view/home/widgets/home_category_item.dart';
+import 'package:spa_booking/src/presentation/view/home/widgets/home_greeting.dart';
+import 'package:spa_booking/src/presentation/view/home/widgets/home_near_salon_card.dart';
+import 'package:spa_booking/src/presentation/view/home/widgets/home_search_bar.dart';
+import 'package:spa_booking/src/presentation/view/home/widgets/home_skeleton.dart';
+import 'package:spa_booking/src/presentation/view/home/widgets/home_store_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -56,7 +58,7 @@ void main() {
       id: 'cust-1',
       fullName: 'Emma Watson',
       phone: '0901234567',
-      role: 'CUSTOMER',
+      role: UserRoleEnum.customer,
     );
 
     final testGreeting = Greeting(
@@ -70,9 +72,9 @@ void main() {
       mockGetGreeting = MockGetGreetingUseCase();
       mockAuthSessionBloc = MockAuthSessionBloc();
 
-      when(() => mockAuthSessionBloc.state).thenReturn(
-        const AuthSessionState.authenticated(testUser),
-      );
+      when(
+        () => mockAuthSessionBloc.state,
+      ).thenReturn(const AuthSessionState.authenticated(testUser));
       when(() => mockAuthSessionBloc.stream).thenAnswer(
         (_) => Stream.value(const AuthSessionState.authenticated(testUser)),
       );
@@ -100,18 +102,11 @@ void main() {
     ) async {
       bool tapped = false;
       await tester.pumpWidget(
-        createHomeTestWidget(
-          child: HomeSearchBar(
-            onTap: () => tapped = true,
-          ),
-        ),
+        createHomeTestWidget(child: HomeSearchBar(onTap: () => tapped = true)),
       );
       await tester.pumpAndSettle();
 
-      expect(
-        find.text('Search salons, services, stylists...'),
-        findsOneWidget,
-      );
+      expect(find.text('Search salons, services, stylists...'), findsOneWidget);
       expect(find.byIcon(LucideIcons.search), findsOneWidget);
 
       await tester.tap(find.byType(HomeSearchBar));
@@ -125,9 +120,7 @@ void main() {
       bool bookTapped = false;
       await tester.pumpWidget(
         createHomeTestWidget(
-          child: HomeBookingCard(
-            onBookNowTap: () => bookTapped = true,
-          ),
+          child: HomeBookingCard(onBookNowTap: () => bookTapped = true),
         ),
       );
       await tester.pumpAndSettle();
@@ -189,9 +182,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        createHomeTestWidget(
-          child: const HomeStoreCard(),
-        ),
+        createHomeTestWidget(child: const HomeStoreCard()),
       );
       await tester.pumpAndSettle();
 
@@ -205,9 +196,9 @@ void main() {
     testWidgets('HomeBodyView renders HomeSkeleton when loading', (
       tester,
     ) async {
-      when(() => mockGetGreeting()).thenAnswer(
-        (_) async => Right(testGreeting),
-      );
+      when(
+        () => mockGetGreeting(),
+      ).thenAnswer((_) async => Right(testGreeting));
 
       final homeBloc = HomeBloc(getGreetingUseCase: mockGetGreeting);
 
@@ -228,75 +219,108 @@ void main() {
       expect(find.byType(HomeSkeleton), findsOneWidget);
     });
 
-    testWidgets('HomeBodyView renders error message and triggers retry on error', (
-      tester,
-    ) async {
-      when(() => mockGetGreeting()).thenAnswer(
-        (_) async => const Left(ServerFailure('Connection error')),
-      );
+    testWidgets(
+      'HomeBodyView renders error message and triggers retry on error',
+      (tester) async {
+        when(() => mockGetGreeting()).thenAnswer(
+          (_) async => const Left(ServerFailure('Connection error')),
+        );
 
-      final homeBloc = HomeBloc(getGreetingUseCase: mockGetGreeting);
+        final homeBloc = HomeBloc(getGreetingUseCase: mockGetGreeting);
 
-      await tester.pumpWidget(
-        createHomeTestWidget(
-          authSessionBloc: mockAuthSessionBloc,
-          child: BlocProvider<HomeBloc>.value(
-            value: homeBloc,
-            child: const HomeBodyView(),
+        await tester.pumpWidget(
+          createHomeTestWidget(
+            authSessionBloc: mockAuthSessionBloc,
+            child: BlocProvider<HomeBloc>.value(
+              value: homeBloc,
+              child: const HomeBodyView(),
+            ),
           ),
-        ),
-      );
+        );
 
-      homeBloc.emit(
-        const HomeState(
-          status: HomeStatus.failure,
-          errorMessage: 'Connection error',
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.text('Connection error'), findsOneWidget);
-      expect(find.text('Retry'), findsOneWidget);
-
-      await tester.tap(find.text('Retry'));
-      await tester.pump();
-    });
-
-    testWidgets('HomeBodyView renders loaded sections with customer header and categories', (
-      tester,
-    ) async {
-      when(() => mockGetGreeting()).thenAnswer(
-        (_) async => Right(testGreeting),
-      );
-
-      final homeBloc = HomeBloc(getGreetingUseCase: mockGetGreeting);
-
-      await tester.pumpWidget(
-        createHomeTestWidget(
-          authSessionBloc: mockAuthSessionBloc,
-          child: BlocProvider<HomeBloc>.value(
-            value: homeBloc,
-            child: const HomeBodyView(),
+        homeBloc.emit(
+          const HomeState(
+            status: HomeStatus.failure,
+            errorMessage: 'Connection error',
           ),
-        ),
-      );
+        );
+        await tester.pumpAndSettle();
 
-      homeBloc.emit(
-        HomeState(
-          status: HomeStatus.loaded,
-          greeting: testGreeting,
-        ),
-      );
-      await tester.pumpAndSettle();
+        expect(find.text('Connection error'), findsOneWidget);
+        expect(find.text('Retry'), findsOneWidget);
 
-      // Check header
-      expect(find.textContaining('Watson'), findsOneWidget);
-      expect(find.text('Luxury spa & salon care awaits'), findsOneWidget);
+        await tester.tap(find.text('Retry'));
+        await tester.pump();
+      },
+    );
 
-      // Check sections
-      expect(find.text('Upcoming Appointment'), findsOneWidget);
-      expect(find.text('Services'), findsOneWidget);
-      expect(find.text('Recommended Salons'), findsOneWidget);
-    });
+    testWidgets(
+      'HomeBodyView renders loaded sections with customer header and categories',
+      (tester) async {
+        when(
+          () => mockGetGreeting(),
+        ).thenAnswer((_) async => Right(testGreeting));
+
+        final homeBloc = HomeBloc(getGreetingUseCase: mockGetGreeting);
+
+        await tester.pumpWidget(
+          createHomeTestWidget(
+            authSessionBloc: mockAuthSessionBloc,
+            child: BlocProvider<HomeBloc>.value(
+              value: homeBloc,
+              child: const HomeBodyView(),
+            ),
+          ),
+        );
+
+        homeBloc.emit(
+          HomeState(status: HomeStatus.loaded, greeting: testGreeting),
+        );
+        await tester.pumpAndSettle();
+
+        // Check header
+        expect(find.text('Good morning'), findsOneWidget);
+
+        // Check sections
+        expect(find.text('Special Offers'), findsOneWidget);
+        expect(find.text('Explore Services'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'HomeNearSalonCard renders with long location text without overflow',
+      (tester) async {
+        const nearItem = HomeNearSalonItem(
+          id: 'salon-1',
+          name: 'Aura Luxury Spa & Clinic',
+          categories: 'Massage · Facial · Hair Care · Nail Design',
+          rating: 4.9,
+          distance:
+              '123 Nguyen Hue Boulevard, Ben Nghe Ward, District 1, Ho Chi Minh City, Vietnam',
+          imageUrl:
+              'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=600&q=80',
+        );
+
+        bool bookTapped = false;
+        await tester.pumpWidget(
+          createHomeTestWidget(
+            child: Center(
+              child: HomeNearSalonCard(
+                salon: nearItem,
+                onBook: () => bookTapped = true,
+              ),
+            ),
+          ),
+        );
+        await tester.pump();
+
+        expect(find.text('Aura Luxury Spa & Clinic'), findsOneWidget);
+        expect(find.text('Book'), findsOneWidget);
+
+        await tester.tap(find.text('Book'));
+        await tester.pump();
+        expect(bookTapped, isTrue);
+      },
+    );
   });
 }

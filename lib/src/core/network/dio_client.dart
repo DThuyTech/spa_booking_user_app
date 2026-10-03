@@ -9,15 +9,37 @@ class DioClient implements NetworkClient {
 
   DioClient({required Dio dioClient, required AppConfig appConfig})
     : dio = dioClient {
+    final normalizedBaseUrl = appConfig.apiBaseUrl.endsWith('/')
+        ? appConfig.apiBaseUrl.substring(0, appConfig.apiBaseUrl.length - 1)
+        : appConfig.apiBaseUrl;
+
     dio.options = BaseOptions(
-      baseUrl: appConfig.apiBaseUrl,
+      baseUrl: normalizedBaseUrl,
       connectTimeout: appConfig.connectTimeout,
       receiveTimeout: appConfig.receiveTimeout,
       headers: {
         AppConstants.headerContentType: AppConstants.contentTypeJson,
         'Accept': AppConstants.contentTypeJson,
+        if (appConfig.xTokenAccess != null &&
+            appConfig.xTokenAccess!.isNotEmpty &&
+            appConfig.xTokenAccess != 'your_x_token_access_here')
+          'X-Token-Access': appConfig.xTokenAccess!,
       },
     );
+  }
+
+  String _resolvePath(String path) {
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+    if (path.startsWith('/api/v1')) {
+      return path;
+    }
+    if (path.startsWith('api/v1')) {
+      return '/$path';
+    }
+    final normalized = path.startsWith('/') ? path : '/$path';
+    return '/api/v1$normalized';
   }
 
   @override
@@ -28,7 +50,7 @@ class DioClient implements NetworkClient {
     CancelToken? cancelToken,
   }) {
     return dio.get<T>(
-      path,
+      _resolvePath(path),
       queryParameters: queryParameters,
       options: options,
       cancelToken: cancelToken,
@@ -49,7 +71,7 @@ class DioClient implements NetworkClient {
       opts.extra = {...?opts.extra, IdempotencyPolicy.extraKey: idempotencyKey};
     }
     return dio.post<T>(
-      path,
+      _resolvePath(path),
       data: data,
       queryParameters: queryParameters,
       options: opts,
@@ -66,7 +88,7 @@ class DioClient implements NetworkClient {
     CancelToken? cancelToken,
   }) {
     return dio.put<T>(
-      path,
+      _resolvePath(path),
       data: data,
       queryParameters: queryParameters,
       options: options,
@@ -88,7 +110,7 @@ class DioClient implements NetworkClient {
       opts.extra = {...?opts.extra, IdempotencyPolicy.extraKey: idempotencyKey};
     }
     return dio.patch<T>(
-      path,
+      _resolvePath(path),
       data: data,
       queryParameters: queryParameters,
       options: opts,
@@ -105,7 +127,7 @@ class DioClient implements NetworkClient {
     CancelToken? cancelToken,
   }) {
     return dio.delete<T>(
-      path,
+      _resolvePath(path),
       data: data,
       queryParameters: queryParameters,
       options: options,

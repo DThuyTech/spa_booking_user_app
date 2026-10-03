@@ -1,4 +1,4 @@
-import 'package:board_oi/src/domain/entities/match/match_request.dart';
+import 'package:spa_booking/src/domain/entities/match/match_request.dart';
 
 /// Seed data of realistic board-game match requests for Board Ơi.
 abstract final class MockMatchData {

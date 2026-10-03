@@ -44,7 +44,7 @@ class GlassmorphicTextField extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          height: 52,
+          height: 44,
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.36),
             borderRadius: BorderRadius.circular(30),
@@ -60,6 +60,7 @@ class GlassmorphicTextField extends StatelessWidget {
             key: textFieldKey,
             controller: controller,
             focusNode: focusNode,
+            textAlignVertical: TextAlignVertical.center,
             obscureText: obscureText,
             keyboardType: keyboardType,
             textInputAction: textInputAction,
@@ -77,15 +78,17 @@ class GlassmorphicTextField extends StatelessWidget {
             decoration: InputDecoration(
               isDense: true,
               filled: true,
-              fillColor: Colors.transparent, // Overrides theme's solid white surface
+              fillColor:
+                  Colors.transparent, // Overrides theme's solid white surface
               hintText: hintText,
               hintStyle: const TextStyle(
                 fontSize: 14.5,
                 fontWeight: FontWeight.w400,
                 color: Color(0xFF94857E),
               ),
+              contentPadding: const EdgeInsets.symmetric(vertical: 10),
               prefixIcon: Padding(
-                padding: const EdgeInsets.only(left: 18, right: 12),
+                padding: const EdgeInsets.only(left: 16, right: 12),
                 child: Icon(
                   prefixIcon,
                   size: 20,
@@ -93,13 +96,15 @@ class GlassmorphicTextField extends StatelessWidget {
                 ),
               ),
               prefixIconConstraints: const BoxConstraints(
-                minWidth: 50,
-                minHeight: 50,
+                minWidth: 48,
+                minHeight: 44,
+                maxHeight: 44,
               ),
               suffixIcon: suffixIcon,
               suffixIconConstraints: const BoxConstraints(
                 minWidth: 44,
                 minHeight: 44,
+                maxHeight: 44,
               ),
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
@@ -107,10 +112,6 @@ class GlassmorphicTextField extends StatelessWidget {
               errorBorder: InputBorder.none,
               disabledBorder: InputBorder.none,
               focusedErrorBorder: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 14,
-                horizontal: 16,
-              ),
             ),
           ),
         ),

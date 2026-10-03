@@ -47,8 +47,10 @@ class _VenueCardState extends State<VenueCard>
       duration: AppMotion.fast,
       reverseDuration: const Duration(milliseconds: 180),
     );
-    _scaleAnim = Tween<double>(begin: 1.0, end: AppMotion.scalePressed)
-        .animate(CurvedAnimation(parent: _controller, curve: AppMotion.spring));
+    _scaleAnim = Tween<double>(
+      begin: 1.0,
+      end: AppMotion.scalePressed,
+    ).animate(CurvedAnimation(parent: _controller, curve: AppMotion.spring));
   }
 
   @override

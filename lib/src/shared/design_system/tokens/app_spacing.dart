@@ -13,9 +13,10 @@ abstract final class AppSpacing {
   static const double xxxl = 64.0;
 
   // Semantic aliases
-  static const double screenPaddingH = 20.0; // Primary mobile horizontal padding
-  static const double sectionSpacing = 32.0;  // Section-to-section
-  static const double heroSpacing = 48.0;     // Hero / large section spacing
+  static const double screenPaddingH =
+      20.0; // Primary mobile horizontal padding
+  static const double sectionSpacing = 32.0; // Section-to-section
+  static const double heroSpacing = 48.0; // Hero / large section spacing
 
   // EdgeInsets helpers
   static const EdgeInsets edgeInsetsZero = EdgeInsets.zero;

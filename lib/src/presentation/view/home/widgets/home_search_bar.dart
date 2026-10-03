@@ -1,8 +1,8 @@
-import 'package:board_oi/src/core/localization/app_localizations.dart';
-import 'package:board_oi/src/shared/design_system/tokens/app_colors.dart';
-import 'package:board_oi/src/shared/design_system/tokens/app_radius.dart';
-import 'package:board_oi/src/shared/design_system/tokens/app_shadows.dart';
-import 'package:board_oi/src/shared/design_system/tokens/app_typography.dart';
+import 'package:spa_booking/src/core/localization/app_localizations.dart';
+import 'package:spa_booking/src/shared/design_system/tokens/app_colors.dart';
+import 'package:spa_booking/src/shared/design_system/tokens/app_radius.dart';
+import 'package:spa_booking/src/shared/design_system/tokens/app_shadows.dart';
+import 'package:spa_booking/src/shared/design_system/tokens/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 
@@ -11,11 +11,7 @@ class HomeSearchBar extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onFilterTap;
 
-  const HomeSearchBar({
-    super.key,
-    this.onTap,
-    this.onFilterTap,
-  });
+  const HomeSearchBar({super.key, this.onTap, this.onFilterTap});
 
   @override
   Widget build(BuildContext context) {

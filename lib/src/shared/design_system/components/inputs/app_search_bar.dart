@@ -163,8 +163,7 @@ class _AppSearchBarState extends State<AppSearchBar>
             padding: const EdgeInsets.only(left: 16, right: 10),
             child: Icon(
               Icons.search_rounded,
-              color:
-                  _isFocused ? AppColors.primaryBrown : AppColors.softBrown,
+              color: _isFocused ? AppColors.primaryBrown : AppColors.softBrown,
               size: 20,
             ),
           ),

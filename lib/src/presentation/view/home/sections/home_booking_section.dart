@@ -1,4 +1,4 @@
-import 'package:board_oi/src/core/localization/app_localizations.dart';
+import 'package:spa_booking/src/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import '../widgets/home_booking_card.dart';
 import '../widgets/home_section_header.dart';
@@ -21,9 +21,7 @@ class HomeBookingSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HomeSectionHeader(
-          title: l10n.upcomingAppointment,
-        ),
+        HomeSectionHeader(title: l10n.upcomingAppointment),
         const SizedBox(height: 8),
         HomeBookingCard(
           onTap: onBookingCardTap,

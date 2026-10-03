@@ -1,13 +1,14 @@
-import 'package:board_oi/src/core/error/failure.dart';
-import 'package:board_oi/src/core/network/auth/token_pair.dart';
-import 'package:board_oi/src/domain/entities/auth/auth_session_entity.dart';
-import 'package:board_oi/src/domain/entities/auth/request_otp_result.dart';
-import 'package:board_oi/src/domain/entities/auth/user.dart';
-import 'package:board_oi/src/domain/repositories/auth/auth_repository.dart';
-import 'package:board_oi/src/domain/usecases/auth/logout_usecase.dart';
-import 'package:board_oi/src/domain/usecases/auth/refresh_token_usecase.dart';
-import 'package:board_oi/src/domain/usecases/auth/request_otp_usecase.dart';
-import 'package:board_oi/src/domain/usecases/auth/verify_otp_usecase.dart';
+import 'package:spa_booking/src/core/error/failure.dart';
+import 'package:spa_booking/src/core/network/auth/token_pair.dart';
+import 'package:spa_booking/src/domain/entities/auth/auth_session_entity.dart';
+import 'package:spa_booking/src/domain/entities/auth/request_otp_result.dart';
+import 'package:spa_booking/src/domain/entities/auth/user.dart';
+import 'package:spa_booking/src/domain/entities/auth/user_role_enum.dart';
+import 'package:spa_booking/src/domain/repositories/auth/auth_repository.dart';
+import 'package:spa_booking/src/domain/usecases/auth/logout_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/refresh_token_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/request_otp_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/verify_otp_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
@@ -37,8 +38,9 @@ void main() {
     );
 
     test('should return RequestOtpResult on success', () async {
-      when(() => mockRepository.requestOtp(tPhone))
-          .thenAnswer((_) async => const Right(tResult));
+      when(
+        () => mockRepository.requestOtp(tPhone),
+      ).thenAnswer((_) async => const Right(tResult));
 
       final result = await requestOtpUseCase(tPhone);
 
@@ -48,8 +50,9 @@ void main() {
 
     test('should return Failure on error', () async {
       const failure = NetworkFailure('Connection error');
-      when(() => mockRepository.requestOtp(tPhone))
-          .thenAnswer((_) async => const Left(failure));
+      when(
+        () => mockRepository.requestOtp(tPhone),
+      ).thenAnswer((_) async => const Left(failure));
 
       final result = await requestOtpUseCase(tPhone);
 
@@ -65,7 +68,7 @@ void main() {
       id: 'usr_001',
       phone: tPhone,
       fullName: 'Aura Customer',
-      role: 'CUSTOMER',
+      role: UserRoleEnum.customer,
     );
     const tSession = AuthSessionEntity(
       accessToken: 'access_token_123',
@@ -75,24 +78,30 @@ void main() {
     );
 
     test('should return AuthSessionEntity on success', () async {
-      when(() => mockRepository.verifyOtp(phone: tPhone, code: tCode))
-          .thenAnswer((_) async => const Right(tSession));
+      when(
+        () => mockRepository.verifyOtp(phone: tPhone, code: tCode),
+      ).thenAnswer((_) async => const Right(tSession));
 
       final result = await verifyOtpUseCase(phone: tPhone, code: tCode);
 
       expect(result, const Right(tSession));
-      verify(() => mockRepository.verifyOtp(phone: tPhone, code: tCode)).called(1);
+      verify(
+        () => mockRepository.verifyOtp(phone: tPhone, code: tCode),
+      ).called(1);
     });
 
     test('should return Failure on invalid OTP', () async {
       const failure = UnauthorizedFailure('Invalid code');
-      when(() => mockRepository.verifyOtp(phone: tPhone, code: tCode))
-          .thenAnswer((_) async => const Left(failure));
+      when(
+        () => mockRepository.verifyOtp(phone: tPhone, code: tCode),
+      ).thenAnswer((_) async => const Left(failure));
 
       final result = await verifyOtpUseCase(phone: tPhone, code: tCode);
 
       expect(result, const Left(failure));
-      verify(() => mockRepository.verifyOtp(phone: tPhone, code: tCode)).called(1);
+      verify(
+        () => mockRepository.verifyOtp(phone: tPhone, code: tCode),
+      ).called(1);
     });
   });
 
@@ -104,8 +113,9 @@ void main() {
     );
 
     test('should return TokenPair on refresh success', () async {
-      when(() => mockRepository.refreshToken(tRefreshToken))
-          .thenAnswer((_) async => const Right(tTokenPair));
+      when(
+        () => mockRepository.refreshToken(tRefreshToken),
+      ).thenAnswer((_) async => const Right(tTokenPair));
 
       final result = await refreshTokenUseCase(tRefreshToken);
 
@@ -115,8 +125,9 @@ void main() {
 
     test('should return Failure on refresh failure', () async {
       const failure = UnauthorizedFailure('Token expired');
-      when(() => mockRepository.refreshToken(tRefreshToken))
-          .thenAnswer((_) async => const Left(failure));
+      when(
+        () => mockRepository.refreshToken(tRefreshToken),
+      ).thenAnswer((_) async => const Left(failure));
 
       final result = await refreshTokenUseCase(tRefreshToken);
 
@@ -127,8 +138,9 @@ void main() {
 
   group('LogoutUseCase', () {
     test('should return Unit on successful logout', () async {
-      when(() => mockRepository.logout())
-          .thenAnswer((_) async => const Right(unit));
+      when(
+        () => mockRepository.logout(),
+      ).thenAnswer((_) async => const Right(unit));
 
       final result = await logoutUseCase();
 

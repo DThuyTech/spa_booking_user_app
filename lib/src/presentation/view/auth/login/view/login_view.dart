@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:board_oi/src/app/di/dependency_injection.dart';
-import 'package:board_oi/src/app/router/app_router.gr.dart';
+import 'package:spa_booking/src/app/di/dependency_injection.dart';
+import 'package:spa_booking/src/app/router/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/login_bloc.dart';
-import '../bloc/login_state.dart';
+import '../../../../bloc/auth/login/login_bloc.dart';
+import '../../../../bloc/auth/login/login_state.dart';
 import '../body_view/login_body_view.dart';
 
 @RoutePage()
@@ -30,14 +30,7 @@ class LoginView extends StatelessWidget {
       listenWhen: (previous, current) =>
           previous.status != current.status && current.isSuccess,
       listener: (context, state) {
-        final phone = state.phone;
-        final expiresInSeconds = state.otpResult?.expiresInSeconds ?? 300;
-        context.router.push(
-          OtpVerificationRoute(
-            phone: phone,
-            expiresInSeconds: expiresInSeconds,
-          ),
-        );
+        context.router.replaceAll([const RootRoute()]);
       },
       child: const AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
@@ -46,6 +39,7 @@ class LoginView extends StatelessWidget {
           statusBarBrightness: Brightness.light,
           systemNavigationBarColor: Colors.transparent,
           systemNavigationBarIconBrightness: Brightness.dark,
+          systemNavigationBarContrastEnforced: false,
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,

@@ -113,16 +113,17 @@ class _AppGlassButtonState extends State<AppGlassButton> {
                             ),
                           )
                         : (widget.child ??
-                            Text(
-                              widget.label!,
-                              style: widget.textStyle ??
-                                  const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.2,
-                                  ),
-                            )),
+                              Text(
+                                widget.label!,
+                                style:
+                                    widget.textStyle ??
+                                    const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.2,
+                                    ),
+                              )),
                   ),
                 ),
               ),

@@ -50,15 +50,13 @@ class _GameCardState extends State<GameCard>
       vsync: this,
       duration: AppMotion.durationFast,
     );
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: AppMotion.scalePressed,
-    ).animate(
-      CurvedAnimation(
-        parent: _pressController,
-        curve: AppMotion.curveStandard,
-      ),
-    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: AppMotion.scalePressed)
+        .animate(
+          CurvedAnimation(
+            parent: _pressController,
+            curve: AppMotion.curveStandard,
+          ),
+        );
   }
 
   @override
@@ -119,9 +117,9 @@ class _GameCardState extends State<GameCard>
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
                               DefaultGameVisual(
-                            title: widget.title,
-                            compact: true,
-                          ),
+                                title: widget.title,
+                                compact: true,
+                              ),
                           loadingBuilder: (context, child, progress) {
                             if (progress == null) return child;
                             return DefaultGameVisual(
@@ -162,8 +160,9 @@ class _GameCardState extends State<GameCard>
                             ),
                             decoration: BoxDecoration(
                               color: AppColors.surface.withValues(alpha: 0.95),
-                              borderRadius:
-                                  BorderRadius.circular(AppRadius.full),
+                              borderRadius: BorderRadius.circular(
+                                AppRadius.full,
+                              ),
                               boxShadow: AppShadows.card,
                             ),
                             child: Text(

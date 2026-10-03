@@ -1,5 +1,5 @@
 abstract final class AppConstants {
-  static const String appName = 'Board Oi';
+  static const String appName = 'Aura';
   static const String defaultLocale = 'en';
   static const String supportedLocaleEn = 'en';
   static const String supportedLocaleVi = 'vi';

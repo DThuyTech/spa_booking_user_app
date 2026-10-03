@@ -1,10 +1,10 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:board_oi/src/core/error/failure.dart';
-import 'package:board_oi/src/core/error/failure_mapper.dart';
-import 'package:board_oi/src/domain/entities/home/greeting.dart';
-import 'package:board_oi/src/domain/repositories/home/home_repository.dart';
-import 'package:board_oi/src/data/datasources/remote/home/home_remote_data_source.dart';
-import 'package:board_oi/src/data/mapper/home/greeting_mapper.dart';
+import 'package:spa_booking/src/core/error/failure.dart';
+import 'package:spa_booking/src/core/error/failure_mapper.dart';
+import 'package:spa_booking/src/domain/entities/home/greeting.dart';
+import 'package:spa_booking/src/domain/repositories/home/home_repository.dart';
+import 'package:spa_booking/src/data/datasources/remote/home/home_remote_data_source.dart';
+import 'package:spa_booking/src/data/mapper/home/greeting_mapper.dart';
 
 class HomeRepositoryImpl implements HomeRepository {
   final HomeRemoteDataSource _remoteDataSource;

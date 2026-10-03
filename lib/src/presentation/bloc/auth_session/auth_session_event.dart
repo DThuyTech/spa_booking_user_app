@@ -19,10 +19,7 @@ final class AuthSessionLoggedIn extends AuthSessionEvent {
   final User user;
   final TokenPair tokens;
 
-  const AuthSessionLoggedIn({
-    required this.user,
-    required this.tokens,
-  });
+  const AuthSessionLoggedIn({required this.user, required this.tokens});
 
   @override
   List<Object?> get props => [user, tokens];
@@ -41,4 +38,14 @@ final class LogoutRequested extends AuthSessionEvent {
 /// Dispatched when token refresh fails or the session has expired.
 final class SessionExpiredReceived extends AuthSessionEvent {
   const SessionExpiredReceived();
+}
+
+/// Dispatched when the current user's profile information has been updated.
+final class AuthSessionUserUpdated extends AuthSessionEvent {
+  final User user;
+
+  const AuthSessionUserUpdated(this.user);
+
+  @override
+  List<Object?> get props => [user];
 }

@@ -43,10 +43,7 @@ class _AppErrorViewState extends State<AppErrorView>
       curve: AppMotion.curveEntrance,
     );
     _scaleAnimation = Tween<double>(begin: 0.92, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animController,
-        curve: AppMotion.curveEntrance,
-      ),
+      CurvedAnimation(parent: _animController, curve: AppMotion.curveEntrance),
     );
     _animController.forward();
   }

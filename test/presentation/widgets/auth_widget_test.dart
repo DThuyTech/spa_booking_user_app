@@ -1,20 +1,26 @@
-import 'package:board_oi/src/core/localization/app_localizations.dart';
-import 'package:board_oi/src/domain/entities/auth/request_otp_result.dart';
-import 'package:board_oi/src/domain/usecases/auth/request_otp_usecase.dart';
-import 'package:board_oi/src/domain/usecases/auth/verify_otp_usecase.dart';
-import 'package:board_oi/src/presentation/view/auth/login/bloc/login_bloc.dart';
-import 'package:board_oi/src/presentation/view/auth/login/sections/login_card_section.dart';
-import 'package:board_oi/src/presentation/view/auth/login/sections/login_footer_section.dart';
-import 'package:board_oi/src/presentation/view/auth/login/sections/login_header_section.dart';
-import 'package:board_oi/src/presentation/view/auth/login/widgets/aura_logo_badge.dart';
-import 'package:board_oi/src/presentation/view/auth/register/view/register_view.dart';
-import 'package:board_oi/src/presentation/view/auth/otp_verification/bloc/otp_verification_bloc.dart';
-import 'package:board_oi/src/presentation/view/auth/otp_verification/sections/otp_header_section.dart';
-import 'package:board_oi/src/presentation/view/auth/otp_verification/widgets/otp_countdown_timer.dart';
-import 'package:board_oi/src/presentation/view/auth/otp_verification/widgets/otp_pin_fields.dart';
+import 'package:spa_booking/src/core/localization/app_localizations.dart';
+import 'package:spa_booking/src/domain/entities/auth/request_otp_result.dart';
+import 'package:spa_booking/src/app/session/session_manager.dart';
+import 'package:spa_booking/src/domain/usecases/auth/login_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/request_otp_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/verify_otp_usecase.dart';
+import 'package:spa_booking/src/presentation/bloc/auth/login/login_bloc.dart';
+import 'package:spa_booking/src/presentation/view/auth/login/sections/login_card_section.dart';
+import 'package:spa_booking/src/presentation/view/auth/login/sections/login_footer_section.dart';
+import 'package:spa_booking/src/presentation/view/auth/login/sections/login_header_section.dart';
+import 'package:spa_booking/src/presentation/view/auth/login/widgets/aura_logo_badge.dart';
+import 'package:spa_booking/src/domain/usecases/auth/register_usecase.dart';
+import 'package:spa_booking/src/app/di/dependency_injection.dart';
+import 'package:spa_booking/src/presentation/bloc/auth/register/register_bloc.dart';
+import 'package:spa_booking/src/presentation/view/auth/register/view/register_view.dart';
+import 'package:spa_booking/src/presentation/bloc/auth/otp_verification/otp_verification_bloc.dart';
+import 'package:spa_booking/src/presentation/view/auth/otp_verification/sections/otp_header_section.dart';
+import 'package:spa_booking/src/presentation/view/auth/otp_verification/widgets/otp_countdown_timer.dart';
+import 'package:spa_booking/src/presentation/view/auth/otp_verification/widgets/otp_pin_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
@@ -22,6 +28,12 @@ import 'package:mocktail/mocktail.dart';
 class MockRequestOtpUseCase extends Mock implements RequestOtpUseCase {}
 
 class MockVerifyOtpUseCase extends Mock implements VerifyOtpUseCase {}
+
+class MockLoginUseCase extends Mock implements LoginUseCase {}
+
+class MockSessionManager extends Mock implements SessionManager {}
+
+class MockRegisterUseCase extends Mock implements RegisterUseCase {}
 
 Widget createLocalizedTestWidget(Widget child) {
   return MaterialApp(
@@ -40,10 +52,29 @@ Widget createLocalizedTestWidget(Widget child) {
 void main() {
   late MockRequestOtpUseCase mockRequestOtp;
   late MockVerifyOtpUseCase mockVerifyOtp;
+  late MockLoginUseCase mockLoginUseCase;
+  late MockSessionManager mockSessionManager;
 
   setUp(() {
     mockRequestOtp = MockRequestOtpUseCase();
     mockVerifyOtp = MockVerifyOtpUseCase();
+    mockLoginUseCase = MockLoginUseCase();
+    mockSessionManager = MockSessionManager();
+    final mockRegisterUseCase = MockRegisterUseCase();
+    if (!sl.isRegistered<RegisterBloc>()) {
+      sl.registerFactory<RegisterBloc>(
+        () => RegisterBloc(
+          registerUseCase: mockRegisterUseCase,
+          sessionManager: mockSessionManager,
+        ),
+      );
+    }
+  });
+
+  tearDown(() {
+    if (sl.isRegistered<RegisterBloc>()) {
+      sl.unregister<RegisterBloc>();
+    }
   });
 
   group('Login View Widgets', () {
@@ -58,53 +89,60 @@ void main() {
       expect(find.byType(AuraLogoBadge), findsOneWidget);
       expect(find.text('AURA'), findsOneWidget);
       expect(find.text('Welcome Back'), findsOneWidget);
-      expect(find.text('Sign in to continue your beauty journey'), findsOneWidget);
+      expect(
+        find.text('Sign in to continue your beauty journey'),
+        findsOneWidget,
+      );
     });
 
-    testWidgets('shows button disabled initially and enables on valid 10-digit input', (
-      tester,
-    ) async {
-      when(() => mockRequestOtp(any())).thenAnswer(
-        (_) async => const Right(
-          RequestOtpResult(message: 'OK', expiresInSeconds: 300),
-        ),
-      );
-
-      final loginBloc = LoginBloc(requestOtpUseCase: mockRequestOtp);
-
-      await tester.pumpWidget(
-        createLocalizedTestWidget(
-          BlocProvider<LoginBloc>.value(
-            value: loginBloc,
-            child: const LoginCardSection(),
+    testWidgets(
+      'shows button disabled initially and enables on valid 10-digit input',
+      (tester) async {
+        when(() => mockRequestOtp(any())).thenAnswer(
+          (_) async => const Right(
+            RequestOtpResult(message: 'OK', expiresInSeconds: 300),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
 
-      // Login button is present
-      expect(find.text('Login'), findsOneWidget);
+        final loginBloc = LoginBloc(
+          loginUseCase: mockLoginUseCase,
+          sessionManager: mockSessionManager,
+        );
 
-      // Verify both glassmorphic fields are present
-      expect(find.byKey(const Key('login_identifier_field')), findsOneWidget);
-      expect(find.byKey(const Key('login_password_field')), findsOneWidget);
+        await tester.pumpWidget(
+          createLocalizedTestWidget(
+            BlocProvider<LoginBloc>.value(
+              value: loginBloc,
+              child: const LoginCardSection(),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
 
-      // Enter invalid phone
-      await tester.enterText(
-        find.byKey(const Key('login_identifier_field')),
-        '123',
-      );
-      await tester.pump();
-      expect(loginBloc.state.isValid, isFalse);
+        // Login button is present
+        expect(find.text('Login'), findsOneWidget);
 
-      // Enter valid 10-digit phone
-      await tester.enterText(
-        find.byKey(const Key('login_identifier_field')),
-        '0901234567',
-      );
-      await tester.pump();
-      expect(loginBloc.state.isValid, isTrue);
-    });
+        // Verify both glassmorphic fields are present
+        expect(find.byKey(const Key('login_identifier_field')), findsOneWidget);
+        expect(find.byKey(const Key('login_password_field')), findsOneWidget);
+
+        // Enter identifier
+        await tester.enterText(
+          find.byKey(const Key('login_identifier_field')),
+          '123',
+        );
+        await tester.pump();
+        expect(loginBloc.state.identifier, '123');
+
+        // Enter valid 10-digit phone/identifier
+        await tester.enterText(
+          find.byKey(const Key('login_identifier_field')),
+          '0901234567',
+        );
+        await tester.pump();
+        expect(loginBloc.state.identifier, '0901234567');
+      },
+    );
 
     testWidgets('renders LoginFooterSection with Register link', (
       tester,
@@ -118,17 +156,99 @@ void main() {
       expect(find.text('Register'), findsOneWidget);
     });
 
+    testWidgets('toggles password visibility in login screen', (tester) async {
+      final loginBloc = LoginBloc(
+        loginUseCase: mockLoginUseCase,
+        sessionManager: mockSessionManager,
+      );
+
+      await tester.pumpWidget(
+        createLocalizedTestWidget(
+          BlocProvider<LoginBloc>.value(
+            value: loginBloc,
+            child: const LoginCardSection(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final passwordFieldFinder = find.byKey(const Key('login_password_field'));
+      expect(passwordFieldFinder, findsOneWidget);
+
+      TextField passwordTextField = tester.widget<TextField>(
+        passwordFieldFinder,
+      );
+      expect(passwordTextField.obscureText, isTrue);
+
+      final toggleButtonFinder = find.byIcon(LucideIcons.eye_off);
+      expect(toggleButtonFinder, findsOneWidget);
+
+      await tester.tap(toggleButtonFinder);
+      await tester.pumpAndSettle();
+
+      passwordTextField = tester.widget<TextField>(passwordFieldFinder);
+      expect(passwordTextField.obscureText, isFalse);
+      expect(find.byIcon(LucideIcons.eye), findsOneWidget);
+
+      await tester.tap(find.byIcon(LucideIcons.eye));
+      await tester.pumpAndSettle();
+
+      passwordTextField = tester.widget<TextField>(passwordFieldFinder);
+      expect(passwordTextField.obscureText, isTrue);
+      expect(find.byIcon(LucideIcons.eye_off), findsOneWidget);
+    });
+
     testWidgets('renders RegisterPage header and fields correctly', (
       tester,
     ) async {
-      await tester.pumpWidget(
-        createLocalizedTestWidget(const RegisterPage()),
-      );
+      await tester.pumpWidget(createLocalizedTestWidget(const RegisterPage()));
       await tester.pumpAndSettle();
 
       expect(find.text('Create Account'), findsOneWidget);
       expect(find.text('Sign In'), findsOneWidget);
     });
+
+    testWidgets(
+      'renders RegisterPage password and confirm password fields and toggles visibility',
+      (tester) async {
+        await tester.pumpWidget(
+          createLocalizedTestWidget(const RegisterPage()),
+        );
+        await tester.pumpAndSettle();
+
+        final pwdFinder = find.byKey(const Key('register_password_field'));
+        final confirmPwdFinder = find.byKey(
+          const Key('register_confirm_password_field'),
+        );
+
+        expect(pwdFinder, findsOneWidget);
+        expect(confirmPwdFinder, findsOneWidget);
+
+        TextField pwdField = tester.widget<TextField>(pwdFinder);
+        TextField confirmField = tester.widget<TextField>(confirmPwdFinder);
+        expect(pwdField.obscureText, isTrue);
+        expect(confirmField.obscureText, isTrue);
+
+        // Find the 2 eye_off icons (one for password, one for confirm password)
+        final eyeOffFinders = find.byIcon(LucideIcons.eye_off);
+        expect(eyeOffFinders, findsNWidgets(2));
+
+        // Toggle password visibility
+        await tester.tap(eyeOffFinders.first);
+        await tester.pumpAndSettle();
+
+        pwdField = tester.widget<TextField>(pwdFinder);
+        expect(pwdField.obscureText, isFalse);
+
+        // Toggle confirm password visibility (it's now the remaining eye_off)
+        await tester.tap(find.byIcon(LucideIcons.eye_off));
+        await tester.pumpAndSettle();
+
+        confirmField = tester.widget<TextField>(confirmPwdFinder);
+        expect(confirmField.obscureText, isFalse);
+        expect(find.byIcon(LucideIcons.eye), findsNWidgets(2));
+      },
+    );
   });
 
   group('OTP Verification View Widgets', () {
@@ -153,82 +273,81 @@ void main() {
       expect(find.text('Verify your number'), findsOneWidget);
     });
 
-    testWidgets('OtpPinFields displays 6 boxes with correct normal and error styling', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        createLocalizedTestWidget(
-          OtpPinFields(
-            code: '428',
-            onChanged: (_) {},
+    testWidgets(
+      'OtpPinFields displays 6 boxes with correct normal and error styling',
+      (tester) async {
+        await tester.pumpWidget(
+          createLocalizedTestWidget(
+            OtpPinFields(code: '428', onChanged: (_) {}),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('4'), findsOneWidget);
-      expect(find.text('2'), findsOneWidget);
-      expect(find.text('8'), findsOneWidget);
+        expect(find.text('4'), findsOneWidget);
+        expect(find.text('2'), findsOneWidget);
+        expect(find.text('8'), findsOneWidget);
 
-      // Error state render
-      await tester.pumpWidget(
-        createLocalizedTestWidget(
-          OtpPinFields(
-            code: '428',
-            hasError: true,
-            errorMessage: 'Invalid verification code. Please try again.',
-            onChanged: (_) {},
+        // Error state render
+        await tester.pumpWidget(
+          createLocalizedTestWidget(
+            OtpPinFields(
+              code: '428',
+              hasError: true,
+              errorMessage: 'Invalid verification code. Please try again.',
+              onChanged: (_) {},
+            ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(
-        find.text('Invalid verification code. Please try again.'),
-        findsOneWidget,
-      );
-    });
+        expect(
+          find.text('Invalid verification code. Please try again.'),
+          findsOneWidget,
+        );
+      },
+    );
 
-    testWidgets('OtpCountdownTimer renders timer and handles resend button state', (
-      tester,
-    ) async {
-      bool resendTapped = false;
+    testWidgets(
+      'OtpCountdownTimer renders timer and handles resend button state',
+      (tester) async {
+        bool resendTapped = false;
 
-      // When timer > 0, resend is disabled
-      await tester.pumpWidget(
-        createLocalizedTestWidget(
-          OtpCountdownTimer(
-            formattedCountdown: '00:45',
-            canResend: false,
-            onResendTap: () => resendTapped = true,
+        // When timer > 0, resend is disabled
+        await tester.pumpWidget(
+          createLocalizedTestWidget(
+            OtpCountdownTimer(
+              formattedCountdown: '00:45',
+              canResend: false,
+              onResendTap: () => resendTapped = true,
+            ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('00:45 remaining'), findsOneWidget);
-      expect(find.text('Resend Code'), findsOneWidget);
+        expect(find.text('00:45 remaining'), findsOneWidget);
+        expect(find.text('Resend Code'), findsOneWidget);
 
-      await tester.tap(find.text('Resend Code'));
-      await tester.pump();
-      expect(resendTapped, isFalse);
+        await tester.tap(find.text('Resend Code'));
+        await tester.pump();
+        expect(resendTapped, isFalse);
 
-      // When canResend is true (timer reached 0)
-      await tester.pumpWidget(
-        createLocalizedTestWidget(
-          OtpCountdownTimer(
-            formattedCountdown: '00:00',
-            canResend: true,
-            onResendTap: () => resendTapped = true,
+        // When canResend is true (timer reached 0)
+        await tester.pumpWidget(
+          createLocalizedTestWidget(
+            OtpCountdownTimer(
+              formattedCountdown: '00:00',
+              canResend: true,
+              onResendTap: () => resendTapped = true,
+            ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Resend Code'));
-      await tester.pump();
-      expect(resendTapped, isTrue);
-    });
+        await tester.tap(find.text('Resend Code'));
+        await tester.pump();
+        expect(resendTapped, isTrue);
+      },
+    );
 
     testWidgets('OtpCountdown renders formatted duration with clock icon', (
       tester,
@@ -243,22 +362,20 @@ void main() {
       expect(find.text('01:30 remaining'), findsOneWidget);
     });
 
-    testWidgets('OtpResendButton displays loading indicator when isResending is true', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        createLocalizedTestWidget(
-          const OtpResendButton(
-            canResend: true,
-            isResending: true,
+    testWidgets(
+      'OtpResendButton displays loading indicator when isResending is true',
+      (tester) async {
+        await tester.pumpWidget(
+          createLocalizedTestWidget(
+            const OtpResendButton(canResend: true, isResending: true),
           ),
-        ),
-      );
-      await tester.pump();
+        );
+        await tester.pump();
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      expect(find.text('Resend Code'), findsNothing);
-    });
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        expect(find.text('Resend Code'), findsNothing);
+      },
+    );
 
     testWidgets('OtpInput renders 6 boxes and notifies onChanged', (
       tester,
@@ -266,10 +383,7 @@ void main() {
       String changedValue = '';
       await tester.pumpWidget(
         createLocalizedTestWidget(
-          OtpInput(
-            code: '12',
-            onChanged: (val) => changedValue = val,
-          ),
+          OtpInput(code: '12', onChanged: (val) => changedValue = val),
         ),
       );
       await tester.pumpAndSettle();

@@ -6,11 +6,11 @@ import '../design_system/tokens/app_spacing.dart';
 import '../design_system/tokens/app_typography.dart';
 
 enum AppEmptyStateVariant {
-  noMatches,    // No nearby matches
-  noEvents,     // No events found
-  noVenues,     // No venues
-  noResults,    // Empty search
-  generic,      // Default
+  noMatches, // No nearby matches
+  noEvents, // No events found
+  noVenues, // No venues
+  noResults, // Empty search
+  generic, // Default
 }
 
 /// Board Ơi Branded Empty State
@@ -50,14 +50,12 @@ class _AppEmptyStateState extends State<AppEmptyState>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: AppMotion.slow,
-    );
+    _controller = AnimationController(vsync: this, duration: AppMotion.slow);
     _fadeAnim = CurvedAnimation(parent: _controller, curve: AppMotion.enter);
-    _scaleAnim = Tween<double>(begin: 0.88, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: AppMotion.enter),
-    );
+    _scaleAnim = Tween<double>(
+      begin: 0.88,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: AppMotion.enter));
     _controller.forward();
   }
 
@@ -69,36 +67,35 @@ class _AppEmptyStateState extends State<AppEmptyState>
 
   _EmptyConfig get _config => switch (widget.variant) {
     AppEmptyStateVariant.noMatches => const _EmptyConfig(
-        emoji: '🎲',
-        title: 'Chưa có bàn nào gần đây',
-        description:
-            'Hãy là người đầu tiên mở bàn và mời bạn bè cùng chơi.',
-        actionText: 'Mở bàn mới',
-      ),
+      emoji: '🎲',
+      title: 'Chưa có bàn nào gần đây',
+      description: 'Hãy là người đầu tiên mở bàn và mời bạn bè cùng chơi.',
+      actionText: 'Mở bàn mới',
+    ),
     AppEmptyStateVariant.noEvents => const _EmptyConfig(
-        emoji: '🎪',
-        title: 'Chưa có sự kiện nào',
-        description: 'Các sự kiện mới đang được lên kế hoạch. Quay lại sau nhé!',
-        actionText: null,
-      ),
+      emoji: '🎪',
+      title: 'Chưa có sự kiện nào',
+      description: 'Các sự kiện mới đang được lên kế hoạch. Quay lại sau nhé!',
+      actionText: null,
+    ),
     AppEmptyStateVariant.noVenues => const _EmptyConfig(
-        emoji: '☕',
-        title: 'Chưa có địa điểm nào',
-        description: 'Khám phá khu vực khác hoặc mở rộng phạm vi tìm kiếm.',
-        actionText: null,
-      ),
+      emoji: '☕',
+      title: 'Chưa có địa điểm nào',
+      description: 'Khám phá khu vực khác hoặc mở rộng phạm vi tìm kiếm.',
+      actionText: null,
+    ),
     AppEmptyStateVariant.noResults => const _EmptyConfig(
-        emoji: '🔍',
-        title: 'Không tìm thấy kết quả',
-        description: 'Thử từ khoá khác hoặc bỏ bớt bộ lọc.',
-        actionText: 'Xoá bộ lọc',
-      ),
+      emoji: '🔍',
+      title: 'Không tìm thấy kết quả',
+      description: 'Thử từ khoá khác hoặc bỏ bớt bộ lọc.',
+      actionText: 'Xoá bộ lọc',
+    ),
     AppEmptyStateVariant.generic => const _EmptyConfig(
-        emoji: '♟️',
-        title: 'Chưa có gì ở đây',
-        description: 'Nội dung sẽ xuất hiện khi có dữ liệu mới.',
-        actionText: null,
-      ),
+      emoji: '♟️',
+      title: 'Chưa có gì ở đây',
+      description: 'Nội dung sẽ xuất hiện khi có dữ liệu mới.',
+      actionText: null,
+    ),
   };
 
   @override
@@ -122,10 +119,7 @@ class _AppEmptyStateState extends State<AppEmptyState>
               mainAxisSize: MainAxisSize.min,
               children: [
                 // ── Illustrated motif ─────────────────────────────────────
-                _BoardGameMotif(
-                  emoji: cfg.emoji,
-                  legacyIcon: widget.icon,
-                ),
+                _BoardGameMotif(emoji: cfg.emoji, legacyIcon: widget.icon),
 
                 const SizedBox(height: AppSpacing.lg),
 
@@ -202,10 +196,7 @@ class _BoardGameMotif extends StatelessWidget {
       child: Center(
         child: legacyIcon != null
             ? Icon(legacyIcon, size: 40, color: AppColors.softBrown)
-            : Text(
-                emoji,
-                style: const TextStyle(fontSize: 44),
-              ),
+            : Text(emoji, style: const TextStyle(fontSize: 44)),
       ),
     );
   }

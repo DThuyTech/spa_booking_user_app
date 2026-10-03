@@ -1,6 +1,6 @@
-import 'package:board_oi/src/core/network/auth/token_pair.dart';
-import 'package:board_oi/src/core/network/auth/token_refresh_coordinator.dart';
-import 'package:board_oi/src/core/network/auth/token_storage.dart';
+import 'package:spa_booking/src/core/network/auth/token_pair.dart';
+import 'package:spa_booking/src/core/network/auth/token_refresh_coordinator.dart';
+import 'package:spa_booking/src/core/network/auth/token_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class MockTokenStorage implements TokenStorage {

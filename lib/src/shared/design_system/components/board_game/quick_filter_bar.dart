@@ -44,10 +44,14 @@ class QuickFilterBar extends StatelessWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.primaryBrown : AppColors.surface,
+                  color: isSelected
+                      ? AppColors.primaryBrown
+                      : AppColors.surface,
                   borderRadius: BorderRadius.circular(AppRadius.full),
                   border: Border.all(
-                    color: isSelected ? AppColors.primaryBrown : AppColors.border,
+                    color: isSelected
+                        ? AppColors.primaryBrown
+                        : AppColors.border,
                   ),
                   boxShadow: isSelected ? AppShadows.neuLow : null,
                 ),

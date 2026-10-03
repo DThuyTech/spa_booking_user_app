@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = board_oi
+PRODUCT_NAME = spa_booking
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.production.base.boardOi
+PRODUCT_BUNDLE_IDENTIFIER = com.production.base.SpaBooking
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2026 com.production.base. All rights reserved.

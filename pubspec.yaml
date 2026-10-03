@@ -1,5 +1,5 @@
-name: board_oi
-description: "A new Flutter project."
+name: spa_booking
+description: "Aura - Premium Spa & Salon Booking"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -50,6 +50,10 @@ dependencies:
   json_annotation: ^4.12.0
   freezed_annotation: ^3.1.0
   flutter_lucide: ^1.48.0
+  random_avatar: ^0.0.8
+  curved_navigation_bar: ^1.0.6
+  pretty_dio_logger: ^1.4.0
+  logger: ^2.8.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -80,6 +84,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - assets/images/
     - assets/icons/
     - assets/onboard/

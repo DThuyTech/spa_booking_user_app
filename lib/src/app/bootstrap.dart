@@ -44,6 +44,6 @@ abstract final class AppBootstrap {
     await sessionManager.restoreSession();
 
     // 6. Run Application
-    runApp(const BoardOiApp());
+    runApp(const SpaBookingApp());
   }
 }

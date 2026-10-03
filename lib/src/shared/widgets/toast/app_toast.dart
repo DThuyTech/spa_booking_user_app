@@ -179,15 +179,13 @@ class _ToastWidgetState extends State<_ToastWidget>
       curve: AppMotion.curveEntrance,
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, -0.4),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animController,
-        curve: AppMotion.curveEntrance,
-      ),
-    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0.0, -0.4), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _animController,
+            curve: AppMotion.curveEntrance,
+          ),
+        );
 
     _animController.forward();
   }

@@ -112,7 +112,11 @@ abstract final class AppSkeleton {
                       const SizedBox(width: -6),
                       circle(size: 24),
                       const Spacer(),
-                      _shimmerLine(width: 72, height: 28, radius: AppRadius.button),
+                      _shimmerLine(
+                        width: 72,
+                        height: 28,
+                        radius: AppRadius.button,
+                      ),
                     ],
                   ),
                 ],
@@ -151,11 +155,7 @@ abstract final class AppSkeleton {
             // Stats row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _statBlock(),
-                _statBlock(),
-                _statBlock(),
-              ],
+              children: [_statBlock(), _statBlock(), _statBlock()],
             ),
             const SizedBox(height: AppSpacing.xl),
             // Games row
@@ -256,9 +256,17 @@ abstract final class AppSkeleton {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      _shimmerLine(width: 60, height: 18, radius: AppRadius.full),
+                      _shimmerLine(
+                        width: 60,
+                        height: 18,
+                        radius: AppRadius.full,
+                      ),
                       const SizedBox(width: 6),
-                      _shimmerLine(width: 44, height: 18, radius: AppRadius.full),
+                      _shimmerLine(
+                        width: 44,
+                        height: 18,
+                        radius: AppRadius.full,
+                      ),
                     ],
                   ),
                 ],

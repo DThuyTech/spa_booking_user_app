@@ -12,15 +12,17 @@ class LoggingInterceptor extends Interceptor {
     options.extra['request_start_time'] = DateTime.now().millisecondsSinceEpoch;
 
     final sanitizedHeaders = AppLogger.sanitizeMap(options.headers);
-
     final sanitizedData = options.data is Map<String, dynamic>
         ? AppLogger.sanitizeMap(options.data as Map<String, dynamic>)
         : options.data;
 
+    final prettyBody = AppLogger.formatJson(sanitizedData);
+    final prettyHeaders = AppLogger.formatJson(sanitizedHeaders);
+
     logger.debug(
-      '--> ${options.method} ${options.uri}\n'
-      'Headers: $sanitizedHeaders\n'
-      'Data: $sanitizedData',
+      '🌐 [API REQUEST] --> ${options.method} ${options.uri}\n'
+      'Headers:\n$prettyHeaders\n'
+      'Body:\n$prettyBody',
     );
 
     handler.next(options);
@@ -38,9 +40,11 @@ class LoggingInterceptor extends Interceptor {
         ? AppLogger.sanitizeMap(response.data as Map<String, dynamic>)
         : response.data;
 
+    final prettyBody = AppLogger.formatJson(sanitizedData);
+
     logger.info(
-      '<-- ${response.statusCode} ${response.requestOptions.method} ${response.requestOptions.uri} ($duration)\n'
-      'Response: $sanitizedData',
+      '✅ [API RESPONSE] <-- ${response.statusCode} ${response.requestOptions.method} ${response.requestOptions.uri} ($duration)\n'
+      'Body:\n$prettyBody',
     );
 
     handler.next(response);
@@ -53,10 +57,12 @@ class LoggingInterceptor extends Interceptor {
         ? '${DateTime.now().millisecondsSinceEpoch - startTime}ms'
         : 'unknown';
 
+    final prettyResponse = AppLogger.formatJson(err.response?.data);
+
     logger.error(
-      '<-- ERROR ${err.response?.statusCode ?? 'No Response'} ${err.requestOptions.method} ${err.requestOptions.uri} ($duration)\n'
+      '❌ [API ERROR] <-- ${err.response?.statusCode ?? 'No Response'} ${err.requestOptions.method} ${err.requestOptions.uri} ($duration)\n'
       'Message: ${err.message}\n'
-      'Response: ${err.response?.data}',
+      'Error Body:\n$prettyResponse',
       err,
       err.stackTrace,
     );

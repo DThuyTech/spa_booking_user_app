@@ -1,5 +1,5 @@
-import 'package:board_oi/src/shared/design_system/tokens/app_colors.dart';
-import 'package:board_oi/src/shared/design_system/tokens/app_radius.dart';
+import 'package:spa_booking/src/shared/design_system/tokens/app_colors.dart';
+import 'package:spa_booking/src/shared/design_system/tokens/app_radius.dart';
 import 'package:flutter/material.dart';
 
 /// Skeleton loading placeholder for Home sections.
@@ -23,9 +23,10 @@ class _HomeSkeletonState extends State<HomeSkeleton>
       duration: const Duration(milliseconds: 1200),
     )..repeat(reverse: true);
 
-    _animation = Tween<double>(begin: 0.35, end: 0.85).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0.35,
+      end: 0.85,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

@@ -1,7 +1,7 @@
-import 'package:board_oi/src/presentation/view/onboarding/widgets/onboarding_glass_card.dart';
-import 'package:board_oi/src/presentation/view/onboarding/widgets/onboarding_page_indicator.dart';
-import 'package:board_oi/src/shared/design_system/components/buttons/app_glass_button.dart';
-import 'package:board_oi/src/shared/design_system/components/cards/app_glass_card.dart';
+import 'package:spa_booking/src/presentation/view/onboarding/widgets/onboarding_glass_card.dart';
+import 'package:spa_booking/src/presentation/view/onboarding/widgets/onboarding_page_indicator.dart';
+import 'package:spa_booking/src/shared/design_system/components/buttons/app_glass_button.dart';
+import 'package:spa_booking/src/shared/design_system/components/cards/app_glass_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -32,10 +32,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: AppGlassButton(
-              label: 'Get Started',
-              isLoading: true,
-            ),
+            body: AppGlassButton(label: 'Get Started', isLoading: true),
           ),
         ),
       );
@@ -49,11 +46,7 @@ void main() {
     testWidgets('renders child inside glassmorphic container', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: AppGlassCard(
-              child: Text('Glass Card Content'),
-            ),
-          ),
+          home: Scaffold(body: AppGlassCard(child: Text('Glass Card Content'))),
         ),
       );
 
@@ -63,15 +56,13 @@ void main() {
   });
 
   group('OnboardingPageIndicator', () {
-    testWidgets('renders correct number of indicators with active pill',
-        (tester) async {
+    testWidgets('renders correct number of indicators with active pill', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: OnboardingPageIndicator(
-              count: 3,
-              activeIndex: 1,
-            ),
+            body: OnboardingPageIndicator(count: 3, activeIndex: 1),
           ),
         ),
       );
@@ -79,9 +70,9 @@ void main() {
       expect(find.byType(AnimatedContainer), findsNWidgets(3));
 
       // The active indicator (index 1) has width 28
-      final containers = tester.widgetList<AnimatedContainer>(
-        find.byType(AnimatedContainer),
-      ).toList();
+      final containers = tester
+          .widgetList<AnimatedContainer>(find.byType(AnimatedContainer))
+          .toList();
 
       expect(containers[0].constraints?.maxWidth ?? 6.0, 6.0);
       expect(containers[1].constraints?.maxWidth ?? 28.0, 28.0);
@@ -90,8 +81,9 @@ void main() {
   });
 
   group('OnboardingGlassCard', () {
-    testWidgets('renders title, description, and handles button click',
-        (tester) async {
+    testWidgets('renders title, description, and handles button click', (
+      tester,
+    ) async {
       bool buttonClicked = false;
 
       await tester.pumpWidget(
