@@ -1,3 +1,5 @@
+import 'package:spa_booking/src/domain/entities/notification/notification_entity.dart';
+
 enum NotificationType { booking, voucher, system }
 
 class VoucherNotificationData {
@@ -50,6 +52,8 @@ class NotificationItem {
   final bool isRead;
   final VoucherNotificationData? voucherData;
   final BookingNotificationData? bookingData;
+  final String? referenceType;
+  final String? referenceId;
 
   const NotificationItem({
     required this.id,
@@ -61,7 +65,63 @@ class NotificationItem {
     this.isRead = false,
     this.voucherData,
     this.bookingData,
+    this.referenceType,
+    this.referenceId,
   });
+
+  factory NotificationItem.fromEntity(NotificationEntity entity) {
+    NotificationType nType = NotificationType.system;
+    final upperType = entity.type.toUpperCase();
+    if (upperType == 'BOOKING') {
+      nType = NotificationType.booking;
+    } else if (upperType == 'VOUCHER' || upperType == 'PAYMENT') {
+      nType = NotificationType.voucher;
+    } else {
+      nType = NotificationType.system;
+    }
+
+    final createdAt = entity.createdAt;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final itemDate = DateTime(createdAt.year, createdAt.month, createdAt.day);
+    final diffDays = today.difference(itemDate).inDays;
+
+    String timeGroup = 'Earlier';
+    if (diffDays == 0) {
+      timeGroup = 'Today';
+    } else if (diffDays == 1) {
+      timeGroup = 'Yesterday';
+    }
+
+    final hour = createdAt.hour.toString().padLeft(2, '0');
+    final minute = createdAt.minute.toString().padLeft(2, '0');
+    final timeStr = diffDays == 0
+        ? '$hour:$minute'
+        : '${createdAt.day.toString().padLeft(2, '0')}/${createdAt.month.toString().padLeft(2, '0')} $hour:$minute';
+
+    return NotificationItem(
+      id: entity.id,
+      type: nType,
+      title: entity.title,
+      subtitle: entity.message,
+      timestamp: timeStr,
+      timeGroup: timeGroup,
+      isRead: entity.isRead,
+      referenceType: entity.referenceType,
+      referenceId: entity.referenceId,
+      bookingData:
+          nType == NotificationType.booking && entity.referenceId != null
+          ? BookingNotificationData(
+              salonName: entity.title,
+              serviceName: entity.message,
+              stylist: '',
+              date: '${createdAt.day}/${createdAt.month}/${createdAt.year}',
+              time: '$hour:$minute',
+              timestamp: timeStr,
+            )
+          : null,
+    );
+  }
 
   NotificationItem copyWith({
     String? id,
@@ -73,6 +133,8 @@ class NotificationItem {
     bool? isRead,
     VoucherNotificationData? voucherData,
     BookingNotificationData? bookingData,
+    String? referenceType,
+    String? referenceId,
   }) {
     return NotificationItem(
       id: id ?? this.id,
@@ -84,6 +146,8 @@ class NotificationItem {
       isRead: isRead ?? this.isRead,
       voucherData: voucherData ?? this.voucherData,
       bookingData: bookingData ?? this.bookingData,
+      referenceType: referenceType ?? this.referenceType,
+      referenceId: referenceId ?? this.referenceId,
     );
   }
 }

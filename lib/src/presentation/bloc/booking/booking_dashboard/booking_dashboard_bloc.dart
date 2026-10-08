@@ -10,6 +10,8 @@ export 'booking_dashboard_state.dart';
 class BookingDashboardBloc
     extends Bloc<BookingDashboardEvent, BookingDashboardState> {
   final GetCustomerBookingsUseCase getCustomerBookingsUseCase;
+  String? filterStatus;
+  String? filterDate;
 
   BookingDashboardBloc({required this.getCustomerBookingsUseCase})
     : super(const BookingDashboardState()) {
@@ -23,14 +25,25 @@ class BookingDashboardBloc
     Emitter<BookingDashboardState> emit,
   ) async {
     final tab = event.tab ?? state.currentTab;
+    if (event.status != null) filterStatus = event.status;
+    if (event.date != null) filterDate = event.date;
+
     if (!event.isRefresh) {
       emit(
         state.copyWith(status: BookingDashboardStatus.loading, failure: null),
       );
     }
 
+    final queryStatus = (event.status ?? filterStatus);
+    final normalizedStatus = (queryStatus == null || queryStatus == 'ALL')
+        ? null
+        : queryStatus;
+    final queryDate = event.date ?? filterDate;
+
     final result = await getCustomerBookingsUseCase(
       tab: tab,
+      status: normalizedStatus,
+      date: queryDate,
       page: 1,
       limit: 20,
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../shared/shared.dart';
 import '../widgets/home_special_offer_card.dart';
 
 class HomeSpecialOffersSection extends StatelessWidget {
@@ -22,11 +23,11 @@ class HomeSpecialOffersSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            'Special Offers',
-            style: TextStyle(
+            context.l10n.specialOffers,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
               color: _textDark,

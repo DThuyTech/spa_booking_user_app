@@ -1,8 +1,8 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:spa_booking/src/core/error/failure.dart';
 import 'package:spa_booking/src/core/error/failure_mapper.dart';
+import 'package:spa_booking/src/domain/entities/favorite/favorite_store_entity.dart';
 import '../../../data/datasources/remote/favorite/favorite_remote_data_source.dart';
-import '../../../domain/entities/favorite/favorite_store_entity.dart';
 import '../../../domain/repositories/favorite/favorite_repository.dart';
 
 class FavoriteRepositoryImpl implements FavoriteRepository {
@@ -22,6 +22,26 @@ class FavoriteRepositoryImpl implements FavoriteRepository {
       );
       final entities = response.items.map((m) => m.toEntity()).toList();
       return Right(entities);
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> toggleFavorite(String storeId) async {
+    try {
+      final result = await remoteDataSource.toggleFavorite(storeId);
+      return Right(result);
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> checkFavorite(String storeId) async {
+    try {
+      final result = await remoteDataSource.checkFavorite(storeId);
+      return Right(result);
     } catch (e) {
       return Left(FailureMapper.map(e));
     }

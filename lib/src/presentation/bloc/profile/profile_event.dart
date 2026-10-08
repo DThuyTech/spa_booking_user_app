@@ -18,3 +18,7 @@ class ProfileRefreshed extends ProfileEvent {
 class ProfileLogoutRequested extends ProfileEvent {
   const ProfileLogoutRequested();
 }
+
+class ProfileDeleteAccountRequested extends ProfileEvent {
+  const ProfileDeleteAccountRequested();
+}

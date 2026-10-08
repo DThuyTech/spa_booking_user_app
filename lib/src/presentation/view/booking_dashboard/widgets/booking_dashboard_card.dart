@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../shared/shared.dart';
-import '../mockup_data/booking_dashboard_mock_data.dart';
+import '../models/booking_dashboard_models.dart';
 
 class BookingDashboardCard extends StatelessWidget {
   final BookingDashboardItem item;

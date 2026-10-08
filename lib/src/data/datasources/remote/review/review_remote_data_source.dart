@@ -1,5 +1,8 @@
 import 'package:spa_booking/src/core/network/network_client.dart';
+import 'package:spa_booking/src/data/model/review/review_list_response_model.dart';
 import 'package:spa_booking/src/data/model/review/review_model.dart';
+
+import '../../../model/review/user_review_model.dart';
 
 abstract interface class ReviewRemoteDataSource {
   Future<ReviewListResponseModel> getStoreReviews({
@@ -23,6 +26,22 @@ abstract interface class ReviewRemoteDataSource {
     required String comment,
     List<String> images = const [],
   });
+
+  Future<UserReviewListResponseModel> getMyReviews({
+    int page = 1,
+    int limit = 10,
+  });
+
+  Future<UserReviewModel> getMyReviewDetail(String reviewId);
+
+  Future<UserReviewModel> updateMyReview({
+    required String reviewId,
+    int? rating,
+    String? comment,
+    List<String>? images,
+  });
+
+  Future<bool> deleteMyReview(String reviewId);
 }
 
 class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
@@ -138,5 +157,71 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
     throw const FormatException(
       'Empty response received for create booking review',
     );
+  }
+
+  @override
+  Future<UserReviewListResponseModel> getMyReviews({
+    int page = 1,
+    int limit = 10,
+  }) async {
+    final response = await _client.get<dynamic>(
+      '/customer/reviews',
+      queryParameters: {'page': page, 'limit': limit},
+    );
+    final rawData = response.data;
+    if (rawData is Map<String, dynamic>) {
+      return UserReviewListResponseModel.fromJson(rawData);
+    }
+    return const UserReviewListResponseModel();
+  }
+
+  @override
+  Future<UserReviewModel> getMyReviewDetail(String reviewId) async {
+    final response = await _client.get<dynamic>('/customer/reviews/$reviewId');
+    final rawData = response.data;
+    if (rawData is Map<String, dynamic>) {
+      final payload = (rawData['data'] as Map<String, dynamic>?) ?? rawData;
+      return UserReviewModel.fromJson(payload);
+    }
+    throw const FormatException('Empty response received for review detail');
+  }
+
+  @override
+  Future<UserReviewModel> updateMyReview({
+    required String reviewId,
+    int? rating,
+    String? comment,
+    List<String>? images,
+  }) async {
+    final body = <String, dynamic>{};
+    if (rating != null) body['rating'] = rating;
+    if (comment != null) body['comment'] = comment;
+    if (images != null) body['images'] = images;
+
+    final response = await _client.patch<dynamic>(
+      '/customer/reviews/$reviewId',
+      data: body,
+    );
+    final rawData = response.data;
+    if (rawData is Map<String, dynamic>) {
+      final payload = (rawData['data'] as Map<String, dynamic>?) ?? rawData;
+      return UserReviewModel.fromJson(payload);
+    }
+    throw const FormatException('Empty response received for update review');
+  }
+
+  @override
+  Future<bool> deleteMyReview(String reviewId) async {
+    final response = await _client.delete<dynamic>(
+      '/customer/reviews/$reviewId',
+    );
+    final rawData = response.data;
+    if (rawData is Map<String, dynamic>) {
+      final data = rawData['data'];
+      if (data is Map<String, dynamic> && data['success'] != null) {
+        return data['success'] == true;
+      }
+    }
+    return true;
   }
 }

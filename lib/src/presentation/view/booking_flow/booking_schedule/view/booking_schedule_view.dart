@@ -13,7 +13,6 @@ import '../../../../../shared/shared.dart';
 import '../../booking_detail/view/booking_detail_view.dart';
 import '../../models/booking_models.dart';
 import '../body_view/booking_schedule_body_view.dart';
-import '../mockup_data/booking_schedule_mock_data.dart';
 import '../utils/schedule_grid_mapper.dart';
 
 @RoutePage()
@@ -26,7 +25,7 @@ class BookingSchedulePage extends StatelessWidget {
   const BookingSchedulePage({
     super.key,
     this.storeId,
-    this.salonName = 'LUXE SALON',
+    required this.salonName,
     this.selectedServices,
     this.selectedStaffId,
   });
@@ -51,7 +50,7 @@ class BookingScheduleView extends StatelessWidget {
   const BookingScheduleView({
     super.key,
     this.storeId,
-    this.salonName = 'LUXE SALON',
+    required this.salonName,
     this.selectedServices,
     this.selectedStaffId,
   });
@@ -104,7 +103,7 @@ class _BookingScheduleContentView extends StatefulWidget {
 
   const _BookingScheduleContentView({
     this.storeId,
-    this.salonName = 'LUXE SALON',
+    required this.salonName,
     this.selectedServices,
     this.selectedStaffId,
   });
@@ -360,9 +359,10 @@ class _BookingScheduleContentViewState
         emptyMessage = 'No booking slots available on this day';
       }
     } else {
-      staffMembers = BookingScheduleMockData.staffMembers;
-      timeColumns = BookingScheduleMockData.timeColumns;
-      slots = BookingScheduleMockData.defaultSlots;
+      staffMembers = const [];
+      timeColumns = const [];
+      slots = const [];
+      emptyMessage = 'No booking slots available';
     }
 
     return Scaffold(

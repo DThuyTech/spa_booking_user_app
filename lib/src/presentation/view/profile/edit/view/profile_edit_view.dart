@@ -1,11 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../../shared/shared.dart';
 import '../../../../../app/di/dependency_injection.dart';
 import '../../../../../app/router/app_router.gr.dart';
 import '../../../../../domain/entities/auth/user.dart';
-import '../../../../../shared/widgets/toast/app_toast.dart';
 import '../../../../bloc/profile_edit/profile_edit_bloc.dart';
 import '../body_view/profile_edit_body_view.dart';
 import '../widgets/profile_edit_circular_button.dart';
@@ -46,6 +45,7 @@ class ProfileEditView extends StatefulWidget {
 
 class _ProfileEditViewState extends State<ProfileEditView> {
   late final TextEditingController _fullNameController;
+  late final TextEditingController _phoneNumberController;
   late final TextEditingController _dobController;
   late final TextEditingController _genderController;
 
@@ -59,6 +59,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     _fullNameController = TextEditingController(text: state.fullName);
     _dobController = TextEditingController(text: state.displayDateOfBirth);
     _genderController = TextEditingController(text: state.gender);
+    _phoneNumberController = TextEditingController(text: state.phoneNumber);
   }
 
   @override
@@ -123,17 +124,22 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileEditBloc, ProfileEditState>(
-      listenWhen: (prev, current) =>
-          prev.status != current.status ||
-          prev.errorMessage != current.errorMessage ||
-          prev.fullName != current.fullName ||
-          prev.phoneNumber != current.phoneNumber ||
-          prev.dateOfBirth != current.dateOfBirth ||
-          prev.gender != current.gender,
+      listenWhen: (prev, current) {
+        return prev.status != current.status ||
+            prev.errorMessage != current.errorMessage ||
+            prev.fullName != current.fullName ||
+            prev.phoneNumber != current.phoneNumber ||
+            prev.dateOfBirth != current.dateOfBirth ||
+            prev.gender != current.gender;
+      },
       listener: (context, state) {
         if (state.fullName != _fullNameController.text &&
             _fullNameController.text.isEmpty) {
           _fullNameController.text = state.fullName;
+        }
+        if (state.phoneNumber != _phoneNumberController.text &&
+            _phoneNumberController.text.isEmpty) {
+          _phoneNumberController.text = state.phoneNumber;
         }
         if (_dobController.text != state.displayDateOfBirth) {
           _dobController.text = state.displayDateOfBirth;
@@ -183,9 +189,9 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       ),
 
                       // Title
-                      const Text(
-                        'Profile Editing',
-                        style: TextStyle(
+                      Text(
+                        context.l10n.profileEditing,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
                           color: _textDark,
@@ -207,12 +213,16 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 // Form Scrollable Body
                 Expanded(
                   child: ProfileEditBodyView(
+                    phoneNumberController: _phoneNumberController,
                     avatarSeed: state.fullName.isNotEmpty
                         ? state.fullName
                         : (widget.initialUser?.fullName ?? 'Eva Huff'),
                     fullNameController: _fullNameController,
                     dobController: _dobController,
                     genderController: _genderController,
+                    onPhoneNumberChanged: (val) => context
+                        .read<ProfileEditBloc>()
+                        .add(ProfileEditPhoneNumberChanged(val)),
                     onPickDob: () =>
                         _pickDateOfBirth(context, state.dateOfBirth),
                     onSelectGender: () =>

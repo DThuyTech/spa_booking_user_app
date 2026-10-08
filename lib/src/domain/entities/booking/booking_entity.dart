@@ -7,7 +7,7 @@ abstract class BookingServiceItemEntity with _$BookingServiceItemEntity {
   const factory BookingServiceItemEntity({
     required String serviceId,
     required String name,
-    required int price,
+    required double price,
     @Default(60) int duration,
   }) = _BookingServiceItemEntity;
 }
@@ -62,8 +62,8 @@ abstract class BookingEntity with _$BookingEntity {
     @Default('UNPAID') String paymentStatus,
     required DateTime startAt,
     required DateTime endAt,
-    @Default(0) int totalDuration,
-    @Default(0) int totalAmount,
+    @Default(0) double totalDuration,
+    @Default(0) double totalAmount,
     @Default([]) List<BookingServiceItemEntity> services,
     BookingStaffSnapshotEntity? staffSnapshot,
     BookingCustomerSnapshotEntity? customerSnapshot,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/localization/app_localizations.dart';
 
 class ProfileStatsRow extends StatelessWidget {
   final int upcomingCount;
@@ -20,12 +21,13 @@ class ProfileStatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Row(
       children: [
         Expanded(
           child: _StatCard(
             value: upcomingCount.toString(),
-            label: 'UPCOMING',
+            label: l10n.upcomingTab.toUpperCase(),
             valueColor: const Color(0xFFBA4A32),
             onTap: onUpcomingTap,
           ),
@@ -34,7 +36,7 @@ class ProfileStatsRow extends StatelessWidget {
         Expanded(
           child: _StatCard(
             value: completedCount.toString(),
-            label: 'COMPLETED',
+            label: l10n.completedTab.toUpperCase(),
             valueColor: const Color(0xFF1E5B6E),
             onTap: onCompletedTap,
           ),
@@ -43,7 +45,7 @@ class ProfileStatsRow extends StatelessWidget {
         Expanded(
           child: _StatCard(
             value: cancelledCount.toString(),
-            label: 'CANCELLED',
+            label: l10n.cancelledTab.toUpperCase(),
             valueColor: const Color(0xFFBA4A32),
             onTap: onCancelledTap,
           ),

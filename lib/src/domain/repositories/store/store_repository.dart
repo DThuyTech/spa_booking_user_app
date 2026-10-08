@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:spa_booking/src/core/error/failure.dart';
+import 'package:spa_booking/src/domain/entities/store/store_full_detail_entity.dart';
 import '../../entities/store/schedule_grid_entity.dart';
 import '../../entities/store/service_category_entity.dart';
 import '../../entities/store/service_entity.dart';
@@ -11,10 +12,35 @@ import '../../entities/store/store_gallery_entity.dart';
 abstract interface class StoreRepository {
   Future<Either<Failure, List<StoreEntity>>> getStores({
     String? search,
+    String? city,
     String? province,
     String? district,
+    bool? isFavorite,
+    int? minPrice,
+    int? maxPrice,
+    double? minRating,
+    double? lat,
+    double? lng,
+    String? sortBy,
     int page = 1,
     int limit = 10,
+  });
+
+  Future<Either<Failure, List<StoreEntity>>> getRecentlyBookedStores({
+    int limit = 10,
+  });
+
+  Future<Either<Failure, List<StoreEntity>>> getNearbyStores({
+    required double lat,
+    required double lng,
+    double? distanceKm,
+    double? radius,
+    int? page,
+    int limit = 10,
+    String? search,
+    String? city,
+    String? district,
+    bool? isFavorite,
   });
 
   Future<Either<Failure, StoreDetailEntity>> getStoreDetail(String storeId);
@@ -43,5 +69,9 @@ abstract interface class StoreRepository {
     required String storeId,
     required String date,
     String? staffProfileId,
+  });
+
+  Future<Either<Failure, StoreFullDetailEntity>> getStoreFullDetail({
+    required String storeId,
   });
 }

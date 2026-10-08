@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StoreListState {
 
- StoreListStatus get status; List<StoreEntity> get stores; bool get hasMore; int get currentPage; String? get search; String? get province; String? get district; Failure? get failure;
+ StoreListStatus get status; List<StoreEntity> get stores; bool get hasMore; int get currentPage; String? get search; String? get city; String? get province; String? get district; Failure? get failure;
 /// Create a copy of StoreListState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $StoreListStateCopyWith<StoreListState> get copyWith => _$StoreListStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StoreListState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.stores, stores)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.search, search) || other.search == search)&&(identical(other.province, province) || other.province == province)&&(identical(other.district, district) || other.district == district)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StoreListState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.stores, stores)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.search, search) || other.search == search)&&(identical(other.city, city) || other.city == city)&&(identical(other.province, province) || other.province == province)&&(identical(other.district, district) || other.district == district)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(stores),hasMore,currentPage,search,province,district,failure);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(stores),hasMore,currentPage,search,city,province,district,failure);
 
 @override
 String toString() {
-  return 'StoreListState(status: $status, stores: $stores, hasMore: $hasMore, currentPage: $currentPage, search: $search, province: $province, district: $district, failure: $failure)';
+  return 'StoreListState(status: $status, stores: $stores, hasMore: $hasMore, currentPage: $currentPage, search: $search, city: $city, province: $province, district: $district, failure: $failure)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $StoreListStateCopyWith<$Res>  {
   factory $StoreListStateCopyWith(StoreListState value, $Res Function(StoreListState) _then) = _$StoreListStateCopyWithImpl;
 @useResult
 $Res call({
- StoreListStatus status, List<StoreEntity> stores, bool hasMore, int currentPage, String? search, String? province, String? district, Failure? failure
+ StoreListStatus status, List<StoreEntity> stores, bool hasMore, int currentPage, String? search, String? city, String? province, String? district, Failure? failure
 });
 
 
@@ -62,13 +62,14 @@ class _$StoreListStateCopyWithImpl<$Res>
 
 /// Create a copy of StoreListState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? stores = null,Object? hasMore = null,Object? currentPage = null,Object? search = freezed,Object? province = freezed,Object? district = freezed,Object? failure = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? stores = null,Object? hasMore = null,Object? currentPage = null,Object? search = freezed,Object? city = freezed,Object? province = freezed,Object? district = freezed,Object? failure = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as StoreListStatus,stores: null == stores ? _self.stores : stores // ignore: cast_nullable_to_non_nullable
 as List<StoreEntity>,hasMore: null == hasMore ? _self.hasMore : hasMore // ignore: cast_nullable_to_non_nullable
 as bool,currentPage: null == currentPage ? _self.currentPage : currentPage // ignore: cast_nullable_to_non_nullable
 as int,search: freezed == search ? _self.search : search // ignore: cast_nullable_to_non_nullable
+as String?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as String?,province: freezed == province ? _self.province : province // ignore: cast_nullable_to_non_nullable
 as String?,district: freezed == district ? _self.district : district // ignore: cast_nullable_to_non_nullable
 as String?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StoreListStatus status,  List<StoreEntity> stores,  bool hasMore,  int currentPage,  String? search,  String? province,  String? district,  Failure? failure)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StoreListStatus status,  List<StoreEntity> stores,  bool hasMore,  int currentPage,  String? search,  String? city,  String? province,  String? district,  Failure? failure)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StoreListState() when $default != null:
-return $default(_that.status,_that.stores,_that.hasMore,_that.currentPage,_that.search,_that.province,_that.district,_that.failure);case _:
+return $default(_that.status,_that.stores,_that.hasMore,_that.currentPage,_that.search,_that.city,_that.province,_that.district,_that.failure);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.status,_that.stores,_that.hasMore,_that.currentPage,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StoreListStatus status,  List<StoreEntity> stores,  bool hasMore,  int currentPage,  String? search,  String? province,  String? district,  Failure? failure)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StoreListStatus status,  List<StoreEntity> stores,  bool hasMore,  int currentPage,  String? search,  String? city,  String? province,  String? district,  Failure? failure)  $default,) {final _that = this;
 switch (_that) {
 case _StoreListState():
-return $default(_that.status,_that.stores,_that.hasMore,_that.currentPage,_that.search,_that.province,_that.district,_that.failure);case _:
+return $default(_that.status,_that.stores,_that.hasMore,_that.currentPage,_that.search,_that.city,_that.province,_that.district,_that.failure);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.status,_that.stores,_that.hasMore,_that.currentPage,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StoreListStatus status,  List<StoreEntity> stores,  bool hasMore,  int currentPage,  String? search,  String? province,  String? district,  Failure? failure)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StoreListStatus status,  List<StoreEntity> stores,  bool hasMore,  int currentPage,  String? search,  String? city,  String? province,  String? district,  Failure? failure)?  $default,) {final _that = this;
 switch (_that) {
 case _StoreListState() when $default != null:
-return $default(_that.status,_that.stores,_that.hasMore,_that.currentPage,_that.search,_that.province,_that.district,_that.failure);case _:
+return $default(_that.status,_that.stores,_that.hasMore,_that.currentPage,_that.search,_that.city,_that.province,_that.district,_that.failure);case _:
   return null;
 
 }
@@ -213,7 +214,7 @@ return $default(_that.status,_that.stores,_that.hasMore,_that.currentPage,_that.
 
 
 class _StoreListState extends StoreListState {
-  const _StoreListState({this.status = StoreListStatus.initial, final  List<StoreEntity> stores = const [], this.hasMore = false, this.currentPage = 1, this.search, this.province, this.district, this.failure}): _stores = stores,super._();
+  const _StoreListState({this.status = StoreListStatus.initial, final  List<StoreEntity> stores = const [], this.hasMore = false, this.currentPage = 1, this.search, this.city, this.province, this.district, this.failure}): _stores = stores,super._();
   
 
 @override@JsonKey() final  StoreListStatus status;
@@ -227,6 +228,7 @@ class _StoreListState extends StoreListState {
 @override@JsonKey() final  bool hasMore;
 @override@JsonKey() final  int currentPage;
 @override final  String? search;
+@override final  String? city;
 @override final  String? province;
 @override final  String? district;
 @override final  Failure? failure;
@@ -241,16 +243,16 @@ _$StoreListStateCopyWith<_StoreListState> get copyWith => __$StoreListStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StoreListState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._stores, _stores)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.search, search) || other.search == search)&&(identical(other.province, province) || other.province == province)&&(identical(other.district, district) || other.district == district)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StoreListState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._stores, _stores)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.search, search) || other.search == search)&&(identical(other.city, city) || other.city == city)&&(identical(other.province, province) || other.province == province)&&(identical(other.district, district) || other.district == district)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_stores),hasMore,currentPage,search,province,district,failure);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_stores),hasMore,currentPage,search,city,province,district,failure);
 
 @override
 String toString() {
-  return 'StoreListState(status: $status, stores: $stores, hasMore: $hasMore, currentPage: $currentPage, search: $search, province: $province, district: $district, failure: $failure)';
+  return 'StoreListState(status: $status, stores: $stores, hasMore: $hasMore, currentPage: $currentPage, search: $search, city: $city, province: $province, district: $district, failure: $failure)';
 }
 
 
@@ -261,7 +263,7 @@ abstract mixin class _$StoreListStateCopyWith<$Res> implements $StoreListStateCo
   factory _$StoreListStateCopyWith(_StoreListState value, $Res Function(_StoreListState) _then) = __$StoreListStateCopyWithImpl;
 @override @useResult
 $Res call({
- StoreListStatus status, List<StoreEntity> stores, bool hasMore, int currentPage, String? search, String? province, String? district, Failure? failure
+ StoreListStatus status, List<StoreEntity> stores, bool hasMore, int currentPage, String? search, String? city, String? province, String? district, Failure? failure
 });
 
 
@@ -278,13 +280,14 @@ class __$StoreListStateCopyWithImpl<$Res>
 
 /// Create a copy of StoreListState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? stores = null,Object? hasMore = null,Object? currentPage = null,Object? search = freezed,Object? province = freezed,Object? district = freezed,Object? failure = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? stores = null,Object? hasMore = null,Object? currentPage = null,Object? search = freezed,Object? city = freezed,Object? province = freezed,Object? district = freezed,Object? failure = freezed,}) {
   return _then(_StoreListState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as StoreListStatus,stores: null == stores ? _self._stores : stores // ignore: cast_nullable_to_non_nullable
 as List<StoreEntity>,hasMore: null == hasMore ? _self.hasMore : hasMore // ignore: cast_nullable_to_non_nullable
 as bool,currentPage: null == currentPage ? _self.currentPage : currentPage // ignore: cast_nullable_to_non_nullable
 as int,search: freezed == search ? _self.search : search // ignore: cast_nullable_to_non_nullable
+as String?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as String?,province: freezed == province ? _self.province : province // ignore: cast_nullable_to_non_nullable
 as String?,district: freezed == district ? _self.district : district // ignore: cast_nullable_to_non_nullable
 as String?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable

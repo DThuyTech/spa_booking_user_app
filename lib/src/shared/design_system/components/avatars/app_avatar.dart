@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../utils/avatar_helper.dart';
 import '../../tokens/app_colors.dart';
 
 enum AppAvatarSize { xs, sm, md, lg, xl }
@@ -122,13 +123,6 @@ class AppAvatar extends StatelessWidget {
 
   static String? _extractInitials(String? text) {
     if (text == null || text.trim().isEmpty) return null;
-    final parts = text.trim().split(RegExp(r'\s+'));
-    if (parts.isEmpty) return null;
-    if (parts.length == 1) {
-      return parts.first
-          .substring(0, parts.first.length.clamp(1, 2))
-          .toUpperCase();
-    }
-    return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
+    return AvatarHelper.getInitials(text);
   }
 }

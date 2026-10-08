@@ -499,6 +499,690 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We are curating top luxury beauty salons for you'**
   String get salonDiscoverySubtitle;
+
+  /// Personal info menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Info'**
+  String get personalInfo;
+
+  /// My bookings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'My Bookings'**
+  String get myBookings;
+
+  /// Saved addresses menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Addresses'**
+  String get savedAddresses;
+
+  /// Change password menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// Insights and spending analytics
+  ///
+  /// In en, this message translates to:
+  /// **'Summary & Revenue (Insights)'**
+  String get insightsTitle;
+
+  /// Favorites menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
+
+  /// Reviews menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get reviews;
+
+  /// Settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// Coupons menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Coupons & Vouchers'**
+  String get coupons;
+
+  /// Language settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// Title of language selector modal
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get selectLanguage;
+
+  /// Vietnamese language option
+  ///
+  /// In en, this message translates to:
+  /// **'Tiếng Việt'**
+  String get vietnamese;
+
+  /// English language option
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// Account menu section header
+  ///
+  /// In en, this message translates to:
+  /// **'ACCOUNT'**
+  String get accountSection;
+
+  /// Engagement menu section header
+  ///
+  /// In en, this message translates to:
+  /// **'ENGAGEMENT'**
+  String get engagementSection;
+
+  /// Upcoming bookings tab
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get upcomingTab;
+
+  /// Completed bookings tab
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completedTab;
+
+  /// Cancelled bookings tab
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get cancelledTab;
+
+  /// Logout confirmation dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Log Out?'**
+  String get confirmLogout;
+
+  /// Logout confirmation prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out of your account?'**
+  String get logoutMessage;
+
+  /// Cancel action
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// Delete account action label
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// Delete account confirmation dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account?'**
+  String get confirmDeleteAccount;
+
+  /// Delete account warning description
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your account? This action will permanently remove your personal data and cannot be undone.'**
+  String get deleteAccountMessage;
+
+  /// Confirm permanent deletion button label
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Permanently'**
+  String get deletePermanently;
+
+  /// Message shown when account is successfully deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been deleted successfully.'**
+  String get deleteAccountSuccess;
+
+  /// Title of booking detail view
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Detail'**
+  String get bookingDetailTitle;
+
+  /// Cancel booking button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelBooking;
+
+  /// Cancel booking dialog headline
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Booking?'**
+  String get cancelBookingConfirm;
+
+  /// Cancel booking reason label
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide a reason for cancellation:'**
+  String get cancelReasonPrompt;
+
+  /// Cancellation reason input placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Reason...'**
+  String get cancelReasonHint;
+
+  /// Keep booking dialog button
+  ///
+  /// In en, this message translates to:
+  /// **'No, Keep'**
+  String get keepBooking;
+
+  /// Confirm cancel booking button
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, Cancel'**
+  String get yesCancel;
+
+  /// Connect with salon button
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get connectSalon;
+
+  /// Phone call prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Call salon via phone number'**
+  String get callSalonPrompt;
+
+  /// Error when phone cannot be launched
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot make phone call to this number'**
+  String get cannotCallPhone;
+
+  /// Message when salon phone is missing
+  ///
+  /// In en, this message translates to:
+  /// **'Salon phone number is not available'**
+  String get noPhoneNumber;
+
+  /// Subtotal amount label
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get subtotal;
+
+  /// Discount amount label
+  ///
+  /// In en, this message translates to:
+  /// **'Discount'**
+  String get discount;
+
+  /// Total payment amount label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount'**
+  String get totalAmount;
+
+  /// User notes section label
+  ///
+  /// In en, this message translates to:
+  /// **'USER NOTES'**
+  String get userNotes;
+
+  /// Add note action
+  ///
+  /// In en, this message translates to:
+  /// **'Add Note'**
+  String get addNote;
+
+  /// Note input placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Write a note...'**
+  String get writeDescription;
+
+  /// Toast when note added
+  ///
+  /// In en, this message translates to:
+  /// **'Note added successfully'**
+  String get noteAddedSuccess;
+
+  /// Toast when note updated
+  ///
+  /// In en, this message translates to:
+  /// **'Note updated successfully'**
+  String get noteUpdatedSuccess;
+
+  /// Toast when booking cancelled
+  ///
+  /// In en, this message translates to:
+  /// **'Booking cancelled successfully'**
+  String get bookingCancelledSuccess;
+
+  /// Filter bookings modal title
+  ///
+  /// In en, this message translates to:
+  /// **'Filter Bookings'**
+  String get filterBookings;
+
+  /// Status filter header
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get statusLabel;
+
+  /// Date filter header
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get dateLabel;
+
+  /// Apply filter button
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get applyFilter;
+
+  /// Reset filter button
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get resetFilter;
+
+  /// Search bookings placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Search salons, services...'**
+  String get searchBookingsPlaceholder;
+
+  /// All filter option
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// Pending booking status
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get statusPending;
+
+  /// Confirmed booking status
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get statusConfirmed;
+
+  /// Completed booking status
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get statusCompleted;
+
+  /// Cancelled booking status
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get statusCancelled;
+
+  /// Select date placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Select date'**
+  String get selectDate;
+
+  /// Clear date action
+  ///
+  /// In en, this message translates to:
+  /// **'Clear date'**
+  String get clearDate;
+
+  /// Special offers section title
+  ///
+  /// In en, this message translates to:
+  /// **'Special Offers'**
+  String get specialOffers;
+
+  /// Explore services section title
+  ///
+  /// In en, this message translates to:
+  /// **'Explore Services'**
+  String get exploreServices;
+
+  /// Book now action button
+  ///
+  /// In en, this message translates to:
+  /// **'Book Now'**
+  String get bookNow;
+
+  /// Directions button
+  ///
+  /// In en, this message translates to:
+  /// **'Directions'**
+  String get directions;
+
+  /// Call now button
+  ///
+  /// In en, this message translates to:
+  /// **'Call Now'**
+  String get callNow;
+
+  /// Book action button
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get book;
+
+  /// Stylist label
+  ///
+  /// In en, this message translates to:
+  /// **'Stylist'**
+  String get stylist;
+
+  /// Customer reviews header
+  ///
+  /// In en, this message translates to:
+  /// **'Customer reviews'**
+  String get customerReviews;
+
+  /// Review singular/title
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get review;
+
+  /// Empty reviews message
+  ///
+  /// In en, this message translates to:
+  /// **'No reviews yet'**
+  String get noReviewsYet;
+
+  /// Prompt for first review
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first to share your experience!'**
+  String get beTheFirstToReview;
+
+  /// Open now status badge
+  ///
+  /// In en, this message translates to:
+  /// **'Open now'**
+  String get openNow;
+
+  /// Empty services text
+  ///
+  /// In en, this message translates to:
+  /// **'No services available yet'**
+  String get noServicesAvailable;
+
+  /// Button to view all services
+  ///
+  /// In en, this message translates to:
+  /// **'View all services'**
+  String get viewAllServices;
+
+  /// Opening hours card title
+  ///
+  /// In en, this message translates to:
+  /// **'Opening Hours'**
+  String get openingHours;
+
+  /// Available now card title
+  ///
+  /// In en, this message translates to:
+  /// **'Available now'**
+  String get availableNow;
+
+  /// About section title
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// Location section title
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location;
+
+  /// New booking title
+  ///
+  /// In en, this message translates to:
+  /// **'New Booking'**
+  String get newBooking;
+
+  /// Total estimate label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Est.'**
+  String get totalEst;
+
+  /// No services in category empty state
+  ///
+  /// In en, this message translates to:
+  /// **'No services found in this category'**
+  String get noServicesInCategory;
+
+  /// Service type label
+  ///
+  /// In en, this message translates to:
+  /// **'Service Type'**
+  String get serviceType;
+
+  /// Services uppercase section title
+  ///
+  /// In en, this message translates to:
+  /// **'SERVICES'**
+  String get servicesCaps;
+
+  /// Today label
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// Staff label
+  ///
+  /// In en, this message translates to:
+  /// **'Staff'**
+  String get staff;
+
+  /// Staff off schedule indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get staffOff;
+
+  /// Staff break schedule indicator
+  ///
+  /// In en, this message translates to:
+  /// **'BREAK'**
+  String get staffBreak;
+
+  /// Sort option highest rated
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Highest Rated'**
+  String get sortByHighestRated;
+
+  /// Sort option alphabetically
+  ///
+  /// In en, this message translates to:
+  /// **'Sort Alphabetically (A-Z)'**
+  String get sortAlphabetically;
+
+  /// Reset sort order option
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Sort Order'**
+  String get resetSortOrder;
+
+  /// Share favorites action
+  ///
+  /// In en, this message translates to:
+  /// **'Share Favorites List'**
+  String get shareFavorites;
+
+  /// Change avatar photo action
+  ///
+  /// In en, this message translates to:
+  /// **'Change Photo'**
+  String get changePhoto;
+
+  /// Profile editing title
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Editing'**
+  String get profileEditing;
+
+  /// Select gender sheet title
+  ///
+  /// In en, this message translates to:
+  /// **'Select Gender'**
+  String get selectGender;
+
+  /// Name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// Date of birth label
+  ///
+  /// In en, this message translates to:
+  /// **'Date of Birth'**
+  String get dateOfBirth;
+
+  /// Gender label
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// This month filter option
+  ///
+  /// In en, this message translates to:
+  /// **'This Month'**
+  String get thisMonth;
+
+  /// Last 3 months filter option
+  ///
+  /// In en, this message translates to:
+  /// **'Last 3 Months'**
+  String get last3Months;
+
+  /// This year filter option
+  ///
+  /// In en, this message translates to:
+  /// **'This Year'**
+  String get thisYear;
+
+  /// Favorite services section title
+  ///
+  /// In en, this message translates to:
+  /// **'Favorite Services'**
+  String get favoriteServices;
+
+  /// Your usual visit section title
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR USUAL VISIT'**
+  String get yourUsualVisit;
+
+  /// Day label
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get day;
+
+  /// Time label
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get time;
+
+  /// Read all notifications button
+  ///
+  /// In en, this message translates to:
+  /// **'Read all'**
+  String get readAll;
+
+  /// No notifications message
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet'**
+  String get noNotificationsYet;
+
+  /// Post review button
+  ///
+  /// In en, this message translates to:
+  /// **'Post'**
+  String get postReview;
+
+  /// Write a review screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Write a Review'**
+  String get writeReview;
+
+  /// Rate specific details label
+  ///
+  /// In en, this message translates to:
+  /// **'Rate specific details'**
+  String get rateSpecificDetails;
+
+  /// Add photos button
+  ///
+  /// In en, this message translates to:
+  /// **'Add Photos'**
+  String get addPhotos;
+
+  /// No salons found text
+  ///
+  /// In en, this message translates to:
+  /// **'No Salons Found'**
+  String get noSalonsFound;
+
+  /// Search screen header
+  ///
+  /// In en, this message translates to:
+  /// **'Find Your Sanctuary'**
+  String get findYourSanctuary;
+
+  /// Top rated filter chip
+  ///
+  /// In en, this message translates to:
+  /// **'Top Rated'**
+  String get topRated;
+
+  /// Verify code title
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Code'**
+  String get verifyCode;
+
+  /// Terms and service link text
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Service'**
+  String get termsAndService;
 }
 
 class _AppLocalizationsDelegate

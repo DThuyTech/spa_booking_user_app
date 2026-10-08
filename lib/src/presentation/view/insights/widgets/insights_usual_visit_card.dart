@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:spa_booking/src/shared/shared.dart';
 
 class InsightsUsualVisitCard extends StatelessWidget {
   final String day;
@@ -61,9 +61,9 @@ class InsightsUsualVisitCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Section Label
-              const Text(
-                'YOUR USUAL VISIT',
-                style: TextStyle(
+              Text(
+                context.l10n.yourUsualVisit,
+                style: const TextStyle(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w700,
                   color: _textMuted,
@@ -93,9 +93,9 @@ class InsightsUsualVisitCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Day',
-                        style: TextStyle(
+                      Text(
+                        context.l10n.day,
+                        style: const TextStyle(
                           fontSize: 11.5,
                           fontWeight: FontWeight.w500,
                           color: _textMuted,
@@ -136,9 +136,9 @@ class InsightsUsualVisitCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Time',
-                        style: TextStyle(
+                      Text(
+                        context.l10n.time,
+                        style: const TextStyle(
                           fontSize: 11.5,
                           fontWeight: FontWeight.w500,
                           color: _textMuted,

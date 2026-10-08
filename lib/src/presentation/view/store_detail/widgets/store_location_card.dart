@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import '../../../../shared/shared.dart';
-import '../mockup_data/store_detail_mock_data.dart';
 
 class StoreLocationCard extends StatelessWidget {
-  final StoreLocationItem location;
+  final double longtitude;
+  final double latitude;
+  final String address;
+  final String city;
+  final String district;
   final VoidCallback? onGetDirections;
 
   static const Color _textDark = Color(0xFF1E2022);
@@ -12,12 +17,22 @@ class StoreLocationCard extends StatelessWidget {
 
   const StoreLocationCard({
     super.key,
-    required this.location,
     this.onGetDirections,
+    required this.longtitude,
+    required this.latitude,
+    required this.address,
+    required this.city,
+    required this.district,
   });
 
   @override
   Widget build(BuildContext context) {
+    final hasValidCoords = latitude != 0 || longtitude != 0;
+    final centerPoint = LatLng(
+      hasValidCoords ? latitude : 10.7769,
+      hasValidCoords ? longtitude : 106.7009,
+    );
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -36,9 +51,9 @@ class StoreLocationCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Location',
-            style: TextStyle(
+          Text(
+            context.l10n.location,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
               color: _textDark,
@@ -47,50 +62,61 @@ class StoreLocationCard extends StatelessWidget {
           ),
           const SizedBox(height: 14),
 
-          // Map preview container with red location marker
+          // Map preview container using FlutterMap (OpenStreetMap, no API key required)
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: SizedBox(
-              height: 110,
+              height: 150,
               width: double.infinity,
               child: Stack(
-                fit: StackFit.expand,
                 children: [
-                  Image.network(
-                    location.mapImageUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      color: const Color(0xFFE2E8F0),
-                      child: const Center(
-                        child: Icon(
-                          LucideIcons.map,
-                          size: 32,
-                          color: Color(0xFF94A3B8),
-                        ),
+                  FlutterMap(
+                    options: MapOptions(
+                      initialCenter: centerPoint,
+                      initialZoom: 15.0,
+                      minZoom: 11.0,
+                      maxZoom: 18.0,
+                      interactionOptions: const InteractionOptions(
+                        flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
                       ),
+                      onTap: (_, _) => onGetDirections?.call(),
                     ),
-                  ),
-                  Container(color: Colors.black.withValues(alpha: 0.08)),
-                  Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: _coralColor,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: _coralColor.withValues(alpha: 0.4),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        userAgentPackageName: 'com.aura.spa_booking',
+                        maxZoom: 19,
+                      ),
+                      MarkerLayer(
+                        markers: [
+                          Marker(
+                            point: centerPoint,
+                            width: 44,
+                            height: 44,
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: _coralColor,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: _coralColor.withValues(alpha: 0.4),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                LucideIcons.map_pin,
+                                size: 20,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                      child: const Icon(
-                        LucideIcons.map_pin,
-                        size: 20,
-                        color: Colors.white,
-                      ),
-                    ),
+                    ],
                   ),
                 ],
               ),
@@ -100,7 +126,7 @@ class StoreLocationCard extends StatelessWidget {
 
           // Address
           Text(
-            location.address,
+            address,
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -109,7 +135,7 @@ class StoreLocationCard extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            location.cityStateZip,
+            [district, city].where((s) => s.isNotEmpty && s != '-').join(', '),
             style: const TextStyle(fontSize: 13, color: _textMuted),
           ),
           const SizedBox(height: 16),
@@ -117,6 +143,7 @@ class StoreLocationCard extends StatelessWidget {
           // Get directions button
           AppButton(
             text: 'Get directions',
+            leadingIcon: const Icon(LucideIcons.navigation, size: 16),
             onPressed: onGetDirections,
             variant: AppButtonVariant.outline,
             textColor: _textDark,

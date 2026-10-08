@@ -11,6 +11,10 @@ abstract final class UrlConstants {
   static const String authMe = '$apiV1/auth/me';
   static const String usersMe = '$apiV1/users/me';
   static const String customerMeProfile = '$apiV1/customers/me/profile';
+  static const String authChangePassword = '$apiV1/auth/change-password';
+  static const String authForgotPassword = '$apiV1/auth/forgot-password';
+  static const String authVerifyOtp = '$apiV1/auth/verify-otp';
+  static const String authResetPassword = '$apiV1/auth/reset-password';
 
   static const String greeting = '$apiV1/greeting';
   static const String matches = '$apiV1/matches';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../../shared/shared.dart';
 import '../../models/booking_models.dart';
 
 class BookingScheduleMatrixGrid extends StatelessWidget {
@@ -55,10 +55,10 @@ class BookingScheduleMatrixGrid extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               // Header Row: Staff | 09:00 AM | 09:30 AM | ...
-              _buildHeaderRow(),
+              _buildHeaderRow(context),
 
               // Rows for each staff
-              ...staffMembers.map((staff) => _buildStaffRow(staff)),
+              ...staffMembers.map((staff) => _buildStaffRow(context, staff)),
             ],
           ),
         ),
@@ -66,7 +66,7 @@ class BookingScheduleMatrixGrid extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderRow() {
+  Widget _buildHeaderRow(BuildContext context) {
     return Container(
       height: 52,
       decoration: const BoxDecoration(
@@ -84,9 +84,9 @@ class BookingScheduleMatrixGrid extends StatelessWidget {
                 right: BorderSide(color: _borderColor, width: 1.0),
               ),
             ),
-            child: const Text(
-              'Staff',
-              style: TextStyle(
+            child: Text(
+              context.l10n.staff,
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF64748B),
@@ -119,7 +119,7 @@ class BookingScheduleMatrixGrid extends StatelessWidget {
     );
   }
 
-  Widget _buildStaffRow(BookingStaffItem staff) {
+  Widget _buildStaffRow(BuildContext context, BookingStaffItem staff) {
     return Container(
       height: _rowHeight,
       decoration: const BoxDecoration(
@@ -177,9 +177,9 @@ class BookingScheduleMatrixGrid extends StatelessWidget {
               child: Container(
                 color: const Color(0xFFF1F5F9),
                 alignment: Alignment.center,
-                child: const Text(
-                  'OFF',
-                  style: TextStyle(
+                child: Text(
+                  context.l10n.staffOff.toUpperCase(),
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
                     color: Color(0xFF94A3B8),
@@ -213,6 +213,7 @@ class BookingScheduleMatrixGrid extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.all(4),
                 child: _buildSlotContent(
+                  context: context,
                   staff: staff,
                   time: time,
                   slot: slot,
@@ -226,6 +227,7 @@ class BookingScheduleMatrixGrid extends StatelessWidget {
   }
 
   Widget _buildSlotContent({
+    required BuildContext context,
     required BookingStaffItem staff,
     required String time,
     required BookingTimeSlotItem slot,
@@ -239,9 +241,9 @@ class BookingScheduleMatrixGrid extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         alignment: Alignment.center,
-        child: const Text(
-          'BREAK',
-          style: TextStyle(
+        child: Text(
+          context.l10n.staffBreak,
+          style: const TextStyle(
             fontSize: 11.5,
             fontWeight: FontWeight.w700,
             color: Color(0xFF64748B),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../../../shared/shared.dart';
 import '../widgets/home_near_salon_card.dart';
 
 class HomeSalonsNearYouSection extends StatelessWidget {
   final List<HomeNearSalonItem> salons;
+  final String? title;
   final VoidCallback? onSeeAllTap;
   final ValueChanged<HomeNearSalonItem>? onSalonTap;
   final ValueChanged<HomeNearSalonItem>? onBookTap;
@@ -13,6 +15,7 @@ class HomeSalonsNearYouSection extends StatelessWidget {
   const HomeSalonsNearYouSection({
     super.key,
     required this.salons,
+    this.title,
     this.onSeeAllTap,
     this.onSalonTap,
     this.onBookTap,
@@ -31,9 +34,9 @@ class HomeSalonsNearYouSection extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Salons Near You',
-                style: TextStyle(
+              Text(
+                title ?? context.l10n.nearbySalons,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
                   color: _textDark,
@@ -43,11 +46,14 @@ class HomeSalonsNearYouSection extends StatelessWidget {
               InkWell(
                 onTap: onSeeAllTap,
                 borderRadius: BorderRadius.circular(8),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
                   child: Text(
-                    'See All',
-                    style: TextStyle(
+                    context.l10n.seeAll,
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: _coralColor,

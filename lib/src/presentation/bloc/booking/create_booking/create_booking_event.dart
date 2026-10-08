@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of 'create_booking_bloc.dart';
 
 sealed class CreateBookingEvent extends Equatable {
   const CreateBookingEvent();

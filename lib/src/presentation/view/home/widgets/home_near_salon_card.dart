@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
 
 class HomeNearSalonItem {
   final String id;
@@ -198,9 +198,9 @@ class HomeNearSalonCard extends StatelessWidget {
                           color: const Color(0xFFE2F3F9),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Text(
-                          'Book',
-                          style: TextStyle(
+                        child: Text(
+                          context.l10n.book,
+                          style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
                             color: Color(0xFF3BA1C0),

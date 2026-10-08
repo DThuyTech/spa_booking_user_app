@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FavoriteStoreModel {
 
- String get id;@JsonKey(name: 'name', defaultValue: '') String get name;@JsonKey(name: 'slug', defaultValue: '') String get slug;@JsonKey(name: 'logoUrl') String? get logoUrl;@JsonKey(name: 'coverImageUrl') String? get coverImageUrl;@JsonKey(name: 'address', defaultValue: '') String get address;@JsonKey(name: 'phoneNumber') String? get phoneNumber;@JsonKey(name: 'isFavorite', defaultValue: true) bool get isFavorite;@JsonKey(name: 'favoritedAt') String? get favoritedAt;
+@JsonKey(readValue: _readId) String get id;@JsonKey(readValue: _readName, defaultValue: '') String get name;@JsonKey(readValue: _readSlug, defaultValue: '') String get slug;@JsonKey(readValue: _readLogoUrl) String? get logoUrl;@JsonKey(readValue: _readCoverImageUrl) String? get coverImageUrl;@JsonKey(readValue: _readAddress, defaultValue: '') String get address;@JsonKey(readValue: _readPhoneNumber) String? get phoneNumber;@JsonKey(readValue: _readRating, fromJson: _ratingFromJson) double? get averageRating;@JsonKey(readValue: _readIsFavorite, defaultValue: true) bool get isFavorite;@JsonKey(readValue: _readFavoritedAt) String? get favoritedAt;
 /// Create a copy of FavoriteStoreModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $FavoriteStoreModelCopyWith<FavoriteStoreModel> get copyWith => _$FavoriteStoreM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FavoriteStoreModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.address, address) || other.address == address)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.isFavorite, isFavorite) || other.isFavorite == isFavorite)&&(identical(other.favoritedAt, favoritedAt) || other.favoritedAt == favoritedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FavoriteStoreModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.address, address) || other.address == address)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.averageRating, averageRating) || other.averageRating == averageRating)&&(identical(other.isFavorite, isFavorite) || other.isFavorite == isFavorite)&&(identical(other.favoritedAt, favoritedAt) || other.favoritedAt == favoritedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,slug,logoUrl,coverImageUrl,address,phoneNumber,isFavorite,favoritedAt);
+int get hashCode => Object.hash(runtimeType,id,name,slug,logoUrl,coverImageUrl,address,phoneNumber,averageRating,isFavorite,favoritedAt);
 
 @override
 String toString() {
-  return 'FavoriteStoreModel(id: $id, name: $name, slug: $slug, logoUrl: $logoUrl, coverImageUrl: $coverImageUrl, address: $address, phoneNumber: $phoneNumber, isFavorite: $isFavorite, favoritedAt: $favoritedAt)';
+  return 'FavoriteStoreModel(id: $id, name: $name, slug: $slug, logoUrl: $logoUrl, coverImageUrl: $coverImageUrl, address: $address, phoneNumber: $phoneNumber, averageRating: $averageRating, isFavorite: $isFavorite, favoritedAt: $favoritedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $FavoriteStoreModelCopyWith<$Res>  {
   factory $FavoriteStoreModelCopyWith(FavoriteStoreModel value, $Res Function(FavoriteStoreModel) _then) = _$FavoriteStoreModelCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'name', defaultValue: '') String name,@JsonKey(name: 'slug', defaultValue: '') String slug,@JsonKey(name: 'logoUrl') String? logoUrl,@JsonKey(name: 'coverImageUrl') String? coverImageUrl,@JsonKey(name: 'address', defaultValue: '') String address,@JsonKey(name: 'phoneNumber') String? phoneNumber,@JsonKey(name: 'isFavorite', defaultValue: true) bool isFavorite,@JsonKey(name: 'favoritedAt') String? favoritedAt
+@JsonKey(readValue: _readId) String id,@JsonKey(readValue: _readName, defaultValue: '') String name,@JsonKey(readValue: _readSlug, defaultValue: '') String slug,@JsonKey(readValue: _readLogoUrl) String? logoUrl,@JsonKey(readValue: _readCoverImageUrl) String? coverImageUrl,@JsonKey(readValue: _readAddress, defaultValue: '') String address,@JsonKey(readValue: _readPhoneNumber) String? phoneNumber,@JsonKey(readValue: _readRating, fromJson: _ratingFromJson) double? averageRating,@JsonKey(readValue: _readIsFavorite, defaultValue: true) bool isFavorite,@JsonKey(readValue: _readFavoritedAt) String? favoritedAt
 });
 
 
@@ -65,7 +65,7 @@ class _$FavoriteStoreModelCopyWithImpl<$Res>
 
 /// Create a copy of FavoriteStoreModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? slug = null,Object? logoUrl = freezed,Object? coverImageUrl = freezed,Object? address = null,Object? phoneNumber = freezed,Object? isFavorite = null,Object? favoritedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? slug = null,Object? logoUrl = freezed,Object? coverImageUrl = freezed,Object? address = null,Object? phoneNumber = freezed,Object? averageRating = freezed,Object? isFavorite = null,Object? favoritedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,8 @@ as String,logoUrl: freezed == logoUrl ? _self.logoUrl : logoUrl // ignore: cast_
 as String?,coverImageUrl: freezed == coverImageUrl ? _self.coverImageUrl : coverImageUrl // ignore: cast_nullable_to_non_nullable
 as String?,address: null == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
 as String,phoneNumber: freezed == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
-as String?,isFavorite: null == isFavorite ? _self.isFavorite : isFavorite // ignore: cast_nullable_to_non_nullable
+as String?,averageRating: freezed == averageRating ? _self.averageRating : averageRating // ignore: cast_nullable_to_non_nullable
+as double?,isFavorite: null == isFavorite ? _self.isFavorite : isFavorite // ignore: cast_nullable_to_non_nullable
 as bool,favoritedAt: freezed == favoritedAt ? _self.favoritedAt : favoritedAt // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -161,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'name', defaultValue: '')  String name, @JsonKey(name: 'slug', defaultValue: '')  String slug, @JsonKey(name: 'logoUrl')  String? logoUrl, @JsonKey(name: 'coverImageUrl')  String? coverImageUrl, @JsonKey(name: 'address', defaultValue: '')  String address, @JsonKey(name: 'phoneNumber')  String? phoneNumber, @JsonKey(name: 'isFavorite', defaultValue: true)  bool isFavorite, @JsonKey(name: 'favoritedAt')  String? favoritedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(readValue: _readId)  String id, @JsonKey(readValue: _readName, defaultValue: '')  String name, @JsonKey(readValue: _readSlug, defaultValue: '')  String slug, @JsonKey(readValue: _readLogoUrl)  String? logoUrl, @JsonKey(readValue: _readCoverImageUrl)  String? coverImageUrl, @JsonKey(readValue: _readAddress, defaultValue: '')  String address, @JsonKey(readValue: _readPhoneNumber)  String? phoneNumber, @JsonKey(readValue: _readRating, fromJson: _ratingFromJson)  double? averageRating, @JsonKey(readValue: _readIsFavorite, defaultValue: true)  bool isFavorite, @JsonKey(readValue: _readFavoritedAt)  String? favoritedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FavoriteStoreModel() when $default != null:
-return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl,_that.address,_that.phoneNumber,_that.isFavorite,_that.favoritedAt);case _:
+return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl,_that.address,_that.phoneNumber,_that.averageRating,_that.isFavorite,_that.favoritedAt);case _:
   return orElse();
 
 }
@@ -182,10 +183,10 @@ return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'name', defaultValue: '')  String name, @JsonKey(name: 'slug', defaultValue: '')  String slug, @JsonKey(name: 'logoUrl')  String? logoUrl, @JsonKey(name: 'coverImageUrl')  String? coverImageUrl, @JsonKey(name: 'address', defaultValue: '')  String address, @JsonKey(name: 'phoneNumber')  String? phoneNumber, @JsonKey(name: 'isFavorite', defaultValue: true)  bool isFavorite, @JsonKey(name: 'favoritedAt')  String? favoritedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(readValue: _readId)  String id, @JsonKey(readValue: _readName, defaultValue: '')  String name, @JsonKey(readValue: _readSlug, defaultValue: '')  String slug, @JsonKey(readValue: _readLogoUrl)  String? logoUrl, @JsonKey(readValue: _readCoverImageUrl)  String? coverImageUrl, @JsonKey(readValue: _readAddress, defaultValue: '')  String address, @JsonKey(readValue: _readPhoneNumber)  String? phoneNumber, @JsonKey(readValue: _readRating, fromJson: _ratingFromJson)  double? averageRating, @JsonKey(readValue: _readIsFavorite, defaultValue: true)  bool isFavorite, @JsonKey(readValue: _readFavoritedAt)  String? favoritedAt)  $default,) {final _that = this;
 switch (_that) {
 case _FavoriteStoreModel():
-return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl,_that.address,_that.phoneNumber,_that.isFavorite,_that.favoritedAt);case _:
+return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl,_that.address,_that.phoneNumber,_that.averageRating,_that.isFavorite,_that.favoritedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +203,10 @@ return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'name', defaultValue: '')  String name, @JsonKey(name: 'slug', defaultValue: '')  String slug, @JsonKey(name: 'logoUrl')  String? logoUrl, @JsonKey(name: 'coverImageUrl')  String? coverImageUrl, @JsonKey(name: 'address', defaultValue: '')  String address, @JsonKey(name: 'phoneNumber')  String? phoneNumber, @JsonKey(name: 'isFavorite', defaultValue: true)  bool isFavorite, @JsonKey(name: 'favoritedAt')  String? favoritedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(readValue: _readId)  String id, @JsonKey(readValue: _readName, defaultValue: '')  String name, @JsonKey(readValue: _readSlug, defaultValue: '')  String slug, @JsonKey(readValue: _readLogoUrl)  String? logoUrl, @JsonKey(readValue: _readCoverImageUrl)  String? coverImageUrl, @JsonKey(readValue: _readAddress, defaultValue: '')  String address, @JsonKey(readValue: _readPhoneNumber)  String? phoneNumber, @JsonKey(readValue: _readRating, fromJson: _ratingFromJson)  double? averageRating, @JsonKey(readValue: _readIsFavorite, defaultValue: true)  bool isFavorite, @JsonKey(readValue: _readFavoritedAt)  String? favoritedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _FavoriteStoreModel() when $default != null:
-return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl,_that.address,_that.phoneNumber,_that.isFavorite,_that.favoritedAt);case _:
+return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl,_that.address,_that.phoneNumber,_that.averageRating,_that.isFavorite,_that.favoritedAt);case _:
   return null;
 
 }
@@ -217,18 +218,19 @@ return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl
 @JsonSerializable()
 
 class _FavoriteStoreModel extends FavoriteStoreModel {
-  const _FavoriteStoreModel({required this.id, @JsonKey(name: 'name', defaultValue: '') required this.name, @JsonKey(name: 'slug', defaultValue: '') required this.slug, @JsonKey(name: 'logoUrl') this.logoUrl, @JsonKey(name: 'coverImageUrl') this.coverImageUrl, @JsonKey(name: 'address', defaultValue: '') required this.address, @JsonKey(name: 'phoneNumber') this.phoneNumber, @JsonKey(name: 'isFavorite', defaultValue: true) required this.isFavorite, @JsonKey(name: 'favoritedAt') this.favoritedAt}): super._();
+  const _FavoriteStoreModel({@JsonKey(readValue: _readId) required this.id, @JsonKey(readValue: _readName, defaultValue: '') required this.name, @JsonKey(readValue: _readSlug, defaultValue: '') required this.slug, @JsonKey(readValue: _readLogoUrl) this.logoUrl, @JsonKey(readValue: _readCoverImageUrl) this.coverImageUrl, @JsonKey(readValue: _readAddress, defaultValue: '') required this.address, @JsonKey(readValue: _readPhoneNumber) this.phoneNumber, @JsonKey(readValue: _readRating, fromJson: _ratingFromJson) this.averageRating, @JsonKey(readValue: _readIsFavorite, defaultValue: true) required this.isFavorite, @JsonKey(readValue: _readFavoritedAt) this.favoritedAt}): super._();
   factory _FavoriteStoreModel.fromJson(Map<String, dynamic> json) => _$FavoriteStoreModelFromJson(json);
 
-@override final  String id;
-@override@JsonKey(name: 'name', defaultValue: '') final  String name;
-@override@JsonKey(name: 'slug', defaultValue: '') final  String slug;
-@override@JsonKey(name: 'logoUrl') final  String? logoUrl;
-@override@JsonKey(name: 'coverImageUrl') final  String? coverImageUrl;
-@override@JsonKey(name: 'address', defaultValue: '') final  String address;
-@override@JsonKey(name: 'phoneNumber') final  String? phoneNumber;
-@override@JsonKey(name: 'isFavorite', defaultValue: true) final  bool isFavorite;
-@override@JsonKey(name: 'favoritedAt') final  String? favoritedAt;
+@override@JsonKey(readValue: _readId) final  String id;
+@override@JsonKey(readValue: _readName, defaultValue: '') final  String name;
+@override@JsonKey(readValue: _readSlug, defaultValue: '') final  String slug;
+@override@JsonKey(readValue: _readLogoUrl) final  String? logoUrl;
+@override@JsonKey(readValue: _readCoverImageUrl) final  String? coverImageUrl;
+@override@JsonKey(readValue: _readAddress, defaultValue: '') final  String address;
+@override@JsonKey(readValue: _readPhoneNumber) final  String? phoneNumber;
+@override@JsonKey(readValue: _readRating, fromJson: _ratingFromJson) final  double? averageRating;
+@override@JsonKey(readValue: _readIsFavorite, defaultValue: true) final  bool isFavorite;
+@override@JsonKey(readValue: _readFavoritedAt) final  String? favoritedAt;
 
 /// Create a copy of FavoriteStoreModel
 /// with the given fields replaced by the non-null parameter values.
@@ -243,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FavoriteStoreModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.address, address) || other.address == address)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.isFavorite, isFavorite) || other.isFavorite == isFavorite)&&(identical(other.favoritedAt, favoritedAt) || other.favoritedAt == favoritedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FavoriteStoreModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.address, address) || other.address == address)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.averageRating, averageRating) || other.averageRating == averageRating)&&(identical(other.isFavorite, isFavorite) || other.isFavorite == isFavorite)&&(identical(other.favoritedAt, favoritedAt) || other.favoritedAt == favoritedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,slug,logoUrl,coverImageUrl,address,phoneNumber,isFavorite,favoritedAt);
+int get hashCode => Object.hash(runtimeType,id,name,slug,logoUrl,coverImageUrl,address,phoneNumber,averageRating,isFavorite,favoritedAt);
 
 @override
 String toString() {
-  return 'FavoriteStoreModel(id: $id, name: $name, slug: $slug, logoUrl: $logoUrl, coverImageUrl: $coverImageUrl, address: $address, phoneNumber: $phoneNumber, isFavorite: $isFavorite, favoritedAt: $favoritedAt)';
+  return 'FavoriteStoreModel(id: $id, name: $name, slug: $slug, logoUrl: $logoUrl, coverImageUrl: $coverImageUrl, address: $address, phoneNumber: $phoneNumber, averageRating: $averageRating, isFavorite: $isFavorite, favoritedAt: $favoritedAt)';
 }
 
 
@@ -263,7 +265,7 @@ abstract mixin class _$FavoriteStoreModelCopyWith<$Res> implements $FavoriteStor
   factory _$FavoriteStoreModelCopyWith(_FavoriteStoreModel value, $Res Function(_FavoriteStoreModel) _then) = __$FavoriteStoreModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'name', defaultValue: '') String name,@JsonKey(name: 'slug', defaultValue: '') String slug,@JsonKey(name: 'logoUrl') String? logoUrl,@JsonKey(name: 'coverImageUrl') String? coverImageUrl,@JsonKey(name: 'address', defaultValue: '') String address,@JsonKey(name: 'phoneNumber') String? phoneNumber,@JsonKey(name: 'isFavorite', defaultValue: true) bool isFavorite,@JsonKey(name: 'favoritedAt') String? favoritedAt
+@JsonKey(readValue: _readId) String id,@JsonKey(readValue: _readName, defaultValue: '') String name,@JsonKey(readValue: _readSlug, defaultValue: '') String slug,@JsonKey(readValue: _readLogoUrl) String? logoUrl,@JsonKey(readValue: _readCoverImageUrl) String? coverImageUrl,@JsonKey(readValue: _readAddress, defaultValue: '') String address,@JsonKey(readValue: _readPhoneNumber) String? phoneNumber,@JsonKey(readValue: _readRating, fromJson: _ratingFromJson) double? averageRating,@JsonKey(readValue: _readIsFavorite, defaultValue: true) bool isFavorite,@JsonKey(readValue: _readFavoritedAt) String? favoritedAt
 });
 
 
@@ -280,7 +282,7 @@ class __$FavoriteStoreModelCopyWithImpl<$Res>
 
 /// Create a copy of FavoriteStoreModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? slug = null,Object? logoUrl = freezed,Object? coverImageUrl = freezed,Object? address = null,Object? phoneNumber = freezed,Object? isFavorite = null,Object? favoritedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? slug = null,Object? logoUrl = freezed,Object? coverImageUrl = freezed,Object? address = null,Object? phoneNumber = freezed,Object? averageRating = freezed,Object? isFavorite = null,Object? favoritedAt = freezed,}) {
   return _then(_FavoriteStoreModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -289,7 +291,8 @@ as String,logoUrl: freezed == logoUrl ? _self.logoUrl : logoUrl // ignore: cast_
 as String?,coverImageUrl: freezed == coverImageUrl ? _self.coverImageUrl : coverImageUrl // ignore: cast_nullable_to_non_nullable
 as String?,address: null == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
 as String,phoneNumber: freezed == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
-as String?,isFavorite: null == isFavorite ? _self.isFavorite : isFavorite // ignore: cast_nullable_to_non_nullable
+as String?,averageRating: freezed == averageRating ? _self.averageRating : averageRating // ignore: cast_nullable_to_non_nullable
+as double?,isFavorite: null == isFavorite ? _self.isFavorite : isFavorite // ignore: cast_nullable_to_non_nullable
 as bool,favoritedAt: freezed == favoritedAt ? _self.favoritedAt : favoritedAt // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -302,7 +305,7 @@ as String?,
 /// @nodoc
 mixin _$FavoriteListResponseModel {
 
- List<FavoriteStoreModel> get items; Map<String, dynamic>? get pagination;
+@JsonKey(readValue: _readItems) List<FavoriteStoreModel> get items; Map<String, dynamic>? get pagination;
 /// Create a copy of FavoriteListResponseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -335,7 +338,7 @@ abstract mixin class $FavoriteListResponseModelCopyWith<$Res>  {
   factory $FavoriteListResponseModelCopyWith(FavoriteListResponseModel value, $Res Function(FavoriteListResponseModel) _then) = _$FavoriteListResponseModelCopyWithImpl;
 @useResult
 $Res call({
- List<FavoriteStoreModel> items, Map<String, dynamic>? pagination
+@JsonKey(readValue: _readItems) List<FavoriteStoreModel> items, Map<String, dynamic>? pagination
 });
 
 
@@ -441,7 +444,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<FavoriteStoreModel> items,  Map<String, dynamic>? pagination)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(readValue: _readItems)  List<FavoriteStoreModel> items,  Map<String, dynamic>? pagination)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FavoriteListResponseModel() when $default != null:
 return $default(_that.items,_that.pagination);case _:
@@ -462,7 +465,7 @@ return $default(_that.items,_that.pagination);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<FavoriteStoreModel> items,  Map<String, dynamic>? pagination)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(readValue: _readItems)  List<FavoriteStoreModel> items,  Map<String, dynamic>? pagination)  $default,) {final _that = this;
 switch (_that) {
 case _FavoriteListResponseModel():
 return $default(_that.items,_that.pagination);case _:
@@ -482,7 +485,7 @@ return $default(_that.items,_that.pagination);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<FavoriteStoreModel> items,  Map<String, dynamic>? pagination)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(readValue: _readItems)  List<FavoriteStoreModel> items,  Map<String, dynamic>? pagination)?  $default,) {final _that = this;
 switch (_that) {
 case _FavoriteListResponseModel() when $default != null:
 return $default(_that.items,_that.pagination);case _:
@@ -497,11 +500,11 @@ return $default(_that.items,_that.pagination);case _:
 @JsonSerializable()
 
 class _FavoriteListResponseModel extends FavoriteListResponseModel {
-  const _FavoriteListResponseModel({final  List<FavoriteStoreModel> items = const [], final  Map<String, dynamic>? pagination}): _items = items,_pagination = pagination,super._();
+  const _FavoriteListResponseModel({@JsonKey(readValue: _readItems) final  List<FavoriteStoreModel> items = const [], final  Map<String, dynamic>? pagination}): _items = items,_pagination = pagination,super._();
   factory _FavoriteListResponseModel.fromJson(Map<String, dynamic> json) => _$FavoriteListResponseModelFromJson(json);
 
  final  List<FavoriteStoreModel> _items;
-@override@JsonKey() List<FavoriteStoreModel> get items {
+@override@JsonKey(readValue: _readItems) List<FavoriteStoreModel> get items {
   if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_items);
@@ -550,7 +553,7 @@ abstract mixin class _$FavoriteListResponseModelCopyWith<$Res> implements $Favor
   factory _$FavoriteListResponseModelCopyWith(_FavoriteListResponseModel value, $Res Function(_FavoriteListResponseModel) _then) = __$FavoriteListResponseModelCopyWithImpl;
 @override @useResult
 $Res call({
- List<FavoriteStoreModel> items, Map<String, dynamic>? pagination
+@JsonKey(readValue: _readItems) List<FavoriteStoreModel> items, Map<String, dynamic>? pagination
 });
 
 

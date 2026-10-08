@@ -26,6 +26,7 @@ class StoreListBloc extends Bloc<StoreListEvent, StoreListState> {
 
     final result = await getStoresUseCase(
       search: event.search,
+      city: event.city,
       province: event.province,
       district: event.district,
       page: 1,
@@ -43,6 +44,7 @@ class StoreListBloc extends Bloc<StoreListEvent, StoreListState> {
           hasMore: stores.length >= 10,
           currentPage: 1,
           search: event.search,
+          city: event.city,
           province: event.province,
           district: event.district,
           failure: null,
@@ -60,6 +62,7 @@ class StoreListBloc extends Bloc<StoreListEvent, StoreListState> {
     final nextPage = state.currentPage + 1;
     final result = await getStoresUseCase(
       search: state.search,
+      city: state.city,
       province: state.province,
       district: state.district,
       page: nextPage,

@@ -13,6 +13,7 @@ class SearchBodyView extends StatelessWidget {
   final ValueChanged<String>? onRemoveServiceFilter;
 
   final List<SearchStoreItem> stores;
+  final bool isLoading;
   final ValueChanged<SearchStoreItem>? onStoreTap;
   final ValueChanged<SearchStoreItem>? onFavoriteToggle;
   final VoidCallback? onResetFilters;
@@ -28,6 +29,7 @@ class SearchBodyView extends StatelessWidget {
     required this.activeFilters,
     this.onRemoveServiceFilter,
     required this.stores,
+    this.isLoading = false,
     this.onStoreTap,
     this.onFavoriteToggle,
     this.onResetFilters,
@@ -65,6 +67,7 @@ class SearchBodyView extends StatelessWidget {
             // 2. Search Content Section (List of Store Cards)
             SearchContentSection(
               stores: stores,
+              isLoading: isLoading,
               onStoreTap: onStoreTap,
               onFavoriteToggle: onFavoriteToggle,
               onResetFilters: onResetFilters,

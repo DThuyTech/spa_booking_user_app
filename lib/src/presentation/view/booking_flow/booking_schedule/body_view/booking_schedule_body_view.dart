@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../../shared/shared.dart';
 import '../../models/booking_models.dart';
 import '../widgets/booking_schedule_matrix_grid.dart';
 
@@ -173,9 +173,9 @@ class BookingScheduleBodyView extends StatelessWidget {
                         ? null
                         : Border.all(color: const Color(0xFFE2E8F0)),
                   ),
-                  child: const Text(
-                    'Today',
-                    style: TextStyle(
+                  child: Text(
+                    context.l10n.today,
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF475569),

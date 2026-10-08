@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookingServiceItemEntity {
 
- String get serviceId; String get name; int get price; int get duration;
+ String get serviceId; String get name; double get price; int get duration;
 /// Create a copy of BookingServiceItemEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $BookingServiceItemEntityCopyWith<$Res>  {
   factory $BookingServiceItemEntityCopyWith(BookingServiceItemEntity value, $Res Function(BookingServiceItemEntity) _then) = _$BookingServiceItemEntityCopyWithImpl;
 @useResult
 $Res call({
- String serviceId, String name, int price, int duration
+ String serviceId, String name, double price, int duration
 });
 
 
@@ -67,7 +67,7 @@ class _$BookingServiceItemEntityCopyWithImpl<$Res>
 serviceId: null == serviceId ? _self.serviceId : serviceId // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
-as int,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
+as double,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -153,7 +153,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String serviceId,  String name,  int price,  int duration)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String serviceId,  String name,  double price,  int duration)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingServiceItemEntity() when $default != null:
 return $default(_that.serviceId,_that.name,_that.price,_that.duration);case _:
@@ -174,7 +174,7 @@ return $default(_that.serviceId,_that.name,_that.price,_that.duration);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String serviceId,  String name,  int price,  int duration)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String serviceId,  String name,  double price,  int duration)  $default,) {final _that = this;
 switch (_that) {
 case _BookingServiceItemEntity():
 return $default(_that.serviceId,_that.name,_that.price,_that.duration);case _:
@@ -194,7 +194,7 @@ return $default(_that.serviceId,_that.name,_that.price,_that.duration);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String serviceId,  String name,  int price,  int duration)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String serviceId,  String name,  double price,  int duration)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingServiceItemEntity() when $default != null:
 return $default(_that.serviceId,_that.name,_that.price,_that.duration);case _:
@@ -214,7 +214,7 @@ class _BookingServiceItemEntity implements BookingServiceItemEntity {
 
 @override final  String serviceId;
 @override final  String name;
-@override final  int price;
+@override final  double price;
 @override@JsonKey() final  int duration;
 
 /// Create a copy of BookingServiceItemEntity
@@ -247,7 +247,7 @@ abstract mixin class _$BookingServiceItemEntityCopyWith<$Res> implements $Bookin
   factory _$BookingServiceItemEntityCopyWith(_BookingServiceItemEntity value, $Res Function(_BookingServiceItemEntity) _then) = __$BookingServiceItemEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String serviceId, String name, int price, int duration
+ String serviceId, String name, double price, int duration
 });
 
 
@@ -269,7 +269,7 @@ class __$BookingServiceItemEntityCopyWithImpl<$Res>
 serviceId: null == serviceId ? _self.serviceId : serviceId // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
-as int,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
+as double,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -1338,7 +1338,7 @@ as bool,
 /// @nodoc
 mixin _$BookingEntity {
 
- String get id; String get bookingCode; String? get storeId; String? get customerId; String get status; String get paymentStatus; DateTime get startAt; DateTime get endAt; int get totalDuration; int get totalAmount; List<BookingServiceItemEntity> get services; BookingStaffSnapshotEntity? get staffSnapshot; BookingCustomerSnapshotEntity? get customerSnapshot; BookingStoreSnapshotEntity? get store; BookingActionsEntity? get actions; String? get note; String? get cancellationReason; DateTime? get cancelledAt; DateTime? get createdAt;
+ String get id; String get bookingCode; String? get storeId; String? get customerId; String get status; String get paymentStatus; DateTime get startAt; DateTime get endAt; double get totalDuration; double get totalAmount; List<BookingServiceItemEntity> get services; BookingStaffSnapshotEntity? get staffSnapshot; BookingCustomerSnapshotEntity? get customerSnapshot; BookingStoreSnapshotEntity? get store; BookingActionsEntity? get actions; String? get note; String? get cancellationReason; DateTime? get cancelledAt; DateTime? get createdAt;
 /// Create a copy of BookingEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1369,7 +1369,7 @@ abstract mixin class $BookingEntityCopyWith<$Res>  {
   factory $BookingEntityCopyWith(BookingEntity value, $Res Function(BookingEntity) _then) = _$BookingEntityCopyWithImpl;
 @useResult
 $Res call({
- String id, String bookingCode, String? storeId, String? customerId, String status, String paymentStatus, DateTime startAt, DateTime endAt, int totalDuration, int totalAmount, List<BookingServiceItemEntity> services, BookingStaffSnapshotEntity? staffSnapshot, BookingCustomerSnapshotEntity? customerSnapshot, BookingStoreSnapshotEntity? store, BookingActionsEntity? actions, String? note, String? cancellationReason, DateTime? cancelledAt, DateTime? createdAt
+ String id, String bookingCode, String? storeId, String? customerId, String status, String paymentStatus, DateTime startAt, DateTime endAt, double totalDuration, double totalAmount, List<BookingServiceItemEntity> services, BookingStaffSnapshotEntity? staffSnapshot, BookingCustomerSnapshotEntity? customerSnapshot, BookingStoreSnapshotEntity? store, BookingActionsEntity? actions, String? note, String? cancellationReason, DateTime? cancelledAt, DateTime? createdAt
 });
 
 
@@ -1397,8 +1397,8 @@ as String,paymentStatus: null == paymentStatus ? _self.paymentStatus : paymentSt
 as String,startAt: null == startAt ? _self.startAt : startAt // ignore: cast_nullable_to_non_nullable
 as DateTime,endAt: null == endAt ? _self.endAt : endAt // ignore: cast_nullable_to_non_nullable
 as DateTime,totalDuration: null == totalDuration ? _self.totalDuration : totalDuration // ignore: cast_nullable_to_non_nullable
-as int,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
-as int,services: null == services ? _self.services : services // ignore: cast_nullable_to_non_nullable
+as double,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
+as double,services: null == services ? _self.services : services // ignore: cast_nullable_to_non_nullable
 as List<BookingServiceItemEntity>,staffSnapshot: freezed == staffSnapshot ? _self.staffSnapshot : staffSnapshot // ignore: cast_nullable_to_non_nullable
 as BookingStaffSnapshotEntity?,customerSnapshot: freezed == customerSnapshot ? _self.customerSnapshot : customerSnapshot // ignore: cast_nullable_to_non_nullable
 as BookingCustomerSnapshotEntity?,store: freezed == store ? _self.store : store // ignore: cast_nullable_to_non_nullable
@@ -1540,7 +1540,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String bookingCode,  String? storeId,  String? customerId,  String status,  String paymentStatus,  DateTime startAt,  DateTime endAt,  int totalDuration,  int totalAmount,  List<BookingServiceItemEntity> services,  BookingStaffSnapshotEntity? staffSnapshot,  BookingCustomerSnapshotEntity? customerSnapshot,  BookingStoreSnapshotEntity? store,  BookingActionsEntity? actions,  String? note,  String? cancellationReason,  DateTime? cancelledAt,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String bookingCode,  String? storeId,  String? customerId,  String status,  String paymentStatus,  DateTime startAt,  DateTime endAt,  double totalDuration,  double totalAmount,  List<BookingServiceItemEntity> services,  BookingStaffSnapshotEntity? staffSnapshot,  BookingCustomerSnapshotEntity? customerSnapshot,  BookingStoreSnapshotEntity? store,  BookingActionsEntity? actions,  String? note,  String? cancellationReason,  DateTime? cancelledAt,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingEntity() when $default != null:
 return $default(_that.id,_that.bookingCode,_that.storeId,_that.customerId,_that.status,_that.paymentStatus,_that.startAt,_that.endAt,_that.totalDuration,_that.totalAmount,_that.services,_that.staffSnapshot,_that.customerSnapshot,_that.store,_that.actions,_that.note,_that.cancellationReason,_that.cancelledAt,_that.createdAt);case _:
@@ -1561,7 +1561,7 @@ return $default(_that.id,_that.bookingCode,_that.storeId,_that.customerId,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String bookingCode,  String? storeId,  String? customerId,  String status,  String paymentStatus,  DateTime startAt,  DateTime endAt,  int totalDuration,  int totalAmount,  List<BookingServiceItemEntity> services,  BookingStaffSnapshotEntity? staffSnapshot,  BookingCustomerSnapshotEntity? customerSnapshot,  BookingStoreSnapshotEntity? store,  BookingActionsEntity? actions,  String? note,  String? cancellationReason,  DateTime? cancelledAt,  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String bookingCode,  String? storeId,  String? customerId,  String status,  String paymentStatus,  DateTime startAt,  DateTime endAt,  double totalDuration,  double totalAmount,  List<BookingServiceItemEntity> services,  BookingStaffSnapshotEntity? staffSnapshot,  BookingCustomerSnapshotEntity? customerSnapshot,  BookingStoreSnapshotEntity? store,  BookingActionsEntity? actions,  String? note,  String? cancellationReason,  DateTime? cancelledAt,  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _BookingEntity():
 return $default(_that.id,_that.bookingCode,_that.storeId,_that.customerId,_that.status,_that.paymentStatus,_that.startAt,_that.endAt,_that.totalDuration,_that.totalAmount,_that.services,_that.staffSnapshot,_that.customerSnapshot,_that.store,_that.actions,_that.note,_that.cancellationReason,_that.cancelledAt,_that.createdAt);case _:
@@ -1581,7 +1581,7 @@ return $default(_that.id,_that.bookingCode,_that.storeId,_that.customerId,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String bookingCode,  String? storeId,  String? customerId,  String status,  String paymentStatus,  DateTime startAt,  DateTime endAt,  int totalDuration,  int totalAmount,  List<BookingServiceItemEntity> services,  BookingStaffSnapshotEntity? staffSnapshot,  BookingCustomerSnapshotEntity? customerSnapshot,  BookingStoreSnapshotEntity? store,  BookingActionsEntity? actions,  String? note,  String? cancellationReason,  DateTime? cancelledAt,  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String bookingCode,  String? storeId,  String? customerId,  String status,  String paymentStatus,  DateTime startAt,  DateTime endAt,  double totalDuration,  double totalAmount,  List<BookingServiceItemEntity> services,  BookingStaffSnapshotEntity? staffSnapshot,  BookingCustomerSnapshotEntity? customerSnapshot,  BookingStoreSnapshotEntity? store,  BookingActionsEntity? actions,  String? note,  String? cancellationReason,  DateTime? cancelledAt,  DateTime? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingEntity() when $default != null:
 return $default(_that.id,_that.bookingCode,_that.storeId,_that.customerId,_that.status,_that.paymentStatus,_that.startAt,_that.endAt,_that.totalDuration,_that.totalAmount,_that.services,_that.staffSnapshot,_that.customerSnapshot,_that.store,_that.actions,_that.note,_that.cancellationReason,_that.cancelledAt,_that.createdAt);case _:
@@ -1607,8 +1607,8 @@ class _BookingEntity implements BookingEntity {
 @override@JsonKey() final  String paymentStatus;
 @override final  DateTime startAt;
 @override final  DateTime endAt;
-@override@JsonKey() final  int totalDuration;
-@override@JsonKey() final  int totalAmount;
+@override@JsonKey() final  double totalDuration;
+@override@JsonKey() final  double totalAmount;
  final  List<BookingServiceItemEntity> _services;
 @override@JsonKey() List<BookingServiceItemEntity> get services {
   if (_services is EqualUnmodifiableListView) return _services;
@@ -1655,7 +1655,7 @@ abstract mixin class _$BookingEntityCopyWith<$Res> implements $BookingEntityCopy
   factory _$BookingEntityCopyWith(_BookingEntity value, $Res Function(_BookingEntity) _then) = __$BookingEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String bookingCode, String? storeId, String? customerId, String status, String paymentStatus, DateTime startAt, DateTime endAt, int totalDuration, int totalAmount, List<BookingServiceItemEntity> services, BookingStaffSnapshotEntity? staffSnapshot, BookingCustomerSnapshotEntity? customerSnapshot, BookingStoreSnapshotEntity? store, BookingActionsEntity? actions, String? note, String? cancellationReason, DateTime? cancelledAt, DateTime? createdAt
+ String id, String bookingCode, String? storeId, String? customerId, String status, String paymentStatus, DateTime startAt, DateTime endAt, double totalDuration, double totalAmount, List<BookingServiceItemEntity> services, BookingStaffSnapshotEntity? staffSnapshot, BookingCustomerSnapshotEntity? customerSnapshot, BookingStoreSnapshotEntity? store, BookingActionsEntity? actions, String? note, String? cancellationReason, DateTime? cancelledAt, DateTime? createdAt
 });
 
 
@@ -1683,8 +1683,8 @@ as String,paymentStatus: null == paymentStatus ? _self.paymentStatus : paymentSt
 as String,startAt: null == startAt ? _self.startAt : startAt // ignore: cast_nullable_to_non_nullable
 as DateTime,endAt: null == endAt ? _self.endAt : endAt // ignore: cast_nullable_to_non_nullable
 as DateTime,totalDuration: null == totalDuration ? _self.totalDuration : totalDuration // ignore: cast_nullable_to_non_nullable
-as int,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
-as int,services: null == services ? _self._services : services // ignore: cast_nullable_to_non_nullable
+as double,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
+as double,services: null == services ? _self._services : services // ignore: cast_nullable_to_non_nullable
 as List<BookingServiceItemEntity>,staffSnapshot: freezed == staffSnapshot ? _self.staffSnapshot : staffSnapshot // ignore: cast_nullable_to_non_nullable
 as BookingStaffSnapshotEntity?,customerSnapshot: freezed == customerSnapshot ? _self.customerSnapshot : customerSnapshot // ignore: cast_nullable_to_non_nullable
 as BookingCustomerSnapshotEntity?,store: freezed == store ? _self.store : store // ignore: cast_nullable_to_non_nullable

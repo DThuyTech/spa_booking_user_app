@@ -54,9 +54,9 @@ class StoreAvailableNowCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Available now',
-                    style: TextStyle(
+                  Text(
+                    context.l10n.availableNow,
+                    style: const TextStyle(
                       fontSize: 19,
                       fontWeight: FontWeight.w700,
                       color: _textDark,

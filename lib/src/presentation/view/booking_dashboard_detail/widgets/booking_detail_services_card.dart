@@ -1,6 +1,6 @@
-import 'package:spa_booking/src/presentation/view/booking_dashboard_detail/mockup_data/booking_dashboard_detail_mock_data.dart';
+import '../models/booking_detail_models.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:spa_booking/src/shared/shared.dart';
 
 class BookingDetailServicesCard extends StatelessWidget {
   final List<DetailServiceItem> services;
@@ -32,13 +32,13 @@ class BookingDetailServicesCard extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             color: const Color(0xFFFA7762),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(LucideIcons.scissors, size: 15, color: Colors.white),
-                SizedBox(width: 8),
+                const Icon(LucideIcons.scissors, size: 15, color: Colors.white),
+                const SizedBox(width: 8),
                 Text(
-                  'SERVICES',
-                  style: TextStyle(
+                  context.l10n.servicesCaps,
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w800,
                     color: Colors.white,

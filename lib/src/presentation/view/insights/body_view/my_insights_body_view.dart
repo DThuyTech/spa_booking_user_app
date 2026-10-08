@@ -5,7 +5,7 @@ import '../../../../data/model/analytics/customer_spending_analytics_model.dart'
 import '../../../bloc/insights/spending_analytics_bloc.dart';
 import '../../../bloc/insights/spending_analytics_event.dart';
 import '../../../bloc/insights/spending_analytics_state.dart';
-import '../mockup_data/my_insights_mock_data.dart';
+import '../models/insights_models.dart';
 import '../widgets/insights_activity_chart_card.dart';
 import '../widgets/insights_favorite_salon_card.dart';
 import '../widgets/insights_favorite_services_card.dart';
@@ -64,60 +64,55 @@ class MyInsightsBodyView extends StatelessWidget {
     CustomerSpendingAnalyticsModel? analytics,
     String selectedPeriodLabel,
   ) {
-    final int bookingsCount =
-        analytics?.summary.totalVisits ??
-        MyInsightsMockData.currentMonthBookings;
-    final String bookingsDiff = analytics != null
-        ? (analytics.summary.totalVisits > 0
-              ? '+${analytics.summary.totalVisits}'
-              : '0')
-        : MyInsightsMockData.bookingsDiff;
+    final int bookingsCount = analytics?.summary.totalVisits ?? 0;
+    final String bookingsDiff =
+        analytics != null && analytics.summary.totalVisits > 0
+        ? '+${analytics.summary.totalVisits}'
+        : '0';
     final String spentDisplay = analytics != null
         ? _formatVnd(analytics.summary.totalSpent)
-        : MyInsightsMockData.spentDisplay;
+        : '0 đ';
 
     final List<double> activityPoints =
         (analytics?.timeline.isNotEmpty ?? false)
         ? analytics!.timeline.map((e) => e.visits.toDouble()).toList()
-        : MyInsightsMockData.bookingActivityPoints;
+        : const [];
 
     final List<double> spendingPoints =
         (analytics?.timeline.isNotEmpty ?? false)
         ? analytics!.timeline.map((e) => e.spent.toDouble()).toList()
-        : MyInsightsMockData.spendingPoints;
+        : const [];
 
     final List<String> chartLabels = (analytics?.timeline.isNotEmpty ?? false)
         ? analytics!.timeline.map((e) => e.date).toList()
-        : MyInsightsMockData.chartMonths;
+        : const [];
 
-    final int totalVisits =
-        analytics?.summary.totalVisits ?? MyInsightsMockData.totalVisitsYear;
-    final String visitCadence =
-        analytics?.summary.visitCadence ?? MyInsightsMockData.visitCadence;
+    final int totalVisits = analytics?.summary.totalVisits ?? 0;
+    final String visitCadence = analytics?.summary.visitCadence ?? '0 lượt';
 
     final String favoriteSalonName =
         analytics?.summary.favoriteSalonName ??
         analytics?.summary.mostVisitedStore?.storeName ??
-        MyInsightsMockData.favoriteSalonName;
+        'Chưa có dữ liệu';
 
     final String favoriteSalonStats =
         analytics?.summary.mostVisitedStore != null
-        ? '${analytics!.summary.mostVisitedStore!.visitCount} visits • ${_formatVnd(analytics.summary.mostVisitedStore!.totalSpent)}'
-        : MyInsightsMockData.favoriteSalonStats;
+        ? '${analytics!.summary.mostVisitedStore!.visitCount} lần • ${_formatVnd(analytics.summary.mostVisitedStore!.totalSpent)}'
+        : '0 lần';
 
     final List<FavoriteServiceItem> services =
         (analytics?.servicesBreakdown.isNotEmpty ?? false)
         ? analytics!.servicesBreakdown.asMap().entries.map((entry) {
             return FavoriteServiceItem(
               name: entry.value.serviceName,
-              lastBooked: 'Booked ${entry.value.bookingCount} times',
+              lastBooked: 'Đã đặt ${entry.value.bookingCount} lần',
               bookingsCount: entry.value.bookingCount,
               iconType: entry.key == 0
                   ? 'scissors'
                   : (entry.key == 1 ? 'palette' : 'smile'),
             );
           }).toList()
-        : MyInsightsMockData.favoriteServices;
+        : const [];
 
     return RefreshIndicator(
       color: const Color(0xFFFF6F59),
@@ -187,27 +182,26 @@ class MyInsightsBodyView extends StatelessWidget {
             const SizedBox(height: 16),
 
             // 6. Usual Visit (Day + Time + Clock Watermark)
-            const InsightsUsualVisitCard(
-              day: MyInsightsMockData.usualVisitDay,
-              time: MyInsightsMockData.usualVisitTime,
+            InsightsUsualVisitCard(
+              day: analytics?.summary.mostVisitedStore != null
+                  ? 'Cuối tuần'
+                  : '---',
+              time: analytics?.summary.mostVisitedStore != null
+                  ? 'Chiều'
+                  : '---',
             ),
 
-            const SizedBox(height: 16),
-
-            // 7. Favorite Services List
-            InsightsFavoriteServicesCard(services: services),
-
-            const SizedBox(height: 16),
-
-            // 8. Tip 1: Top Service
-            if (MyInsightsMockData.tips.isNotEmpty)
-              InsightsTipBannerCard(item: MyInsightsMockData.tips[0]),
-
-            const SizedBox(height: 12),
-
-            // 9. Tip 2: Spending Trend
-            if (MyInsightsMockData.tips.length > 1)
-              InsightsTipBannerCard(item: MyInsightsMockData.tips[1]),
+            if (services.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              InsightsFavoriteServicesCard(services: services),
+              const SizedBox(height: 16),
+              InsightsTipBannerCard(
+                item: InsightsTipItem(
+                  title: 'Dịch vụ yêu thích',
+                  message: 'Bạn thường đặt ${services.first.name} nhiều nhất.',
+                ),
+              ),
+            ],
 
             const SizedBox(height: 48),
           ],

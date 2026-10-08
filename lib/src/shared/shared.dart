@@ -40,6 +40,7 @@ export 'design_system/components/dialogs/app_dialog.dart';
 export 'dialogs/app_confirm_dialog.dart';
 export 'design_system/components/sheets/app_action_sheet.dart';
 export 'design_system/components/sheets/app_bottom_sheet.dart';
+export 'design_system/components/sheets/city_selection_bottom_sheet.dart';
 export 'bottom_sheets/app_selection_sheet.dart';
 
 // Chips
@@ -76,3 +77,13 @@ export 'design_system/components/games/game_visual_card.dart';
 
 // Icons
 export 'package:flutter_lucide/flutter_lucide.dart';
+
+// Utils
+export 'utils/avatar_helper.dart';
+export 'utils/distance_helper.dart';
+
+// Extensions
+export '../core/extensions/datetime_extension.dart';
+
+// Localization
+export '../core/localization/app_localizations.dart';

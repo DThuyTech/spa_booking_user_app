@@ -11,7 +11,6 @@ part of 'booking_availability_model.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$BookingSlotModel {
 
@@ -22,8 +21,6 @@ mixin _$BookingSlotModel {
 @pragma('vm:prefer-inline')
 $BookingSlotModelCopyWith<BookingSlotModel> get copyWith => _$BookingSlotModelCopyWithImpl<BookingSlotModel>(this as BookingSlotModel, _$identity);
 
-  /// Serializes this BookingSlotModel to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingSlotModel&&(identical(other.time, time) || other.time == time)&&(identical(other.available, available) || other.available == available)&&(identical(other.availableStaffCount, availableStaffCount) || other.availableStaffCount == availableStaffCount)&&(identical(other.reason, reason) || other.reason == reason));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,time,available,availableStaffCount,reason);
 
@@ -209,11 +206,11 @@ return $default(_that.time,_that.available,_that.availableStaffCount,_that.reaso
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _BookingSlotModel implements BookingSlotModel {
   const _BookingSlotModel({required this.time, required this.available, this.availableStaffCount, this.reason});
-  factory _BookingSlotModel.fromJson(Map<String, dynamic> json) => _$BookingSlotModelFromJson(json);
+  
 
 @override final  String time;
 @override final  bool available;
@@ -226,17 +223,14 @@ class _BookingSlotModel implements BookingSlotModel {
 @pragma('vm:prefer-inline')
 _$BookingSlotModelCopyWith<_BookingSlotModel> get copyWith => __$BookingSlotModelCopyWithImpl<_BookingSlotModel>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$BookingSlotModelToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingSlotModel&&(identical(other.time, time) || other.time == time)&&(identical(other.available, available) || other.available == available)&&(identical(other.availableStaffCount, availableStaffCount) || other.availableStaffCount == availableStaffCount)&&(identical(other.reason, reason) || other.reason == reason));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,time,available,availableStaffCount,reason);
 
@@ -283,7 +277,6 @@ as String?,
 
 }
 
-
 /// @nodoc
 mixin _$BookingAvailabilityModel {
 
@@ -294,8 +287,6 @@ mixin _$BookingAvailabilityModel {
 @pragma('vm:prefer-inline')
 $BookingAvailabilityModelCopyWith<BookingAvailabilityModel> get copyWith => _$BookingAvailabilityModelCopyWithImpl<BookingAvailabilityModel>(this as BookingAvailabilityModel, _$identity);
 
-  /// Serializes this BookingAvailabilityModel to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -303,7 +294,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingAvailabilityModel&&(identical(other.storeId, storeId) || other.storeId == storeId)&&(identical(other.date, date) || other.date == date)&&(identical(other.totalDurationMinutes, totalDurationMinutes) || other.totalDurationMinutes == totalDurationMinutes)&&const DeepCollectionEquality().equals(other.slots, slots));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,storeId,date,totalDurationMinutes,const DeepCollectionEquality().hash(slots));
 
@@ -481,11 +472,11 @@ return $default(_that.storeId,_that.date,_that.totalDurationMinutes,_that.slots)
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _BookingAvailabilityModel implements BookingAvailabilityModel {
   const _BookingAvailabilityModel({required this.storeId, required this.date, this.totalDurationMinutes = 0, final  List<BookingSlotModel> slots = const []}): _slots = slots;
-  factory _BookingAvailabilityModel.fromJson(Map<String, dynamic> json) => _$BookingAvailabilityModelFromJson(json);
+  
 
 @override final  String storeId;
 @override final  String date;
@@ -504,17 +495,14 @@ class _BookingAvailabilityModel implements BookingAvailabilityModel {
 @pragma('vm:prefer-inline')
 _$BookingAvailabilityModelCopyWith<_BookingAvailabilityModel> get copyWith => __$BookingAvailabilityModelCopyWithImpl<_BookingAvailabilityModel>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$BookingAvailabilityModelToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingAvailabilityModel&&(identical(other.storeId, storeId) || other.storeId == storeId)&&(identical(other.date, date) || other.date == date)&&(identical(other.totalDurationMinutes, totalDurationMinutes) || other.totalDurationMinutes == totalDurationMinutes)&&const DeepCollectionEquality().equals(other._slots, _slots));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,storeId,date,totalDurationMinutes,const DeepCollectionEquality().hash(_slots));
 

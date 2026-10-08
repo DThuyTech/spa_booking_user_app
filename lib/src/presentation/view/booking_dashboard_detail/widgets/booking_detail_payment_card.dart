@@ -1,23 +1,42 @@
 import 'package:flutter/material.dart';
+import '../../../../core/localization/app_localizations.dart';
 
 class BookingDetailPaymentCard extends StatelessWidget {
   final String subtotal;
-  final String discount;
-  final String discountBadge;
+  final String? discount;
+  final String? discountBadge;
   final String totalAmount;
   final String paymentStatus;
 
   const BookingDetailPaymentCard({
     super.key,
     required this.subtotal,
-    required this.discount,
-    required this.discountBadge,
+    this.discount,
+    this.discountBadge,
     required this.totalAmount,
     required this.paymentStatus,
   });
 
+  bool get _hasDiscount {
+    if (discount == null) return false;
+    final d = discount!.trim().toLowerCase();
+    if (d.isEmpty ||
+        d == '0' ||
+        d == '0 vnd' ||
+        d == '0đ' ||
+        d == '0 đ' ||
+        d == '0\$' ||
+        d == '-0 vnd' ||
+        d == '-0đ') {
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
@@ -39,9 +58,9 @@ class BookingDetailPaymentCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Subtotal',
-                style: TextStyle(
+              Text(
+                l10n.subtotal,
+                style: const TextStyle(
                   fontSize: 13.5,
                   fontWeight: FontWeight.w500,
                   color: Color(0xFF64748B),
@@ -58,53 +77,56 @@ class BookingDetailPaymentCard extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 10),
-
-          // Discount Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  const Text(
-                    'Discount',
-                    style: TextStyle(
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF64748B),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE0F7F6),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      discountBadge,
+          // Discount Row (only shown if discount exists and is greater than 0)
+          if (_hasDiscount) ...[
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      l10n.discount,
                       style: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFF0F766E),
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF64748B),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Text(
-                discount,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF0F766E),
+                    if (discountBadge != null && discountBadge!.isNotEmpty) ...[
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE0F7F6),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          discountBadge!,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF0F766E),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
-              ),
-            ],
-          ),
+                Text(
+                  discount!,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF0F766E),
+                  ),
+                ),
+              ],
+            ),
+          ],
 
           const SizedBox(height: 14),
           const Divider(height: 1, color: Color(0xFFF1F5F9)),
@@ -117,9 +139,9 @@ class BookingDetailPaymentCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Total Amount',
-                    style: TextStyle(
+                  Text(
+                    l10n.totalAmount,
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF64748B),

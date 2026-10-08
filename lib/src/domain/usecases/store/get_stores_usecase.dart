@@ -10,15 +10,31 @@ class GetStoresUseCase {
 
   Future<Either<Failure, List<StoreEntity>>> call({
     String? search,
+    String? city,
     String? province,
     String? district,
+    bool? isFavorite,
+    int? minPrice,
+    int? maxPrice,
+    double? minRating,
+    double? lat,
+    double? lng,
+    String? sortBy,
     int page = 1,
     int limit = 10,
   }) {
     return _repository.getStores(
       search: search,
+      city: city,
       province: province,
       district: district,
+      isFavorite: isFavorite,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      minRating: minRating,
+      lat: lat,
+      lng: lng,
+      sortBy: sortBy,
       page: page,
       limit: limit,
     );

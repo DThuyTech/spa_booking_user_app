@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
 
 class HomeAppointmentItem {
   final String id;
@@ -166,7 +166,7 @@ class HomeUpcomingAppointmentCard extends StatelessWidget {
                     const SizedBox(width: 5),
                     Expanded(
                       child: Text(
-                        'Stylist: ${appointment.stylist}',
+                        '${context.l10n.stylist}: ${appointment.stylist}',
                         style: const TextStyle(
                           fontSize: 12.5,
                           fontWeight: FontWeight.w500,

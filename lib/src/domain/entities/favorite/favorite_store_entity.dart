@@ -8,6 +8,7 @@ abstract class FavoriteStoreEntity with _$FavoriteStoreEntity {
     required String id,
     required String name,
     required String slug,
+    double? averageRating,
     String? logoUrl,
     String? coverImageUrl,
     required String address,

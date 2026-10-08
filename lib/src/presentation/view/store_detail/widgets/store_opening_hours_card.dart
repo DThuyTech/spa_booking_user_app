@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
-import '../mockup_data/store_detail_mock_data.dart';
+import '../../../../shared/shared.dart';
+import 'package:spa_booking/src/domain/entities/store/store_business_hour_enity.dart';
 
 class StoreOpeningHoursCard extends StatefulWidget {
-  final StoreOpeningHoursItem openingHours;
+  final List<StoreBusinessHourEntity> openingHours;
 
   static const Color _coralColor = Color(0xFFFF6F59);
   static const Color _textDark = Color(0xFF1E2022);
@@ -20,6 +20,11 @@ class _StoreOpeningHoursCardState extends State<StoreOpeningHoursCard> {
 
   @override
   Widget build(BuildContext context) {
+    final dayOfWeek = DateTime.now().weekday;
+    final today = widget.openingHours.firstWhere(
+      (e) => e.dayOfWeek == dayOfWeek,
+      orElse: () => widget.openingHours.first,
+    );
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -49,9 +54,9 @@ class _StoreOpeningHoursCardState extends State<StoreOpeningHoursCard> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Opening Hours',
-                  style: TextStyle(
+                Text(
+                  context.l10n.openingHours,
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                     color: StoreOpeningHoursCard._textDark,
@@ -82,7 +87,7 @@ class _StoreOpeningHoursCardState extends State<StoreOpeningHoursCard> {
               ),
               const SizedBox(width: 8),
               Text(
-                widget.openingHours.todayHours,
+                '${context.l10n.today}, ${today.timeRanges.first.startTime} - ${today.timeRanges.first.endTime}',
                 style: const TextStyle(
                   fontSize: 13.5,
                   fontWeight: FontWeight.w500,
@@ -97,16 +102,15 @@ class _StoreOpeningHoursCardState extends State<StoreOpeningHoursCard> {
             const SizedBox(height: 14),
             const Divider(color: Color(0xFFF1F5F9), height: 1),
             const SizedBox(height: 12),
-            ...widget.openingHours.weeklySchedule.entries.map((entry) {
-              final isToday =
-                  entry.key == 'Today' || entry.key == _getCurrentDayOfWeek();
+            ...widget.openingHours.map((entry) {
+              final isToday = entry.dayOfWeek == DateTime.now().weekday;
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      entry.key,
+                      entry.dayName,
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: isToday ? FontWeight.w700 : FontWeight.w500,
@@ -116,7 +120,7 @@ class _StoreOpeningHoursCardState extends State<StoreOpeningHoursCard> {
                       ),
                     ),
                     Text(
-                      entry.value,
+                      '${entry.timeRanges.first.startTime} - ${entry.timeRanges.first.endTime}',
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: isToday ? FontWeight.w600 : FontWeight.w400,
@@ -133,27 +137,5 @@ class _StoreOpeningHoursCardState extends State<StoreOpeningHoursCard> {
         ],
       ),
     );
-  }
-
-  String _getCurrentDayOfWeek() {
-    final now = DateTime.now();
-    switch (now.weekday) {
-      case 1:
-        return 'Monday';
-      case 2:
-        return 'Tuesday';
-      case 3:
-        return 'Wednesday';
-      case 4:
-        return 'Thursday';
-      case 5:
-        return 'Friday';
-      case 6:
-        return 'Saturday';
-      case 7:
-        return 'Sunday';
-      default:
-        return '';
-    }
   }
 }

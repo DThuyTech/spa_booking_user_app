@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:spa_booking/src/domain/usecases/store/get_store_full_detail_usecase.dart';
 import '../../core/config/app_config.dart';
 import '../../core/logging/app_logger.dart';
 import '../../core/logging/log_level.dart';
@@ -26,6 +27,7 @@ import '../../data/repositories/home/home_repository_impl.dart';
 import '../../domain/repositories/auth/auth_repository.dart';
 import '../../domain/repositories/home/home_repository.dart';
 import '../../domain/usecases/auth/get_current_user.dart';
+import '../../domain/usecases/auth/delete_account_usecase.dart';
 import '../../domain/usecases/auth/logout_usecase.dart';
 import '../../domain/usecases/auth/refresh_token_usecase.dart';
 import '../../domain/usecases/auth/request_otp_usecase.dart';
@@ -35,8 +37,15 @@ import '../../domain/usecases/home/get_greeting_usecase.dart';
 import '../../domain/usecases/auth/login_usecase.dart';
 import '../../domain/usecases/auth/register_usecase.dart';
 import '../../domain/usecases/auth/save_customer_profile_usecase.dart';
+import '../../domain/usecases/auth/change_password_usecase.dart';
+import '../../domain/usecases/auth/forgot_password_usecase.dart';
+import '../../domain/usecases/auth/verify_reset_otp_usecase.dart';
+import '../../domain/usecases/auth/reset_password_usecase.dart';
+import '../../presentation/bloc/auth/change_password/change_password_cubit.dart';
+import '../../presentation/bloc/auth/forgot_password/forgot_password_cubit.dart';
 import '../../presentation/bloc/home/home_bloc.dart';
 import '../../presentation/bloc/auth/login/login_bloc.dart';
+import '../../presentation/bloc/locale/locale_cubit.dart';
 import '../../presentation/bloc/auth/register/register_bloc.dart';
 import '../../presentation/bloc/auth/otp_verification/otp_verification_bloc.dart';
 import '../../presentation/bloc/profile/profile_bloc.dart';
@@ -52,12 +61,14 @@ import '../../domain/usecases/store/get_store_categories_usecase.dart';
 import '../../domain/usecases/store/get_store_services_usecase.dart';
 import '../../domain/usecases/store/get_store_staff_usecase.dart';
 import '../../domain/usecases/store/get_store_gallery_usecase.dart';
+import '../../domain/usecases/store/get_nearby_stores_usecase.dart';
 import '../../presentation/bloc/store/store_list/store_list_bloc.dart';
 import '../../presentation/bloc/store/store_detail/store_detail_bloc.dart';
 import '../../presentation/bloc/store/store_services/store_services_bloc.dart';
 import '../../presentation/bloc/store/store_staff/store_staff_bloc.dart';
 import '../../presentation/bloc/store/store_gallery/store_gallery_bloc.dart';
 import '../../domain/usecases/store/get_store_schedule_grid_usecase.dart';
+import '../../domain/usecases/store/get_recently_booked_stores_usecase.dart';
 import '../../presentation/bloc/store/store_schedule_grid/store_schedule_grid_bloc.dart';
 
 import '../../data/datasources/remote/booking/booking_remote_data_source.dart';
@@ -84,8 +95,13 @@ import '../../domain/repositories/review/review_repository.dart';
 import '../../domain/usecases/review/get_store_reviews_usecase.dart';
 import '../../domain/usecases/review/create_store_review_usecase.dart';
 import '../../domain/usecases/review/create_booking_review_usecase.dart';
+import '../../domain/usecases/review/get_my_reviews_usecase.dart';
+import '../../domain/usecases/review/get_my_review_detail_usecase.dart';
+import '../../domain/usecases/review/update_my_review_usecase.dart';
+import '../../domain/usecases/review/delete_my_review_usecase.dart';
 import '../../presentation/bloc/review/store_reviews/store_reviews_bloc.dart';
 import '../../presentation/bloc/review/write_review/write_review_bloc.dart';
+import '../../presentation/bloc/review/user_reviews/user_reviews_bloc.dart';
 
 import '../../data/datasources/remote/favorite/favorite_remote_data_source.dart';
 import '../../data/repositories/favorite/favorite_repository_impl.dart';
@@ -104,6 +120,12 @@ import '../../data/repositories/notification/notification_repository_impl.dart';
 import '../../domain/repositories/notification/notification_repository.dart';
 import '../../domain/usecases/notification/notification_usecases.dart';
 import '../../presentation/bloc/notification/notification_bloc.dart';
+
+import '../../data/datasources/local/location/location_local_data_source.dart';
+import '../../data/datasources/remote/location/location_remote_data_source.dart';
+import '../../data/repositories/location/location_repository_impl.dart';
+import '../../domain/repositories/location/location_repository.dart';
+import '../../domain/usecases/location/get_cities_usecase.dart';
 
 import '../router/app_router.dart';
 import '../session/session_manager.dart';
@@ -220,6 +242,9 @@ Future<void> registerDependencies({
     () => RefreshTokenUseCase(sl<AuthRepository>()),
   );
   sl.registerFactory<LogoutUseCase>(() => LogoutUseCase(sl<AuthRepository>()));
+  sl.registerFactory<DeleteAccountUseCase>(
+    () => DeleteAccountUseCase(sl<AuthRepository>()),
+  );
   sl.registerFactory<RestoreSession>(
     () => RestoreSession(sl<AuthRepository>()),
   );
@@ -233,6 +258,18 @@ Future<void> registerDependencies({
   sl.registerFactory<LoginUseCase>(() => LoginUseCase(sl<AuthRepository>()));
   sl.registerFactory<RegisterUseCase>(
     () => RegisterUseCase(sl<AuthRepository>()),
+  );
+  sl.registerFactory<ChangePasswordUseCase>(
+    () => ChangePasswordUseCase(sl<AuthRepository>()),
+  );
+  sl.registerFactory<ForgotPasswordUseCase>(
+    () => ForgotPasswordUseCase(sl<AuthRepository>()),
+  );
+  sl.registerFactory<VerifyResetOtpUseCase>(
+    () => VerifyResetOtpUseCase(sl<AuthRepository>()),
+  );
+  sl.registerFactory<ResetPasswordUseCase>(
+    () => ResetPasswordUseCase(sl<AuthRepository>()),
   );
 
   sl.registerFactory<LoginBloc>(
@@ -259,10 +296,22 @@ Future<void> registerDependencies({
       requestOtpUseCase: sl<RequestOtpUseCase>(),
     ),
   );
+  sl.registerFactory<ChangePasswordCubit>(
+    () =>
+        ChangePasswordCubit(changePasswordUseCase: sl<ChangePasswordUseCase>()),
+  );
+  sl.registerFactory<ForgotPasswordCubit>(
+    () => ForgotPasswordCubit(
+      forgotPasswordUseCase: sl<ForgotPasswordUseCase>(),
+      verifyResetOtpUseCase: sl<VerifyResetOtpUseCase>(),
+      resetPasswordUseCase: sl<ResetPasswordUseCase>(),
+    ),
+  );
   sl.registerFactory<ProfileBloc>(
     () => ProfileBloc(
       getCurrentUserUseCase: sl<GetCurrentUser>(),
       logoutUseCase: sl<LogoutUseCase>(),
+      deleteAccountUseCase: sl<DeleteAccountUseCase>(),
       sessionManager: sl<SessionManager>(),
       authSessionBloc: sl.isRegistered<AuthSessionBloc>()
           ? sl<AuthSessionBloc>()
@@ -279,6 +328,9 @@ Future<void> registerDependencies({
           ? sl<AuthSessionBloc>()
           : null,
     ),
+  );
+  sl.registerLazySingleton<LocaleCubit>(
+    () => LocaleCubit(sl<PreferencesStorage>()),
   );
   sl.registerLazySingleton<AuthSessionBloc>(
     () => AuthSessionBloc(
@@ -303,6 +355,9 @@ Future<void> registerDependencies({
   sl.registerFactory<GetStoreDetailUseCase>(
     () => GetStoreDetailUseCase(sl<StoreRepository>()),
   );
+  sl.registerFactory<GetStoreFullDetailUseCase>(
+    () => GetStoreFullDetailUseCase(sl<StoreRepository>()),
+  );
   sl.registerFactory<GetStoreCategoriesUseCase>(
     () => GetStoreCategoriesUseCase(sl<StoreRepository>()),
   );
@@ -315,12 +370,21 @@ Future<void> registerDependencies({
   sl.registerFactory<GetStoreGalleryUseCase>(
     () => GetStoreGalleryUseCase(sl<StoreRepository>()),
   );
+  sl.registerFactory<GetRecentlyBookedStoresUseCase>(
+    () => GetRecentlyBookedStoresUseCase(sl<StoreRepository>()),
+  );
+  sl.registerFactory<GetNearbyStoresUseCase>(
+    () => GetNearbyStoresUseCase(sl<StoreRepository>()),
+  );
 
   sl.registerFactory<StoreListBloc>(
     () => StoreListBloc(getStoresUseCase: sl<GetStoresUseCase>()),
   );
   sl.registerFactory<StoreDetailBloc>(
-    () => StoreDetailBloc(getStoreDetailUseCase: sl<GetStoreDetailUseCase>()),
+    () => StoreDetailBloc(
+      getStoreDetailUseCase: sl<GetStoreFullDetailUseCase>(),
+      toggleFavoriteUseCase: sl<ToggleFavoriteUseCase>(),
+    ),
   );
   sl.registerFactory<StoreServicesBloc>(
     () => StoreServicesBloc(
@@ -431,6 +495,26 @@ Future<void> registerDependencies({
       createBookingReviewUseCase: sl<CreateBookingReviewUseCase>(),
     ),
   );
+  sl.registerFactory<GetMyReviewsUseCase>(
+    () => GetMyReviewsUseCase(sl<ReviewRepository>()),
+  );
+  sl.registerFactory<GetMyReviewDetailUseCase>(
+    () => GetMyReviewDetailUseCase(sl<ReviewRepository>()),
+  );
+  sl.registerFactory<UpdateMyReviewUseCase>(
+    () => UpdateMyReviewUseCase(sl<ReviewRepository>()),
+  );
+  sl.registerFactory<DeleteMyReviewUseCase>(
+    () => DeleteMyReviewUseCase(sl<ReviewRepository>()),
+  );
+  sl.registerFactory<UserReviewsBloc>(
+    () => UserReviewsBloc(
+      getMyReviewsUseCase: sl<GetMyReviewsUseCase>(),
+      getMyReviewDetailUseCase: sl<GetMyReviewDetailUseCase>(),
+      updateMyReviewUseCase: sl<UpdateMyReviewUseCase>(),
+      deleteMyReviewUseCase: sl<DeleteMyReviewUseCase>(),
+    ),
+  );
 
   // 12. Feature - Favorites / Wishlist
   sl.registerLazySingleton<FavoriteRemoteDataSource>(
@@ -510,7 +594,24 @@ Future<void> registerDependencies({
     ),
   );
 
-  // 15. Feature - Home Greeting
+  // 15. Feature - Location & Cities
+  sl.registerLazySingleton<LocationLocalDataSource>(
+    () => LocationLocalDataSourceImpl(sl<PreferencesStorage>()),
+  );
+  sl.registerLazySingleton<LocationRemoteDataSource>(
+    () => LocationRemoteDataSourceImpl(sl<NetworkClient>()),
+  );
+  sl.registerLazySingleton<LocationRepository>(
+    () => LocationRepositoryImpl(
+      remoteDataSource: sl<LocationRemoteDataSource>(),
+      localDataSource: sl<LocationLocalDataSource>(),
+    ),
+  );
+  sl.registerFactory<GetCitiesUseCase>(
+    () => GetCitiesUseCase(sl<LocationRepository>()),
+  );
+
+  // 16. Feature - Home Greeting
   sl.registerFactory<HomeRemoteDataSource>(
     () => const MockHomeRemoteDataSource(),
   );
@@ -524,6 +625,11 @@ Future<void> registerDependencies({
     () => HomeBloc(
       getGreetingUseCase: sl<GetGreetingUseCase>(),
       getStoresUseCase: sl<GetStoresUseCase>(),
+      getFavoritesUseCase: sl<GetFavoritesUseCase>(),
+      toggleFavoriteUseCase: sl<ToggleFavoriteUseCase>(),
+      getCitiesUseCase: sl<GetCitiesUseCase>(),
+      getRecentlyBookedStoresUseCase: sl<GetRecentlyBookedStoresUseCase>(),
+      getNearbyStoresUseCase: sl<GetNearbyStoresUseCase>(),
     ),
   );
 }

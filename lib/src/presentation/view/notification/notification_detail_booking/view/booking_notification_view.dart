@@ -4,7 +4,16 @@ import '../../../booking_flow/booking_detail/view/booking_detail_view.dart';
 import 'package:spa_booking/src/shared/shared.dart';
 import '../../models/notification_models.dart';
 import '../body_view/booking_notification_body_view.dart';
-import '../mockup_data/booking_notification_mock_data.dart';
+
+const _emptyBooking = BookingNotificationData(
+  salonName: '',
+  serviceName: '',
+  stylist: '',
+  date: '',
+  time: '',
+  status: '',
+  timestamp: '',
+);
 
 @RoutePage()
 class BookingNotificationPage extends StatelessWidget {
@@ -14,19 +23,14 @@ class BookingNotificationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BookingNotificationView(
-      booking: booking ?? BookingNotificationMockData.defaultBooking,
-    );
+    return BookingNotificationView(booking: booking ?? _emptyBooking);
   }
 }
 
 class BookingNotificationView extends StatelessWidget {
   final BookingNotificationData booking;
 
-  const BookingNotificationView({
-    super.key,
-    this.booking = BookingNotificationMockData.defaultBooking,
-  });
+  const BookingNotificationView({super.key, this.booking = _emptyBooking});
 
   static const Color _coralColor = Color(0xFFFF6F59);
   static const Color _textDark = Color(0xFF1E2022);

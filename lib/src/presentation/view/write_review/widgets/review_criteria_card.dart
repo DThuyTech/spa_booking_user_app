@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spa_booking/src/shared/shared.dart';
 import '../mockup_data/write_review_mock_data.dart';
 
 class ReviewCriteriaCard extends StatelessWidget {
@@ -36,9 +37,9 @@ class ReviewCriteriaCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Rate specific details',
-            style: TextStyle(
+          Text(
+            context.l10n.rateSpecificDetails,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
               color: _textDark,

@@ -1,14 +1,15 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../app/di/dependency_injection.dart';
+import '../../../../app/router/app_router.gr.dart';
 import '../../../../domain/entities/store/store_entity.dart';
+import '../../../../domain/usecases/favorite/get_favorites_usecase.dart';
 import '../../../../shared/design_system/components/sheets/app_filter_bottom_sheet.dart';
 import '../../../../shared/utils/app_toast_helper.dart';
 import '../../../bloc/store/store_list/store_list_bloc.dart';
-import '../../store_detail/view/store_detail_view.dart';
 import '../body_view/search_body_view.dart';
-import '../mockup_data/search_mock_data.dart';
 import '../widgets/search_store_card.dart';
 
 class SearchView extends StatelessWidget {
@@ -33,15 +34,22 @@ class _SearchContent extends StatefulWidget {
 class _SearchContentState extends State<_SearchContent> {
   late final TextEditingController _searchController;
   String _searchQuery = '';
-  SpaFilterCriteria _filterCriteria = SearchMockData.defaultCriteria;
+  SpaFilterCriteria _filterCriteria = const SpaFilterCriteria(
+    location: '',
+    distanceKm: 50.0,
+    services: [],
+    date: 'Today',
+    time: 'Any Time',
+    priceRange: RangeValues(0, 500),
+    rating: 'All',
+  );
 
-  late List<SearchStoreItem> _allStores;
+  final Set<String> _favoriteIds = {};
 
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController();
-    _allStores = List.from(SearchMockData.stores);
   }
 
   @override
@@ -50,19 +58,43 @@ class _SearchContentState extends State<_SearchContent> {
     super.dispose();
   }
 
-  void _onFavoriteToggle(SearchStoreItem store) {
+  Future<void> _onFavoriteToggle(SearchStoreItem store) async {
+    final isFav = _favoriteIds.contains(store.id) || store.isFavorite;
+    final nextFav = !isFav;
     setState(() {
-      final index = _allStores.indexWhere((s) => s.id == store.id);
-      if (index != -1) {
-        _allStores[index] = store.copyWith(isFavorite: !store.isFavorite);
+      if (nextFav) {
+        _favoriteIds.add(store.id);
+      } else {
+        _favoriteIds.remove(store.id);
       }
     });
-    AppToastHelper.showInfo(
-      context,
-      message: store.isFavorite
-          ? 'Removed from favorites'
-          : 'Added to favorites',
-    );
+
+    if (sl.isRegistered<ToggleFavoriteUseCase>()) {
+      final result = await sl<ToggleFavoriteUseCase>()(
+        storeId: store.id,
+        isFavorite: nextFav,
+      );
+      result.fold((_) {
+        if (mounted) {
+          setState(() {
+            if (nextFav) {
+              _favoriteIds.remove(store.id);
+            } else {
+              _favoriteIds.add(store.id);
+            }
+          });
+        }
+      }, (_) {});
+    }
+
+    if (mounted) {
+      AppToastHelper.showInfo(
+        context,
+        message: nextFav
+            ? 'Đã thêm ${store.name} vào yêu thích'
+            : 'Đã xóa ${store.name} khỏi yêu thích',
+      );
+    }
   }
 
   void _openFilterBottomSheet() {
@@ -76,10 +108,10 @@ class _SearchContentState extends State<_SearchContent> {
         context.read<StoreListBloc>().add(
           FetchStoresEvent(
             search: _searchQuery.isNotEmpty ? _searchQuery : null,
-            province: criteria.location.isNotEmpty ? criteria.location : null,
+            city: criteria.location.isNotEmpty ? criteria.location : null,
           ),
         );
-        AppToastHelper.showSuccess(context, message: 'Filters applied');
+        AppToastHelper.showSuccess(context, message: 'Đã áp dụng bộ lọc');
       },
     );
   }
@@ -95,39 +127,45 @@ class _SearchContentState extends State<_SearchContent> {
   void _onResetFilters() {
     setState(() {
       _filterCriteria = const SpaFilterCriteria(
-        location: 'Ho Chi Minh City',
+        location: '',
         distanceKm: 50.0,
         services: [],
         date: 'Today',
         time: 'Any Time',
-        priceRange: RangeValues(0, 200),
-        rating: '4.0+',
+        priceRange: RangeValues(0, 500),
+        rating: 'All',
       );
       _searchController.clear();
       _searchQuery = '';
     });
     context.read<StoreListBloc>().add(const FetchStoresEvent());
-    AppToastHelper.showInfo(context, message: 'Filters reset');
+    AppToastHelper.showInfo(context, message: 'Đã đặt lại bộ lọc');
   }
 
   List<SearchStoreItem> _mapToSearchItems(List<StoreEntity> stores) {
-    if (stores.isEmpty) {
-      return _allStores;
-    }
+    if (stores.isEmpty) return const [];
 
     return stores.map((s) {
+      final isFav = _favoriteIds.contains(s.id) || s.isFavorite;
       return SearchStoreItem(
         id: s.id,
         name: s.name,
         rating: s.rating,
-        distance: '1.2 km',
+        distance: s.distanceKm != null
+            ? '${s.distanceKm!.toStringAsFixed(1)} km'
+            : (s.district?.isNotEmpty == true
+                  ? s.district!
+                  : (s.address.contains(',')
+                        ? s.address.split(',').last.trim()
+                        : (s.city ?? s.address))),
         tags: const ['Spa & Wellness'],
         description: s.address,
-        imageUrl:
-            s.coverUrl ??
-            s.logoUrl ??
-            'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80',
-        isFavorite: false,
+        imageUrl: (s.coverUrl != null && s.coverUrl!.isNotEmpty)
+            ? s.coverUrl!
+            : (s.logoUrl != null && s.logoUrl!.isNotEmpty)
+            ? s.logoUrl!
+            : 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80',
+        isFavorite: isFav,
       );
     }).toList();
   }
@@ -157,6 +195,7 @@ class _SearchContentState extends State<_SearchContent> {
               bottom: false,
               child: SearchBodyView(
                 searchController: _searchController,
+                isLoading: state.isLoading,
                 onQueryChanged: (q) {
                   setState(() {
                     _searchQuery = q.trim();
@@ -164,7 +203,7 @@ class _SearchContentState extends State<_SearchContent> {
                   context.read<StoreListBloc>().add(
                     FetchStoresEvent(
                       search: _searchQuery.isNotEmpty ? _searchQuery : null,
-                      province: _filterCriteria.location.isNotEmpty
+                      city: _filterCriteria.location.isNotEmpty
                           ? _filterCriteria.location
                           : null,
                     ),
@@ -182,11 +221,7 @@ class _SearchContentState extends State<_SearchContent> {
                 onRemoveServiceFilter: _onRemoveServiceFilter,
                 stores: displayStores,
                 onStoreTap: (store) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => StoreDetailView(storeId: store.id),
-                    ),
-                  );
+                  context.router.push(StoreDetailRoute(storeId: store.id));
                 },
                 onFavoriteToggle: _onFavoriteToggle,
                 onResetFilters: _onResetFilters,
@@ -194,7 +229,7 @@ class _SearchContentState extends State<_SearchContent> {
                   context.read<StoreListBloc>().add(
                     FetchStoresEvent(
                       search: _searchQuery.isNotEmpty ? _searchQuery : null,
-                      province: _filterCriteria.location.isNotEmpty
+                      city: _filterCriteria.location.isNotEmpty
                           ? _filterCriteria.location
                           : null,
                       isRefresh: true,

@@ -10,7 +10,7 @@ class NotificationFilterChips extends StatelessWidget {
     required this.onFilterChanged,
   });
 
-  static const List<String> _filters = ['All', 'Bookings', 'Vouchers'];
+  static const List<String> _filters = ['All', 'Unread', 'Bookings', 'System'];
   static const Color _coralColor = Color(0xFFFF6F59);
   static const Color _textDark = Color(0xFF1E2022);
 

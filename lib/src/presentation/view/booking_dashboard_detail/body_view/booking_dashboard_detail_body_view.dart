@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spa_booking/src/core/extensions/double_extensions.dart';
 import '../../../../domain/entities/booking/booking_entity.dart';
 import '../../../../shared/utils/app_toast_helper.dart';
 import '../../../bloc/booking/booking_action/booking_action_bloc.dart';
-import '../mockup_data/booking_dashboard_detail_mock_data.dart';
+import '../models/booking_detail_models.dart';
 import '../widgets/booking_detail_datetime_card.dart';
 import '../widgets/booking_detail_notes_card.dart';
 import '../widgets/booking_detail_payment_card.dart';
@@ -22,18 +23,12 @@ class BookingDashboardDetailBodyView extends StatefulWidget {
 
 class _BookingDashboardDetailBodyViewState
     extends State<BookingDashboardDetailBodyView> {
-  late List<DetailUserNoteItem> _notes;
-
   @override
   void initState() {
     super.initState();
-    _notes = List.from(BookingDashboardDetailMockData.notes);
   }
 
   void _onAddNote(String text) {
-    setState(() {
-      _notes.add(DetailUserNoteItem(timestamp: 'Just now', note: text));
-    });
     if (widget.booking != null) {
       context.read<BookingActionBloc>().add(
         UpdateBookingNotesEvent(bookingId: widget.booking!.id, note: text),
@@ -46,43 +41,38 @@ class _BookingDashboardDetailBodyViewState
   @override
   Widget build(BuildContext context) {
     final b = widget.booking;
-    final status = b?.status ?? BookingDashboardDetailMockData.status;
-    final bookingCode = b != null
-        ? '#${b.bookingCode}'
-        : BookingDashboardDetailMockData.bookingCode;
-    final salonName =
-        b?.store?.name ?? BookingDashboardDetailMockData.salonName;
-    final salonAddress =
-        b?.store?.address ?? BookingDashboardDetailMockData.salonAddress;
-    final salonPhone =
-        b?.store?.phoneNumber ?? BookingDashboardDetailMockData.salonPhone;
-    final appointmentDate = b != null
-        ? '${b.startAt.year}-${b.startAt.month.toString().padLeft(2, '0')}-${b.startAt.day.toString().padLeft(2, '0')}'
-        : BookingDashboardDetailMockData.appointmentDate;
-    final appointmentTimeRange = b != null
-        ? '${b.startAt.hour.toString().padLeft(2, '0')}:${b.startAt.minute.toString().padLeft(2, '0')} - ${b.endAt.hour.toString().padLeft(2, '0')}:${b.endAt.minute.toString().padLeft(2, '0')}'
-        : BookingDashboardDetailMockData.appointmentTimeRange;
-    final appointmentDurationBadge = b != null
-        ? '${b.totalDuration}m'
-        : BookingDashboardDetailMockData.appointmentDurationBadge;
+    if (b == null) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 60),
+          child: CircularProgressIndicator(color: Color(0xFFFC6E58)),
+        ),
+      );
+    }
 
-    final services = (b != null && b.services.isNotEmpty)
-        ? b.services
-              .map(
-                (item) => DetailServiceItem(
-                  name: item.name,
-                  duration: '${item.duration}m',
-                  price: '${item.price} VND',
-                ),
-              )
-              .toList()
-        : BookingDashboardDetailMockData.services;
+    final status = b.status;
+    final bookingCode = '#${b.bookingCode}';
+    final salonName = b.store?.name ?? '';
+    final salonAddress = b.store?.address ?? '';
+    final salonPhone = b.store?.phoneNumber ?? '';
+    final appointmentDate =
+        '${b.startAt.year}-${b.startAt.month.toString().padLeft(2, '0')}-${b.startAt.day.toString().padLeft(2, '0')}';
+    final appointmentTimeRange =
+        '${b.startAt.hour.toString().padLeft(2, '0')}:${b.startAt.minute.toString().padLeft(2, '0')} - ${b.endAt.hour.toString().padLeft(2, '0')}:${b.endAt.minute.toString().padLeft(2, '0')}';
+    final appointmentDurationBadge = '${b.totalDuration}m';
 
-    final totalAmount = b != null
-        ? '${b.totalAmount} VND'
-        : BookingDashboardDetailMockData.totalAmount;
-    final paymentStatus =
-        b?.paymentStatus ?? BookingDashboardDetailMockData.paymentStatus;
+    final services = b.services
+        .map(
+          (item) => DetailServiceItem(
+            name: item.name,
+            duration: '${item.duration}m',
+            price: item.price.toVnd(),
+          ),
+        )
+        .toList();
+
+    final totalAmount = b.totalAmount.toVnd();
+    final paymentStatus = b.paymentStatus;
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -168,21 +158,18 @@ class _BookingDashboardDetailBodyViewState
           const SizedBox(height: 14),
 
           // User Notes Card
-          BookingDetailNotesCard(notes: _notes, onAddNote: _onAddNote),
+          BookingDetailNotesCard(
+            note: widget.booking?.note ?? '-',
+            onAddNote: _onAddNote,
+          ),
 
           const SizedBox(height: 14),
 
           // Payment Summary Card
           BookingDetailPaymentCard(
-            subtotal: b != null
-                ? totalAmount
-                : BookingDashboardDetailMockData.subtotal,
-            discount: b != null
-                ? '0 VND'
-                : BookingDashboardDetailMockData.discount,
-            discountBadge: b != null
-                ? 'Standard'
-                : BookingDashboardDetailMockData.discountBadge,
+            subtotal: totalAmount,
+            discount: null, // Don't show if there is no discount
+            discountBadge: null,
             totalAmount: totalAmount,
             paymentStatus: paymentStatus,
           ),

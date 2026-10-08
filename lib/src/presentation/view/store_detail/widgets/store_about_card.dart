@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../shared/shared.dart';
 
 class StoreAboutCard extends StatefulWidget {
   final String description;
@@ -36,9 +37,9 @@ class _StoreAboutCardState extends State<StoreAboutCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'About',
-            style: TextStyle(
+          Text(
+            context.l10n.about,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
               color: StoreAboutCard._textDark,

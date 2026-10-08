@@ -2,6 +2,7 @@ import 'package:spa_booking/src/core/constants/url_constants.dart';
 import 'package:spa_booking/src/core/network/interceptors/auth_interceptor.dart';
 import 'package:spa_booking/src/core/network/network_client.dart';
 import 'package:spa_booking/src/data/model/auth/auth_response_model.dart';
+import 'package:spa_booking/src/data/model/auth/forgot_password_response_model.dart';
 import 'package:spa_booking/src/data/model/auth/refresh_token_response_model.dart';
 import 'package:spa_booking/src/data/model/auth/request_otp_request_model.dart';
 import 'package:spa_booking/src/data/model/auth/request_otp_response_model.dart';
@@ -45,6 +46,23 @@ abstract interface class AuthApiService {
     String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
+  });
+
+  Future<void> deleteAccount();
+
+  Future<String> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  });
+
+  Future<ForgotPasswordResponseModel> forgotPassword({required String phone});
+
+  Future<String> verifyResetOtp({required String phone, required String otp});
+
+  Future<String> resetPassword({
+    required String phone,
+    required String otp,
+    required String newPassword,
   });
 }
 
@@ -270,5 +288,100 @@ class AuthApiServiceImpl implements AuthApiService {
     }
 
     throw Exception('Empty response received from update customer profile');
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    await _client.delete<Map<String, dynamic>>('/users/me');
+  }
+
+  @override
+  Future<String> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    final response = await _client.post<Map<String, dynamic>>(
+      UrlConstants.authChangePassword,
+      data: {'oldPassword': oldPassword, 'newPassword': newPassword},
+    );
+
+    final responseData = response.data;
+    if (responseData != null) {
+      return (responseData['message'] as String?) ?? 'Đổi mật khẩu thành công';
+    }
+    return 'Đổi mật khẩu thành công';
+  }
+
+  @override
+  Future<ForgotPasswordResponseModel> forgotPassword({
+    required String phone,
+  }) async {
+    final response = await _client.post<Map<String, dynamic>>(
+      UrlConstants.authForgotPassword,
+      data: {'phone': phone},
+      options: Options(
+        extra: {
+          AuthInterceptor.extraSkipAuth: true,
+          AuthInterceptor.extraSkipRefresh: true,
+        },
+      ),
+    );
+
+    final responseData = response.data;
+    if (responseData != null) {
+      final payload =
+          (responseData['data'] as Map<String, dynamic>?) ?? responseData;
+      return ForgotPasswordResponseModel.fromJson(payload);
+    }
+
+    throw const FormatException('Empty response received from forgot-password');
+  }
+
+  @override
+  Future<String> verifyResetOtp({
+    required String phone,
+    required String otp,
+  }) async {
+    final response = await _client.post<Map<String, dynamic>>(
+      UrlConstants.authVerifyOtp,
+      data: {'phone': phone, 'otp': otp},
+      options: Options(
+        extra: {
+          AuthInterceptor.extraSkipAuth: true,
+          AuthInterceptor.extraSkipRefresh: true,
+        },
+      ),
+    );
+
+    final responseData = response.data;
+    if (responseData != null) {
+      return (responseData['message'] as String?) ?? 'Xác thực OTP thành công';
+    }
+    return 'Xác thực OTP thành công';
+  }
+
+  @override
+  Future<String> resetPassword({
+    required String phone,
+    required String otp,
+    required String newPassword,
+  }) async {
+    final response = await _client.post<Map<String, dynamic>>(
+      UrlConstants.authResetPassword,
+      data: {'phone': phone, 'otp': otp, 'newPassword': newPassword},
+      options: Options(
+        extra: {
+          AuthInterceptor.extraSkipAuth: true,
+          AuthInterceptor.extraSkipRefresh: true,
+        },
+      ),
+    );
+
+    final responseData = response.data;
+    if (responseData != null) {
+      return (responseData['message'] as String?) ??
+          'Đặt lại mật khẩu thành công';
+    }
+    return 'Đặt lại mật khẩu thành công';
   }
 }

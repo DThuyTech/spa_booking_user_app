@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:spa_booking/src/shared/shared.dart';
 
 class ReviewAddPhotosSection extends StatelessWidget {
   final List<String> photoUrls;
@@ -21,9 +21,9 @@ class ReviewAddPhotosSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Add Photos',
-          style: TextStyle(
+        Text(
+          context.l10n.addPhotos,
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w800,
             color: _textDark,

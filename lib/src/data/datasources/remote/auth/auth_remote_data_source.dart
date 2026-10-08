@@ -1,4 +1,5 @@
 import 'package:spa_booking/src/data/model/auth/auth_response_model.dart';
+import 'package:spa_booking/src/data/model/auth/forgot_password_response_model.dart';
 import 'package:spa_booking/src/data/model/auth/refresh_token_response_model.dart';
 import 'package:spa_booking/src/data/model/auth/request_otp_request_model.dart';
 import 'package:spa_booking/src/data/model/auth/request_otp_response_model.dart';
@@ -46,6 +47,23 @@ abstract interface class AuthRemoteDataSource {
     String? lastName,
     required String phoneNumber,
     required String dateOfBirth,
+  });
+
+  Future<void> deleteAccount();
+
+  Future<String> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  });
+
+  Future<ForgotPasswordResponseModel> forgotPassword({required String phone});
+
+  Future<String> verifyResetOtp({required String phone, required String otp});
+
+  Future<String> resetPassword({
+    required String phone,
+    required String otp,
+    required String newPassword,
   });
 }
 
@@ -132,6 +150,45 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       lastName: lastName,
       phoneNumber: phoneNumber,
       dateOfBirth: dateOfBirth,
+    );
+  }
+
+  @override
+  Future<void> deleteAccount() {
+    return _apiService.deleteAccount();
+  }
+
+  @override
+  Future<String> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  }) {
+    return _apiService.changePassword(
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    );
+  }
+
+  @override
+  Future<ForgotPasswordResponseModel> forgotPassword({required String phone}) {
+    return _apiService.forgotPassword(phone: phone);
+  }
+
+  @override
+  Future<String> verifyResetOtp({required String phone, required String otp}) {
+    return _apiService.verifyResetOtp(phone: phone, otp: otp);
+  }
+
+  @override
+  Future<String> resetPassword({
+    required String phone,
+    required String otp,
+    required String newPassword,
+  }) {
+    return _apiService.resetPassword(
+      phone: phone,
+      otp: otp,
+      newPassword: newPassword,
     );
   }
 }

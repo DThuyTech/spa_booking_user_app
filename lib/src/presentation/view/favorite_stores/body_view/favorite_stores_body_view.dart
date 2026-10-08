@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/favorite_store_item.dart';
+import 'package:spa_booking/src/domain/entities/favorite/favorite_store_entity.dart';
 import '../widgets/favorite_store_card.dart';
 import '../widgets/favorite_stores_empty_view.dart';
 import '../widgets/favorite_stores_search_bar.dart';
@@ -7,11 +7,11 @@ import '../widgets/favorite_stores_search_bar.dart';
 class FavoriteStoresBodyView extends StatelessWidget {
   final TextEditingController searchController;
   final ValueChanged<String> onSearchChanged;
-  final VoidCallback onFilterTap;
+  final VoidCallback? onFilterTap;
   final bool hasActiveFilter;
-  final List<FavoriteStoreItem> stores;
-  final ValueChanged<FavoriteStoreItem> onFavoriteToggle;
-  final ValueChanged<FavoriteStoreItem> onViewSalon;
+  final List<FavoriteStoreEntity> stores;
+  final ValueChanged<FavoriteStoreEntity> onFavoriteToggle;
+  final ValueChanged<FavoriteStoreEntity> onViewSalon;
   final VoidCallback onClearSearch;
   final VoidCallback onExploreSalons;
 
@@ -19,8 +19,8 @@ class FavoriteStoresBodyView extends StatelessWidget {
     super.key,
     required this.searchController,
     required this.onSearchChanged,
-    required this.onFilterTap,
-    required this.hasActiveFilter,
+    this.onFilterTap,
+    this.hasActiveFilter = false,
     required this.stores,
     required this.onFavoriteToggle,
     required this.onViewSalon,

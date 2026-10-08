@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:spa_booking/src/core/extensions/double_extensions.dart';
 
 class BookingResultSummaryCard extends StatelessWidget {
   final String bookingCode;
   final String salonName;
   final String dateDisplay;
   final String timeDisplay;
-  final int totalAmount;
+  final double totalAmount;
 
   const BookingResultSummaryCard({
     super.key,
@@ -18,20 +19,6 @@ class BookingResultSummaryCard extends StatelessWidget {
 
   static const Color _textDark = Color(0xFF1E2022);
   static const Color _textMuted = Color(0xFF64748B);
-
-  String _formatVnd(int amount) {
-    final str = amount.toString();
-    final buffer = StringBuffer();
-    int count = 0;
-    for (int i = str.length - 1; i >= 0; i--) {
-      buffer.write(str[i]);
-      count++;
-      if (count % 3 == 0 && i > 0) {
-        buffer.write(',');
-      }
-    }
-    return '${buffer.toString().split('').reversed.join('')} VND';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +46,7 @@ class BookingResultSummaryCard extends StatelessWidget {
           const Divider(height: 20, color: Color(0xFFF1F5F9)),
           _buildRow('Time', timeDisplay),
           const Divider(height: 20, color: Color(0xFFF1F5F9)),
-          _buildRow(
-            'Total Paid / Est.',
-            _formatVnd(totalAmount),
-            isTotal: true,
-          ),
+          _buildRow('Total Paid / Est.', totalAmount.toVnd(), isTotal: true),
         ],
       ),
     );

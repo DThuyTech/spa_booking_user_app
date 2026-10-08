@@ -23,6 +23,8 @@ abstract interface class BookingRepository {
 
   Future<Either<Failure, BookingListResponseEntity>> getCustomerBookings({
     String? tab,
+    String? status,
+    String? date,
     int page = 1,
     int limit = 20,
   });

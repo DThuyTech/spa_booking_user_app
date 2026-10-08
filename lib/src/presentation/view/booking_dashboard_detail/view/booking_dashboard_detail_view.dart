@@ -1,6 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../app/di/dependency_injection.dart';
+import '../../../../app/router/app_router.gr.dart';
 import '../../../../domain/entities/booking/booking_entity.dart';
 import '../../../../shared/shared.dart';
 import '../../../bloc/booking/booking_action/booking_action_bloc.dart';
@@ -40,6 +43,7 @@ class _BookingDashboardDetailContent extends StatelessWidget {
   const _BookingDashboardDetailContent({required this.bookingId});
 
   void _showCancelDialog(BuildContext parentContext) {
+    final l10n = parentContext.l10n;
     final reasonController = TextEditingController(text: 'Change of schedule');
 
     showDialog(
@@ -50,9 +54,9 @@ class _BookingDashboardDetailContent extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: const Text(
-            'Cancel Booking?',
-            style: TextStyle(
+          title: Text(
+            l10n.cancelBookingConfirm,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
               color: Color(0xFF1E293B),
@@ -62,15 +66,15 @@ class _BookingDashboardDetailContent extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Please provide a reason for cancellation:',
-                style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+              Text(
+                l10n.cancelReasonPrompt,
+                style: const TextStyle(fontSize: 13, color: Color(0xFF64748B)),
               ),
               const SizedBox(height: 10),
               AppTextField(
                 controller: reasonController,
                 maxLines: 2,
-                hint: 'Reason...',
+                hint: l10n.cancelReasonHint,
                 fillColor: const Color(0xFFF8FAFC),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -82,16 +86,16 @@ class _BookingDashboardDetailContent extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogCtx).pop(),
-              child: const Text(
-                'No, Keep',
-                style: TextStyle(
+              child: Text(
+                l10n.keepBooking,
+                style: const TextStyle(
                   color: Color(0xFF64748B),
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
             AppButton(
-              text: 'Yes, Cancel',
+              text: l10n.yesCancel,
               onPressed: () {
                 final reason = reasonController.text.trim();
                 Navigator.of(dialogCtx).pop();
@@ -112,12 +116,34 @@ class _BookingDashboardDetailContent extends StatelessWidget {
     );
   }
 
-  void _connectSalon(BuildContext context, String? phone, String? storeName) {
-    AppToastHelper.showInfo(
-      context,
-      message:
-          'Connecting to ${storeName ?? 'Salon'} (${phone ?? '+84 912 345 678'})...',
-    );
+  Future<void> _connectSalon(
+    BuildContext context,
+    String? phone,
+    String? storeName,
+  ) async {
+    final l10n = context.l10n;
+    final phoneNumber = (phone != null && phone.trim().isNotEmpty)
+        ? phone.trim()
+        : null;
+
+    if (phoneNumber == null) {
+      AppToastHelper.showWarning(context, message: l10n.noPhoneNumber);
+      return;
+    }
+
+    final cleanedPhone = phoneNumber.replaceAll(RegExp(r'[^0-9+]'), '');
+    final uri = Uri.parse('tel:$cleanedPhone');
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      } else {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }
+    } catch (_) {
+      if (context.mounted) {
+        AppToast.error(context, message: l10n.cannotCallPhone);
+      }
+    }
   }
 
   @override
@@ -197,10 +223,15 @@ class _BookingDashboardDetailContent extends StatelessWidget {
     required bool isLoading,
     required BookingEntity? booking,
   }) {
+    final l10n = context.l10n;
+    final isCompleted =
+        (booking?.status.toUpperCase() == 'COMPLETED') ||
+        (booking?.actions?.canReview ?? false);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppAppBar(
-        title: 'Booking detail',
+        title: l10n.bookingDetailTitle,
         onMorePressed: () {
           AppToastHelper.showInfo(context, message: 'More options');
         },
@@ -220,38 +251,93 @@ class _BookingDashboardDetailContent extends StatelessWidget {
           ),
           child: Row(
             children: [
-              // Cancel Button
-              Expanded(
-                child: AppButton(
-                  text: 'Cancel',
-                  onPressed: (canCancel && !isSubmittingAction)
-                      ? () => _showCancelDialog(context)
-                      : null,
-                  variant: AppButtonVariant.outline,
-                  isLoading: isSubmittingAction,
-                  textColor: canCancel ? const Color(0xFFFA7762) : Colors.grey,
-                  borderRadius: BorderRadius.circular(24),
-                  height: 48,
-                ),
-              ),
-
-              const SizedBox(width: 14),
-
-              // Connect Button
-              Expanded(
-                child: AppButton(
-                  text: 'Connect',
-                  onPressed: () => _connectSalon(
-                    context,
-                    booking?.store?.address,
-                    booking?.store?.name,
+              if (isCompleted) ...[
+                // Connect Button
+                Expanded(
+                  child: AppButton(
+                    text: l10n.connectSalon,
+                    onPressed: () => _connectSalon(
+                      context,
+                      booking?.store?.phoneNumber ?? '',
+                      booking?.store?.name,
+                    ),
+                    variant: AppButtonVariant.outline,
+                    textColor: const Color(0xFFFA7762),
+                    borderRadius: BorderRadius.circular(24),
+                    height: 48,
                   ),
-                  backgroundColor: const Color(0xFFFA7762),
-                  textColor: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  height: 48,
                 ),
-              ),
+
+                const SizedBox(width: 14),
+
+                // Review Button
+                Expanded(
+                  child: AppButton(
+                    text: l10n.review,
+                    leadingIcon: const Icon(
+                      LucideIcons.star,
+                      size: 16,
+                      color: Colors.white,
+                    ),
+                    onPressed: () async {
+                      final result = await context.router.push(
+                        WriteReviewRoute(
+                          bookingId: booking?.id ?? bookingId,
+                          storeId: booking?.storeId ?? booking?.store?.id,
+                          salonName: booking?.store?.name,
+                          logoUrl: booking?.store?.logoUrl,
+                        ),
+                      );
+                      if (result == true && context.mounted) {
+                        try {
+                          context.read<BookingDetailBloc>().add(
+                            LoadBookingDetailEvent(booking?.id ?? bookingId),
+                          );
+                        } catch (_) {}
+                      }
+                    },
+                    backgroundColor: const Color(0xFFFA7762),
+                    textColor: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    height: 48,
+                  ),
+                ),
+              ] else ...[
+                // Cancel Button
+                Expanded(
+                  child: AppButton(
+                    text: l10n.cancelBooking,
+                    onPressed: (canCancel && !isSubmittingAction)
+                        ? () => _showCancelDialog(context)
+                        : null,
+                    variant: AppButtonVariant.outline,
+                    isLoading: isSubmittingAction,
+                    textColor: canCancel
+                        ? const Color(0xFFFA7762)
+                        : Colors.grey,
+                    borderRadius: BorderRadius.circular(24),
+                    height: 48,
+                  ),
+                ),
+
+                const SizedBox(width: 14),
+
+                // Connect Button (Triggers phone call to store)
+                Expanded(
+                  child: AppButton(
+                    text: l10n.connectSalon,
+                    onPressed: () => _connectSalon(
+                      context,
+                      booking?.store?.phoneNumber ?? '',
+                      booking?.store?.name,
+                    ),
+                    backgroundColor: const Color(0xFFFA7762),
+                    textColor: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    height: 48,
+                  ),
+                ),
+              ],
             ],
           ),
         ),

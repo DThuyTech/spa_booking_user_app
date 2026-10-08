@@ -2,7 +2,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../domain/entities/booking/booking_availability_entity.dart';
 
 part 'booking_availability_model.freezed.dart';
-part 'booking_availability_model.g.dart';
 
 @freezed
 abstract class BookingSlotModel with _$BookingSlotModel {

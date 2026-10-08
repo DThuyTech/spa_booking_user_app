@@ -4,6 +4,7 @@ import '../widgets/search_store_card.dart';
 
 class SearchContentSection extends StatelessWidget {
   final List<SearchStoreItem> stores;
+  final bool isLoading;
   final ValueChanged<SearchStoreItem>? onStoreTap;
   final ValueChanged<SearchStoreItem>? onFavoriteToggle;
   final VoidCallback? onResetFilters;
@@ -11,6 +12,7 @@ class SearchContentSection extends StatelessWidget {
   const SearchContentSection({
     super.key,
     required this.stores,
+    this.isLoading = false,
     this.onStoreTap,
     this.onFavoriteToggle,
     this.onResetFilters,
@@ -18,6 +20,15 @@ class SearchContentSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading && stores.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 60),
+        child: Center(
+          child: CircularProgressIndicator(color: Color(0xFFFC6E58)),
+        ),
+      );
+    }
+
     if (stores.isEmpty) {
       return Center(
         child: Padding(
@@ -41,9 +52,9 @@ class SearchContentSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'No Salons Found',
-                style: TextStyle(
+              Text(
+                context.l10n.noSalonsFound,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF1E2022),

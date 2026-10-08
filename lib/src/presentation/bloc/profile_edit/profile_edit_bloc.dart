@@ -119,12 +119,13 @@ class ProfileEditBloc extends Bloc<ProfileEditEvent, ProfileEditState> {
 
     String trimmedPhone = state.phoneNumber.trim();
     if (trimmedPhone.isEmpty) {
-      final user = authSessionBloc?.state.user;
-      if (user != null && user.phone.isNotEmpty) {
-        trimmedPhone = user.phone;
-      } else {
-        trimmedPhone = '+1234567890';
-      }
+      emit(
+        state.copyWith(
+          status: ProfileEditStatus.failure,
+          errorMessage: () => 'Please enter your phone number',
+        ),
+      );
+      return;
     }
 
     final trimmedDob = state.dateOfBirth.trim();

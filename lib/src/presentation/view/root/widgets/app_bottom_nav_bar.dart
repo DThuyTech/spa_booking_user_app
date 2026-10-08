@@ -62,7 +62,7 @@ class AppBottomNavBar extends StatelessWidget {
           inactiveColor: Color(0xFFFA7762),
           size: 26,
         ),
-        _CurvedBarIcon(icon: LucideIcons.calendar, isSelected: barIndex == 3),
+        _CurvedBarIcon(icon: LucideIcons.map_pin, isSelected: barIndex == 3),
         _CurvedBarIcon(icon: LucideIcons.user, isSelected: barIndex == 4),
       ],
       color: Colors.white,

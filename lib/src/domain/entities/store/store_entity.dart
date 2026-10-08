@@ -15,5 +15,18 @@ abstract class StoreEntity with _$StoreEntity {
     @Default(5.0) double rating,
     @Default(0) int reviewCount,
     String? priceRange,
+    @Default(false) bool isFavorite,
+    String? city,
+    String? district,
+    String? description,
+    String? email,
+    double? latitude,
+    double? longitude,
+    double? distanceKm,
+    int? minPrice,
+    DateTime? lastBookingAt,
+    String? lastBookingCode,
+    String? lastBookingStatus,
+    int? totalBookingsCount,
   }) = _StoreEntity;
 }

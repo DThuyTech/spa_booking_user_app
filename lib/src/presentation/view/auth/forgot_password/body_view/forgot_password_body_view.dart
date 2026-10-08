@@ -5,12 +5,14 @@ class ForgotPasswordBodyView extends StatelessWidget {
   final TextEditingController emailOrPhoneController;
   final VoidCallback onSendResetLink;
   final VoidCallback onNeedHelp;
+  final bool isLoading;
 
   const ForgotPasswordBodyView({
     super.key,
     required this.emailOrPhoneController,
     required this.onSendResetLink,
     required this.onNeedHelp,
+    this.isLoading = false,
   });
 
   static const Color _textDark = Color(0xFF1E2022);
@@ -95,7 +97,8 @@ class ForgotPasswordBodyView extends StatelessWidget {
                     // Send Reset Link Button
                     AppButton(
                       text: 'Send Reset Link',
-                      onPressed: onSendResetLink,
+                      isLoading: isLoading,
+                      onPressed: isLoading ? null : onSendResetLink,
                       backgroundColor: _coralColor,
                       textColor: Colors.white,
                       borderRadius: BorderRadius.circular(28),

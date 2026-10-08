@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:spa_booking/src/data/model/auth/auth_response_model.dart';
+import 'package:spa_booking/src/data/model/auth/forgot_password_response_model.dart';
 import 'package:spa_booking/src/data/model/auth/refresh_token_response_model.dart';
 import 'package:spa_booking/src/data/model/auth/request_otp_response_model.dart';
 import 'package:spa_booking/src/data/model/auth/user_model.dart';
@@ -157,6 +158,11 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
   }
 
   @override
+  Future<void> deleteAccount() async {
+    await Future.delayed(const Duration(milliseconds: 150));
+  }
+
+  @override
   Future<UserModel> getCurrentUser() async {
     await Future.delayed(const Duration(milliseconds: 150));
     return _currentUser;
@@ -204,5 +210,46 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
       dateOfBirth: () => dateOfBirth,
     );
     return _currentUser;
+  }
+
+  @override
+  Future<String> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return 'Đổi mật khẩu thành công';
+  }
+
+  @override
+  Future<ForgotPasswordResponseModel> forgotPassword({
+    required String phone,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return ForgotPasswordResponseModel(
+      success: true,
+      message: 'Mã xác thực OTP đã được gửi đến số điện thoại',
+      phone: phone,
+      otp: '123456',
+    );
+  }
+
+  @override
+  Future<String> verifyResetOtp({
+    required String phone,
+    required String otp,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return 'Xác thực OTP thành công';
+  }
+
+  @override
+  Future<String> resetPassword({
+    required String phone,
+    required String otp,
+    required String newPassword,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return 'Đặt lại mật khẩu thành công. Vui lòng đăng nhập với mật khẩu mới.';
   }
 }

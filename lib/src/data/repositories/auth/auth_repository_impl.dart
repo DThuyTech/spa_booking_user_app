@@ -4,6 +4,7 @@ import '../../../core/error/failure_mapper.dart';
 import '../../../core/network/auth/token_pair.dart';
 import '../../../core/storage/session_storage.dart';
 import '../../../domain/entities/auth/auth_session_entity.dart';
+import '../../../domain/entities/auth/forgot_password_result.dart';
 import '../../../domain/entities/auth/request_otp_result.dart';
 import '../../../domain/entities/auth/user.dart';
 import '../../../domain/repositories/auth/auth_repository.dart';
@@ -276,6 +277,77 @@ class AuthRepositoryImpl implements AuthRepository {
 
       final userResult = await getCurrentUser();
       return userResult.fold((failure) => Left(failure), (user) => Right(user));
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteAccount() async {
+    try {
+      await remote.deleteAccount();
+      await sessionStorage.clearSession();
+      return const Right(unit);
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    try {
+      final message = await remote.changePassword(
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+      );
+      return Right(message);
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ForgotPasswordResult>> forgotPassword({
+    required String phone,
+  }) async {
+    try {
+      final response = await remote.forgotPassword(phone: phone);
+      final entity = AuthMapper.toForgotPasswordResult(response);
+      return Right(entity);
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> verifyResetOtp({
+    required String phone,
+    required String otp,
+  }) async {
+    try {
+      final message = await remote.verifyResetOtp(phone: phone, otp: otp);
+      return Right(message);
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> resetPassword({
+    required String phone,
+    required String otp,
+    required String newPassword,
+  }) async {
+    try {
+      final message = await remote.resetPassword(
+        phone: phone,
+        otp: otp,
+        newPassword: newPassword,
+      );
+      return Right(message);
     } catch (e) {
       return Left(FailureMapper.map(e));
     }

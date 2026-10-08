@@ -1,12 +1,13 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spa_booking/src/app/di/dependency_injection.dart';
+import 'package:spa_booking/src/presentation/bloc/notification/notification_bloc.dart';
+import 'package:spa_booking/src/shared/shared.dart';
 import '../../models/notification_models.dart';
 import '../../notification_detail_booking/view/booking_notification_view.dart';
 import '../../notification_detail_voucher/view/voucher_detail_view.dart';
 import '../body_view/notification_dashboard_body_view.dart';
-import '../mockup_data/notification_dashboard_mock_data.dart';
 
 @RoutePage()
 class NotificationDashboardPage extends StatelessWidget {
@@ -14,7 +15,12 @@ class NotificationDashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const NotificationDashboardView();
+    return BlocProvider(
+      create: (_) => sl<NotificationBloc>()
+        ..add(const FetchNotificationsEvent())
+        ..add(const FetchUnreadCountEvent()),
+      child: const NotificationDashboardView(),
+    );
   }
 }
 
@@ -27,25 +33,17 @@ class NotificationDashboardView extends StatefulWidget {
 }
 
 class _NotificationDashboardViewState extends State<NotificationDashboardView> {
-  late List<NotificationItem> _notifications;
   String _selectedFilter = 'All';
 
   static const Color _coralColor = Color(0xFFFF6F59);
 
-  @override
-  void initState() {
-    super.initState();
-    _notifications = List.from(NotificationDashboardMockData.notifications);
-  }
-
   void _onNotificationTap(NotificationItem item) {
-    // Mark as read
-    setState(() {
-      final index = _notifications.indexWhere((n) => n.id == item.id);
-      if (index != -1) {
-        _notifications[index] = _notifications[index].copyWith(isRead: true);
-      }
-    });
+    // Mark as read in API
+    if (!item.isRead) {
+      context.read<NotificationBloc>().add(
+        MarkNotificationAsReadEvent(item.id),
+      );
+    }
 
     if (item.type == NotificationType.voucher && item.voucherData != null) {
       Navigator.of(context).push(
@@ -66,47 +64,92 @@ class _NotificationDashboardViewState extends State<NotificationDashboardView> {
   }
 
   void _onMarkAllAsRead() {
+    context.read<NotificationBloc>().add(
+      const MarkAllNotificationsAsReadEvent(),
+    );
+    AppToast.success(context, message: context.l10n.readAll);
+  }
+
+  void _onFilterChanged(String filter) {
     setState(() {
-      _notifications = _notifications
-          .map((item) => item.copyWith(isRead: true))
-          .toList();
+      _selectedFilter = filter;
     });
-    AppToast.success(context, message: 'All notifications marked as read');
+
+    final bloc = context.read<NotificationBloc>();
+    switch (filter) {
+      case 'Unread':
+        bloc.add(const FetchNotificationsEvent(status: 'UNREAD'));
+        break;
+      case 'Bookings':
+        bloc.add(const FetchNotificationsEvent(type: 'BOOKING'));
+        break;
+      case 'System':
+        bloc.add(const FetchNotificationsEvent(type: 'SYSTEM'));
+        break;
+      default:
+        bloc.add(const FetchNotificationsEvent(status: 'ALL'));
+    }
+  }
+
+  Future<void> _onRefresh() async {
+    _onFilterChanged(_selectedFilter);
+    context.read<NotificationBloc>().add(const FetchUnreadCountEvent());
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
-      appBar: AppAppBar(
-        title: 'Notifications',
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: TextButton(
-              onPressed: _onMarkAllAsRead,
-              style: TextButton.styleFrom(
-                foregroundColor: _coralColor,
-                textStyle: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
+    return BlocConsumer<NotificationBloc, NotificationState>(
+      listener: (context, state) {
+        if (state.isFailure && state.failure != null) {
+          AppToast.error(context, message: state.failure!.message);
+        }
+      },
+      builder: (context, state) {
+        final notifications = state.items
+            .map(NotificationItem.fromEntity)
+            .toList();
+        final hasUnread = state.items.any((n) => !n.isRead);
+
+        Widget bodyContent;
+        if (state.isLoading && state.items.isEmpty) {
+          bodyContent = const Center(
+            child: CircularProgressIndicator(color: _coralColor),
+          );
+        } else {
+          bodyContent = NotificationDashboardBodyView(
+            notifications: notifications,
+            selectedFilter: _selectedFilter,
+            onFilterChanged: _onFilterChanged,
+            onNotificationTap: _onNotificationTap,
+            onRefresh: _onRefresh,
+          );
+        }
+
+        return Scaffold(
+          backgroundColor: const Color(0xFFF8F9FA),
+          appBar: AppAppBar(
+            title: context.l10n.notifications,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: TextButton(
+                  onPressed: hasUnread ? _onMarkAllAsRead : null,
+                  style: TextButton.styleFrom(
+                    foregroundColor: _coralColor,
+                    disabledForegroundColor: const Color(0xFFCBD5E1),
+                    textStyle: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  child: Text(context.l10n.readAll),
                 ),
               ),
-              child: const Text('Read all'),
-            ),
+            ],
           ),
-        ],
-      ),
-      body: NotificationDashboardBodyView(
-        notifications: _notifications,
-        selectedFilter: _selectedFilter,
-        onFilterChanged: (filter) {
-          setState(() {
-            _selectedFilter = filter;
-          });
-        },
-        onNotificationTap: _onNotificationTap,
-      ),
+          body: bodyContent,
+        );
+      },
     );
   }
 }

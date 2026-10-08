@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
-import '../mockup_data/store_detail_mock_data.dart';
+import '../../../../shared/shared.dart';
+import 'package:spa_booking/src/core/extensions/double_extensions.dart';
+import 'package:spa_booking/src/domain/entities/store/service_entity.dart';
 
 class StoreOverviewServicesCard extends StatelessWidget {
-  final List<StoreOverviewServiceItem> services;
+  final List<ServiceEntity> services;
   final VoidCallback? onViewAllServices;
 
   static const Color _coralColor = Color(0xFFFF6F59);
@@ -36,9 +37,9 @@ class StoreOverviewServicesCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Services',
-            style: TextStyle(
+          Text(
+            context.l10n.services,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
               color: _textDark,
@@ -47,11 +48,11 @@ class StoreOverviewServicesCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           if (services.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
-                'No services available yet',
-                style: TextStyle(
+                context.l10n.noServicesAvailable,
+                style: const TextStyle(
                   fontSize: 14,
                   color: _textMuted,
                   fontStyle: FontStyle.italic,
@@ -69,7 +70,7 @@ class StoreOverviewServicesCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          item.title,
+                          item.name,
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
@@ -78,7 +79,7 @@ class StoreOverviewServicesCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          item.duration,
+                          '${item.durationMinutes.toString()} Phút ',
                           style: const TextStyle(
                             fontSize: 12.5,
                             color: _textMuted,
@@ -87,7 +88,7 @@ class StoreOverviewServicesCard extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      item.price,
+                      item.basePrice.toVnd(),
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
@@ -102,19 +103,23 @@ class StoreOverviewServicesCard extends StatelessWidget {
             GestureDetector(
               onTap: onViewAllServices,
               behavior: HitTestBehavior.opaque,
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'View all services',
-                    style: TextStyle(
+                    context.l10n.viewAllServices,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: _coralColor,
                     ),
                   ),
-                  SizedBox(width: 4),
-                  Icon(LucideIcons.chevron_right, size: 16, color: _coralColor),
+                  const SizedBox(width: 4),
+                  const Icon(
+                    LucideIcons.chevron_right,
+                    size: 16,
+                    color: _coralColor,
+                  ),
                 ],
               ),
             ),

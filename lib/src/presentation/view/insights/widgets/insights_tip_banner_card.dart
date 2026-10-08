@@ -1,4 +1,4 @@
-import 'package:spa_booking/src/presentation/view/insights/mockup_data/my_insights_mock_data.dart';
+import '../models/insights_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 

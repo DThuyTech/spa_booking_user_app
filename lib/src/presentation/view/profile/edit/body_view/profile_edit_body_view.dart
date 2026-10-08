@@ -8,9 +8,13 @@ class ProfileEditBodyView extends StatelessWidget {
   final TextEditingController fullNameController;
   final TextEditingController dobController;
   final TextEditingController genderController;
+  final TextEditingController phoneNumberController;
+
   final VoidCallback onPickDob;
   final VoidCallback onSelectGender;
   final ValueChanged<String> onFullNameChanged;
+  final ValueChanged<String> onPhoneNumberChanged;
+
   final bool isSubmitting;
   final VoidCallback onSubmit;
 
@@ -25,6 +29,8 @@ class ProfileEditBodyView extends StatelessWidget {
     required this.onFullNameChanged,
     required this.isSubmitting,
     required this.onSubmit,
+    required this.phoneNumberController,
+    required this.onPhoneNumberChanged,
   });
 
   @override
@@ -43,6 +49,8 @@ class ProfileEditBodyView extends StatelessWidget {
             onPickDob: onPickDob,
             onSelectGender: onSelectGender,
             onFullNameChanged: onFullNameChanged,
+            phoneNumberController: phoneNumberController,
+            onPhoneNumberChanged: onPhoneNumberChanged,
           ),
           ProfileEditActionSection(
             isSubmitting: isSubmitting,
