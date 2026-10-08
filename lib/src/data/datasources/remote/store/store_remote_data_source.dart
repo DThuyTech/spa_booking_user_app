@@ -160,8 +160,9 @@ class StoreRemoteDataSourceImpl implements StoreRemoteDataSource {
           final matched = fallbackResult.items.where((s) {
             final addr = s.address.toLowerCase();
             final scity = (s.city ?? '').toLowerCase();
-            if (scity.contains(normCity) || addr.contains(normCity))
+            if (scity.contains(normCity) || addr.contains(normCity)) {
               return true;
+            }
             if (normCity.contains('hồ chí minh') ||
                 normCity.contains('ho chi minh')) {
               return addr.contains('hồ chí minh') ||

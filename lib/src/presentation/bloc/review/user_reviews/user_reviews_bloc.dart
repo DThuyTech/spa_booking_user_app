@@ -62,8 +62,9 @@ class UserReviewsBloc extends Bloc<UserReviewsEvent, UserReviewsState> {
     LoadMoreUserReviewsEvent event,
     Emitter<UserReviewsState> emit,
   ) async {
-    if (state.hasReachedMax || state.status == UserReviewsStatus.loading)
+    if (state.hasReachedMax || state.status == UserReviewsStatus.loading) {
       return;
+    }
 
     final nextPage = state.page + 1;
     final result = await getMyReviewsUseCase(page: nextPage, limit: 10);
