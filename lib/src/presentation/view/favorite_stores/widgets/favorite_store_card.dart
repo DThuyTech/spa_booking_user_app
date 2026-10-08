@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:spa_booking/src/domain/entities/favorite/favorite_store_entity.dart';
 import '../../../../shared/shared.dart';
-import '../models/favorite_store_item.dart';
 
 class FavoriteStoreCard extends StatelessWidget {
-  final FavoriteStoreItem store;
+  final FavoriteStoreEntity store;
   final VoidCallback onFavoriteToggle;
   final VoidCallback onViewSalon;
 
@@ -46,7 +46,12 @@ class FavoriteStoreCard extends StatelessWidget {
                   child: AspectRatio(
                     aspectRatio: 16 / 9,
                     child: Image.network(
-                      store.imageUrl,
+                      (store.coverImageUrl != null &&
+                              store.coverImageUrl!.isNotEmpty)
+                          ? store.coverImageUrl!
+                          : (store.logoUrl != null && store.logoUrl!.isNotEmpty)
+                          ? store.logoUrl!
+                          : '',
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
@@ -129,7 +134,7 @@ class FavoriteStoreCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          store.rating.toStringAsFixed(1),
+                          store.averageRating?.toStringAsFixed(1) ?? '0.0',
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
@@ -168,26 +173,30 @@ class FavoriteStoreCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          LucideIcons.map_pin,
-                          size: 14,
-                          color: Color(0xFF71717A),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          store.distance,
-                          style: const TextStyle(
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.w500,
+                    if (store.address.isNotEmpty) ...[
+                      const SizedBox(width: 8),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            LucideIcons.map_pin,
+                            size: 14,
                             color: Color(0xFF71717A),
                           ),
-                        ),
-                      ],
-                    ),
+                          const SizedBox(width: 4),
+                          Text(
+                            store.address.contains(',')
+                                ? store.address.split(',').last.trim()
+                                : store.address,
+                            style: const TextStyle(
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF71717A),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
 
@@ -195,7 +204,7 @@ class FavoriteStoreCard extends StatelessWidget {
 
                 // Description
                 Text(
-                  store.description,
+                  store.address,
                   style: const TextStyle(
                     fontSize: 13,
                     color: _textSubtle,

@@ -35,9 +35,11 @@ class BookingDashboardMockData {
   const BookingDashboardMockData._();
 
   static const int upcomingCount = 2;
+  static const int allCount = 16;
+  static const int pastCount = 12;
+  static const int cancelledCount = 2;
   static const int todayCount = 1;
   static const int completedCount = 12;
-  static const int cancelledCount = 2;
 
   static const List<BookingDashboardGroup> groups = [
     BookingDashboardGroup(

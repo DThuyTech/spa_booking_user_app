@@ -9,6 +9,7 @@ class ResetPasswordBodyView extends StatelessWidget {
   final String newPassword;
   final ValueChanged<String> onPasswordChanged;
   final VoidCallback onUpdatePassword;
+  final bool isLoading;
 
   const ResetPasswordBodyView({
     super.key,
@@ -17,6 +18,7 @@ class ResetPasswordBodyView extends StatelessWidget {
     required this.newPassword,
     required this.onPasswordChanged,
     required this.onUpdatePassword,
+    this.isLoading = false,
   });
 
   static const Color _textDark = Color(0xFF1E2022);
@@ -97,7 +99,8 @@ class ResetPasswordBodyView extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 36, bottom: 20),
                   child: AppButton(
                     text: 'Update Password',
-                    onPressed: onUpdatePassword,
+                    isLoading: isLoading,
+                    onPressed: isLoading ? null : onUpdatePassword,
                     backgroundColor: _coralColor,
                     textColor: Colors.white,
                     borderRadius: BorderRadius.circular(28),

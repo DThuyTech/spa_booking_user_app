@@ -9,6 +9,7 @@ class ForgotPasswordOtpBodyView extends StatelessWidget {
   final VoidCallback onVerify;
   final int countdownSeconds;
   final VoidCallback onResend;
+  final bool isLoading;
 
   const ForgotPasswordOtpBodyView({
     super.key,
@@ -18,6 +19,7 @@ class ForgotPasswordOtpBodyView extends StatelessWidget {
     required this.onVerify,
     required this.countdownSeconds,
     required this.onResend,
+    this.isLoading = false,
   });
 
   static const Color _textDark = Color(0xFF1E2022);
@@ -36,9 +38,9 @@ class ForgotPasswordOtpBodyView extends StatelessWidget {
           const SizedBox(height: 12),
 
           // Title
-          const Text(
-            'Verify Code',
-            style: TextStyle(
+          Text(
+            context.l10n.verifyCode,
+            style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w800,
               color: _textDark,
@@ -98,7 +100,7 @@ class ForgotPasswordOtpBodyView extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    child: const Text('Resend Code'),
+                    child: Text(context.l10n.resendOtp),
                   )
                 : Text(
                     'Resend code in 00:${countdownSeconds.toString().padLeft(2, '0')}',
@@ -115,7 +117,8 @@ class ForgotPasswordOtpBodyView extends StatelessWidget {
           // Verify Button
           AppButton(
             text: 'Verify & Proceed',
-            onPressed: otpCode.length == 6 ? onVerify : null,
+            isLoading: isLoading,
+            onPressed: (!isLoading && otpCode.length == 6) ? onVerify : null,
             backgroundColor: _coralColor,
             textColor: Colors.white,
             borderRadius: BorderRadius.circular(28),

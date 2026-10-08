@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../mockup_data/store_detail_mock_data.dart';
+import 'package:spa_booking/src/domain/entities/store/store.dart';
 
 class StoreRatingSummaryCard extends StatelessWidget {
-  final StoreRatingSummary summary;
+  final StoreReviewsOverviewEntity summary;
 
   static const Color _starColor = Color(0xFFF59E0B);
   static const Color _textDark = Color(0xFF1E2022);
@@ -68,7 +68,10 @@ class StoreRatingSummaryCard extends StatelessWidget {
           // Star breakdown bars (5 down to 1)
           ...List.generate(5, (index) {
             final star = 5 - index;
-            final ratio = summary.starRatios[star] ?? 0.0;
+            final count = summary.ratingDistribution[star.toString()] ?? 0;
+            final ratio = summary.totalReviews > 0
+                ? (count / summary.totalReviews).clamp(0.0, 1.0)
+                : 0.0;
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 3.5),
               child: Row(
@@ -94,7 +97,7 @@ class StoreRatingSummaryCard extends StatelessWidget {
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: FractionallySizedBox(
-                            widthFactor: ratio.clamp(0.0, 1.0),
+                            widthFactor: ratio,
                             child: Container(color: _starColor),
                           ),
                         ),

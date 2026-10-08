@@ -2,8 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../app/di/dependency_injection.dart';
-import '../../../../shared/design_system/components/navigation/app_app_bar.dart';
-import '../../../../shared/widgets/toast/app_toast.dart';
+import '../../../../shared/shared.dart';
 import '../../../bloc/review/write_review/write_review_bloc.dart';
 import '../body_view/write_review_body_view.dart';
 import '../mockup_data/write_review_mock_data.dart';
@@ -30,8 +29,8 @@ class WriteReviewPage extends StatelessWidget {
       child: WriteReviewView(
         storeId: storeId,
         bookingId: bookingId,
-        salonName: salonName ?? WriteReviewMockData.defaultSalonName,
-        logoUrl: logoUrl ?? WriteReviewMockData.defaultLogoUrl,
+        salonName: salonName ?? '',
+        logoUrl: logoUrl ?? '',
       ),
     );
   }
@@ -47,8 +46,8 @@ class WriteReviewView extends StatefulWidget {
     super.key,
     this.storeId,
     this.bookingId,
-    this.salonName = WriteReviewMockData.defaultSalonName,
-    this.logoUrl = WriteReviewMockData.defaultLogoUrl,
+    this.salonName = '',
+    this.logoUrl = '',
   });
 
   @override
@@ -104,85 +103,31 @@ class _WriteReviewViewState extends State<WriteReviewView> {
     });
   }
 
-  bool get _hasBloc {
-    try {
-      BlocProvider.of<WriteReviewBloc>(context);
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
-
   void _onSubmit() {
     if (_selectedRating == 0) {
       AppToast.warning(context, message: 'Please select a star rating');
       return;
     }
 
-    if (_hasBloc) {
-      context.read<WriteReviewBloc>().add(
-        SubmitReviewEvent(
-          storeId: widget.storeId ?? '',
-          bookingId: widget.bookingId ?? '',
-          rating: _selectedRating,
-          comment: _reviewController.text.trim(),
-          images: _photoUrls,
-        ),
-      );
+    final comment = _reviewController.text.trim();
+    if (comment.isEmpty) {
+      AppToast.warning(context, message: 'Please enter your review comment');
       return;
     }
 
-    AppToast.success(
-      context,
-      message: 'Thank you! Your review for ${widget.salonName} was submitted.',
+    context.read<WriteReviewBloc>().add(
+      SubmitReviewEvent(
+        storeId: widget.storeId ?? '',
+        bookingId: widget.bookingId ?? '',
+        rating: _selectedRating,
+        comment: comment,
+        images: _photoUrls,
+      ),
     );
-    Navigator.of(context).maybePop(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final scaffold = Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
-      appBar: AppAppBar(
-        title: 'Write a Review',
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: TextButton(
-              onPressed: _onSubmit,
-              style: TextButton.styleFrom(
-                foregroundColor: _coralColor,
-                textStyle: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              child: const Text('Post'),
-            ),
-          ),
-        ],
-      ),
-      body: WriteReviewBodyView(
-        salonName: widget.salonName,
-        logoUrl: widget.logoUrl,
-        selectedRating: _selectedRating,
-        onRatingChanged: (rating) {
-          setState(() {
-            _selectedRating = rating;
-          });
-        },
-        reviewController: _reviewController,
-        criteria: _criteria,
-        onCriteriaChanged: _onCriteriaChanged,
-        photoUrls: _photoUrls,
-        onAddPhoto: _onAddPhoto,
-        onRemovePhoto: _onRemovePhoto,
-        onSubmitReview: _onSubmit,
-      ),
-    );
-
-    if (!_hasBloc) return scaffold;
-
     return BlocConsumer<WriteReviewBloc, WriteReviewState>(
       listener: (context, state) {
         if (state.status == WriteReviewStatus.success) {
@@ -191,6 +136,7 @@ class _WriteReviewViewState extends State<WriteReviewView> {
             message:
                 'Thank you! Your review for ${widget.salonName} was submitted.',
           );
+
           Navigator.of(context).maybePop(true);
         } else if (state.status == WriteReviewStatus.failure) {
           AppToast.error(
@@ -200,6 +146,48 @@ class _WriteReviewViewState extends State<WriteReviewView> {
         }
       },
       builder: (context, state) {
+        final scaffold = Scaffold(
+          backgroundColor: const Color(0xFFF8F9FA),
+          appBar: AppAppBar(
+            title: context.l10n.writeReview,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: TextButton(
+                  onPressed: state.status == WriteReviewStatus.loading
+                      ? null
+                      : () => _onSubmit(),
+                  style: TextButton.styleFrom(
+                    foregroundColor: _coralColor,
+                    textStyle: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  child: Text(context.l10n.postReview),
+                ),
+              ),
+            ],
+          ),
+          body: WriteReviewBodyView(
+            salonName: widget.salonName,
+            logoUrl: widget.logoUrl,
+            selectedRating: _selectedRating,
+            onRatingChanged: (rating) {
+              setState(() {
+                _selectedRating = rating;
+              });
+            },
+            reviewController: _reviewController,
+            criteria: _criteria,
+            onCriteriaChanged: _onCriteriaChanged,
+            photoUrls: _photoUrls,
+            onAddPhoto: _onAddPhoto,
+            onRemovePhoto: _onRemovePhoto,
+            onSubmitReview: () => _onSubmit(),
+          ),
+        );
+
         if (state.status == WriteReviewStatus.loading) {
           return Stack(
             children: [
@@ -213,6 +201,7 @@ class _WriteReviewViewState extends State<WriteReviewView> {
             ],
           );
         }
+
         return scaffold;
       },
     );

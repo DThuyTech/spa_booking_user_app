@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:spa_booking/src/domain/entities/store/store.dart';
 import '../../../../shared/shared.dart';
-import '../mockup_data/store_detail_mock_data.dart';
 import '../widgets/store_rating_summary_card.dart';
 import '../widgets/store_review_item_card.dart';
 
 class StoreReviewsTabView extends StatelessWidget {
-  final StoreRatingSummary ratingSummary;
-  final List<StoreReviewItem> reviews;
+  final StoreReviewsOverviewEntity? ratingSummary;
   final VoidCallback? onViewAllReviews;
   final VoidCallback? onWriteReview;
 
@@ -16,13 +15,16 @@ class StoreReviewsTabView extends StatelessWidget {
   const StoreReviewsTabView({
     super.key,
     required this.ratingSummary,
-    required this.reviews,
     this.onViewAllReviews,
     this.onWriteReview,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (ratingSummary == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    final reviews = ratingSummary!.recentReviews;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -34,9 +36,9 @@ class StoreReviewsTabView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Customer reviews',
-                style: TextStyle(
+              Text(
+                context.l10n.customerReviews,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: _textDark,
@@ -55,14 +57,18 @@ class StoreReviewsTabView extends StatelessWidget {
                     color: const Color(0xFFFDEEEB),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(LucideIcons.pen_line, size: 13, color: _coralColor),
-                      SizedBox(width: 5),
+                      const Icon(
+                        LucideIcons.pen_line,
+                        size: 13,
+                        color: _coralColor,
+                      ),
+                      const SizedBox(width: 5),
                       Text(
-                        'Review',
-                        style: TextStyle(
+                        context.l10n.review,
+                        style: const TextStyle(
                           fontSize: 12.5,
                           fontWeight: FontWeight.w700,
                           color: _coralColor,
@@ -77,7 +83,7 @@ class StoreReviewsTabView extends StatelessWidget {
           const SizedBox(height: 14),
 
           // Rating summary card
-          StoreRatingSummaryCard(summary: ratingSummary),
+          StoreRatingSummaryCard(summary: ratingSummary!),
           const SizedBox(height: 16),
 
           // List of customer reviews
@@ -91,26 +97,29 @@ class StoreReviewsTabView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: const Color(0xFFECEFF1)),
               ),
-              child: const Column(
+              child: Column(
                 children: [
-                  Icon(
+                  const Icon(
                     LucideIcons.message_square_dashed,
                     size: 36,
                     color: Color(0xFF90A4AE),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
-                    'No reviews yet',
-                    style: TextStyle(
+                    context.l10n.noReviewsYet,
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF455A64),
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
-                    'Be the first to share your experience!',
-                    style: TextStyle(fontSize: 13, color: Color(0xFF90A4AE)),
+                    context.l10n.beTheFirstToReview,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF90A4AE),
+                    ),
                   ),
                 ],
               ),

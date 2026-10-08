@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StoreDetailState {
 
- StoreDetailStatus get status; StoreDetailEntity? get detail; Failure? get failure;
+ StoreDetailStatus get status; StoreFullDetailEntity? get detail; List<StoreBusinessHourEntity> get businessHours; List<ServiceCategoryEntity> get categories; List<ServiceEntity> get services; List<StaffEntity> get staff; List<ReviewEntity> get reviews; Failure? get failure;
 /// Create a copy of StoreDetailState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $StoreDetailStateCopyWith<StoreDetailState> get copyWith => _$StoreDetailStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StoreDetailState&&(identical(other.status, status) || other.status == status)&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StoreDetailState&&(identical(other.status, status) || other.status == status)&&(identical(other.detail, detail) || other.detail == detail)&&const DeepCollectionEquality().equals(other.businessHours, businessHours)&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.services, services)&&const DeepCollectionEquality().equals(other.staff, staff)&&const DeepCollectionEquality().equals(other.reviews, reviews)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,detail,failure);
+int get hashCode => Object.hash(runtimeType,status,detail,const DeepCollectionEquality().hash(businessHours),const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(services),const DeepCollectionEquality().hash(staff),const DeepCollectionEquality().hash(reviews),failure);
 
 @override
 String toString() {
-  return 'StoreDetailState(status: $status, detail: $detail, failure: $failure)';
+  return 'StoreDetailState(status: $status, detail: $detail, businessHours: $businessHours, categories: $categories, services: $services, staff: $staff, reviews: $reviews, failure: $failure)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $StoreDetailStateCopyWith<$Res>  {
   factory $StoreDetailStateCopyWith(StoreDetailState value, $Res Function(StoreDetailState) _then) = _$StoreDetailStateCopyWithImpl;
 @useResult
 $Res call({
- StoreDetailStatus status, StoreDetailEntity? detail, Failure? failure
+ StoreDetailStatus status, StoreFullDetailEntity? detail, List<StoreBusinessHourEntity> businessHours, List<ServiceCategoryEntity> categories, List<ServiceEntity> services, List<StaffEntity> staff, List<ReviewEntity> reviews, Failure? failure
 });
 
 
-$StoreDetailEntityCopyWith<$Res>? get detail;
+$StoreFullDetailEntityCopyWith<$Res>? get detail;
 
 }
 /// @nodoc
@@ -62,11 +62,16 @@ class _$StoreDetailStateCopyWithImpl<$Res>
 
 /// Create a copy of StoreDetailState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? detail = freezed,Object? failure = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? detail = freezed,Object? businessHours = null,Object? categories = null,Object? services = null,Object? staff = null,Object? reviews = null,Object? failure = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as StoreDetailStatus,detail: freezed == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
-as StoreDetailEntity?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
+as StoreFullDetailEntity?,businessHours: null == businessHours ? _self.businessHours : businessHours // ignore: cast_nullable_to_non_nullable
+as List<StoreBusinessHourEntity>,categories: null == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
+as List<ServiceCategoryEntity>,services: null == services ? _self.services : services // ignore: cast_nullable_to_non_nullable
+as List<ServiceEntity>,staff: null == staff ? _self.staff : staff // ignore: cast_nullable_to_non_nullable
+as List<StaffEntity>,reviews: null == reviews ? _self.reviews : reviews // ignore: cast_nullable_to_non_nullable
+as List<ReviewEntity>,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as Failure?,
   ));
 }
@@ -74,12 +79,12 @@ as Failure?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$StoreDetailEntityCopyWith<$Res>? get detail {
+$StoreFullDetailEntityCopyWith<$Res>? get detail {
     if (_self.detail == null) {
     return null;
   }
 
-  return $StoreDetailEntityCopyWith<$Res>(_self.detail!, (value) {
+  return $StoreFullDetailEntityCopyWith<$Res>(_self.detail!, (value) {
     return _then(_self.copyWith(detail: value));
   });
 }
@@ -164,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StoreDetailStatus status,  StoreDetailEntity? detail,  Failure? failure)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StoreDetailStatus status,  StoreFullDetailEntity? detail,  List<StoreBusinessHourEntity> businessHours,  List<ServiceCategoryEntity> categories,  List<ServiceEntity> services,  List<StaffEntity> staff,  List<ReviewEntity> reviews,  Failure? failure)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StoreDetailState() when $default != null:
-return $default(_that.status,_that.detail,_that.failure);case _:
+return $default(_that.status,_that.detail,_that.businessHours,_that.categories,_that.services,_that.staff,_that.reviews,_that.failure);case _:
   return orElse();
 
 }
@@ -185,10 +190,10 @@ return $default(_that.status,_that.detail,_that.failure);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StoreDetailStatus status,  StoreDetailEntity? detail,  Failure? failure)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StoreDetailStatus status,  StoreFullDetailEntity? detail,  List<StoreBusinessHourEntity> businessHours,  List<ServiceCategoryEntity> categories,  List<ServiceEntity> services,  List<StaffEntity> staff,  List<ReviewEntity> reviews,  Failure? failure)  $default,) {final _that = this;
 switch (_that) {
 case _StoreDetailState():
-return $default(_that.status,_that.detail,_that.failure);case _:
+return $default(_that.status,_that.detail,_that.businessHours,_that.categories,_that.services,_that.staff,_that.reviews,_that.failure);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +210,10 @@ return $default(_that.status,_that.detail,_that.failure);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StoreDetailStatus status,  StoreDetailEntity? detail,  Failure? failure)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StoreDetailStatus status,  StoreFullDetailEntity? detail,  List<StoreBusinessHourEntity> businessHours,  List<ServiceCategoryEntity> categories,  List<ServiceEntity> services,  List<StaffEntity> staff,  List<ReviewEntity> reviews,  Failure? failure)?  $default,) {final _that = this;
 switch (_that) {
 case _StoreDetailState() when $default != null:
-return $default(_that.status,_that.detail,_that.failure);case _:
+return $default(_that.status,_that.detail,_that.businessHours,_that.categories,_that.services,_that.staff,_that.reviews,_that.failure);case _:
   return null;
 
 }
@@ -220,11 +225,46 @@ return $default(_that.status,_that.detail,_that.failure);case _:
 
 
 class _StoreDetailState extends StoreDetailState {
-  const _StoreDetailState({this.status = StoreDetailStatus.initial, this.detail, this.failure}): super._();
+  const _StoreDetailState({this.status = StoreDetailStatus.initial, this.detail, final  List<StoreBusinessHourEntity> businessHours = const [], final  List<ServiceCategoryEntity> categories = const [], final  List<ServiceEntity> services = const [], final  List<StaffEntity> staff = const [], final  List<ReviewEntity> reviews = const [], this.failure}): _businessHours = businessHours,_categories = categories,_services = services,_staff = staff,_reviews = reviews,super._();
   
 
 @override@JsonKey() final  StoreDetailStatus status;
-@override final  StoreDetailEntity? detail;
+@override final  StoreFullDetailEntity? detail;
+ final  List<StoreBusinessHourEntity> _businessHours;
+@override@JsonKey() List<StoreBusinessHourEntity> get businessHours {
+  if (_businessHours is EqualUnmodifiableListView) return _businessHours;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_businessHours);
+}
+
+ final  List<ServiceCategoryEntity> _categories;
+@override@JsonKey() List<ServiceCategoryEntity> get categories {
+  if (_categories is EqualUnmodifiableListView) return _categories;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_categories);
+}
+
+ final  List<ServiceEntity> _services;
+@override@JsonKey() List<ServiceEntity> get services {
+  if (_services is EqualUnmodifiableListView) return _services;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_services);
+}
+
+ final  List<StaffEntity> _staff;
+@override@JsonKey() List<StaffEntity> get staff {
+  if (_staff is EqualUnmodifiableListView) return _staff;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_staff);
+}
+
+ final  List<ReviewEntity> _reviews;
+@override@JsonKey() List<ReviewEntity> get reviews {
+  if (_reviews is EqualUnmodifiableListView) return _reviews;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_reviews);
+}
+
 @override final  Failure? failure;
 
 /// Create a copy of StoreDetailState
@@ -237,16 +277,16 @@ _$StoreDetailStateCopyWith<_StoreDetailState> get copyWith => __$StoreDetailStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StoreDetailState&&(identical(other.status, status) || other.status == status)&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StoreDetailState&&(identical(other.status, status) || other.status == status)&&(identical(other.detail, detail) || other.detail == detail)&&const DeepCollectionEquality().equals(other._businessHours, _businessHours)&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._services, _services)&&const DeepCollectionEquality().equals(other._staff, _staff)&&const DeepCollectionEquality().equals(other._reviews, _reviews)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,detail,failure);
+int get hashCode => Object.hash(runtimeType,status,detail,const DeepCollectionEquality().hash(_businessHours),const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_services),const DeepCollectionEquality().hash(_staff),const DeepCollectionEquality().hash(_reviews),failure);
 
 @override
 String toString() {
-  return 'StoreDetailState(status: $status, detail: $detail, failure: $failure)';
+  return 'StoreDetailState(status: $status, detail: $detail, businessHours: $businessHours, categories: $categories, services: $services, staff: $staff, reviews: $reviews, failure: $failure)';
 }
 
 
@@ -257,11 +297,11 @@ abstract mixin class _$StoreDetailStateCopyWith<$Res> implements $StoreDetailSta
   factory _$StoreDetailStateCopyWith(_StoreDetailState value, $Res Function(_StoreDetailState) _then) = __$StoreDetailStateCopyWithImpl;
 @override @useResult
 $Res call({
- StoreDetailStatus status, StoreDetailEntity? detail, Failure? failure
+ StoreDetailStatus status, StoreFullDetailEntity? detail, List<StoreBusinessHourEntity> businessHours, List<ServiceCategoryEntity> categories, List<ServiceEntity> services, List<StaffEntity> staff, List<ReviewEntity> reviews, Failure? failure
 });
 
 
-@override $StoreDetailEntityCopyWith<$Res>? get detail;
+@override $StoreFullDetailEntityCopyWith<$Res>? get detail;
 
 }
 /// @nodoc
@@ -274,11 +314,16 @@ class __$StoreDetailStateCopyWithImpl<$Res>
 
 /// Create a copy of StoreDetailState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? detail = freezed,Object? failure = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? detail = freezed,Object? businessHours = null,Object? categories = null,Object? services = null,Object? staff = null,Object? reviews = null,Object? failure = freezed,}) {
   return _then(_StoreDetailState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as StoreDetailStatus,detail: freezed == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
-as StoreDetailEntity?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
+as StoreFullDetailEntity?,businessHours: null == businessHours ? _self._businessHours : businessHours // ignore: cast_nullable_to_non_nullable
+as List<StoreBusinessHourEntity>,categories: null == categories ? _self._categories : categories // ignore: cast_nullable_to_non_nullable
+as List<ServiceCategoryEntity>,services: null == services ? _self._services : services // ignore: cast_nullable_to_non_nullable
+as List<ServiceEntity>,staff: null == staff ? _self._staff : staff // ignore: cast_nullable_to_non_nullable
+as List<StaffEntity>,reviews: null == reviews ? _self._reviews : reviews // ignore: cast_nullable_to_non_nullable
+as List<ReviewEntity>,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as Failure?,
   ));
 }
@@ -287,12 +332,12 @@ as Failure?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$StoreDetailEntityCopyWith<$Res>? get detail {
+$StoreFullDetailEntityCopyWith<$Res>? get detail {
     if (_self.detail == null) {
     return null;
   }
 
-  return $StoreDetailEntityCopyWith<$Res>(_self.detail!, (value) {
+  return $StoreFullDetailEntityCopyWith<$Res>(_self.detail!, (value) {
     return _then(_self.copyWith(detail: value));
   });
 }

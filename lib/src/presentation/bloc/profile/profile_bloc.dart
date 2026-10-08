@@ -1,5 +1,6 @@
 import '../../../app/session/session_manager.dart';
 import '../../../core/error/failure.dart';
+import '../../../domain/usecases/auth/delete_account_usecase.dart';
 import '../../../domain/usecases/auth/get_current_user.dart';
 import '../../../domain/usecases/auth/logout_usecase.dart';
 import '../../../domain/usecases/booking/get_customer_bookings_usecase.dart';
@@ -14,6 +15,7 @@ export 'profile_state.dart';
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final GetCurrentUser getCurrentUserUseCase;
   final LogoutUseCase logoutUseCase;
+  final DeleteAccountUseCase? deleteAccountUseCase;
   final SessionManager sessionManager;
   final AuthSessionBloc? authSessionBloc;
   final GetCustomerBookingsUseCase? getCustomerBookingsUseCase;
@@ -21,6 +23,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc({
     required this.getCurrentUserUseCase,
     required this.logoutUseCase,
+    this.deleteAccountUseCase,
     required this.sessionManager,
     this.authSessionBloc,
     this.getCustomerBookingsUseCase,
@@ -28,6 +31,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<ProfileStarted>(_onStarted);
     on<ProfileRefreshed>(_onRefreshed);
     on<ProfileLogoutRequested>(_onLogoutRequested);
+    on<ProfileDeleteAccountRequested>(_onDeleteAccountRequested);
   }
 
   Future<void> _onStarted(
@@ -140,5 +144,44 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     await sessionManager.logout();
     authSessionBloc?.add(const LogoutRequested());
     emit(state.copyWith(status: ProfileStatus.loggedOut));
+  }
+
+  Future<void> _onDeleteAccountRequested(
+    ProfileDeleteAccountRequested event,
+    Emitter<ProfileState> emit,
+  ) async {
+    if (deleteAccountUseCase == null) return;
+    emit(
+      state.copyWith(
+        status: ProfileStatus.deletingAccount,
+        errorMessage: () => null,
+      ),
+    );
+
+    final result = await deleteAccountUseCase!();
+    await result.fold(
+      (failure) async {
+        String msg = failure.message;
+        if (msg.contains(':')) {
+          final parts = msg.split(':');
+          if (parts.length > 1 && parts[1].trim().isNotEmpty) {
+            msg = parts.sublist(1).join(':').trim();
+          }
+        }
+        emit(
+          state.copyWith(
+            status: ProfileStatus.failure,
+            errorMessage: () => msg,
+          ),
+        );
+      },
+      (_) async {
+        try {
+          await sessionManager.logout();
+          authSessionBloc?.add(const LogoutRequested());
+        } catch (_) {}
+        emit(state.copyWith(status: ProfileStatus.accountDeleted));
+      },
+    );
   }
 }

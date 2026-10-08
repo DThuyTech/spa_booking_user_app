@@ -5,7 +5,7 @@ class BookingServiceItem {
   final String category;
   final String name;
   final String duration;
-  final int price;
+  final double price;
   final String priceDisplay;
   final bool isSelected;
   final int? durationMinutes;
@@ -26,7 +26,7 @@ class BookingServiceItem {
     String? category,
     String? name,
     String? duration,
-    int? price,
+    double? price,
     String? priceDisplay,
     bool? isSelected,
     int? durationMinutes,
@@ -117,9 +117,9 @@ class BookingDetailData {
   final String durationDisplay;
   final List<BookingServiceItem> services;
   final List<String> notes;
-  final int subtotal;
-  final int discount;
-  final int totalAmount;
+  final double subtotal;
+  final double discount;
+  final double totalAmount;
   final String paymentStatus;
 
   const BookingDetailData({

@@ -1,8 +1,13 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:spa_booking/src/domain/entities/booking/booking_entity.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../domain/usecases/booking/create_booking_usecase.dart';
-import 'create_booking_event.dart';
-import 'create_booking_state.dart';
+
+part 'create_booking_bloc.freezed.dart';
+part 'create_booking_event.dart';
+part 'create_booking_state.dart';
 
 class CreateBookingBloc extends Bloc<CreateBookingEvent, CreateBookingState> {
   final CreateBookingUseCase createBookingUseCase;

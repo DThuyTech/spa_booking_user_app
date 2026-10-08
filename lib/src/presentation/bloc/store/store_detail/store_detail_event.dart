@@ -15,3 +15,16 @@ class FetchStoreDetailEvent extends StoreDetailEvent {
   @override
   List<Object?> get props => [storeId];
 }
+
+class ToggleStoreFavoriteEvent extends StoreDetailEvent {
+  final String storeId;
+  final bool isFavorite;
+
+  const ToggleStoreFavoriteEvent({
+    required this.storeId,
+    required this.isFavorite,
+  });
+
+  @override
+  List<Object?> get props => [storeId, isFavorite];
+}

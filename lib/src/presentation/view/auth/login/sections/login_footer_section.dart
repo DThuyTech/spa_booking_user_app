@@ -3,7 +3,6 @@ import 'package:spa_booking/src/app/router/app_router.gr.dart';
 import 'package:spa_booking/src/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:spa_booking/src/presentation/view/terms/view/terms_of_use_view.dart';
-import '../widgets/social_auth_divider.dart';
 
 class LoginFooterSection extends StatelessWidget {
   const LoginFooterSection({super.key});
@@ -14,9 +13,7 @@ class LoginFooterSection extends StatelessWidget {
 
     return Column(
       children: [
-        const SizedBox(height: 24),
-        const SocialAuthDivider(),
-        const SizedBox(height: 24),
+        const SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

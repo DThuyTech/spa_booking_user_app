@@ -1,7 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spa_booking/src/app/di/dependency_injection.dart';
 import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
 import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
-import 'package:flutter/material.dart';
+import 'package:spa_booking/src/presentation/bloc/auth/change_password/change_password_cubit.dart';
 import '../body_view/change_password_body_view.dart';
 
 @RoutePage()
@@ -10,7 +13,10 @@ class ChangePasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ChangePasswordView();
+    return BlocProvider(
+      create: (_) => sl<ChangePasswordCubit>(),
+      child: const ChangePasswordView(),
+    );
   }
 }
 
@@ -42,47 +48,75 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     super.dispose();
   }
 
-  void _onUpdatePassword() {
+  void _onUpdatePassword(BuildContext context) {
     final current = _currentPasswordController.text;
     final newPass = _newPasswordController.text;
     final confirm = _confirmPasswordController.text;
 
     if (current.isEmpty) {
-      AppToast.warning(context, message: 'Please enter your current password');
+      AppToast.warning(context, message: 'Vui lòng nhập mật khẩu hiện tại');
       return;
     }
     if (newPass.length < 8) {
       AppToast.warning(
         context,
-        message: 'New password must be at least 8 characters long',
+        message: 'Mật khẩu mới phải có ít nhất 8 ký tự',
+      );
+      return;
+    }
+    if (newPass == current) {
+      AppToast.warning(
+        context,
+        message: 'Mật khẩu mới không được trùng mật khẩu cũ',
       );
       return;
     }
     if (newPass != confirm) {
       AppToast.error(
         context,
-        message: 'New password and confirmation do not match',
+        message: 'Mật khẩu mới và xác nhận mật khẩu không khớp',
       );
       return;
     }
 
-    AppToast.success(context, message: 'Password updated successfully!');
-    Navigator.of(context).maybePop();
+    context.read<ChangePasswordCubit>().changePassword(
+      oldPassword: current,
+      newPassword: newPass,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: const AppAppBar(backgroundColor: Colors.white),
-      body: SafeArea(
-        child: ChangePasswordBodyView(
-          currentPasswordController: _currentPasswordController,
-          newPasswordController: _newPasswordController,
-          confirmPasswordController: _confirmPasswordController,
-          onUpdatePassword: _onUpdatePassword,
-        ),
-      ),
+    return BlocConsumer<ChangePasswordCubit, ChangePasswordState>(
+      listener: (context, state) {
+        if (state.isFailure) {
+          AppToast.error(
+            context,
+            message: state.errorMessage ?? 'Đổi mật khẩu thất bại',
+          );
+        } else if (state.isSuccess) {
+          AppToast.success(
+            context,
+            message: state.message ?? 'Đổi mật khẩu thành công!',
+          );
+          Navigator.of(context).maybePop();
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: const AppAppBar(backgroundColor: Colors.white),
+          body: SafeArea(
+            child: ChangePasswordBodyView(
+              currentPasswordController: _currentPasswordController,
+              newPasswordController: _newPasswordController,
+              confirmPasswordController: _confirmPasswordController,
+              isLoading: state.isLoading,
+              onUpdatePassword: () => _onUpdatePassword(context),
+            ),
+          ),
+        );
+      },
     );
   }
 }

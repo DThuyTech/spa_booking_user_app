@@ -1,8 +1,4 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../../../core/error/failure.dart';
-import '../../../../domain/entities/booking/booking_entity.dart';
-
-part 'create_booking_state.freezed.dart';
+part of 'create_booking_bloc.dart';
 
 enum CreateBookingStatus { initial, submitting, success, failure }
 

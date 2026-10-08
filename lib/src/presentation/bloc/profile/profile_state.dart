@@ -9,6 +9,8 @@ enum ProfileStatus {
   loggingOut,
   loggedOut,
   needsProfileSetup,
+  deletingAccount,
+  accountDeleted,
 }
 
 typedef ProfileStatusEnum = ProfileStatus;
@@ -34,6 +36,8 @@ class ProfileState extends Equatable {
   bool get isLoggingOut => status == ProfileStatus.loggingOut;
   bool get isLoggedOut => status == ProfileStatus.loggedOut;
   bool get needsProfileSetup => status == ProfileStatus.needsProfileSetup;
+  bool get isDeletingAccount => status == ProfileStatus.deletingAccount;
+  bool get isAccountDeleted => status == ProfileStatus.accountDeleted;
 
   ProfileState copyWith({
     ProfileStatus? status,

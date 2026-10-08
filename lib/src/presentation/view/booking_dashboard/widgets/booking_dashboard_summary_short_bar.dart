@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class BookingDashboardSummaryShortBar extends StatelessWidget {
   final int upcomingCount;
-  final int todayCount;
-  final int completedCount;
+  final int allCount;
+  final int pastCount;
   final int cancelledCount;
   final ValueChanged<String>? onFilterSelect;
   final String selectedFilter;
@@ -11,8 +11,8 @@ class BookingDashboardSummaryShortBar extends StatelessWidget {
   const BookingDashboardSummaryShortBar({
     super.key,
     required this.upcomingCount,
-    required this.todayCount,
-    required this.completedCount,
+    required this.allCount,
+    required this.pastCount,
     required this.cancelledCount,
     this.onFilterSelect,
     this.selectedFilter = 'UPCOMING',
@@ -43,31 +43,28 @@ class BookingDashboardSummaryShortBar extends StatelessWidget {
             _buildCompactChip(
               title: 'Upcoming',
               count: upcomingCount,
-              isPrimary: true,
               isSelected: selectedFilter == 'UPCOMING',
               onTap: () => onFilterSelect?.call('UPCOMING'),
             ),
             const SizedBox(width: 6),
             _buildCompactChip(
-              title: 'Today',
-              count: todayCount,
-              isPrimary: false,
-              isSelected: selectedFilter == 'TODAY',
-              onTap: () => onFilterSelect?.call('TODAY'),
+              title: 'All',
+              count: allCount,
+              isSelected: selectedFilter == 'ALL',
+              onTap: () => onFilterSelect?.call('ALL'),
             ),
             const SizedBox(width: 6),
             _buildCompactChip(
-              title: 'Completed',
-              count: completedCount,
-              isPrimary: false,
-              isSelected: selectedFilter == 'COMPLETED',
-              onTap: () => onFilterSelect?.call('COMPLETED'),
+              title: 'Past',
+              count: pastCount,
+              isSelected:
+                  selectedFilter == 'PAST' || selectedFilter == 'COMPLETED',
+              onTap: () => onFilterSelect?.call('PAST'),
             ),
             const SizedBox(width: 6),
             _buildCompactChip(
               title: 'Cancelled',
               count: cancelledCount,
-              isPrimary: false,
               isSelected: selectedFilter == 'CANCELLED',
               onTap: () => onFilterSelect?.call('CANCELLED'),
             ),
@@ -80,26 +77,34 @@ class BookingDashboardSummaryShortBar extends StatelessWidget {
   Widget _buildCompactChip({
     required String title,
     required int count,
-    required bool isPrimary,
     required bool isSelected,
     required VoidCallback onTap,
   }) {
     final bool active = isSelected;
     final Color bgColor = active
         ? const Color(0xFFFA7762)
-        : (isPrimary ? const Color(0xFFFFF0EC) : const Color(0xFFF8FAFC));
-    final Color textColor = active
+        : const Color(0xFFF8FAFC);
+    final Color textColor = active ? Colors.white : const Color(0xFF475569);
+    final Color countBgColor = active
+        ? Colors.white.withValues(alpha: 0.25)
+        : const Color(0xFFE2E8F0);
+    final Color countTextColor = active
         ? Colors.white
-        : (isPrimary ? const Color(0xFFE05243) : const Color(0xFF475569));
+        : const Color(0xFF1E293B);
 
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(14),
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: active ? const Color(0xFFFA7762) : const Color(0xFFE2E8F0),
+            width: 1,
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -107,8 +112,8 @@ class BookingDashboardSummaryShortBar extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: active ? FontWeight.w700 : FontWeight.w600,
+                fontSize: 12.5,
+                fontWeight: active ? FontWeight.w700 : FontWeight.w500,
                 color: textColor,
               ),
             ),
@@ -116,17 +121,15 @@ class BookingDashboardSummaryShortBar extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
               decoration: BoxDecoration(
-                color: active
-                    ? Colors.white.withValues(alpha: 0.25)
-                    : Colors.black.withValues(alpha: 0.05),
+                color: countBgColor,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
                 '$count',
                 style: TextStyle(
                   fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                  color: textColor,
+                  fontWeight: FontWeight.w700,
+                  color: countTextColor,
                 ),
               ),
             ),

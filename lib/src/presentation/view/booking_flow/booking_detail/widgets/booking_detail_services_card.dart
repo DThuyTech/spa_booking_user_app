@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../../shared/shared.dart';
 import '../../models/booking_models.dart';
 
 class BookingDetailServicesCard extends StatelessWidget {
@@ -34,13 +34,13 @@ class BookingDetailServicesCard extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             color: _coralColor,
-            child: const Row(
+            child: Row(
               children: [
-                Icon(LucideIcons.scissors, size: 16, color: Colors.white),
-                SizedBox(width: 8),
+                const Icon(LucideIcons.scissors, size: 16, color: Colors.white),
+                const SizedBox(width: 8),
                 Text(
-                  'SERVICES',
-                  style: TextStyle(
+                  context.l10n.servicesCaps,
+                  style: const TextStyle(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w800,
                     color: Colors.white,

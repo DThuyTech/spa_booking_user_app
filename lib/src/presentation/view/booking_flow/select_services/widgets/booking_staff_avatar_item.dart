@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spa_booking/src/shared/shared.dart';
 import '../../models/booking_models.dart';
 
 class BookingStaffAvatarItem extends StatelessWidget {
@@ -68,9 +69,9 @@ class BookingStaffAvatarItem extends StatelessWidget {
                 ),
               ),
               if (staff.isOff)
-                const Text(
-                  'Off',
-                  style: TextStyle(
+                Text(
+                  context.l10n.staffOff,
+                  style: const TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF94A3B8),

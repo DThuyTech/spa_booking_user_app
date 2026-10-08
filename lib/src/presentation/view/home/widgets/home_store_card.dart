@@ -6,6 +6,8 @@ import 'package:spa_booking/src/shared/design_system/tokens/app_typography.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 
+import 'package:spa_booking/src/shared/utils/distance_helper.dart';
+
 /// Reusable store card for salon presentation, supporting both live store entities
 /// and an isolated placeholder when store endpoints are pending backend contract.
 class HomeStoreCard extends StatelessWidget {
@@ -13,6 +15,11 @@ class HomeStoreCard extends StatelessWidget {
   final String? address;
   final double? rating;
   final String? coverUrl;
+  final String? distance;
+  final double? latitude;
+  final double? longitude;
+  final double? userLatitude;
+  final double? userLongitude;
   final VoidCallback? onTap;
 
   const HomeStoreCard({
@@ -21,6 +28,11 @@ class HomeStoreCard extends StatelessWidget {
     this.address,
     this.rating,
     this.coverUrl,
+    this.distance,
+    this.latitude,
+    this.longitude,
+    this.userLatitude,
+    this.userLongitude,
     this.onTap,
   });
 
@@ -35,6 +47,15 @@ class HomeStoreCard extends StatelessWidget {
   }
 
   Widget _buildStoreCard(BuildContext context) {
+    final effectiveDistance =
+        distance ??
+        DistanceHelper.calculateAndFormat(
+          userLat: userLatitude,
+          userLng: userLongitude,
+          storeLat: latitude,
+          storeLng: longitude,
+        );
+
     return Container(
       width: 220,
       decoration: BoxDecoration(
@@ -94,23 +115,42 @@ class HomeStoreCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
-                    if (rating != null) ...[
+                    if (rating != null || effectiveDistance != null) ...[
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          const Icon(
-                            Icons.star_rounded,
-                            size: 16,
-                            color: Color(0xFFF59E0B),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            rating!.toStringAsFixed(1),
-                            style: AppTypography.labelSmall.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.darkBrown,
+                          if (rating != null) ...[
+                            const Icon(
+                              Icons.star_rounded,
+                              size: 16,
+                              color: Color(0xFFF59E0B),
                             ),
-                          ),
+                            const SizedBox(width: 4),
+                            Text(
+                              rating!.toStringAsFixed(1),
+                              style: AppTypography.labelSmall.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.darkBrown,
+                              ),
+                            ),
+                          ],
+                          if (rating != null && effectiveDistance != null)
+                            const SizedBox(width: 8),
+                          if (effectiveDistance != null) ...[
+                            const Icon(
+                              LucideIcons.map_pin,
+                              size: 13,
+                              color: Color(0xFFFA7762),
+                            ),
+                            const SizedBox(width: 3),
+                            Text(
+                              effectiveDistance,
+                              style: AppTypography.labelSmall.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFFFA7762),
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ],

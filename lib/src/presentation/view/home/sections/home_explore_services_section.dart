@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../shared/shared.dart';
 
 class ServiceCategoryItem {
   final String id;
@@ -32,11 +33,11 @@ class HomeExploreServicesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            'Explore Services',
-            style: TextStyle(
+            context.l10n.exploreServices,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
               color: _textDark,

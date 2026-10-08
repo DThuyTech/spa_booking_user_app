@@ -23,12 +23,8 @@ class ToggleFavoriteUseCase {
 
   Future<Either<Failure, bool>> call({
     required String storeId,
-    required bool isFavorite,
+    bool? isFavorite,
   }) {
-    if (isFavorite) {
-      return repository.addFavorite(storeId);
-    } else {
-      return repository.removeFavorite(storeId);
-    }
+    return repository.toggleFavorite(storeId);
   }
 }

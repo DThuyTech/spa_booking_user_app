@@ -61,12 +61,16 @@ class BookingRepositoryImpl implements BookingRepository {
   @override
   Future<Either<Failure, BookingListResponseEntity>> getCustomerBookings({
     String? tab,
+    String? status,
+    String? date,
     int page = 1,
     int limit = 20,
   }) async {
     try {
       final model = await remoteDataSource.getCustomerBookings(
         tab: tab,
+        status: status,
+        date: date,
         page: page,
         limit: limit,
       );

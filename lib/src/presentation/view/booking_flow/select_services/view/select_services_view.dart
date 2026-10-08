@@ -2,13 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spa_booking/src/app/di/dependency_injection.dart';
+import 'package:spa_booking/src/core/extensions/double_extensions.dart';
 import 'package:spa_booking/src/presentation/bloc/store/store_services/store_services_bloc.dart';
 import 'package:spa_booking/src/presentation/bloc/store/store_staff/store_staff_bloc.dart';
 import 'package:spa_booking/src/shared/shared.dart';
 import '../../booking_schedule/view/booking_schedule_view.dart';
 import '../../models/booking_models.dart';
 import '../body_view/select_services_body_view.dart';
-import '../mockup_data/select_services_mock_data.dart';
 
 @RoutePage()
 class SelectServicesPage extends StatelessWidget {
@@ -21,7 +21,7 @@ class SelectServicesPage extends StatelessWidget {
   const SelectServicesPage({
     super.key,
     this.storeId,
-    this.salonName = 'LUXE SALON',
+    required this.salonName,
     this.initialSelectedServiceId,
     this.initialServices,
     this.initialStaffMembers,
@@ -49,7 +49,7 @@ class SelectServicesView extends StatelessWidget {
   const SelectServicesView({
     super.key,
     this.storeId,
-    this.salonName = 'LUXE SALON',
+    required this.salonName,
     this.initialSelectedServiceId,
     this.initialServices,
     this.initialStaffMembers,
@@ -125,7 +125,7 @@ class _SelectServicesContentView extends StatefulWidget {
 
   const _SelectServicesContentView({
     this.storeId,
-    this.salonName = 'LUXE SALON',
+    required this.salonName,
     this.initialSelectedServiceId,
     this.initialServices,
     this.initialStaffMembers,
@@ -174,12 +174,6 @@ class _SelectServicesContentViewState
             .where((c) => c.isNotEmpty)
             .toSet(),
       ];
-    } else if (widget.storeId == null || widget.storeId!.isEmpty) {
-      _services = List.from(SelectServicesMockData.services);
-      for (final s in _services) {
-        if (s.isSelected) _selectedServiceIds.add(s.id);
-      }
-      _categories = ['All', 'Hair', 'Beauty', 'Team'];
     } else {
       _services = [];
       _categories = ['All'];
@@ -188,9 +182,6 @@ class _SelectServicesContentViewState
     if (widget.initialStaffMembers != null &&
         widget.initialStaffMembers!.isNotEmpty) {
       _staffMembers = List.from(widget.initialStaffMembers!);
-      _selectedStaffId = _staffMembers.first.id;
-    } else if (widget.storeId == null || widget.storeId!.isEmpty) {
-      _staffMembers = List.from(SelectServicesMockData.staffMembers);
       _selectedStaffId = _staffMembers.first.id;
     } else {
       _staffMembers = [];
@@ -222,11 +213,11 @@ class _SelectServicesContentViewState
 
   int get _selectedCount => _services.where((s) => s.isSelected).length;
 
-  int get _totalPrice => _services
+  double get _totalPrice => _services
       .where((s) => s.isSelected)
-      .fold(0, (sum, item) => sum + item.price);
+      .fold(0.0, (sum, item) => sum + item.price);
 
-  String get _formattedTotalPrice => _formatVnd(_totalPrice);
+  String get _formattedTotalPrice => _totalPrice.toVnd();
 
   String get _totalDurationDisplay {
     int totalMinutes = 0;
@@ -250,20 +241,6 @@ class _SelectServicesContentViewState
     } else {
       return '$mins min';
     }
-  }
-
-  String _formatVnd(int amount) {
-    final str = amount.toString();
-    final buffer = StringBuffer();
-    int count = 0;
-    for (int i = str.length - 1; i >= 0; i--) {
-      buffer.write(str[i]);
-      count++;
-      if (count % 3 == 0 && i > 0) {
-        buffer.write(',');
-      }
-    }
-    return '${buffer.toString().split('').reversed.join('')} VND';
   }
 
   String _getInitials(String name) {
@@ -351,8 +328,8 @@ class _SelectServicesContentViewState
                   name: s.name,
                   duration: '${s.durationMinutes} min',
                   durationMinutes: s.durationMinutes,
-                  price: s.price,
-                  priceDisplay: _formatVnd(s.price),
+                  price: s.basePrice,
+                  priceDisplay: s.basePrice.toVnd(),
                   isSelected: isSelected,
                 );
               }).toList();
@@ -432,9 +409,9 @@ class _SelectServicesContentViewState
         titleWidget: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'New Booking',
-              style: TextStyle(
+            Text(
+              context.l10n.newBooking,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
                 color: _textDark,
@@ -527,9 +504,9 @@ class _SelectServicesContentViewState
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Total Est.',
-                  style: TextStyle(
+                Text(
+                  context.l10n.totalEst,
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF64748B),

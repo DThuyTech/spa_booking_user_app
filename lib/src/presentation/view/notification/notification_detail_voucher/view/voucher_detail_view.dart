@@ -1,11 +1,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../booking_flow/select_services/view/select_services_view.dart';
 import 'package:spa_booking/src/shared/shared.dart';
 import '../../models/notification_models.dart';
 import '../body_view/voucher_detail_body_view.dart';
-import '../mockup_data/voucher_detail_mock_data.dart';
+
+const _emptyVoucher = VoucherNotificationData(
+  title: '',
+  description: '',
+  discountPercent: '',
+  validUntil: '',
+  applicableServices: [],
+  imageUrl: '',
+  code: '',
+);
 
 @RoutePage()
 class VoucherDetailPage extends StatelessWidget {
@@ -15,29 +23,20 @@ class VoucherDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VoucherDetailView(
-      voucher: voucher ?? VoucherDetailMockData.defaultVoucher,
-    );
+    return VoucherDetailView(voucher: voucher ?? _emptyVoucher);
   }
 }
 
 class VoucherDetailView extends StatelessWidget {
   final VoucherNotificationData voucher;
 
-  const VoucherDetailView({
-    super.key,
-    this.voucher = VoucherDetailMockData.defaultVoucher,
-  });
+  const VoucherDetailView({super.key, this.voucher = _emptyVoucher});
 
   static const Color _coralColor = Color(0xFFFF6F59);
   static const Color _textDark = Color(0xFF1E2022);
 
   void _onBookNow(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const SelectServicesView(salonName: 'LUXE SALON'),
-      ),
-    );
+    Navigator.of(context).pop();
   }
 
   void _onViewCoupon(BuildContext context) {

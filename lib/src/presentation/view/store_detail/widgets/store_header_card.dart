@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
-import '../mockup_data/store_detail_mock_data.dart';
+import 'package:spa_booking/src/domain/entities/store/store_full_detail_entity.dart';
+import '../../../../shared/shared.dart';
 
 class StoreHeaderCard extends StatelessWidget {
-  final StoreDetailItem store;
+  final StoreFullDetailEntity store;
 
   static const Color _starColor = Color(0xFFF59E0B);
   static const Color _textDark = Color(0xFF1E2022);
   static const Color _textMuted = Color(0xFF71717A);
   static const Color _openBadgeBg = Color(0xFFE8F8F0);
   static const Color _openBadgeText = Color(0xFF16A34A);
-  static const Color _seatsBadgeBg = Color(0xFFF1F5F9);
-  static const Color _seatsBadgeText = Color(0xFF475569);
 
   const StoreHeaderCard({super.key, required this.store});
 
@@ -45,7 +43,6 @@ class StoreHeaderCard extends StatelessWidget {
               color: _textDark,
             ),
           ),
-          const SizedBox(height: 8),
 
           // Rating and Distance Row
           Row(
@@ -53,7 +50,7 @@ class StoreHeaderCard extends StatelessWidget {
               const Icon(Icons.star_rounded, size: 17, color: _starColor),
               const SizedBox(width: 4),
               Text(
-                '${store.rating.toStringAsFixed(1)} (${store.reviewCount} reviews)',
+                '${store.averageRating} (${store.reviewSummary?.totalReviews ?? 0} ${context.l10n.reviews.toLowerCase()})',
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -61,14 +58,20 @@ class StoreHeaderCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 14),
+            ],
+          ),
+          Row(
+            children: [
               const Icon(LucideIcons.map_pin, size: 14, color: _textMuted),
               const SizedBox(width: 4),
-              Text(
-                store.distance,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: _textMuted,
+              Flexible(
+                child: Text(
+                  store.address,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: _textMuted,
+                  ),
                 ),
               ),
             ],
@@ -101,7 +104,7 @@ class StoreHeaderCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      store.openStatusText,
+                      context.l10n.openNow,
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -114,24 +117,24 @@ class StoreHeaderCard extends StatelessWidget {
               const SizedBox(width: 8),
 
               // Available Seats Badge
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
-                decoration: BoxDecoration(
-                  color: _seatsBadgeBg,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Text(
-                  store.seatsText,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: _seatsBadgeText,
-                  ),
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.symmetric(
+              //     horizontal: 10,
+              //     vertical: 5,
+              //   ),
+              //   decoration: BoxDecoration(
+              //     color: _seatsBadgeBg,
+              //     borderRadius: BorderRadius.circular(16),
+              //   ),
+              //   child: Text(
+              //     'còn ${store.seatsText} ghế',
+              //     style: const TextStyle(
+              //       fontSize: 12,
+              //       fontWeight: FontWeight.w500,
+              //       color: _seatsBadgeText,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ],

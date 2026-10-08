@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
-import '../../../../../shared/design_system/components/inputs/app_text_field.dart';
+import 'package:flutter/services.dart';
+import '../../../../../shared/shared.dart';
 
 class ProfileEditFormSection extends StatelessWidget {
   final TextEditingController fullNameController;
+  final TextEditingController phoneNumberController;
   final TextEditingController dobController;
   final TextEditingController genderController;
   final VoidCallback onPickDob;
   final VoidCallback onSelectGender;
   final ValueChanged<String> onFullNameChanged;
+  final ValueChanged<String> onPhoneNumberChanged;
 
   static const Color _coralColor = Color(0xFFFC6E58);
   static const Color _inputFillColor = Color(0xFFF4F6F8);
@@ -19,11 +21,13 @@ class ProfileEditFormSection extends StatelessWidget {
   const ProfileEditFormSection({
     super.key,
     required this.fullNameController,
+    required this.phoneNumberController,
     required this.dobController,
     required this.genderController,
     required this.onPickDob,
     required this.onSelectGender,
     required this.onFullNameChanged,
+    required this.onPhoneNumberChanged,
   });
 
   @override
@@ -57,9 +61,9 @@ class ProfileEditFormSection extends StatelessWidget {
         // Name Field
         AppTextField(
           controller: fullNameController,
-          label: 'Name',
+          label: context.l10n.name,
           labelStyle: labelStyle,
-          hint: 'Enter your name',
+          hint: context.l10n.name,
           hintStyle: hintStyle,
           style: inputStyle,
           fillColor: _inputFillColor,
@@ -75,10 +79,35 @@ class ProfileEditFormSection extends StatelessWidget {
 
         const SizedBox(height: 20),
 
+        // Name Field
+        AppTextField(
+          controller: phoneNumberController,
+          label: context.l10n.phone,
+          labelStyle: labelStyle,
+          hint: context.l10n.enterPhone,
+          hintStyle: hintStyle,
+          style: inputStyle,
+          fillColor: _inputFillColor,
+          border: inputBorder,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(15),
+          ],
+          keyboardType: TextInputType.phone,
+          enabledBorder: inputBorder,
+          focusedBorder: inputBorder,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 15,
+          ),
+          onChanged: onPhoneNumberChanged,
+        ),
+
+        const SizedBox(height: 20),
         // Date of Birth Field
         AppTextField(
           controller: dobController,
-          label: 'Date of Birth',
+          label: context.l10n.dateOfBirth,
           labelStyle: labelStyle,
           hint: '10/02/2002',
           hintStyle: hintStyle,
@@ -108,9 +137,9 @@ class ProfileEditFormSection extends StatelessWidget {
         // Gender Field
         AppTextField(
           controller: genderController,
-          label: 'Gender',
+          label: context.l10n.gender,
           labelStyle: labelStyle,
-          hint: 'Select Gender',
+          hint: context.l10n.selectGender,
           hintStyle: hintStyle,
           style: inputStyle,
           fillColor: _inputFillColor,

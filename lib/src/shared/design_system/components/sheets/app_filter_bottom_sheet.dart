@@ -3,6 +3,10 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import '../buttons/app_button.dart';
 import '../chips/app_option_picker.dart';
 import '../feedback/app_filter_slider.dart';
+import '../../../../app/di/dependency_injection.dart';
+import '../../../../domain/entities/location/city_entity.dart';
+import '../../../../domain/usecases/location/get_cities_usecase.dart';
+import 'city_selection_bottom_sheet.dart';
 
 class SpaFilterCriteria {
   final String location;
@@ -46,17 +50,20 @@ class SpaFilterCriteria {
 
 class AppFilterBottomSheet extends StatefulWidget {
   final SpaFilterCriteria initialCriteria;
+  final List<CityEntity>? availableCities;
   final ValueChanged<SpaFilterCriteria> onApply;
 
   const AppFilterBottomSheet({
     super.key,
     required this.initialCriteria,
+    this.availableCities,
     required this.onApply,
   });
 
   static Future<SpaFilterCriteria?> show(
     BuildContext context, {
     SpaFilterCriteria? initialCriteria,
+    List<CityEntity>? availableCities,
     ValueChanged<SpaFilterCriteria>? onApply,
   }) {
     return showModalBottomSheet<SpaFilterCriteria>(
@@ -65,6 +72,7 @@ class AppFilterBottomSheet extends StatefulWidget {
       backgroundColor: Colors.transparent,
       builder: (ctx) => AppFilterBottomSheet(
         initialCriteria: initialCriteria ?? const SpaFilterCriteria(),
+        availableCities: availableCities,
         onApply: (criteria) {
           onApply?.call(criteria);
           Navigator.of(ctx).pop(criteria);
@@ -90,10 +98,44 @@ class _AppFilterBottomSheetState extends State<AppFilterBottomSheet> {
   static const Color _textDark = Color(0xFF1E2022);
   static const Color _inputBg = Color(0xFFF7F8FA);
 
+  List<CityEntity> _cities = [];
+
   @override
   void initState() {
     super.initState();
     _resetTo(widget.initialCriteria);
+    _cities = List.from(widget.availableCities ?? []);
+    if (_cities.isEmpty) {
+      _loadCities();
+    }
+  }
+
+  Future<void> _loadCities() async {
+    try {
+      if (sl.isRegistered<GetCitiesUseCase>()) {
+        final result = await sl<GetCitiesUseCase>()();
+        result.fold((_) {}, (loaded) {
+          if (mounted && loaded.isNotEmpty) {
+            setState(() {
+              _cities = loaded;
+            });
+          }
+        });
+      }
+    } catch (_) {}
+  }
+
+  void _openCityPicker() {
+    CitySelectionBottomSheet.show(
+      context,
+      cities: _cities,
+      selectedCity: _location,
+      onCitySelected: (selectedCity) {
+        setState(() {
+          _location = selectedCity;
+        });
+      },
+    );
   }
 
   void _resetTo(SpaFilterCriteria criteria) {
@@ -192,50 +234,146 @@ class _AppFilterBottomSheetState extends State<AppFilterBottomSheet> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 1. Location
-                  const Text(
-                    'Location',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: _textDark,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _inputBg,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: const Color(0xFFEDF0F3)),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          LucideIcons.map_pin,
-                          color: _coralColor,
-                          size: 18,
+                  // 1. City (Thành phố)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Thành phố (City)',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: _textDark,
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            _location,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: _textDark,
-                            ),
+                      ),
+                      GestureDetector(
+                        onTap: _openCityPicker,
+                        child: Text(
+                          'Đổi thành phố',
+                          style: TextStyle(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w600,
+                            color: _coralColor,
                           ),
                         ),
-                        const Icon(
-                          LucideIcons.chevron_down,
-                          color: Color(0xFF9CA3AF),
-                          size: 18,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(14),
+                      onTap: _openCityPicker,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 12,
                         ),
-                      ],
+                        decoration: BoxDecoration(
+                          color: _inputBg,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: const Color(0xFFEDF0F3)),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              LucideIcons.map_pin,
+                              color: _coralColor,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                _location.isNotEmpty
+                                    ? _location
+                                    : 'Chọn Tỉnh / Thành phố',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: _location.isNotEmpty
+                                      ? _textDark
+                                      : Colors.grey.shade400,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Icon(
+                                LucideIcons.chevron_down,
+                                color: Color(0xFF4B5563),
+                                size: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Quick popular city chips
+                  const SizedBox(height: 10),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    child: Row(
+                      children:
+                          [
+                            'Hồ Chí Minh',
+                            'Hà Nội',
+                            'Đà Nẵng',
+                            'Bình Dương',
+                            'Đồng Nai',
+                          ].map((cityName) {
+                            final isSelected =
+                                _location.toLowerCase() ==
+                                cityName.toLowerCase();
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(20),
+                                onTap: () {
+                                  setState(() {
+                                    _location = cityName;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? _coralColor.withValues(alpha: 0.12)
+                                        : const Color(0xFFF3F4F6),
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? _coralColor
+                                          : Colors.transparent,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    cityName,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w700
+                                          : FontWeight.w500,
+                                      color: isSelected
+                                          ? _coralColor
+                                          : const Color(0xFF4B5563),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
                     ),
                   ),
 

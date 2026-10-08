@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../../../shared/shared.dart';
-import '../mockup_data/booking_dashboard_detail_mock_data.dart';
 
 class BookingDetailNotesCard extends StatefulWidget {
-  final List<DetailUserNoteItem> notes;
+  final String note;
   final ValueChanged<String>? onAddNote;
 
-  const BookingDetailNotesCard({
-    super.key,
-    required this.notes,
-    this.onAddNote,
-  });
+  const BookingDetailNotesCard({super.key, required this.note, this.onAddNote});
 
   @override
   State<BookingDetailNotesCard> createState() => _BookingDetailNotesCardState();
@@ -34,8 +29,15 @@ class _BookingDetailNotesCardState extends State<BookingDetailNotesCard> {
     }
   }
 
+  bool get _hasExistingNote {
+    final n = widget.note.trim();
+    return n.isNotEmpty && n != '-';
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -62,13 +64,13 @@ class _BookingDetailNotesCardState extends State<BookingDetailNotesCard> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(LucideIcons.menu, size: 15, color: Colors.white),
-                    SizedBox(width: 8),
+                    const Icon(LucideIcons.menu, size: 15, color: Colors.white),
+                    const SizedBox(width: 8),
                     Text(
-                      'USER NOTES',
-                      style: TextStyle(
+                      l10n.userNotes,
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
                         color: Colors.white,
@@ -79,9 +81,9 @@ class _BookingDetailNotesCardState extends State<BookingDetailNotesCard> {
                 ),
                 GestureDetector(
                   onTap: _submitNote,
-                  child: const Text(
-                    'Add Note',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.addNote,
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
@@ -92,48 +94,33 @@ class _BookingDetailNotesCardState extends State<BookingDetailNotesCard> {
             ),
           ),
 
-          // Notes List
+          // Notes Content & Input
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ...widget.notes.map((item) {
-                  return Padding(
+                if (_hasExistingNote) ...[
+                  Padding(
                     padding: const EdgeInsets.only(bottom: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.timestamp,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF94A3B8),
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          item.note,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF1E293B),
-                            height: 1.35,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      widget.note,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF1E293B),
+                        height: 1.35,
+                      ),
                     ),
-                  );
-                }),
-
-                const SizedBox(height: 4),
+                  ),
+                  const SizedBox(height: 4),
+                ],
 
                 // Note input box
                 AppTextField(
                   controller: _noteController,
                   maxLines: 3,
-                  hint: 'Write a description...',
+                  hint: l10n.writeDescription,
                   hintStyle: const TextStyle(
                     fontSize: 12.5,
                     color: Color(0xFF94A3B8),

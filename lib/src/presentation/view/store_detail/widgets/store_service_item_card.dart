@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:spa_booking/src/core/extensions/double_extensions.dart';
+import 'package:spa_booking/src/domain/entities/store/service_entity.dart';
 import '../../../../shared/shared.dart';
-import '../mockup_data/store_detail_mock_data.dart';
 
-class StoreServiceItemCard extends StatelessWidget {
-  final StoreServiceItem service;
+class StoreDetailEntityCard extends StatelessWidget {
+  final ServiceEntity service;
+
   final VoidCallback? onBook;
 
   static const Color _coralColor = Color(0xFFFF6F59);
   static const Color _textDark = Color(0xFF1E2022);
   static const Color _textMuted = Color(0xFF71717A);
-  static const Color _popularBadgeBg = Color(0xFFE0F2FE);
-  static const Color _popularBadgeText = Color(0xFF0284C7);
 
-  const StoreServiceItemCard({super.key, required this.service, this.onBook});
+  const StoreDetailEntityCard({super.key, this.onBook, required this.service});
 
   @override
   Widget build(BuildContext context) {
@@ -45,41 +45,30 @@ class StoreServiceItemCard extends StatelessWidget {
                   color: _textDark,
                 ),
               ),
-              if (service.badge != null) ...[
-                const SizedBox(width: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _popularBadgeBg,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    service.badge!,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: _popularBadgeText,
-                    ),
-                  ),
-                ),
-              ],
+              Spacer(),
+              const Icon(LucideIcons.clock, size: 13, color: _textMuted),
+              const SizedBox(width: 4),
+              Text(
+                service.durationMinutes.toString(),
+                style: const TextStyle(fontSize: 12, color: _textMuted),
+              ),
             ],
           ),
           const SizedBox(height: 6),
 
           // Description
-          Text(
-            service.description,
-            style: const TextStyle(
-              fontSize: 13,
-              height: 1.4,
-              color: _textMuted,
+          if (service.description != null &&
+              service.description!.isNotEmpty) ...[
+            Text(
+              service.description ?? '-',
+              style: const TextStyle(
+                fontSize: 13,
+                height: 1.4,
+                color: _textMuted,
+              ),
             ),
-          ),
-          const SizedBox(height: 12),
+            const SizedBox(height: 6),
+          ],
 
           // Bottom Row: Duration & Price on left, Book button on right
           Row(
@@ -89,23 +78,9 @@ class StoreServiceItemCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      const Icon(
-                        LucideIcons.clock,
-                        size: 13,
-                        color: _textMuted,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        service.duration,
-                        style: const TextStyle(fontSize: 12, color: _textMuted),
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 4),
                   Text(
-                    service.priceDisplay,
+                    service.basePrice.toVnd(),
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,

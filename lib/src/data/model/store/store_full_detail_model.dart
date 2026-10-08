@@ -1,157 +1,120 @@
-import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:spa_booking/src/data/model/store/business_hours_summary_model.dart';
 import 'package:spa_booking/src/data/model/store/service_category_model.dart';
 import 'package:spa_booking/src/data/model/store/service_model.dart';
 import 'package:spa_booking/src/data/model/store/staff_model.dart';
-import 'package:spa_booking/src/data/model/store/store_detail_model.dart';
+import 'package:spa_booking/src/data/model/store/store_booking_settings_model.dart';
+import 'package:spa_booking/src/data/model/store/store_reviews_overview_model.dart';
+import 'package:spa_booking/src/domain/entities/store/store_full_detail_entity.dart';
 
-class StoreReviewsOverviewModel extends Equatable {
+part 'store_full_detail_model.g.dart';
+
+@JsonSerializable()
+class StoreFullDetailModel {
+  final String id;
+  final String name;
+  final String slug;
+  final String? description;
+  final String address;
+  final String phoneNumber;
+  final String? logoUrl;
+  final String? coverImageUrl;
+  final double? latitude;
+  final double? longitude;
+  final String? district;
+  final String? city;
   final double averageRating;
-  final int totalReviews;
-  final Map<String, int> ratingDistribution;
+  final double minPrice;
 
-  const StoreReviewsOverviewModel({
-    this.averageRating = 5.0,
-    this.totalReviews = 0,
-    this.ratingDistribution = const {},
-  });
+  @JsonKey(defaultValue: [])
+  final List<String> images;
 
-  factory StoreReviewsOverviewModel.fromJson(Map<String, dynamic> json) {
-    final rawDist = json['ratingDistribution'] as Map<String, dynamic>? ?? {};
-    final dist = <String, int>{};
-    rawDist.forEach((key, value) {
-      if (value is num) {
-        dist[key] = value.toInt();
-      } else {
-        dist[key] = int.tryParse(value.toString()) ?? 0;
-      }
-    });
+  final BusinessHoursSummaryModel? businessHours;
 
-    final rawAvg = json['averageRating'];
-    final avg = (rawAvg is num)
-        ? rawAvg.toDouble()
-        : (double.tryParse(rawAvg?.toString() ?? '') ?? 5.0);
-
-    final rawTotal = json['totalReviews'];
-    final total = (rawTotal is num)
-        ? rawTotal.toInt()
-        : (int.tryParse(rawTotal?.toString() ?? '') ?? 0);
-
-    return StoreReviewsOverviewModel(
-      averageRating: avg,
-      totalReviews: total,
-      ratingDistribution: dist,
-    );
-  }
-
-  @override
-  List<Object?> get props => [averageRating, totalReviews, ratingDistribution];
-}
-
-class StoreFullDetailModel extends Equatable {
-  final StoreDetailModel store;
-  final List<StoreBusinessHourModel> businessHours;
   final StoreBookingSettingsModel? bookingSettings;
+
+  @JsonKey(defaultValue: [])
   final List<ServiceCategoryModel> categories;
+
+  @JsonKey(defaultValue: [])
   final List<ServiceModel> services;
+
+  @JsonKey(defaultValue: [])
   final List<StaffModel> staff;
-  final StoreReviewsOverviewModel? reviews;
+
+  final StoreReviewsOverviewModel? reviewSummary;
   final bool isFavorite;
 
   const StoreFullDetailModel({
-    required this.store,
-    this.businessHours = const [],
+    required this.id,
+    required this.name,
+    required this.slug,
+    this.description,
+    required this.address,
+    required this.phoneNumber,
+    this.logoUrl,
+    this.coverImageUrl,
+    this.latitude,
+    this.longitude,
+    this.district,
+    this.city,
+    this.images = const [],
+    this.businessHours,
     this.bookingSettings,
     this.categories = const [],
     this.services = const [],
     this.staff = const [],
-    this.reviews,
+    this.reviewSummary,
     this.isFavorite = false,
+    this.averageRating = 0,
+    this.minPrice = 0,
   });
 
   factory StoreFullDetailModel.fromJson(Map<String, dynamic> json) {
-    final storeDetail = StoreDetailModel.fromJson(json);
+    final storeMap = json['store'] as Map<String, dynamic>?;
+    final reviewsMap = json['reviews'] as Map<String, dynamic>?;
 
-    final rawHours =
-        json['businessHours'] ??
-        (json['store'] is Map<String, dynamic>
-            ? (json['store'] as Map<String, dynamic>)['businessHours']
-            : null);
-    List<StoreBusinessHourModel> parsedHours = [];
-    if (rawHours is List) {
-      parsedHours = rawHours
-          .whereType<Map<String, dynamic>>()
-          .map(StoreBusinessHourModel.fromJson)
-          .toList();
-    }
+    final isFav = (json['isFavorite'] ?? storeMap?['isFavorite']) == true;
 
-    final rawSettings =
-        json['bookingSettings'] ??
-        (json['store'] is Map<String, dynamic>
-            ? (json['store'] as Map<String, dynamic>)['bookingSettings']
-            : null);
-    StoreBookingSettingsModel? parsedSettings;
-    if (rawSettings is Map<String, dynamic>) {
-      parsedSettings = StoreBookingSettingsModel.fromJson(rawSettings);
-    }
+    final merged = <String, dynamic>{
+      ...?storeMap,
+      ...json,
+      'isFavorite': isFav,
+      if (reviewsMap != null && json['reviewSummary'] == null)
+        'reviewSummary': reviewsMap,
+      if (reviewsMap != null && json['averageRating'] == null)
+        'averageRating': reviewsMap['averageRating'] ?? 0,
+    };
 
-    final rawCategories = json['categories'];
-    List<ServiceCategoryModel> parsedCategories = [];
-    if (rawCategories is List) {
-      parsedCategories = rawCategories
-          .whereType<Map<String, dynamic>>()
-          .map(ServiceCategoryModel.fromJson)
-          .toList();
-    }
-
-    final rawServices = json['services'];
-    List<ServiceModel> parsedServices = [];
-    if (rawServices is List) {
-      parsedServices = rawServices
-          .whereType<Map<String, dynamic>>()
-          .map(ServiceModel.fromJson)
-          .toList();
-    }
-
-    final rawStaff = json['staff'];
-    List<StaffModel> parsedStaff = [];
-    if (rawStaff is List) {
-      parsedStaff = rawStaff
-          .whereType<Map<String, dynamic>>()
-          .map(StaffModel.fromJson)
-          .toList();
-    }
-
-    final rawReviews = json['reviews'];
-    StoreReviewsOverviewModel? parsedReviews;
-    if (rawReviews is Map<String, dynamic>) {
-      parsedReviews = StoreReviewsOverviewModel.fromJson(rawReviews);
-    }
-
-    final isFav = json['isFavorite'] as bool? ?? false;
-
-    return StoreFullDetailModel(
-      store: storeDetail,
-      businessHours: parsedHours.isNotEmpty
-          ? parsedHours
-          : storeDetail.businessHours,
-      bookingSettings: parsedSettings ?? storeDetail.bookingSettings,
-      categories: parsedCategories,
-      services: parsedServices,
-      staff: parsedStaff,
-      reviews: parsedReviews,
-      isFavorite: isFav,
-    );
+    return _$StoreFullDetailModelFromJson(merged);
   }
 
-  @override
-  List<Object?> get props => [
-    store,
-    businessHours,
-    bookingSettings,
-    categories,
-    services,
-    staff,
-    reviews,
-    isFavorite,
-  ];
+  Map<String, dynamic> toJson() => _$StoreFullDetailModelToJson(this);
+
+  StoreFullDetailEntity toEntity() {
+    return StoreFullDetailEntity(
+      id: id,
+      name: name,
+      slug: slug,
+      description: description,
+      address: address,
+      phoneNumber: phoneNumber,
+      logoUrl: logoUrl,
+      coverImageUrl: coverImageUrl,
+      latitude: latitude,
+      longitude: longitude,
+      district: district,
+      city: city,
+      images: images,
+      businessHours: businessHours?.toEntity(),
+      bookingSettings: bookingSettings?.toEntity(),
+      categories: categories.map((e) => e.toEntity()).toList(),
+      services: services.map((e) => e.toEntity()).toList(),
+      staff: staff.map((e) => e.toEntity()).toList(),
+      reviewSummary: reviewSummary?.toEntity(),
+      isFavorite: isFavorite,
+      averageRating: averageRating,
+      minPrice: minPrice,
+    );
+  }
 }

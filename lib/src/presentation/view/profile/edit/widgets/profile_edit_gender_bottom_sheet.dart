@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../../shared/shared.dart';
 
 class ProfileEditGenderBottomSheet extends StatelessWidget {
   final String currentGender;
@@ -46,9 +46,9 @@ class ProfileEditGenderBottomSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Select Gender',
-              style: TextStyle(
+            Text(
+              context.l10n.selectGender,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: _textDark,

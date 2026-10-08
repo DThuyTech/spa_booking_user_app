@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
 import '../../../../shared/design_system/components/buttons/app_favorite_button.dart';
 
 class HomeRecommendedSalonItem {
@@ -158,7 +158,7 @@ class HomeRecommendedSalonCard extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  '(${item.reviewCount} reviews)',
+                                  '(${item.reviewCount} ${context.l10n.reviews.toLowerCase()})',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: Color(0xFF9CA3AF),

@@ -8,15 +8,16 @@ part of 'favorite_store_model.dart';
 
 _FavoriteStoreModel _$FavoriteStoreModelFromJson(Map<String, dynamic> json) =>
     _FavoriteStoreModel(
-      id: json['id'] as String,
-      name: json['name'] as String? ?? '',
-      slug: json['slug'] as String? ?? '',
-      logoUrl: json['logoUrl'] as String?,
-      coverImageUrl: json['coverImageUrl'] as String?,
-      address: json['address'] as String? ?? '',
-      phoneNumber: json['phoneNumber'] as String?,
-      isFavorite: json['isFavorite'] as bool? ?? true,
-      favoritedAt: json['favoritedAt'] as String?,
+      id: _readId(json, 'id') as String,
+      name: _readName(json, 'name') as String? ?? '',
+      slug: _readSlug(json, 'slug') as String? ?? '',
+      logoUrl: _readLogoUrl(json, 'logoUrl') as String?,
+      coverImageUrl: _readCoverImageUrl(json, 'coverImageUrl') as String?,
+      address: _readAddress(json, 'address') as String? ?? '',
+      phoneNumber: _readPhoneNumber(json, 'phoneNumber') as String?,
+      averageRating: _ratingFromJson(_readRating(json, 'averageRating')),
+      isFavorite: _readIsFavorite(json, 'isFavorite') as bool? ?? true,
+      favoritedAt: _readFavoritedAt(json, 'favoritedAt') as String?,
     );
 
 Map<String, dynamic> _$FavoriteStoreModelToJson(_FavoriteStoreModel instance) =>
@@ -28,6 +29,7 @@ Map<String, dynamic> _$FavoriteStoreModelToJson(_FavoriteStoreModel instance) =>
       'coverImageUrl': instance.coverImageUrl,
       'address': instance.address,
       'phoneNumber': instance.phoneNumber,
+      'averageRating': instance.averageRating,
       'isFavorite': instance.isFavorite,
       'favoritedAt': instance.favoritedAt,
     };
@@ -36,7 +38,7 @@ _FavoriteListResponseModel _$FavoriteListResponseModelFromJson(
   Map<String, dynamic> json,
 ) => _FavoriteListResponseModel(
   items:
-      (json['items'] as List<dynamic>?)
+      (_readItems(json, 'items') as List<dynamic>?)
           ?.map((e) => FavoriteStoreModel.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],

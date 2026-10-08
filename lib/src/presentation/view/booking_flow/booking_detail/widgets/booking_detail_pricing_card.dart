@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import '../../../../../shared/shared.dart';
+import 'package:spa_booking/src/core/extensions/double_extensions.dart';
 
 class BookingDetailPricingCard extends StatelessWidget {
-  final int subtotal;
-  final int discount;
-  final int totalAmount;
+  final double subtotal;
+  final double discount;
+  final double totalAmount;
   final String paymentStatus;
 
   const BookingDetailPricingCard({
@@ -16,20 +18,6 @@ class BookingDetailPricingCard extends StatelessWidget {
 
   static const Color _textDark = Color(0xFF1E2022);
   static const Color _textMuted = Color(0xFF64748B);
-
-  String _formatVnd(int amount) {
-    final str = amount.toString();
-    final buffer = StringBuffer();
-    int count = 0;
-    for (int i = str.length - 1; i >= 0; i--) {
-      buffer.write(str[i]);
-      count++;
-      if (count % 3 == 0 && i > 0) {
-        buffer.write(',');
-      }
-    }
-    return '${buffer.toString().split('').reversed.join('')} VND';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,16 +41,16 @@ class BookingDetailPricingCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Subtotal',
-                style: TextStyle(
+              Text(
+                context.l10n.subtotal,
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: _textMuted,
                 ),
               ),
               Text(
-                _formatVnd(subtotal),
+                subtotal.toVnd(),
                 style: const TextStyle(
                   fontSize: 14.5,
                   fontWeight: FontWeight.w700,
@@ -72,46 +60,50 @@ class BookingDetailPricingCard extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 10),
-
-          // Discount Row with 10% OFF pill
-          Row(
-            children: [
-              const Text(
-                'Discount',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF0D9488),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFCCFBF1),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: const Text(
-                  '10% OFF',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF0F766E),
+          if (discount > 0) ...[
+            const SizedBox(height: 10),
+            // Discount Row with 10% OFF pill
+            Row(
+              children: [
+                Text(
+                  context.l10n.discount,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF0D9488),
                   ),
                 ),
-              ),
-              const Spacer(),
-              Text(
-                '-${_formatVnd(discount)}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF0D9488),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFCCFBF1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: const Text(
+                    '10% OFF',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF0F766E),
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
+                const Spacer(),
+                Text(
+                  discount.toVnd(),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF0D9488),
+                  ),
+                ),
+              ],
+            ),
+          ],
 
           const Divider(height: 24, thickness: 1, color: Color(0xFFF1F5F9)),
 
@@ -123,9 +115,9 @@ class BookingDetailPricingCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Total Amount',
-                    style: TextStyle(
+                  Text(
+                    context.l10n.totalAmount,
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                       color: _textMuted,
@@ -154,7 +146,7 @@ class BookingDetailPricingCard extends StatelessWidget {
                 ],
               ),
               Text(
-                _formatVnd(totalAmount),
+                totalAmount.toVnd(),
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w900,

@@ -16,6 +16,7 @@ abstract class StoreListState with _$StoreListState {
     @Default(false) bool hasMore,
     @Default(1) int currentPage,
     String? search,
+    String? city,
     String? province,
     String? district,
     Failure? failure,

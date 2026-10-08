@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FavoriteStoreEntity {
 
- String get id; String get name; String get slug; String? get logoUrl; String? get coverImageUrl; String get address; String? get phoneNumber; bool get isFavorite; DateTime? get favoritedAt;
+ String get id; String get name; String get slug; double? get averageRating; String? get logoUrl; String? get coverImageUrl; String get address; String? get phoneNumber; bool get isFavorite; DateTime? get favoritedAt;
 /// Create a copy of FavoriteStoreEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $FavoriteStoreEntityCopyWith<FavoriteStoreEntity> get copyWith => _$FavoriteStor
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FavoriteStoreEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.address, address) || other.address == address)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.isFavorite, isFavorite) || other.isFavorite == isFavorite)&&(identical(other.favoritedAt, favoritedAt) || other.favoritedAt == favoritedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FavoriteStoreEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.averageRating, averageRating) || other.averageRating == averageRating)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.address, address) || other.address == address)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.isFavorite, isFavorite) || other.isFavorite == isFavorite)&&(identical(other.favoritedAt, favoritedAt) || other.favoritedAt == favoritedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,slug,logoUrl,coverImageUrl,address,phoneNumber,isFavorite,favoritedAt);
+int get hashCode => Object.hash(runtimeType,id,name,slug,averageRating,logoUrl,coverImageUrl,address,phoneNumber,isFavorite,favoritedAt);
 
 @override
 String toString() {
-  return 'FavoriteStoreEntity(id: $id, name: $name, slug: $slug, logoUrl: $logoUrl, coverImageUrl: $coverImageUrl, address: $address, phoneNumber: $phoneNumber, isFavorite: $isFavorite, favoritedAt: $favoritedAt)';
+  return 'FavoriteStoreEntity(id: $id, name: $name, slug: $slug, averageRating: $averageRating, logoUrl: $logoUrl, coverImageUrl: $coverImageUrl, address: $address, phoneNumber: $phoneNumber, isFavorite: $isFavorite, favoritedAt: $favoritedAt)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $FavoriteStoreEntityCopyWith<$Res>  {
   factory $FavoriteStoreEntityCopyWith(FavoriteStoreEntity value, $Res Function(FavoriteStoreEntity) _then) = _$FavoriteStoreEntityCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String slug, String? logoUrl, String? coverImageUrl, String address, String? phoneNumber, bool isFavorite, DateTime? favoritedAt
+ String id, String name, String slug, double? averageRating, String? logoUrl, String? coverImageUrl, String address, String? phoneNumber, bool isFavorite, DateTime? favoritedAt
 });
 
 
@@ -62,12 +62,13 @@ class _$FavoriteStoreEntityCopyWithImpl<$Res>
 
 /// Create a copy of FavoriteStoreEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? slug = null,Object? logoUrl = freezed,Object? coverImageUrl = freezed,Object? address = null,Object? phoneNumber = freezed,Object? isFavorite = null,Object? favoritedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? slug = null,Object? averageRating = freezed,Object? logoUrl = freezed,Object? coverImageUrl = freezed,Object? address = null,Object? phoneNumber = freezed,Object? isFavorite = null,Object? favoritedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,slug: null == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
-as String,logoUrl: freezed == logoUrl ? _self.logoUrl : logoUrl // ignore: cast_nullable_to_non_nullable
+as String,averageRating: freezed == averageRating ? _self.averageRating : averageRating // ignore: cast_nullable_to_non_nullable
+as double?,logoUrl: freezed == logoUrl ? _self.logoUrl : logoUrl // ignore: cast_nullable_to_non_nullable
 as String?,coverImageUrl: freezed == coverImageUrl ? _self.coverImageUrl : coverImageUrl // ignore: cast_nullable_to_non_nullable
 as String?,address: null == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
 as String,phoneNumber: freezed == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String slug,  String? logoUrl,  String? coverImageUrl,  String address,  String? phoneNumber,  bool isFavorite,  DateTime? favoritedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String slug,  double? averageRating,  String? logoUrl,  String? coverImageUrl,  String address,  String? phoneNumber,  bool isFavorite,  DateTime? favoritedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FavoriteStoreEntity() when $default != null:
-return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl,_that.address,_that.phoneNumber,_that.isFavorite,_that.favoritedAt);case _:
+return $default(_that.id,_that.name,_that.slug,_that.averageRating,_that.logoUrl,_that.coverImageUrl,_that.address,_that.phoneNumber,_that.isFavorite,_that.favoritedAt);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String slug,  String? logoUrl,  String? coverImageUrl,  String address,  String? phoneNumber,  bool isFavorite,  DateTime? favoritedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String slug,  double? averageRating,  String? logoUrl,  String? coverImageUrl,  String address,  String? phoneNumber,  bool isFavorite,  DateTime? favoritedAt)  $default,) {final _that = this;
 switch (_that) {
 case _FavoriteStoreEntity():
-return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl,_that.address,_that.phoneNumber,_that.isFavorite,_that.favoritedAt);case _:
+return $default(_that.id,_that.name,_that.slug,_that.averageRating,_that.logoUrl,_that.coverImageUrl,_that.address,_that.phoneNumber,_that.isFavorite,_that.favoritedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String slug,  String? logoUrl,  String? coverImageUrl,  String address,  String? phoneNumber,  bool isFavorite,  DateTime? favoritedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String slug,  double? averageRating,  String? logoUrl,  String? coverImageUrl,  String address,  String? phoneNumber,  bool isFavorite,  DateTime? favoritedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _FavoriteStoreEntity() when $default != null:
-return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl,_that.address,_that.phoneNumber,_that.isFavorite,_that.favoritedAt);case _:
+return $default(_that.id,_that.name,_that.slug,_that.averageRating,_that.logoUrl,_that.coverImageUrl,_that.address,_that.phoneNumber,_that.isFavorite,_that.favoritedAt);case _:
   return null;
 
 }
@@ -214,12 +215,13 @@ return $default(_that.id,_that.name,_that.slug,_that.logoUrl,_that.coverImageUrl
 
 
 class _FavoriteStoreEntity implements FavoriteStoreEntity {
-  const _FavoriteStoreEntity({required this.id, required this.name, required this.slug, this.logoUrl, this.coverImageUrl, required this.address, this.phoneNumber, this.isFavorite = true, this.favoritedAt});
+  const _FavoriteStoreEntity({required this.id, required this.name, required this.slug, this.averageRating, this.logoUrl, this.coverImageUrl, required this.address, this.phoneNumber, this.isFavorite = true, this.favoritedAt});
   
 
 @override final  String id;
 @override final  String name;
 @override final  String slug;
+@override final  double? averageRating;
 @override final  String? logoUrl;
 @override final  String? coverImageUrl;
 @override final  String address;
@@ -237,16 +239,16 @@ _$FavoriteStoreEntityCopyWith<_FavoriteStoreEntity> get copyWith => __$FavoriteS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FavoriteStoreEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.address, address) || other.address == address)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.isFavorite, isFavorite) || other.isFavorite == isFavorite)&&(identical(other.favoritedAt, favoritedAt) || other.favoritedAt == favoritedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FavoriteStoreEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.averageRating, averageRating) || other.averageRating == averageRating)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.coverImageUrl, coverImageUrl) || other.coverImageUrl == coverImageUrl)&&(identical(other.address, address) || other.address == address)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.isFavorite, isFavorite) || other.isFavorite == isFavorite)&&(identical(other.favoritedAt, favoritedAt) || other.favoritedAt == favoritedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,slug,logoUrl,coverImageUrl,address,phoneNumber,isFavorite,favoritedAt);
+int get hashCode => Object.hash(runtimeType,id,name,slug,averageRating,logoUrl,coverImageUrl,address,phoneNumber,isFavorite,favoritedAt);
 
 @override
 String toString() {
-  return 'FavoriteStoreEntity(id: $id, name: $name, slug: $slug, logoUrl: $logoUrl, coverImageUrl: $coverImageUrl, address: $address, phoneNumber: $phoneNumber, isFavorite: $isFavorite, favoritedAt: $favoritedAt)';
+  return 'FavoriteStoreEntity(id: $id, name: $name, slug: $slug, averageRating: $averageRating, logoUrl: $logoUrl, coverImageUrl: $coverImageUrl, address: $address, phoneNumber: $phoneNumber, isFavorite: $isFavorite, favoritedAt: $favoritedAt)';
 }
 
 
@@ -257,7 +259,7 @@ abstract mixin class _$FavoriteStoreEntityCopyWith<$Res> implements $FavoriteSto
   factory _$FavoriteStoreEntityCopyWith(_FavoriteStoreEntity value, $Res Function(_FavoriteStoreEntity) _then) = __$FavoriteStoreEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String slug, String? logoUrl, String? coverImageUrl, String address, String? phoneNumber, bool isFavorite, DateTime? favoritedAt
+ String id, String name, String slug, double? averageRating, String? logoUrl, String? coverImageUrl, String address, String? phoneNumber, bool isFavorite, DateTime? favoritedAt
 });
 
 
@@ -274,12 +276,13 @@ class __$FavoriteStoreEntityCopyWithImpl<$Res>
 
 /// Create a copy of FavoriteStoreEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? slug = null,Object? logoUrl = freezed,Object? coverImageUrl = freezed,Object? address = null,Object? phoneNumber = freezed,Object? isFavorite = null,Object? favoritedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? slug = null,Object? averageRating = freezed,Object? logoUrl = freezed,Object? coverImageUrl = freezed,Object? address = null,Object? phoneNumber = freezed,Object? isFavorite = null,Object? favoritedAt = freezed,}) {
   return _then(_FavoriteStoreEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,slug: null == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
-as String,logoUrl: freezed == logoUrl ? _self.logoUrl : logoUrl // ignore: cast_nullable_to_non_nullable
+as String,averageRating: freezed == averageRating ? _self.averageRating : averageRating // ignore: cast_nullable_to_non_nullable
+as double?,logoUrl: freezed == logoUrl ? _self.logoUrl : logoUrl // ignore: cast_nullable_to_non_nullable
 as String?,coverImageUrl: freezed == coverImageUrl ? _self.coverImageUrl : coverImageUrl // ignore: cast_nullable_to_non_nullable
 as String?,address: null == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
 as String,phoneNumber: freezed == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable

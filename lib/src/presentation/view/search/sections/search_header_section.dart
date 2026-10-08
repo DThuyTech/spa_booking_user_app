@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
-import '../../../../shared/design_system/components/buttons/app_icon_button.dart';
-import '../../../../shared/design_system/components/inputs/app_text_field.dart';
+import '../../../../shared/shared.dart';
 import '../../../../shared/design_system/components/sheets/app_filter_bottom_sheet.dart';
 
 class SearchHeaderSection extends StatelessWidget {
@@ -33,9 +31,9 @@ class SearchHeaderSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Title
-        const Text(
-          'Find Your Sanctuary',
-          style: TextStyle(
+        Text(
+          context.l10n.findYourSanctuary,
+          style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w800,
             color: _textDark,
@@ -216,17 +214,17 @@ class SearchHeaderSection extends StatelessWidget {
                 color: Color(0xFF6B7280),
               ),
             ),
-            const Row(
+            Row(
               children: [
-                Icon(
+                const Icon(
                   LucideIcons.arrow_down_up,
                   size: 13,
                   color: Color(0xFF6B7280),
                 ),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Text(
-                  'Top Rated',
-                  style: TextStyle(
+                  context.l10n.topRated,
+                  style: const TextStyle(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF6B7280),

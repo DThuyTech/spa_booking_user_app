@@ -1,28 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'store_booking_settings_entity.dart';
+import 'store_business_hour_enity.dart';
+
 part 'store_detail_entity.freezed.dart';
-
-@freezed
-abstract class StoreBusinessHourEntity with _$StoreBusinessHourEntity {
-  const factory StoreBusinessHourEntity({
-    required int dayOfWeek,
-    required String dayName,
-    required bool isOpen,
-    required String openTime,
-    required String closeTime,
-  }) = _StoreBusinessHourEntity;
-}
-
-@freezed
-abstract class StoreBookingSettingsEntity with _$StoreBookingSettingsEntity {
-  const factory StoreBookingSettingsEntity({
-    @Default(60) int minBookingNoticeMinutes,
-    @Default(30) int maxBookingAdvanceDays,
-    @Default(120) int minCancellationNoticeMinutes,
-    @Default(120) int minRescheduleNoticeMinutes,
-    @Default(true) bool autoConfirm,
-  }) = _StoreBookingSettingsEntity;
-}
 
 @freezed
 abstract class StoreDetailEntity with _$StoreDetailEntity {
@@ -38,5 +19,10 @@ abstract class StoreDetailEntity with _$StoreDetailEntity {
     @Default([]) List<String> images,
     @Default([]) List<StoreBusinessHourEntity> businessHours,
     StoreBookingSettingsEntity? bookingSettings,
+    double? latitude,
+    double? longitude,
+    String? district,
+    String? city,
+    @Default(false) bool isFavorite,
   }) = _StoreDetailEntity;
 }

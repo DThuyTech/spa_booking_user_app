@@ -7,3 +7,7 @@ export 'logout_usecase.dart';
 export 'get_current_user.dart';
 export 'restore_session.dart';
 export 'save_customer_profile_usecase.dart';
+export 'change_password_usecase.dart';
+export 'forgot_password_usecase.dart';
+export 'verify_reset_otp_usecase.dart';
+export 'reset_password_usecase.dart';

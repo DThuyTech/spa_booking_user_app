@@ -16,7 +16,7 @@ class ProfileEditState extends Equatable {
   const ProfileEditState({
     this.status = ProfileEditStatus.initial,
     this.fullName = '',
-    this.phoneNumber = '+1234567890',
+    this.phoneNumber = '',
     this.dateOfBirth = '2002-02-10',
     this.gender = 'Female',
     this.errorMessage,

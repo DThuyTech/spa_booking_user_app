@@ -4,7 +4,6 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
 import '../../../../../shared/design_system/components/buttons/app_icon_button.dart';
 import '../body_view/booking_result_body_view.dart';
-import '../mockup_data/booking_result_mock_data.dart';
 
 @RoutePage()
 class BookingResultPage extends StatelessWidget {
@@ -13,7 +12,7 @@ class BookingResultPage extends StatelessWidget {
   final String? salonName;
   final String? dateDisplay;
   final String? timeDisplay;
-  final int? totalAmount;
+  final double? totalAmount;
 
   const BookingResultPage({
     super.key,
@@ -29,11 +28,11 @@ class BookingResultPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BookingResultView(
       isSuccess: isSuccess,
-      bookingCode: bookingCode ?? BookingResultMockData.defaultBookingCode,
-      salonName: salonName ?? BookingResultMockData.defaultSalonName,
-      dateDisplay: dateDisplay ?? BookingResultMockData.defaultDateDisplay,
-      timeDisplay: timeDisplay ?? BookingResultMockData.defaultTimeDisplay,
-      totalAmount: totalAmount ?? BookingResultMockData.defaultTotalAmount,
+      bookingCode: bookingCode ?? '',
+      salonName: salonName ?? '',
+      dateDisplay: dateDisplay ?? '',
+      timeDisplay: timeDisplay ?? '',
+      totalAmount: totalAmount ?? 0.0,
     );
   }
 }
@@ -44,16 +43,16 @@ class BookingResultView extends StatefulWidget {
   final String salonName;
   final String dateDisplay;
   final String timeDisplay;
-  final int totalAmount;
+  final double totalAmount;
 
   const BookingResultView({
     super.key,
     this.isSuccess = true,
-    this.bookingCode = BookingResultMockData.defaultBookingCode,
-    this.salonName = BookingResultMockData.defaultSalonName,
-    this.dateDisplay = BookingResultMockData.defaultDateDisplay,
-    this.timeDisplay = BookingResultMockData.defaultTimeDisplay,
-    this.totalAmount = BookingResultMockData.defaultTotalAmount,
+    this.bookingCode = '',
+    this.salonName = '',
+    this.dateDisplay = '',
+    this.timeDisplay = '',
+    this.totalAmount = 0.0,
   });
 
   @override

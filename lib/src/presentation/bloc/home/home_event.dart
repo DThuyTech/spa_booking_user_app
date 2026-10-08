@@ -21,3 +21,21 @@ final class HomeRefreshed extends HomeEvent {
 final class HomeRetried extends HomeEvent {
   const HomeRetried();
 }
+
+final class AddFavoriteStore extends HomeEvent {
+  const AddFavoriteStore({required this.storeId});
+  final String storeId;
+}
+
+final class RemoveFavoriteStore extends HomeEvent {
+  const RemoveFavoriteStore({required this.storeId});
+  final String storeId;
+}
+
+final class HomeCityChanged extends HomeEvent {
+  const HomeCityChanged(this.city);
+  final String city;
+
+  @override
+  List<Object?> get props => [city];
+}

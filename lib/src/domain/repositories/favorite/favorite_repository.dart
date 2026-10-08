@@ -8,6 +8,10 @@ abstract interface class FavoriteRepository {
     int limit = 20,
   });
 
+  Future<Either<Failure, bool>> toggleFavorite(String storeId);
+
+  Future<Either<Failure, bool>> checkFavorite(String storeId);
+
   Future<Either<Failure, bool>> addFavorite(String storeId);
 
   Future<Either<Failure, bool>> removeFavorite(String storeId);

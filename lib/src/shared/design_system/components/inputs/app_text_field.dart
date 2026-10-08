@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../tokens/app_colors.dart';
 import '../../tokens/app_spacing.dart';
 
@@ -31,6 +32,7 @@ class AppTextField extends StatefulWidget {
   final TextStyle? hintStyle;
   final TextStyle? labelStyle;
   final EdgeInsetsGeometry? contentPadding;
+  final List<TextInputFormatter>? inputFormatters;
 
   const AppTextField({
     super.key,
@@ -62,6 +64,7 @@ class AppTextField extends StatefulWidget {
     this.hintStyle,
     this.labelStyle,
     this.contentPadding,
+    this.inputFormatters,
   });
 
   @override
@@ -132,6 +135,7 @@ class _AppTextFieldState extends State<AppTextField> {
           maxLines: widget.isPassword ? 1 : widget.maxLines,
           minLines: widget.minLines,
           maxLength: widget.maxLength,
+          inputFormatters: widget.inputFormatters,
           style: widget.style,
           decoration: InputDecoration(
             filled: widget.fillColor != null ? true : null,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../shared/shared.dart';
 import '../widgets/home_upcoming_appointment_card.dart';
 
 class HomeUpcomingAppointmentSection extends StatelessWidget {
@@ -22,9 +23,9 @@ class HomeUpcomingAppointmentSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Upcoming Appointment',
-            style: TextStyle(
+          Text(
+            context.l10n.upcomingAppointment,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
               color: _textDark,

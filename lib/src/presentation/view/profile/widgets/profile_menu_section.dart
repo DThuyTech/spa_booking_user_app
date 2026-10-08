@@ -4,12 +4,14 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 class ProfileMenuItemData {
   final IconData icon;
   final String title;
+  final String? trailingText;
   final Color iconColor;
   final VoidCallback? onTap;
 
   const ProfileMenuItemData({
     required this.icon,
     required this.title,
+    this.trailingText,
     this.iconColor = const Color(0xFF3F6874),
     this.onTap,
   });
@@ -97,6 +99,17 @@ class ProfileMenuSection extends StatelessWidget {
                               ),
                             ),
                           ),
+                          if (item.trailingText != null) ...[
+                            Text(
+                              item.trailingText!,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF8A7D75),
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                          ],
                           const Icon(
                             LucideIcons.chevron_right,
                             size: 18,

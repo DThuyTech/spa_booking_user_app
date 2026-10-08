@@ -1,6 +1,6 @@
 import 'package:spa_booking/src/domain/entities/auth/user.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
 
 class ProfileHeaderWaveClipper extends CustomClipper<Path> {
   const ProfileHeaderWaveClipper();
@@ -117,45 +117,49 @@ class ProfileHeaderWave extends StatelessWidget {
                                 height: 104,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) =>
-                                    _buildDefaultAvatar(),
+                                    _buildInitialsAvatar(),
                               )
-                            : _buildDefaultAvatar(),
+                            : _buildInitialsAvatar(),
                       ),
                     ),
 
                     // Edit button badge
-                    Positioned(
-                      bottom: 2,
-                      right: 2,
-                      child: GestureDetector(
-                        onTap: onEditAvatar,
-                        child: Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: const Color(0xFFE55D47),
-                            border: Border.all(color: Colors.white, width: 2.5),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(
-                                  0xFFE55D47,
-                                ).withValues(alpha: 0.35),
-                                blurRadius: 6,
-                                offset: const Offset(0, 2),
+                    if (onEditAvatar != null)
+                      Positioned(
+                        bottom: 2,
+                        right: 2,
+                        child: GestureDetector(
+                          onTap: onEditAvatar,
+                          child: Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: const Color(0xFFE55D47),
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 2.5,
                               ),
-                            ],
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              LucideIcons.pencil,
-                              color: Colors.white,
-                              size: 14,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(
+                                    0xFFE55D47,
+                                  ).withValues(alpha: 0.35),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                LucideIcons.pencil,
+                                color: Colors.white,
+                                size: 14,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -192,16 +196,28 @@ class ProfileHeaderWave extends StatelessWidget {
     );
   }
 
-  Widget _buildDefaultAvatar() {
-    return Image.asset(
-      'assets/images/profile_avatar.png',
+  Widget _buildInitialsAvatar() {
+    final initials = AvatarHelper.getInitials(user?.fullName);
+    return Container(
       width: 104,
       height: 104,
-      fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) => Container(
-        color: const Color(0xFFFFDCD6),
-        child: const Center(
-          child: Icon(LucideIcons.user, size: 48, color: Color(0xFFBA4A32)),
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFFC6E58), Color(0xFFD6452E)],
+        ),
+      ),
+      child: Center(
+        child: Text(
+          initials,
+          style: const TextStyle(
+            fontSize: 34,
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+            letterSpacing: 1.2,
+          ),
         ),
       ),
     );

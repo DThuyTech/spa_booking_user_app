@@ -8,7 +8,7 @@ class BookingResultBodyView extends StatelessWidget {
   final String salonName;
   final String dateDisplay;
   final String timeDisplay;
-  final int totalAmount;
+  final double totalAmount;
   final VoidCallback onPrimaryAction;
   final VoidCallback onSecondaryAction;
   final VoidCallback onToggleState;

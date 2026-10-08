@@ -40,6 +40,14 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     });
 
     on<RegisterSubmitted>(_onSubmitted);
+    on<ErrorCleared>(_onErrorCleared);
+  }
+
+  Future<void> _onErrorCleared(
+    ErrorCleared event,
+    Emitter<RegisterState> emit,
+  ) async {
+    emit(state.copyWith(errorMessage: () => null));
   }
 
   Future<void> _onSubmitted(

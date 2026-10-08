@@ -10,9 +10,17 @@ class GetCustomerBookingsUseCase {
 
   Future<Either<Failure, BookingListResponseEntity>> call({
     String? tab,
+    String? status,
+    String? date,
     int page = 1,
     int limit = 20,
   }) {
-    return _repository.getCustomerBookings(tab: tab, page: page, limit: limit);
+    return _repository.getCustomerBookings(
+      tab: tab,
+      status: status,
+      date: date,
+      page: page,
+      limit: limit,
+    );
   }
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../core/localization/app_localizations.dart';
 import '../../../../domain/entities/booking/booking_entity.dart';
 import '../../../../shared/utils/app_toast_helper.dart';
 import '../../../bloc/booking/booking_dashboard/booking_dashboard_bloc.dart';
 import '../../booking_dashboard_detail/view/booking_dashboard_detail_view.dart';
-import '../mockup_data/booking_dashboard_mock_data.dart';
+import '../models/booking_dashboard_models.dart';
 import '../widgets/booking_dashboard_card.dart';
 import '../widgets/booking_dashboard_summary_grid.dart';
 import '../widgets/booking_dashboard_summary_short_bar.dart';
@@ -27,6 +28,8 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
 
   bool _isScrolled = false;
   late String _selectedFilter;
+  String _selectedStatus = 'ALL';
+  DateTime? _selectedDate;
   String _searchQuery = '';
 
   @override
@@ -84,73 +87,293 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
   }
 
   void _showFilterSheet() {
+    final l10n = context.l10n;
+    String tempStatus = _selectedStatus;
+    DateTime? tempDate = _selectedDate;
+
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (sheetCtx) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            final formattedDateStr = tempDate != null
+                ? '${tempDate!.year}-${tempDate!.month.toString().padLeft(2, '0')}-${tempDate!.day.toString().padLeft(2, '0')}'
+                : null;
+
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 18,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Filter Bookings',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFF1E293B),
+                    // Handle bar
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE2E8F0),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(LucideIcons.x, size: 20),
-                      onPressed: () => Navigator.of(sheetCtx).pop(),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children:
-                      [
-                        'All',
-                        'UPCOMING',
-                        'TODAY',
-                        'COMPLETED',
-                        'CANCELLED',
-                      ].map((filter) {
-                        final isSel = _selectedFilter == filter;
-                        return ChoiceChip(
-                          label: Text(filter),
-                          selected: isSel,
-                          selectedColor: const Color(0xFFFA7762),
-                          backgroundColor: const Color(0xFFF1F5F9),
-                          labelStyle: TextStyle(
-                            color: isSel
-                                ? Colors.white
-                                : const Color(0xFF475569),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
+                    const SizedBox(height: 14),
+
+                    // Header Row with Title, Reset & Close
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.filterBookings,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF1E293B),
                           ),
-                          onSelected: (val) {
-                            Navigator.of(sheetCtx).pop();
-                            _onFilterSelect(filter);
+                        ),
+                        Row(
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                setSheetState(() {
+                                  tempStatus = 'ALL';
+                                  tempDate = null;
+                                });
+                              },
+                              child: Text(
+                                l10n.resetFilter,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFFFA7762),
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(LucideIcons.x, size: 20),
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              onPressed: () => Navigator.of(sheetCtx).pop(),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Section 1: Status Filter
+                    Text(
+                      l10n.statusLabel,
+                      style: const TextStyle(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF475569),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children:
+                          [
+                            {'code': 'ALL', 'label': l10n.all},
+                            {'code': 'PENDING', 'label': l10n.statusPending},
+                            {
+                              'code': 'CONFIRMED',
+                              'label': l10n.statusConfirmed,
+                            },
+                            {
+                              'code': 'COMPLETED',
+                              'label': l10n.statusCompleted,
+                            },
+                            {
+                              'code': 'CANCELLED',
+                              'label': l10n.statusCancelled,
+                            },
+                          ].map((s) {
+                            final code = s['code']!;
+                            final label = s['label']!;
+                            final isSel = tempStatus == code;
+
+                            return ChoiceChip(
+                              label: Text(label),
+                              selected: isSel,
+                              selectedColor: const Color(0xFFFA7762),
+                              backgroundColor: const Color(0xFFF1F5F9),
+                              labelStyle: TextStyle(
+                                color: isSel
+                                    ? Colors.white
+                                    : const Color(0xFF475569),
+                                fontWeight: isSel
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
+                                fontSize: 12.5,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                side: BorderSide(
+                                  color: isSel
+                                      ? const Color(0xFFFA7762)
+                                      : const Color(0xFFE2E8F0),
+                                ),
+                              ),
+                              onSelected: (_) {
+                                setSheetState(() {
+                                  tempStatus = code;
+                                });
+                              },
+                            );
+                          }).toList(),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // Section 2: Date / DateTime Filter
+                    Text(
+                      l10n.dateLabel,
+                      style: const TextStyle(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF475569),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () async {
+                        final picked = await showDatePicker(
+                          context: context,
+                          initialDate: tempDate ?? DateTime.now(),
+                          firstDate: DateTime(2024),
+                          lastDate: DateTime(2030),
+                          builder: (context, child) {
+                            return Theme(
+                              data: Theme.of(context).copyWith(
+                                colorScheme: const ColorScheme.light(
+                                  primary: Color(0xFFFA7762),
+                                  onPrimary: Colors.white,
+                                  onSurface: Color(0xFF1E293B),
+                                ),
+                              ),
+                              child: child!,
+                            );
                           },
                         );
-                      }).toList(),
+                        if (picked != null) {
+                          setSheetState(() {
+                            tempDate = picked;
+                          });
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF8FAFC),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: const Color(0xFFE2E8F0)),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              LucideIcons.calendar,
+                              size: 18,
+                              color: Color(0xFFFA7762),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                formattedDateStr ?? l10n.selectDate,
+                                style: TextStyle(
+                                  fontSize: 13.5,
+                                  color: formattedDateStr != null
+                                      ? const Color(0xFF1E293B)
+                                      : const Color(0xFF94A3B8),
+                                  fontWeight: formattedDateStr != null
+                                      ? FontWeight.w600
+                                      : FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                            if (tempDate != null)
+                              GestureDetector(
+                                onTap: () {
+                                  setSheetState(() {
+                                    tempDate = null;
+                                  });
+                                },
+                                child: const Icon(
+                                  LucideIcons.x,
+                                  size: 16,
+                                  color: Color(0xFF94A3B8),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 26),
+
+                    // Apply Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFA7762),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(sheetCtx).pop();
+                          setState(() {
+                            _selectedStatus = tempStatus;
+                            _selectedDate = tempDate;
+                          });
+
+                          try {
+                            final dateParam = tempDate != null
+                                ? '${tempDate!.year}-${tempDate!.month.toString().padLeft(2, '0')}-${tempDate!.day.toString().padLeft(2, '0')}'
+                                : null;
+                            context.read<BookingDashboardBloc>().add(
+                              FetchCustomerBookingsEvent(
+                                status: tempStatus == 'ALL' ? null : tempStatus,
+                                date: dateParam,
+                                isRefresh: true,
+                              ),
+                            );
+                          } catch (_) {}
+                        },
+                        child: Text(
+                          l10n.applyFilter,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
                 ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
@@ -160,40 +383,46 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
     List<BookingEntity> bookings, {
     required bool hasBloc,
   }) {
-    if (!hasBloc && bookings.isEmpty) {
-      return BookingDashboardMockData.groups;
-    }
     if (bookings.isEmpty) {
       return const [];
     }
 
-    // Filter by selected tab
     final now = DateTime.now();
     final todayStr =
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    final filterDateStr = _selectedDate != null
+        ? '${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}'
+        : null;
 
     final filtered = bookings.where((b) {
+      final bDateStr =
+          '${b.startAt.year}-${b.startAt.month.toString().padLeft(2, '0')}-${b.startAt.day.toString().padLeft(2, '0')}';
+
+      // 1. Date filter if selected
+      if (filterDateStr != null && bDateStr != filterDateStr) {
+        return false;
+      }
+
+      // 2. Status filter if selected (not ALL)
+      if (_selectedStatus != 'ALL' &&
+          b.status.toUpperCase() != _selectedStatus) {
+        return false;
+      }
+
+      // 3. Tab filter
       if (!hasBloc) {
-        final bDateStr =
-            '${b.startAt.year}-${b.startAt.month.toString().padLeft(2, '0')}-${b.startAt.day.toString().padLeft(2, '0')}';
         if (_selectedFilter == 'UPCOMING') {
           return b.status == 'CONFIRMED' || b.status == 'PENDING';
-        } else if (_selectedFilter == 'TODAY') {
-          return bDateStr == todayStr;
+        } else if (_selectedFilter == 'ALL') {
+          return true;
         } else if (_selectedFilter == 'COMPLETED' ||
             _selectedFilter == 'PAST') {
           return b.status == 'COMPLETED';
         } else if (_selectedFilter == 'CANCELLED') {
           return b.status == 'CANCELLED';
         }
-        return true;
       }
 
-      if (_selectedFilter == 'TODAY') {
-        final bDateStr =
-            '${b.startAt.year}-${b.startAt.month.toString().padLeft(2, '0')}-${b.startAt.day.toString().padLeft(2, '0')}';
-        return bDateStr == todayStr;
-      }
       return true;
     }).toList();
 
@@ -245,9 +474,9 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
           title = 'No upcoming bookings';
           subtitle = 'You have no upcoming appointments scheduled.';
           break;
-        case 'TODAY':
-          title = 'No bookings today';
-          subtitle = 'You have no appointments scheduled for today.';
+        case 'ALL':
+          title = 'No bookings found';
+          subtitle = 'You have no bookings recorded yet.';
           break;
         case 'COMPLETED':
         case 'PAST':
@@ -342,31 +571,13 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
     BookingDashboardState state, {
     required bool hasBloc,
   }) {
+    final l10n = context.l10n;
     final bookings = state.items;
-    final now = DateTime.now();
-    final todayStr =
-        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
 
-    final int upcomingCount;
-    final int todayCount;
-    final int completedCount;
-    final int cancelledCount;
-
-    if (!hasBloc) {
-      upcomingCount = BookingDashboardMockData.upcomingCount;
-      todayCount = BookingDashboardMockData.todayCount;
-      completedCount = BookingDashboardMockData.completedCount;
-      cancelledCount = BookingDashboardMockData.cancelledCount;
-    } else {
-      upcomingCount = state.summary.upcoming;
-      todayCount = bookings.where((b) {
-        final bDateStr =
-            '${b.startAt.year}-${b.startAt.month.toString().padLeft(2, '0')}-${b.startAt.day.toString().padLeft(2, '0')}';
-        return bDateStr == todayStr;
-      }).length;
-      completedCount = state.summary.past;
-      cancelledCount = state.summary.cancelled;
-    }
+    final int upcomingCount = hasBloc ? state.summary.upcoming : 0;
+    final int allCount = hasBloc ? state.summary.total : 0;
+    final int pastCount = hasBloc ? state.summary.past : 0;
+    final int cancelledCount = hasBloc ? state.summary.cancelled : 0;
 
     final groups = _buildGroups(bookings, hasBloc: hasBloc);
 
@@ -407,8 +618,8 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
                 // Full 2x2 Summary Grid
                 BookingDashboardSummaryGrid(
                   upcomingCount: upcomingCount,
-                  todayCount: todayCount,
-                  completedCount: completedCount,
+                  allCount: allCount,
+                  pastCount: pastCount,
                   cancelledCount: cancelledCount,
                   selectedFilter: _selectedFilter,
                   onFilterSelect: _onFilterSelect,
@@ -419,6 +630,7 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
                 // Search Bar with Filter Button
                 BookingSearchFilterBar(
                   controller: _searchController,
+                  hintText: l10n.searchBookingsPlaceholder,
                   onChanged: (val) {
                     setState(() {
                       _searchQuery = val.trim().toLowerCase();
@@ -543,8 +755,8 @@ class _BookingDashboardBodyViewState extends State<BookingDashboardBodyView> {
                     top: false,
                     child: BookingDashboardSummaryShortBar(
                       upcomingCount: upcomingCount,
-                      todayCount: todayCount,
-                      completedCount: completedCount,
+                      allCount: allCount,
+                      pastCount: pastCount,
                       cancelledCount: cancelledCount,
                       selectedFilter: _selectedFilter,
                       onFilterSelect: _onFilterSelect,

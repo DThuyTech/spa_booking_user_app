@@ -65,7 +65,7 @@ class _SparklinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (values.isEmpty) return;
+    if (values.length < 2) return;
 
     // 1. Draw horizontal dotted/faint grid lines
     final gridPaint = Paint()

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import '../booking/view/booking_view.dart';
 import '../home/view/home_view.dart';
+import '../nearby_stores/view/nearby_stores_view.dart';
 import '../profile/view/profile_view.dart';
 import '../search/view/search_view.dart';
 import 'widgets/app_bottom_nav_bar.dart';
@@ -25,9 +26,12 @@ class _RootPageState extends State<RootPage> {
   void initState() {
     super.initState();
     _pages = [
-      HomePage(onSearchTap: () => _onTabSelected(1)),
+      HomePage(
+        onSearchTap: () => _onTabSelected(1),
+        onAvatarTap: () => _onTabSelected(3),
+      ),
       const SearchView(),
-      const BookingView(),
+      const NearbyStoresView(),
       const ProfilePage(),
     ];
   }
@@ -91,6 +95,19 @@ class _RootPageState extends State<RootPage> {
                   color: const Color(0xFFE55D47),
                   onTap: () {
                     Navigator.of(sheetContext).pop();
+                  },
+                ),
+                const SizedBox(height: 12),
+                _buildQuickActionTile(
+                  icon: LucideIcons.calendar_check_2,
+                  title: 'My Bookings & History',
+                  subtitle: 'View upcoming and past appointments',
+                  color: const Color(0xFF2C2420),
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const BookingView()),
+                    );
                   },
                 ),
                 const SizedBox(height: 12),

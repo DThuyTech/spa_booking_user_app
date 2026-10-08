@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:spa_booking/src/domain/entities/store/store_full_detail_entity.dart';
 import '../../../../shared/design_system/components/buttons/app_favorite_button.dart';
 import '../../../../shared/design_system/components/buttons/app_icon_button.dart';
-import '../mockup_data/store_detail_mock_data.dart';
 import '../widgets/store_header_card.dart';
 
 class StoreDetailHeaderSection extends StatelessWidget {
-  final StoreDetailItem store;
+  final StoreFullDetailEntity fullStore;
   final VoidCallback? onBackTap;
   final ValueChanged<bool>? onFavoriteToggle;
   final VoidCallback? onShareTap;
 
   const StoreDetailHeaderSection({
     super.key,
-    required this.store,
+    required this.fullStore,
     this.onBackTap,
     this.onFavoriteToggle,
     this.onShareTap,
@@ -32,7 +32,7 @@ class StoreDetailHeaderSection extends StatelessWidget {
             fit: StackFit.expand,
             children: [
               Image.network(
-                store.coverImageUrl,
+                fullStore.coverImageUrl ?? '-',
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(
                   color: const Color(0xFFE2E8F0),
@@ -95,9 +95,9 @@ class StoreDetailHeaderSection extends StatelessWidget {
                   Row(
                     children: [
                       AppFavoriteButton(
-                        isFavorite: store.isFavorite,
+                        isFavorite: fullStore.isFavorite,
                         onToggle: () =>
-                            onFavoriteToggle?.call(!store.isFavorite),
+                            onFavoriteToggle?.call(!fullStore.isFavorite),
                         size: 42,
                         iconSize: 20,
                         isFloating: true,
@@ -124,7 +124,7 @@ class StoreDetailHeaderSection extends StatelessWidget {
         // Floating Store Header Card (overlapping the cover bottom)
         Padding(
           padding: const EdgeInsets.only(top: 245, left: 16, right: 16),
-          child: StoreHeaderCard(store: store),
+          child: StoreHeaderCard(store: fullStore),
         ),
       ],
     );

@@ -7,6 +7,7 @@ class ChangePasswordBodyView extends StatelessWidget {
   final TextEditingController newPasswordController;
   final TextEditingController confirmPasswordController;
   final VoidCallback onUpdatePassword;
+  final bool isLoading;
 
   const ChangePasswordBodyView({
     super.key,
@@ -14,6 +15,7 @@ class ChangePasswordBodyView extends StatelessWidget {
     required this.newPasswordController,
     required this.confirmPasswordController,
     required this.onUpdatePassword,
+    this.isLoading = false,
   });
 
   static const Color _textDark = Color(0xFF1E2022);
@@ -97,7 +99,8 @@ class ChangePasswordBodyView extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 36, bottom: 20),
                   child: AppButton(
                     text: 'Update Password',
-                    onPressed: onUpdatePassword,
+                    isLoading: isLoading,
+                    onPressed: isLoading ? null : onUpdatePassword,
                     backgroundColor: _coralColor,
                     textColor: Colors.white,
                     borderRadius: BorderRadius.circular(28),

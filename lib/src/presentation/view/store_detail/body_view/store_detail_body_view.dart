@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import '../mockup_data/store_detail_mock_data.dart';
+import 'package:spa_booking/src/domain/entities/store/store_detail_entity.dart';
+import 'package:spa_booking/src/domain/entities/store/store_full_detail_entity.dart';
+import 'package:spa_booking/src/presentation/view/store_detail/view/store_gallery_tab_view.dart';
+import 'package:spa_booking/src/presentation/view/store_detail/view/store_overview_tab_view.dart';
+import 'package:spa_booking/src/presentation/view/store_detail/view/store_reviews_tab_view.dart';
+import 'package:spa_booking/src/presentation/view/store_detail/view/store_services_tab_view.dart';
 import '../sections/store_detail_header_section.dart';
 import '../sections/store_detail_tab_bar_section.dart';
-import '../view/store_gallery_tab_view.dart';
-import '../view/store_overview_tab_view.dart';
-import '../view/store_reviews_tab_view.dart';
-import '../view/store_services_tab_view.dart';
 
 class StoreDetailBodyView extends StatelessWidget {
-  final StoreDetailItem store;
+  final StoreFullDetailEntity store;
   final StoreDetailTab activeTab;
   final ValueChanged<StoreDetailTab> onTabChanged;
   final VoidCallback? onBackTap;
   final ValueChanged<bool>? onFavoriteToggle;
   final VoidCallback? onShareTap;
   final VoidCallback? onBookSeat;
-  final ValueChanged<StoreServiceItem>? onBookService;
-  final ValueChanged<StoreGalleryPhotoItem>? onPhotoTap;
+  final ValueChanged<StoreDetailEntity>? onBookService;
+  // final ValueChanged<StoreGalleryPhotoItem>? onPhotoTap;
   final VoidCallback? onGetDirections;
   final VoidCallback? onViewAllReviews;
   final VoidCallback? onWriteReview;
@@ -31,7 +32,7 @@ class StoreDetailBodyView extends StatelessWidget {
     this.onShareTap,
     this.onBookSeat,
     this.onBookService,
-    this.onPhotoTap,
+    // this.onPhotoTap,
     this.onGetDirections,
     this.onViewAllReviews,
     this.onWriteReview,
@@ -48,7 +49,7 @@ class StoreDetailBodyView extends StatelessWidget {
         children: [
           // 1. Header Section with Cover and Overlapping Store Info Card
           StoreDetailHeaderSection(
-            store: store,
+            fullStore: store,
             onBackTap: onBackTap,
             onFavoriteToggle: onFavoriteToggle,
             onShareTap: onShareTap,
@@ -79,18 +80,19 @@ class StoreDetailBodyView extends StatelessWidget {
         );
       case StoreDetailTab.services:
         return StoreServicesTabView(
-          serviceGroups: store.serviceGroups,
+          categories: store.categories,
+          services: store.services,
           onBookService: onBookService,
         );
+
       case StoreDetailTab.gallery:
         return StoreGalleryTabView(
-          photos: store.galleryPhotos,
-          onPhotoTap: onPhotoTap,
+          coverImageUrl: store.coverImageUrl,
+          images: store.images,
         );
       case StoreDetailTab.reviews:
         return StoreReviewsTabView(
-          ratingSummary: store.ratingSummary,
-          reviews: store.reviews,
+          ratingSummary: store.reviewSummary,
           onViewAllReviews: onViewAllReviews,
           onWriteReview: onWriteReview,
         );

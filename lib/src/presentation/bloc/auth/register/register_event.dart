@@ -42,3 +42,7 @@ final class RegisterConfirmPasswordChanged extends RegisterEvent {
 final class RegisterSubmitted extends RegisterEvent {
   const RegisterSubmitted();
 }
+
+final class ErrorCleared extends RegisterEvent {
+  const ErrorCleared();
+}

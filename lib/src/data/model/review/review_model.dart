@@ -1,28 +1,54 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
+
 import '../../../domain/entities/review/review_entity.dart';
 
-part 'review_model.freezed.dart';
+part 'review_model.g.dart';
 
-@freezed
-abstract class ReviewModel with _$ReviewModel {
-  const ReviewModel._();
+@JsonSerializable()
+class ReviewModel {
+  final String id;
 
-  const factory ReviewModel({
-    required String id,
-    @JsonKey(name: 'customerName', defaultValue: 'Customer')
-    required String customerName,
-    @JsonKey(name: 'avatarUrl') String? avatarUrl,
-    @JsonKey(name: 'rating', defaultValue: 5) required int rating,
-    @JsonKey(name: 'comment', defaultValue: '') required String comment,
-    @JsonKey(name: 'images', defaultValue: []) List<String>? images,
-    @JsonKey(name: 'serviceNames', defaultValue: []) List<String>? serviceNames,
-    @JsonKey(name: 'staffName') String? staffName,
-    @JsonKey(name: 'createdAt') String? createdAt,
-  }) = _ReviewModel;
+  @JsonKey(defaultValue: 'Customer')
+  final String customerName;
+
+  final String? avatarUrl;
+
+  @JsonKey(defaultValue: 5)
+  final int rating;
+
+  @JsonKey(defaultValue: '')
+  final String comment;
+
+  @JsonKey(defaultValue: [])
+  final List<String>? images;
+
+  @JsonKey(defaultValue: [])
+  final List<String>? serviceNames;
+
+  final String? staffName;
+  final String? createdAt;
+
+  const ReviewModel({
+    required this.id,
+    required this.customerName,
+    this.avatarUrl,
+    required this.rating,
+    required this.comment,
+    this.images,
+    this.serviceNames,
+    this.staffName,
+    this.createdAt,
+  });
 
   factory ReviewModel.fromJson(Map<String, dynamic> json) {
-    final customer = json['customer'] as Map<String, dynamic>?;
-    final user = json['user'] as Map<String, dynamic>?;
+    final customer = json['customer'] is Map<String, dynamic>
+        ? json['customer'] as Map<String, dynamic>
+        : null;
+
+    final user = json['user'] is Map<String, dynamic>
+        ? json['user'] as Map<String, dynamic>
+        : null;
+
     final customerName =
         json['customerName'] ??
         customer?['name'] ??
@@ -30,6 +56,7 @@ abstract class ReviewModel with _$ReviewModel {
         user?['name'] ??
         user?['fullName'] ??
         'Customer';
+
     final avatarUrl =
         json['avatarUrl'] ??
         customer?['avatar'] ??
@@ -38,21 +65,22 @@ abstract class ReviewModel with _$ReviewModel {
         user?['avatarUrl'];
 
     final rawImages = json['images'];
-    List<String> parsedImages = [];
-    if (rawImages is List) {
-      parsedImages = rawImages.map((e) => e.toString()).toList();
-    }
+
+    final parsedImages = rawImages is List
+        ? rawImages.map((e) => e.toString()).toList()
+        : <String>[];
 
     final rawServiceNames = json['serviceNames'];
-    List<String> parsedServiceNames = [];
-    if (rawServiceNames is List) {
-      parsedServiceNames = rawServiceNames.map((e) => e.toString()).toList();
-    }
+
+    final parsedServiceNames = rawServiceNames is List
+        ? rawServiceNames.map((e) => e.toString()).toList()
+        : <String>[];
 
     final rawRating = json['rating'];
-    final ratingVal = (rawRating is num)
+
+    final ratingVal = rawRating is num
         ? rawRating.toInt()
-        : (int.tryParse(rawRating?.toString() ?? '') ?? 5);
+        : int.tryParse(rawRating?.toString() ?? '') ?? 5;
 
     return ReviewModel(
       id: (json['id'] ?? json['_id'] ?? '').toString(),
@@ -62,11 +90,12 @@ abstract class ReviewModel with _$ReviewModel {
       comment: (json['comment'] ?? '').toString(),
       images: parsedImages,
       serviceNames: parsedServiceNames,
-      staffName: json['staffName'] as String?,
-      createdAt: json['createdAt'] as String?,
+      staffName: json['staffName']?.toString(),
+      createdAt: json['createdAt']?.toString(),
     );
   }
 
+  Map<String, dynamic> toJson() => _$ReviewModelToJson(this);
   ReviewEntity toEntity() {
     return ReviewEntity(
       id: id,
@@ -80,88 +109,6 @@ abstract class ReviewModel with _$ReviewModel {
       createdAt: createdAt != null
           ? DateTime.tryParse(createdAt!) ?? DateTime.now()
           : DateTime.now(),
-    );
-  }
-}
-
-@freezed
-abstract class ReviewListResponseModel with _$ReviewListResponseModel {
-  const ReviewListResponseModel._();
-
-  const factory ReviewListResponseModel({
-    required String storeId,
-    @Default(5.0) double averageRating,
-    @Default(0) int totalReviews,
-    @JsonKey(name: 'ratingDistribution')
-    Map<String, dynamic>? ratingDistribution,
-    @Default([]) List<ReviewModel> items,
-    Map<String, dynamic>? pagination,
-  }) = _ReviewListResponseModel;
-
-  factory ReviewListResponseModel.fromJson(Map<String, dynamic> json) {
-    final rawItems = json['items'] ?? json['reviews'] ?? json['data'];
-    List<ReviewModel> items = [];
-    if (rawItems is List) {
-      items = rawItems
-          .whereType<Map<String, dynamic>>()
-          .map(ReviewModel.fromJson)
-          .toList();
-    }
-
-    final rawAvg = json['averageRating'];
-    final avg = (rawAvg is num)
-        ? rawAvg.toDouble()
-        : (double.tryParse(rawAvg?.toString() ?? '') ?? 5.0);
-
-    final rawTotal = json['totalReviews'] ?? json['total'];
-    final total = (rawTotal is num)
-        ? rawTotal.toInt()
-        : (int.tryParse(rawTotal?.toString() ?? '') ?? items.length);
-
-    Map<String, dynamic>? pagination =
-        json['pagination'] as Map<String, dynamic>?;
-    if (pagination == null &&
-        (json['total'] != null || json['totalPages'] != null)) {
-      pagination = {
-        'total': total,
-        'page': json['page'] ?? 1,
-        'limit': json['limit'] ?? 10,
-        'totalPages': json['totalPages'] ?? 1,
-      };
-    }
-
-    return ReviewListResponseModel(
-      storeId: (json['storeId'] ?? '').toString(),
-      averageRating: avg,
-      totalReviews: total,
-      ratingDistribution: json['ratingDistribution'] as Map<String, dynamic>?,
-      items: items,
-      pagination: pagination,
-    );
-  }
-
-  ReviewListEntity toEntity() {
-    final Map<dynamic, dynamic> dist = ratingDistribution ?? const {};
-    final distributionEntity = StoreRatingDistributionEntity(
-      star5: (dist['5'] as num?)?.toInt() ?? (dist[5] as num?)?.toInt() ?? 0,
-      star4: (dist['4'] as num?)?.toInt() ?? (dist[4] as num?)?.toInt() ?? 0,
-      star3: (dist['3'] as num?)?.toInt() ?? (dist[3] as num?)?.toInt() ?? 0,
-      star2: (dist['2'] as num?)?.toInt() ?? (dist[2] as num?)?.toInt() ?? 0,
-      star1: (dist['1'] as num?)?.toInt() ?? (dist[1] as num?)?.toInt() ?? 0,
-    );
-
-    final pag = pagination ?? {};
-    final page = (pag['page'] as num?)?.toInt() ?? 1;
-    final totalPages = (pag['totalPages'] as num?)?.toInt() ?? 1;
-
-    return ReviewListEntity(
-      storeId: storeId,
-      averageRating: averageRating,
-      totalReviews: totalReviews,
-      ratingDistribution: distributionEntity,
-      items: items.map((m) => m.toEntity()).toList(),
-      page: page,
-      totalPages: totalPages,
     );
   }
 }

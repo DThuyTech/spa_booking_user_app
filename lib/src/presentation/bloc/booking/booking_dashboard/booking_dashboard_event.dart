@@ -9,12 +9,19 @@ sealed class BookingDashboardEvent extends Equatable {
 
 class FetchCustomerBookingsEvent extends BookingDashboardEvent {
   final String? tab;
+  final String? status;
+  final String? date;
   final bool isRefresh;
 
-  const FetchCustomerBookingsEvent({this.tab, this.isRefresh = false});
+  const FetchCustomerBookingsEvent({
+    this.tab,
+    this.status,
+    this.date,
+    this.isRefresh = false,
+  });
 
   @override
-  List<Object?> get props => [tab, isRefresh];
+  List<Object?> get props => [tab, status, date, isRefresh];
 }
 
 class ChangeBookingTabEvent extends BookingDashboardEvent {

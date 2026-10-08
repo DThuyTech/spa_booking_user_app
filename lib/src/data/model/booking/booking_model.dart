@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:spa_booking/src/core/utils/json_parser.dart';
 import '../../../domain/entities/booking/booking_entity.dart';
 
 part 'booking_model.freezed.dart';
@@ -9,20 +10,19 @@ abstract class BookingServiceItemModel with _$BookingServiceItemModel {
   const factory BookingServiceItemModel({
     required String serviceId,
     required String name,
-    required int price,
+    required double price,
     @Default(60) int duration,
   }) = _BookingServiceItemModel;
 
   factory BookingServiceItemModel.fromJson(Map<String, dynamic> json) {
     return BookingServiceItemModel(
-      serviceId: (json['serviceId'] ?? json['id'] ?? '') as String,
-      name: (json['name'] ?? '') as String,
-      price:
-          (json['price'] ?? json['unitPrice'] ?? json['totalAmount'] as num?)
-              ?.toInt() ??
-          0,
-      duration:
-          (json['duration'] ?? json['durationMinutes'] as num?)?.toInt() ?? 60,
+      serviceId: JsonParser.string(
+        json['serviceId'],
+        defaultValue: json['id'] ?? '',
+      ),
+      name: JsonParser.string(json['name'], defaultValue: ''),
+      price: JsonParser.doubleValue(json['price']),
+      duration: JsonParser.intValue(json['duration'], defaultValue: 60),
     );
   }
 }
@@ -105,8 +105,8 @@ abstract class BookingModel with _$BookingModel {
     @Default('UNPAID') String paymentStatus,
     required String startAt,
     required String endAt,
-    @Default(0) int totalDuration,
-    @Default(0) int totalAmount,
+    @Default(0) double totalDuration,
+    @Default(0) double totalAmount,
     @Default([]) List<BookingServiceItemModel> services,
     BookingStaffSnapshotModel? staffSnapshot,
     BookingCustomerSnapshotModel? customerSnapshot,
@@ -163,9 +163,9 @@ abstract class BookingModel with _$BookingModel {
       endAt: (json['endAt'] ?? '') as String,
       totalDuration:
           (json['totalDuration'] ?? json['totalDurationMinutes'] as num?)
-              ?.toInt() ??
+              ?.toDouble() ??
           0,
-      totalAmount: (json['totalAmount'] as num?)?.toInt() ?? 0,
+      totalAmount: (json['totalAmount'] as num?)?.toDouble() ?? 0,
       services: services,
       staffSnapshot: staffSnapshot,
       customerSnapshot: customerSnapshot,

@@ -1,8 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:spa_booking/src/shared/design_system/components/navigation/app_app_bar.dart';
-import 'package:spa_booking/src/presentation/view/insights/body_view/my_insights_body_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:spa_booking/src/shared/shared.dart';
+import 'package:spa_booking/src/presentation/view/insights/body_view/my_insights_body_view.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../app/di/dependency_injection.dart';
@@ -60,17 +59,17 @@ class _MyInsightsViewState extends State<MyInsightsView> {
                 borderRadius: BorderRadius.circular(14),
               ),
               itemBuilder: (context) => [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'This Month',
-                  child: Text('This Month'),
+                  child: Text(context.l10n.thisMonth),
                 ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'Last 3 Months',
-                  child: Text('Last 3 Months'),
+                  child: Text(context.l10n.last3Months),
                 ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'This Year',
-                  child: Text('This Year'),
+                  child: Text(context.l10n.thisYear),
                 ),
               ],
               child: Container(

@@ -26,16 +26,29 @@ abstract class StoreListResponseModel with _$StoreListResponseModel {
   }) = _StoreListResponseModel;
 
   factory StoreListResponseModel.fromJson(Map<String, dynamic> json) {
-    final normalized = Map<String, dynamic>.from(json);
-    if (!normalized.containsKey('pagination') &&
-        normalized.containsKey('total')) {
-      normalized['pagination'] = {
-        'total': normalized['total'],
-        'page': normalized['page'] ?? 1,
-        'limit': normalized['limit'] ?? 10,
-        'totalPages': normalized['totalPages'] ?? 1,
-      };
+    final rawItems = json['items'] ?? json['data'] ?? json['stores'];
+    List<StoreModel> items = [];
+    if (rawItems is List) {
+      items = rawItems
+          .whereType<Map<String, dynamic>>()
+          .map(StoreModel.fromJson)
+          .toList();
     }
-    return _$StoreListResponseModelFromJson(normalized);
+
+    StorePaginationModel? pagination;
+    if (json['pagination'] is Map<String, dynamic>) {
+      pagination = StorePaginationModel.fromJson(
+        json['pagination'] as Map<String, dynamic>,
+      );
+    } else if (json.containsKey('total')) {
+      pagination = StorePaginationModel(
+        total: (json['total'] as num?)?.toInt() ?? 0,
+        page: (json['page'] as num?)?.toInt() ?? 1,
+        limit: (json['limit'] as num?)?.toInt() ?? 10,
+        totalPages: (json['totalPages'] as num?)?.toInt() ?? 1,
+      );
+    }
+
+    return StoreListResponseModel(items: items, pagination: pagination);
   }
 }

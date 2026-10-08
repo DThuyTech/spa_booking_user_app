@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import '../../../../shared/shared.dart';
 import '../widgets/home_recommended_salon_card.dart';
 
 class HomeRecommendedForYouSection extends StatelessWidget {
   final List<HomeRecommendedSalonItem> salons;
+  final String? title;
+  final String? subtitle;
   final VoidCallback? onSeeAllTap;
   final ValueChanged<HomeRecommendedSalonItem>? onSalonTap;
   final ValueChanged<HomeRecommendedSalonItem>? onFavoriteToggle;
@@ -13,6 +16,8 @@ class HomeRecommendedForYouSection extends StatelessWidget {
   const HomeRecommendedForYouSection({
     super.key,
     required this.salons,
+    this.title,
+    this.subtitle,
     this.onSeeAllTap,
     this.onSalonTap,
     this.onFavoriteToggle,
@@ -30,24 +35,46 @@ class HomeRecommendedForYouSection extends StatelessWidget {
           // Section Header
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const Text(
-                'Recommended for You',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: _textDark,
-                  letterSpacing: -0.3,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title ?? context.l10n.recommendedSalons,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: _textDark,
+                        letterSpacing: -0.3,
+                      ),
+                    ),
+                    if (subtitle != null && subtitle!.isNotEmpty) ...[
+                      const SizedBox(height: 3),
+                      Text(
+                        subtitle!,
+                        style: const TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF64748B),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
               InkWell(
                 onTap: onSeeAllTap,
                 borderRadius: BorderRadius.circular(8),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
                   child: Text(
-                    'See All',
-                    style: TextStyle(
+                    context.l10n.seeAll,
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: _coralColor,

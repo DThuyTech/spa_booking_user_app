@@ -1,9 +1,6 @@
-import 'package:flutter_lucide/flutter_lucide.dart';
-import '../sections/home_explore_services_section.dart';
 import '../widgets/home_near_salon_card.dart';
 import '../widgets/home_recommended_salon_card.dart';
 import '../widgets/home_special_offer_card.dart';
-import '../widgets/home_upcoming_appointment_card.dart';
 
 class HomeMockData {
   const HomeMockData._();
@@ -37,35 +34,6 @@ class HomeMockData {
           'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=800&q=80',
     ),
   ];
-
-  static const List<ServiceCategoryItem> categories = [
-    ServiceCategoryItem(
-      id: 'haircuts',
-      label: 'Haircuts',
-      icon: LucideIcons.scissors,
-    ),
-    ServiceCategoryItem(id: 'nail', label: 'Nail', icon: LucideIcons.hand),
-    ServiceCategoryItem(
-      id: 'facial',
-      label: 'Facial',
-      icon: LucideIcons.face_slightly_smiling,
-    ),
-    ServiceCategoryItem(
-      id: 'massage',
-      label: 'Massage',
-      icon: LucideIcons.sparkles,
-    ),
-    ServiceCategoryItem(id: 'spa', label: 'Spa', icon: LucideIcons.flower_2),
-  ];
-
-  static const HomeAppointmentItem upcomingAppointment = HomeAppointmentItem(
-    id: 'appt_1',
-    salonName: 'Miette Hair Studio',
-    serviceName: 'Hair Coloring',
-    status: 'Confirmed',
-    dateTimeDisplay: 'Today · 14:30',
-    stylist: 'Anna',
-  );
 
   static const List<HomeNearSalonItem> nearSalons = [
     HomeNearSalonItem(

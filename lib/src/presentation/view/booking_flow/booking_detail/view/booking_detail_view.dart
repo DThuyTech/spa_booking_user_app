@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:spa_booking/src/presentation/bloc/booking/create_booking/create_booking_bloc.dart';
-import 'package:spa_booking/src/presentation/bloc/booking/create_booking/create_booking_event.dart';
-import 'package:spa_booking/src/presentation/bloc/booking/create_booking/create_booking_state.dart';
 import '../../../../../shared/shared.dart';
 import '../../booking_result/view/booking_result_view.dart';
 import '../../models/booking_models.dart';
 import '../body_view/booking_detail_body_view.dart';
-import '../mockup_data/booking_detail_mock_data.dart';
 
 @RoutePage()
 class BookingDetailPage extends StatelessWidget {
@@ -24,9 +21,9 @@ class BookingDetailPage extends StatelessWidget {
   const BookingDetailPage({
     super.key,
     this.storeId,
-    this.salonName = 'Aurus Salon',
-    this.selectedDate = 'Aug 26, 2026',
-    this.selectedTime = '10:00 AM – 12:15 PM',
+    this.salonName = '',
+    this.selectedDate = '',
+    this.selectedTime = '',
     this.selectedServices,
     this.selectedStaffId,
     this.startAt,
@@ -61,9 +58,9 @@ class BookingDetailView extends StatelessWidget {
   const BookingDetailView({
     super.key,
     this.storeId,
-    this.salonName = 'Aurus Salon',
-    this.selectedDate = 'Aug 26, 2026',
-    this.selectedTime = '10:00 AM – 12:15 PM',
+    this.salonName = '',
+    this.selectedDate = '',
+    this.selectedTime = '',
     this.selectedServices,
     this.selectedStaffId,
     this.startAt,
@@ -115,9 +112,9 @@ class _BookingDetailContentView extends StatefulWidget {
 
   const _BookingDetailContentView({
     this.storeId,
-    this.salonName = 'Aurus Salon',
-    this.selectedDate = 'Aug 26, 2026',
-    this.selectedTime = '10:00 AM – 12:15 PM',
+    required this.salonName,
+    required this.selectedDate,
+    required this.selectedTime,
     this.selectedServices,
     this.selectedStaffId,
     this.startAt,
@@ -139,31 +136,31 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
     super.initState();
     _noteController = TextEditingController();
 
-    final base = BookingDetailMockData.defaultBookingDetail;
     final activeServices =
         (widget.selectedServices != null && widget.selectedServices!.isNotEmpty)
         ? widget.selectedServices!
-        : base.services;
+        : const <BookingServiceItem>[];
 
-    final subtotal = activeServices.fold(0, (sum, s) => sum + s.price);
-    final discount = (subtotal * 0.1).round();
+    final subtotal = activeServices.fold(0.0, (sum, s) => sum + s.price);
+    final discount = 0.0;
     final total = subtotal - discount;
 
     _detail = BookingDetailData(
-      bookingCode: base.bookingCode,
-      status: base.status,
+      bookingCode:
+          'BK-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
+      status: 'Chờ xác nhận',
       salonName: widget.salonName,
-      salonAddress: base.salonAddress,
-      salonPhone: base.salonPhone,
+      salonAddress: '',
+      salonPhone: '',
       dateDisplay: widget.selectedDate,
       timeDisplay: widget.selectedTime,
-      durationDisplay: _durationFrom(activeServices) ?? base.durationDisplay,
+      durationDisplay: _durationFrom(activeServices) ?? '30 phút',
       services: activeServices,
-      notes: List.from(base.notes),
+      notes: const [],
       subtotal: subtotal,
       discount: discount,
       totalAmount: total,
-      paymentStatus: base.paymentStatus,
+      paymentStatus: 'Tại salon',
     );
   }
 

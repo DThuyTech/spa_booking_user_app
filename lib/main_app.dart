@@ -10,6 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'src/presentation/bloc/auth_session/auth_session_bloc.dart';
 import 'src/shared/design_system/theme/app_theme.dart';
 
+import 'src/presentation/bloc/locale/locale_cubit.dart';
+
 /// Main application widget configuring MaterialApp, Router, Locale, and Global Theme.
 class SpaBookingApp extends StatelessWidget {
   const SpaBookingApp({super.key});
@@ -18,28 +20,36 @@ class SpaBookingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final appRouter = sl<AppRouter>();
     final sessionManager = sl<SessionManager>();
-
     final authSessionBloc = sl<AuthSessionBloc>();
+    final localeCubit = sl<LocaleCubit>();
 
-    return BlocProvider.value(
-      value: authSessionBloc,
-      child: MaterialApp.router(
-        title: AppConstants.appName,
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        themeMode: ThemeMode.system,
-        routerConfig: appRouter.config(
-          reevaluateListenable: ReevaluateListenable.stream(
-            sessionManager.sessionStream,
-          ),
-        ),
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: AppLocalizations.supportedLocales,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: authSessionBloc),
+        BlocProvider.value(value: localeCubit),
+      ],
+      child: BlocBuilder<LocaleCubit, LocaleState>(
+        builder: (context, localeState) {
+          return MaterialApp.router(
+            title: AppConstants.appName,
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: ThemeMode.system,
+            locale: localeState.locale,
+            routerConfig: appRouter.config(
+              reevaluateListenable: ReevaluateListenable.stream(
+                sessionManager.sessionStream,
+              ),
+            ),
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalizations.supportedLocales,
+          );
+        },
       ),
     );
   }

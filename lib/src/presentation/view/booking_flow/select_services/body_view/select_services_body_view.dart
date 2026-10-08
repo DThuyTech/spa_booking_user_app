@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
-import '../../../../../shared/design_system/components/inputs/app_text_field.dart';
+import 'package:spa_booking/src/shared/shared.dart';
 import '../../models/booking_models.dart';
 import '../widgets/booking_service_selection_card.dart';
-import '../widgets/booking_staff_avatar_item.dart';
 
 class SelectServicesBodyView extends StatelessWidget {
   final int selectedServiceCount;
@@ -88,13 +86,8 @@ class SelectServicesBodyView extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          // 2. Customer Section
-          _buildCustomerSection(),
-
-          const SizedBox(height: 22),
-
           // 3. Service Type Category Filter Chips
-          _buildCategoryChips(),
+          _buildCategoryChips(context),
 
           const SizedBox(height: 24),
 
@@ -104,7 +97,7 @@ class SelectServicesBodyView extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 36),
               alignment: Alignment.center,
-              child: const Column(
+              child: Column(
                 children: [
                   Icon(
                     LucideIcons.scissors,
@@ -113,8 +106,8 @@ class SelectServicesBodyView extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'No services found in this category',
-                    style: TextStyle(
+                    context.l10n.noServicesInCategory,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF64748B),
@@ -139,12 +132,6 @@ class SelectServicesBodyView extends StatelessWidget {
               ),
               const SizedBox(height: 16),
             ],
-          ],
-
-          // 5. Select Staff Section
-          if (staffMembers.isNotEmpty) ...[
-            _buildStaffSection(),
-            const SizedBox(height: 32),
           ],
         ],
       ),
@@ -210,58 +197,7 @@ class SelectServicesBodyView extends StatelessWidget {
     );
   }
 
-  Widget _buildCustomerSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Customer',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: _textDark,
-              ),
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: const Text(
-                '+ Add new customer',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: _coralColor,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        AppTextField(
-          controller: customerSearchController,
-          hint: 'Search existing customers...',
-          prefixIcon: const Icon(
-            LucideIcons.search,
-            size: 18,
-            color: Color(0xFF94A3B8),
-          ),
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCategoryChips() {
+  Widget _buildCategoryChips(BuildContext context) {
     final cats = _categoriesToDisplay;
     if (cats.length <= 1) {
       return const SizedBox.shrink();
@@ -269,9 +205,9 @@ class SelectServicesBodyView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Service Type',
-          style: TextStyle(
+        Text(
+          context.l10n.serviceType,
+          style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
             color: _textDark,
@@ -318,39 +254,6 @@ class SelectServicesBodyView extends StatelessWidget {
         fontWeight: FontWeight.w700,
         color: _textDark,
       ),
-    );
-  }
-
-  Widget _buildStaffSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Select Staff',
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: _textDark,
-          ),
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 96,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            clipBehavior: Clip.none,
-            itemCount: staffMembers.length,
-            itemBuilder: (context, index) {
-              final staff = staffMembers[index];
-              return BookingStaffAvatarItem(
-                staff: staff,
-                isSelected: selectedStaffId == staff.id,
-                onTap: () => onStaffSelected(staff),
-              );
-            },
-          ),
-        ),
-      ],
     );
   }
 }
