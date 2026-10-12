@@ -1,114 +1,83 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 class AppBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTabSelected;
-  final VoidCallback onCenterAction;
 
   const AppBottomNavBar({
     super.key,
     required this.currentIndex,
     required this.onTabSelected,
-    required this.onCenterAction,
   });
 
-  /// Map page index (0: Home, 1: Search, 2: Bookings, 3: Profile)
-  /// to 5-item curved bar index (0: Home, 1: Search, 2: Center Action, 3: Bookings, 4: Profile)
-  int _toBarIndex(int pageIndex) {
-    switch (pageIndex) {
-      case 0:
-        return 0;
-      case 1:
-        return 1;
-      case 2:
-        return 3;
-      case 3:
-        return 4;
-      default:
-        return 0;
-    }
-  }
-
-  int _toPageIndex(int barIndex) {
-    switch (barIndex) {
-      case 0:
-        return 0;
-      case 1:
-        return 1;
-      case 3:
-        return 2;
-      case 4:
-        return 3;
-      default:
-        return 0;
-    }
-  }
+  static const Color _activeColor = Color(0xFFFC6E58);
+  static const Color _inactiveColor = Color(0xFF94A3B8);
 
   @override
   Widget build(BuildContext context) {
-    final barIndex = _toBarIndex(currentIndex);
+    final isVi = Localizations.localeOf(context).languageCode == 'vi';
 
-    return CurvedNavigationBar(
-      index: barIndex,
-      height: 65.0,
-      items: <Widget>[
-        _CurvedBarIcon(icon: LucideIcons.house, isSelected: barIndex == 0),
-        _CurvedBarIcon(icon: LucideIcons.search, isSelected: barIndex == 1),
-        const _CurvedBarIcon(
-          icon: LucideIcons.sparkles,
-          isSelected: false,
-          inactiveColor: Color(0xFFFA7762),
-          size: 26,
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 16,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        bottom: true,
+        maintainBottomViewPadding: true,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: GNav(
+            rippleColor: _activeColor.withValues(alpha: 0.15),
+            hoverColor: _activeColor.withValues(alpha: 0.08),
+            haptic: true,
+            tabBorderRadius: 16,
+            curve: Curves.easeOutExpo,
+            duration: const Duration(milliseconds: 300),
+            gap: 8,
+            color: _inactiveColor,
+            activeColor: _activeColor,
+            iconSize: 22,
+            tabBackgroundColor: _activeColor.withValues(alpha: 0.12),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            selectedIndex: currentIndex,
+            onTabChange: onTabSelected,
+            textStyle: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: _activeColor,
+              letterSpacing: -0.2,
+            ),
+            tabs: [
+              GButton(
+                icon: LucideIcons.house,
+                text: isVi ? 'Trang chủ' : 'Home',
+              ),
+              GButton(
+                icon: LucideIcons.search,
+                text: isVi ? 'Tìm kiếm' : 'Search',
+              ),
+              GButton(
+                icon: LucideIcons.calendar,
+                text: isVi ? 'Lịch hẹn' : 'Bookings',
+              ),
+              GButton(
+                icon: LucideIcons.user,
+                text: isVi ? 'Cá nhân' : 'Profile',
+              ),
+            ],
+          ),
         ),
-        _CurvedBarIcon(icon: LucideIcons.map_pin, isSelected: barIndex == 3),
-        _CurvedBarIcon(icon: LucideIcons.user, isSelected: barIndex == 4),
-      ],
-      color: Colors.white,
-      buttonBackgroundColor: const Color(0xFFFA7762),
-      backgroundColor: Colors.transparent,
-      animationCurve: Curves.easeInOutCubic,
-      animationDuration: const Duration(milliseconds: 350),
-      onTap: (index) {
-        if (index == 2) {
-          onCenterAction();
-        } else {
-          onTabSelected(_toPageIndex(index));
-        }
-      },
-      letIndexChange: (index) {
-        if (index == 2) {
-          onCenterAction();
-          return false;
-        }
-        return true;
-      },
-    );
-  }
-}
-
-class _CurvedBarIcon extends StatelessWidget {
-  final IconData icon;
-  final bool isSelected;
-  final Color? inactiveColor;
-  final double size;
-
-  const _CurvedBarIcon({
-    required this.icon,
-    required this.isSelected,
-    this.inactiveColor,
-    this.size = 24,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Icon(
-      icon,
-      size: size,
-      color: isSelected
-          ? Colors.white
-          : (inactiveColor ?? const Color(0xFF64748B)),
+      ),
     );
   }
 }

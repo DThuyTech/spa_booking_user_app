@@ -1,13 +1,15 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spa_booking/src/app/session/session_manager.dart';
 import 'package:spa_booking/src/core/network/auth/token_pair.dart';
 import 'package:spa_booking/src/domain/usecases/auth/login_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/send_login_otp_usecase.dart';
 import 'package:spa_booking/src/presentation/bloc/auth_session/auth_session_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginUseCase loginUseCase;
+  final SendLoginOtpUseCase? sendLoginOtpUseCase;
   final SessionManager sessionManager;
   final AuthSessionBloc? authSessionBloc;
 
@@ -17,6 +19,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   LoginBloc({
     required this.loginUseCase,
+    this.sendLoginOtpUseCase,
     required this.sessionManager,
     this.authSessionBloc,
   }) : super(const LoginState()) {
@@ -62,12 +65,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (state.isLoading) return;
 
     final identifier = state.identifier.trim();
-    final password = state.password;
 
     if (identifier.isEmpty) {
       emit(
         state.copyWith(
-          identifierError: () => 'Email cannot be empty.',
+          identifierError: () => 'Vui lòng nhập Email hoặc Số điện thoại.',
           status: LoginStatus.failure,
         ),
       );
@@ -82,17 +84,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (!isEmail && !isPhone) {
       emit(
         state.copyWith(
-          identifierError: () => 'Please enter a valid email address.',
-          status: LoginStatus.failure,
-        ),
-      );
-      return;
-    }
-
-    if (password.isEmpty) {
-      emit(
-        state.copyWith(
-          passwordError: () => 'Password cannot be empty.',
+          identifierError: () => 'Email hoặc Số điện thoại không hợp lệ.',
           status: LoginStatus.failure,
         ),
       );
@@ -108,6 +100,42 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       ),
     );
 
+    // Prefer Passwordless OTP flow if sendLoginOtpUseCase is available
+    if (sendLoginOtpUseCase != null) {
+      final result = await sendLoginOtpUseCase!(identifier: identifier);
+      result.fold(
+        (failure) {
+          emit(
+            state.copyWith(
+              status: LoginStatus.failure,
+              errorMessage: () => failure.message,
+            ),
+          );
+        },
+        (otpResult) {
+          emit(
+            state.copyWith(
+              status: LoginStatus.success,
+              otpResult: () => otpResult,
+            ),
+          );
+        },
+      );
+      return;
+    }
+
+    // Fallback password login
+    final password = state.password;
+    if (password.isEmpty) {
+      emit(
+        state.copyWith(
+          passwordError: () => 'Mật khẩu không được để trống.',
+          status: LoginStatus.failure,
+        ),
+      );
+      return;
+    }
+
     final result = await loginUseCase(email: identifier, password: password);
 
     await result.fold(
@@ -120,7 +148,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         );
       },
       (session) async {
-        // Persist session into central SessionManager
         await sessionManager.login(
           tokens: TokenPair(
             accessToken: session.accessToken,
@@ -130,7 +157,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           role: session.user.role.value,
         );
 
-        // Notify AuthSessionBloc of logged in state
         authSessionBloc?.add(
           AuthSessionLoggedIn(
             user: session.user,

@@ -2,7 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:spa_booking/src/app/di/dependency_injection.dart';
+import 'package:spa_booking/src/domain/entities/booking/booking_availability_entity.dart';
 import 'package:spa_booking/src/presentation/bloc/booking/create_booking/create_booking_bloc.dart';
+import 'package:spa_booking/src/presentation/bloc/store/store_staff/store_staff_bloc.dart';
+import 'package:spa_booking/src/domain/entities/booking/booking_item_param.dart';
 import '../../../../../shared/shared.dart';
 import '../../booking_result/view/booking_result_view.dart';
 import '../../models/booking_models.dart';
@@ -16,7 +20,10 @@ class BookingDetailPage extends StatelessWidget {
   final String selectedTime;
   final List<BookingServiceItem>? selectedServices;
   final String? selectedStaffId;
+  final Map<String, String?>? selectedStaffPerService;
   final DateTime? startAt;
+  final BookingAvailabilityOptionEntity? selectedOption;
+  final bool isQuickBook;
 
   const BookingDetailPage({
     super.key,
@@ -26,7 +33,10 @@ class BookingDetailPage extends StatelessWidget {
     this.selectedTime = '',
     this.selectedServices,
     this.selectedStaffId,
+    this.selectedStaffPerService,
     this.startAt,
+    this.selectedOption,
+    this.isQuickBook = false,
   });
 
   @override
@@ -40,7 +50,10 @@ class BookingDetailPage extends StatelessWidget {
         selectedTime: selectedTime,
         selectedServices: selectedServices,
         selectedStaffId: selectedStaffId,
+        selectedStaffPerService: selectedStaffPerService,
         startAt: startAt,
+        selectedOption: selectedOption,
+        isQuickBook: isQuickBook,
       ),
     );
   }
@@ -53,7 +66,10 @@ class BookingDetailView extends StatelessWidget {
   final String selectedTime;
   final List<BookingServiceItem>? selectedServices;
   final String? selectedStaffId;
+  final Map<String, String?>? selectedStaffPerService;
   final DateTime? startAt;
+  final BookingAvailabilityOptionEntity? selectedOption;
+  final bool isQuickBook;
 
   const BookingDetailView({
     super.key,
@@ -63,7 +79,10 @@ class BookingDetailView extends StatelessWidget {
     this.selectedTime = '',
     this.selectedServices,
     this.selectedStaffId,
+    this.selectedStaffPerService,
     this.startAt,
+    this.selectedOption,
+    this.isQuickBook = false,
   });
 
   @override
@@ -84,7 +103,10 @@ class BookingDetailView extends StatelessWidget {
           selectedTime: selectedTime,
           selectedServices: selectedServices,
           selectedStaffId: selectedStaffId,
+          selectedStaffPerService: selectedStaffPerService,
           startAt: startAt,
+          selectedOption: selectedOption,
+          isQuickBook: isQuickBook,
         ),
       );
     }
@@ -96,7 +118,10 @@ class BookingDetailView extends StatelessWidget {
       selectedTime: selectedTime,
       selectedServices: selectedServices,
       selectedStaffId: selectedStaffId,
+      selectedStaffPerService: selectedStaffPerService,
       startAt: startAt,
+      selectedOption: selectedOption,
+      isQuickBook: isQuickBook,
     );
   }
 }
@@ -108,7 +133,10 @@ class _BookingDetailContentView extends StatefulWidget {
   final String selectedTime;
   final List<BookingServiceItem>? selectedServices;
   final String? selectedStaffId;
+  final Map<String, String?>? selectedStaffPerService;
   final DateTime? startAt;
+  final BookingAvailabilityOptionEntity? selectedOption;
+  final bool isQuickBook;
 
   const _BookingDetailContentView({
     this.storeId,
@@ -117,7 +145,10 @@ class _BookingDetailContentView extends StatefulWidget {
     required this.selectedTime,
     this.selectedServices,
     this.selectedStaffId,
+    this.selectedStaffPerService,
     this.startAt,
+    this.selectedOption,
+    this.isQuickBook = false,
   });
 
   @override
@@ -136,14 +167,102 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
     super.initState();
     _noteController = TextEditingController();
 
-    final activeServices =
+    var activeServices =
         (widget.selectedServices != null && widget.selectedServices!.isNotEmpty)
-        ? widget.selectedServices!
-        : const <BookingServiceItem>[];
+        ? List<BookingServiceItem>.from(widget.selectedServices!)
+        : <BookingServiceItem>[];
 
-    final subtotal = activeServices.fold(0.0, (sum, s) => sum + s.price);
+    final serviceStaffNames = <String, String>{};
+    final staffList = sl.isRegistered<StoreStaffBloc>()
+        ? sl<StoreStaffBloc>().state.staffList
+        : const [];
+
+    // Nếu có selectedOption từ API Tra Cứu Slot Khả Dụng (Availability):
+    // Sắp xếp lại danh sách dịch vụ theo đúng thứ tự (sequence) và gán chuyên viên tương ứng
+    if (widget.selectedOption != null &&
+        widget.selectedOption!.items.isNotEmpty) {
+      final sortedOptionItems = List<BookingAvailabilityOptionItemEntity>.from(
+        widget.selectedOption!.items,
+      )..sort((a, b) => a.sequence.compareTo(b.sequence));
+
+      final orderedServices = <BookingServiceItem>[];
+      for (final optItem in sortedOptionItems) {
+        final match = activeServices
+            .where((s) => s.id == optItem.serviceId)
+            .firstOrNull;
+        if (match != null) {
+          orderedServices.add(match);
+        } else {
+          orderedServices.add(
+            BookingServiceItem(
+              id: optItem.serviceId,
+              category: 'General',
+              name: optItem.serviceName ?? 'Dịch vụ',
+              priceDisplay: optItem.estimatedPrice != null
+                  ? '${optItem.estimatedPrice!.toInt()}đ'
+                  : '0đ',
+              duration: '${optItem.durationMinutes} min',
+              price: optItem.estimatedPrice ?? 0,
+              durationMinutes: optItem.durationMinutes,
+            ),
+          );
+        }
+
+        // Tên nhân viên phụ trách dịch vụ này từ kết quả availability
+        if (optItem.staffName != null && optItem.staffName!.isNotEmpty) {
+          serviceStaffNames[optItem.serviceId] = optItem.staffName!;
+        } else if (optItem.staffProfileId != null &&
+            optItem.staffProfileId!.isNotEmpty) {
+          final matchStaff = staffList
+              .where((st) => st.staffProfileId == optItem.staffProfileId)
+              .firstOrNull;
+          serviceStaffNames[optItem.serviceId] =
+              matchStaff?.fullName ?? 'Chuyên viên được phân công';
+        }
+      }
+
+      // Thêm các dịch vụ còn lại (phòng trường hợp có dịch vụ chưa map)
+      for (final s in activeServices) {
+        if (!orderedServices.any((os) => os.id == s.id)) {
+          orderedServices.add(s);
+        }
+      }
+      activeServices = orderedServices;
+    } else {
+      // Fallback khi không có slot từ availability (ví dụ Quick Book)
+      for (final s in activeServices) {
+        final staffId =
+            widget.selectedStaffPerService?[s.id] ?? widget.selectedStaffId;
+        if (staffId != null &&
+            staffId.isNotEmpty &&
+            !staffId.startsWith('unassigned')) {
+          final match = staffList
+              .where((st) => st.staffProfileId == staffId)
+              .firstOrNull;
+          if (match != null) {
+            serviceStaffNames[s.id] = match.fullName;
+          } else {
+            serviceStaffNames[s.id] = 'Chuyên viên đã chọn';
+          }
+        }
+      }
+    }
+
+    final subtotal =
+        (widget.selectedOption?.estimatedPrice != null &&
+            widget.selectedOption!.estimatedPrice! > 0)
+        ? widget.selectedOption!.estimatedPrice!
+        : activeServices.fold(0.0, (sum, s) => sum + s.price);
     final discount = 0.0;
     final total = subtotal - discount;
+
+    String? staffName;
+    if (widget.selectedStaffId != null) {
+      final match = staffList
+          .where((s) => s.staffProfileId == widget.selectedStaffId)
+          .firstOrNull;
+      staffName = match?.fullName ?? 'Chuyên viên đã chọn';
+    }
 
     _detail = BookingDetailData(
       bookingCode:
@@ -161,6 +280,8 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
       discount: discount,
       totalAmount: total,
       paymentStatus: 'Tại salon',
+      staffName: staffName,
+      serviceStaffNames: serviceStaffNames,
     );
   }
 
@@ -209,6 +330,8 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
         discount: _detail.discount,
         totalAmount: _detail.totalAmount,
         paymentStatus: _detail.paymentStatus,
+        staffName: _detail.staffName,
+        serviceStaffNames: _detail.serviceStaffNames,
       );
       _noteController.clear();
     });
@@ -216,13 +339,63 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
   }
 
   void _onConfirm() {
-    final storeId = widget.storeId ?? 'default_store';
-    final serviceIds = _detail.services.map((s) => s.id).toList();
+    // 1. startAt:
+    // Ưu tiên giờ đã chọn từ availability API hoặc lịch hẹn
+    final String? isoDate;
+    if (widget.selectedOption != null &&
+        widget.selectedOption!.startAt.isNotEmpty) {
+      isoDate = widget.selectedOption!.startAt;
+    } else if (widget.startAt != null) {
+      isoDate = widget.startAt!.toUtc().toIso8601String();
+    } else {
+      isoDate = null;
+    }
 
-    // Use the slot picked on the schedule table (sent as UTC ISO-8601).
-    final isoDate = (widget.startAt ?? DateTime.now())
-        .toUtc()
-        .toIso8601String();
+    // 2. Danh sách items: Sắp xếp theo đúng thứ tự (sequence) và thợ của availability API
+    final List<BookingItemParam> items;
+    if (widget.selectedOption != null &&
+        widget.selectedOption!.items.isNotEmpty) {
+      final sortedOptionItems = List<BookingAvailabilityOptionItemEntity>.from(
+        widget.selectedOption!.items,
+      )..sort((a, b) => a.sequence.compareTo(b.sequence));
+
+      items = sortedOptionItems.map((optItem) {
+        final staffId =
+            (optItem.staffProfileId != null &&
+                optItem.staffProfileId!.isNotEmpty &&
+                !optItem.staffProfileId!.startsWith('unassigned'))
+            ? optItem.staffProfileId
+            : (widget.selectedStaffPerService?[optItem.serviceId] ??
+                  widget.selectedStaffId);
+        final cleanStaffId =
+            (staffId != null &&
+                staffId.isNotEmpty &&
+                !staffId.startsWith('unassigned'))
+            ? staffId
+            : null;
+        return BookingItemParam(
+          serviceId: optItem.serviceId,
+          staffProfileId: cleanStaffId,
+        );
+      }).toList();
+    } else {
+      final serviceList = _detail.services;
+      items = serviceList.map((service) {
+        final staffId =
+            widget.selectedStaffPerService?[service.id] ??
+            widget.selectedStaffId;
+        final cleanStaffId =
+            (staffId != null &&
+                staffId.isNotEmpty &&
+                !staffId.startsWith('unassigned'))
+            ? staffId
+            : null;
+        return BookingItemParam(
+          serviceId: service.id,
+          staffProfileId: cleanStaffId,
+        );
+      }).toList();
+    }
 
     final hasBloc =
         context
@@ -231,10 +404,9 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
     if (hasBloc) {
       context.read<CreateBookingBloc>().add(
         SubmitBookingEvent(
-          storeId: storeId,
-          serviceIds: serviceIds.isNotEmpty ? serviceIds : ['srv_default'],
+          storeId: widget.storeId ?? '',
           startAt: isoDate,
-          staffProfileId: widget.selectedStaffId,
+          items: items,
           note: _noteController.text.trim().isNotEmpty
               ? _noteController.text.trim()
               : (_detail.notes.isNotEmpty ? _detail.notes.join('; ') : null),
@@ -275,7 +447,7 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
             context,
             message: 'Booking created successfully (#${booking.bookingCode})',
           );
-          Navigator.of(context).push(
+          Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (_) => BookingResultView(
                 isSuccess: true,
@@ -300,9 +472,18 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
   }
 
   Widget _buildScaffold(BuildContext context, {required bool isSubmitting}) {
+    final isVi = Localizations.localeOf(context).languageCode == 'vi';
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      appBar: AppAppBar(title: 'Booking detail', onMorePressed: () {}),
+      appBar: AppAppBar(
+        title: isVi ? 'Chi tiết lịch hẹn' : 'Booking Detail',
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(LucideIcons.arrow_left, color: Color(0xFF1E2022)),
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
+      ),
       body: BookingDetailBodyView(
         detail: _detail,
         noteController: _noteController,
@@ -333,13 +514,13 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
             // Outlined Back Button
             Expanded(
               child: AppButton(
-                text: 'Back',
+                text: isVi ? 'Quay lại' : 'Back',
                 onPressed: isSubmitting
                     ? null
                     : () => Navigator.of(context).maybePop(),
                 variant: AppButtonVariant.outline,
                 textColor: const Color(0xFFBA4A32),
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(16),
                 height: 48,
               ),
             ),
@@ -348,9 +529,11 @@ class _BookingDetailContentViewState extends State<_BookingDetailContentView> {
             // Coral Confirm Button
             Expanded(
               child: AppButton(
-                text: 'Confirm',
+                text: isVi ? 'Xác nhận đặt lịch' : 'Confirm',
                 isLoading: isSubmitting,
                 backgroundColor: _coralColor,
+                borderRadius: BorderRadius.circular(16),
+                height: 48,
                 onPressed: isSubmitting ? null : _onConfirm,
               ),
             ),

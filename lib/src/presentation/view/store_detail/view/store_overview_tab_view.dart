@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spa_booking/src/domain/entities/store/store.dart';
 import '../widgets/store_about_card.dart';
-import '../widgets/store_available_now_card.dart';
 import '../widgets/store_location_card.dart';
 import '../widgets/store_opening_hours_card.dart';
-import '../widgets/store_overview_services_card.dart';
-import '../utils/store_operating_hours_helper.dart';
 
 class StoreOverviewTabView extends StatelessWidget {
   final StoreFullDetailEntity store;
@@ -24,10 +21,6 @@ class StoreOverviewTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final storeDetail = store;
-    final operatingStatus = StoreOperatingHoursHelper.calculateStatus(
-      businessHours: store.businessHours?.days,
-      context: context,
-    );
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -36,27 +29,11 @@ class StoreOverviewTabView extends StatelessWidget {
         children: [
           const SizedBox(height: 16),
 
-          // 1. Available Now / Advance Booking Card
-          StoreAvailableNowCard(
-            availableSeats: 4,
-            estimatedWait: '~5 min',
-            isStoreOpen: operatingStatus.isOpen,
-            onBookSeat: onBookSeat,
-          ),
+          // 1. Opening Hours Card (Giờ mở cửa)
+          StoreOpeningHoursCard(openingHours: store.businessHours?.days ?? []),
           const SizedBox(height: 16),
 
-          // 2. About Card
-          StoreAboutCard(description: storeDetail.description ?? ''),
-          const SizedBox(height: 16),
-
-          // 3. Services Preview Card
-          StoreOverviewServicesCard(
-            services: store.services,
-            onViewAllServices: onViewAllServices,
-          ),
-          const SizedBox(height: 16),
-
-          // 4. Location Card
+          // 2. Location Card (Vị trí & Bản đồ)
           StoreLocationCard(
             onGetDirections: onGetDirections,
             longtitude: storeDetail.longitude ?? 0,
@@ -67,13 +44,9 @@ class StoreOverviewTabView extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          // 5. Opening Hours Card
-          StoreOpeningHoursCard(openingHours: store.businessHours?.days ?? []),
-          const SizedBox(height: 16),
-
-          // // 6. Information Card
-          // StoreInformationCard(information: store.information),
-          // const SizedBox(height: 24),
+          // 3. About Card (Mô tả)
+          StoreAboutCard(description: storeDetail.description ?? ''),
+          const SizedBox(height: 24),
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:spa_booking/src/core/error/failure.dart';
 import '../../entities/booking/booking_entity.dart';
+import '../../entities/booking/booking_item_param.dart';
 import '../../repositories/booking/booking_repository.dart';
 
 class CreateBookingUseCase {
@@ -10,15 +11,17 @@ class CreateBookingUseCase {
 
   Future<Either<Failure, BookingEntity>> call({
     required String storeId,
-    required List<String> serviceIds,
-    required String startAt,
+    String? startAt,
+    List<BookingItemParam>? items,
+    List<String>? serviceIds,
     String? staffProfileId,
     String? note,
   }) {
     return _repository.createBooking(
       storeId: storeId,
-      serviceIds: serviceIds,
       startAt: startAt,
+      items: items,
+      serviceIds: serviceIds,
       staffProfileId: staffProfileId,
       note: note,
     );

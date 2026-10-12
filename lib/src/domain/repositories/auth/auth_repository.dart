@@ -79,4 +79,49 @@ abstract interface class AuthRepository {
     required String otp,
     required String newPassword,
   });
+
+  // Customer OTP Auth
+  Future<Either<Failure, RequestOtpResult>> sendRegisterOtp({
+    String? phoneNumber,
+    String? email,
+  });
+
+  Future<Either<Failure, AuthSessionEntity>> registerWithOtp({
+    String? phoneNumber,
+    String? email,
+    required String otp,
+    required String name,
+  });
+
+  Future<Either<Failure, RequestOtpResult>> sendLoginOtp({
+    required String identifier,
+  });
+
+  Future<Either<Failure, AuthSessionEntity>> loginWithOtp({
+    required String identifier,
+    required String otp,
+  });
+
+  // Contact Info Management
+  Future<Either<Failure, RequestOtpResult>> requestChangeEmail({
+    required String newEmail,
+  });
+
+  Future<Either<Failure, User>> verifyChangeEmail({
+    required String newEmail,
+    required String otp,
+  });
+
+  Future<Either<Failure, RequestOtpResult>> requestChangePhone({
+    required String newPhone,
+  });
+
+  Future<Either<Failure, User>> verifyChangePhone({
+    required String newPhone,
+    required String otp,
+  });
+
+  Future<Either<Failure, Unit>> removeCustomerEmail();
+
+  Future<Either<Failure, Unit>> removeCustomerPhone();
 }

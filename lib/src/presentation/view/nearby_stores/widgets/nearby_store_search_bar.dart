@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
+import '../../../../shared/shared.dart';
 
 class NearbyStoreSearchHeader extends StatelessWidget {
   final TextEditingController searchController;
@@ -9,6 +9,7 @@ class NearbyStoreSearchHeader extends StatelessWidget {
   final String activeFilter;
   final ValueChanged<String> onSelectFilter;
   final int totalResults;
+  final VoidCallback? onBack;
 
   const NearbyStoreSearchHeader({
     super.key,
@@ -19,11 +20,11 @@ class NearbyStoreSearchHeader extends StatelessWidget {
     required this.activeFilter,
     required this.onSelectFilter,
     required this.totalResults,
+    this.onBack,
   });
 
   static const Color _primaryCoral = Color(0xFFFC6E58);
   static const Color _darkEspresso = Color(0xFF2C2420);
-  static const Color _secondaryText = Color(0xFF756C64);
 
   static const List<String> _filters = [
     'Tất cả',
@@ -42,100 +43,72 @@ class NearbyStoreSearchHeader extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Floating Search Bar Card
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: const Color(0xFFF0EBE6), width: 1.2),
-            boxShadow: [
-              BoxShadow(
-                color: _darkEspresso.withValues(alpha: 0.08),
-                blurRadius: 18,
-                offset: const Offset(0, 6),
-              ),
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
-                blurRadius: 6,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
+        // Search Row: Back Button + AppSearchBar component
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              const SizedBox(width: 14),
-              const Icon(LucideIcons.search, size: 20, color: _primaryCoral),
-              const SizedBox(width: 10),
-              Expanded(
-                child: TextField(
-                  controller: searchController,
-                  onChanged: onSearchChanged,
-                  style: const TextStyle(
-                    fontSize: 14.5,
-                    fontWeight: FontWeight.w600,
-                    color: _darkEspresso,
-                  ),
-                  decoration: const InputDecoration(
-                    hintText: 'Tìm kiếm spa, salon, dịch vụ gần bạn...',
-                    hintStyle: TextStyle(
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFFA59B91),
-                    ),
-                    border: InputBorder.none,
-                    isDense: true,
-                    contentPadding: EdgeInsets.symmetric(vertical: 14),
-                  ),
-                ),
-              ),
-              if (searchController.text.isNotEmpty)
-                IconButton(
-                  icon: const Icon(
-                    LucideIcons.x,
-                    size: 18,
-                    color: _secondaryText,
-                  ),
-                  onPressed: onClearSearch,
-                  splashRadius: 18,
-                ),
-              Container(height: 24, width: 1, color: const Color(0xFFEFE8DF)),
-              // Filter Button
+              // Back Button
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: onOpenFilter,
-                  borderRadius: const BorderRadius.horizontal(
-                    right: Radius.circular(22),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 13,
-                    ),
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        const Icon(
-                          LucideIcons.sliders_horizontal,
-                          size: 19,
-                          color: _darkEspresso,
+                  onTap: () {
+                    if (onBack != null) {
+                      onBack!();
+                    } else {
+                      Navigator.of(context).maybePop();
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(24),
+                  child: Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFFE4DED6),
+                        width: 1.2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: _darkEspresso.withValues(alpha: 0.08),
+                          blurRadius: 18,
+                          offset: const Offset(0, 6),
                         ),
-                        if (activeFilter != 'Tất cả')
-                          Positioned(
-                            top: -2,
-                            right: -2,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: _primaryCoral,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          ),
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.03),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
                       ],
                     ),
+                    child: const Center(
+                      child: Icon(
+                        LucideIcons.arrow_left,
+                        size: 20,
+                        color: _darkEspresso,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+
+              // AppSearchBar component
+              Expanded(
+                child: AppSearchBar(
+                  controller: searchController,
+                  hintText: 'Tìm kiếm spa, salon gần bạn...',
+                  onChanged: onSearchChanged,
+                  onClear: onClearSearch,
+                  onFilterTap: onOpenFilter,
+                  showFilterButton: true,
+                  isFilterActive: activeFilter != 'Tất cả',
+                  prefixIcon: const Icon(
+                    LucideIcons.search,
+                    size: 19,
+                    color: _primaryCoral,
                   ),
                 ),
               ),

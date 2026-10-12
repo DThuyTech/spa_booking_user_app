@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:spa_booking/src/domain/entities/booking/booking_entity.dart';
+import 'package:spa_booking/src/domain/entities/booking/booking_item_param.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../domain/usecases/booking/create_booking_usecase.dart';
 
@@ -26,8 +27,9 @@ class CreateBookingBloc extends Bloc<CreateBookingEvent, CreateBookingState> {
 
     final result = await createBookingUseCase(
       storeId: event.storeId,
-      serviceIds: event.serviceIds,
       startAt: event.startAt,
+      items: event.items,
+      serviceIds: event.serviceIds,
       staffProfileId: event.staffProfileId,
       note: event.note,
     );

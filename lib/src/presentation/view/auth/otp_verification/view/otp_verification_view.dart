@@ -13,21 +13,39 @@ import '../body_view/otp_verification_body_view.dart';
 
 @RoutePage()
 class OtpVerificationPage extends StatelessWidget {
-  final String phone;
+  final String? phone;
+  final String? identifier;
+  final String? name;
+  final String? mockOtp;
+  final OtpFlowType flowType;
   final int expiresInSeconds;
 
   const OtpVerificationPage({
     super.key,
-    required this.phone,
+    this.phone,
+    this.identifier,
+    this.name,
+    this.mockOtp,
+    this.flowType = OtpFlowType.login,
     this.expiresInSeconds = 300,
   });
 
   @override
   Widget build(BuildContext context) {
+    final effectiveId = (identifier != null && identifier!.isNotEmpty)
+        ? identifier!
+        : (phone ?? '');
+
     return BlocProvider(
       create: (_) => sl<OtpVerificationBloc>()
         ..add(
-          OtpStarted(phone: phone, initialCountdownSeconds: expiresInSeconds),
+          OtpStarted(
+            identifier: effectiveId,
+            name: name,
+            mockOtp: mockOtp,
+            flowType: flowType,
+            initialCountdownSeconds: expiresInSeconds,
+          ),
         ),
       child: const OtpVerificationView(),
     );
@@ -70,6 +88,11 @@ class OtpVerificationView extends StatelessWidget {
           if (context.mounted) {
             // Navigate to root / authenticated app
             context.router.replaceAll([const RootRoute()]);
+          }
+        } else {
+          // Contact info change verified
+          if (context.mounted) {
+            context.router.maybePop(true);
           }
         }
       },

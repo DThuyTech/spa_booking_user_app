@@ -30,11 +30,11 @@ class StoreAvailableNowCard extends StatelessWidget {
 
     final subtitle = isStoreOpen
         ? (isVi
-            ? 'Còn $availableSeats ghế trống • Thời gian chờ: $estimatedWait'
-            : '$availableSeats seats available • Estimated wait: $estimatedWait')
+              ? 'Còn $availableSeats ghế trống • Thời gian chờ: $estimatedWait'
+              : '$availableSeats seats available • Estimated wait: $estimatedWait')
         : (isVi
-            ? 'Salon đang tạm đóng cửa. Bạn vẫn có thể chọn dịch vụ & đặt lịch trước cho các ngày tiếp theo!'
-            : 'Salon is currently closed. You can book an appointment in advance for upcoming days!');
+              ? 'Salon đang tạm đóng cửa. Bạn vẫn có thể chọn dịch vụ & đặt lịch trước cho các ngày tiếp theo!'
+              : 'Salon is currently closed. You can book an appointment in advance for upcoming days!');
 
     final buttonText = isStoreOpen
         ? (isVi ? 'Đặt chỗ ngay' : 'Book a seat')

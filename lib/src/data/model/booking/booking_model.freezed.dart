@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookingServiceItemModel {
 
- String get serviceId; String get name; double get price; int get duration;
+ String get serviceId; String get name; double get price; int get duration; String? get staffProfileId; String? get staffName; String? get startAt; String? get endAt; int? get sequence;
 /// Create a copy of BookingServiceItemModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $BookingServiceItemModelCopyWith<BookingServiceItemModel> get copyWith => _$Book
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingServiceItemModel&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.duration, duration) || other.duration == duration));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingServiceItemModel&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.staffProfileId, staffProfileId) || other.staffProfileId == staffProfileId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.endAt, endAt) || other.endAt == endAt)&&(identical(other.sequence, sequence) || other.sequence == sequence));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,serviceId,name,price,duration);
+int get hashCode => Object.hash(runtimeType,serviceId,name,price,duration,staffProfileId,staffName,startAt,endAt,sequence);
 
 @override
 String toString() {
-  return 'BookingServiceItemModel(serviceId: $serviceId, name: $name, price: $price, duration: $duration)';
+  return 'BookingServiceItemModel(serviceId: $serviceId, name: $name, price: $price, duration: $duration, staffProfileId: $staffProfileId, staffName: $staffName, startAt: $startAt, endAt: $endAt, sequence: $sequence)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $BookingServiceItemModelCopyWith<$Res>  {
   factory $BookingServiceItemModelCopyWith(BookingServiceItemModel value, $Res Function(BookingServiceItemModel) _then) = _$BookingServiceItemModelCopyWithImpl;
 @useResult
 $Res call({
- String serviceId, String name, double price, int duration
+ String serviceId, String name, double price, int duration, String? staffProfileId, String? staffName, String? startAt, String? endAt, int? sequence
 });
 
 
@@ -62,13 +62,18 @@ class _$BookingServiceItemModelCopyWithImpl<$Res>
 
 /// Create a copy of BookingServiceItemModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? serviceId = null,Object? name = null,Object? price = null,Object? duration = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? serviceId = null,Object? name = null,Object? price = null,Object? duration = null,Object? staffProfileId = freezed,Object? staffName = freezed,Object? startAt = freezed,Object? endAt = freezed,Object? sequence = freezed,}) {
   return _then(_self.copyWith(
 serviceId: null == serviceId ? _self.serviceId : serviceId // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
 as double,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
-as int,
+as int,staffProfileId: freezed == staffProfileId ? _self.staffProfileId : staffProfileId // ignore: cast_nullable_to_non_nullable
+as String?,staffName: freezed == staffName ? _self.staffName : staffName // ignore: cast_nullable_to_non_nullable
+as String?,startAt: freezed == startAt ? _self.startAt : startAt // ignore: cast_nullable_to_non_nullable
+as String?,endAt: freezed == endAt ? _self.endAt : endAt // ignore: cast_nullable_to_non_nullable
+as String?,sequence: freezed == sequence ? _self.sequence : sequence // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -153,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String serviceId,  String name,  double price,  int duration)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String serviceId,  String name,  double price,  int duration,  String? staffProfileId,  String? staffName,  String? startAt,  String? endAt,  int? sequence)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingServiceItemModel() when $default != null:
-return $default(_that.serviceId,_that.name,_that.price,_that.duration);case _:
+return $default(_that.serviceId,_that.name,_that.price,_that.duration,_that.staffProfileId,_that.staffName,_that.startAt,_that.endAt,_that.sequence);case _:
   return orElse();
 
 }
@@ -174,10 +179,10 @@ return $default(_that.serviceId,_that.name,_that.price,_that.duration);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String serviceId,  String name,  double price,  int duration)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String serviceId,  String name,  double price,  int duration,  String? staffProfileId,  String? staffName,  String? startAt,  String? endAt,  int? sequence)  $default,) {final _that = this;
 switch (_that) {
 case _BookingServiceItemModel():
-return $default(_that.serviceId,_that.name,_that.price,_that.duration);case _:
+return $default(_that.serviceId,_that.name,_that.price,_that.duration,_that.staffProfileId,_that.staffName,_that.startAt,_that.endAt,_that.sequence);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +199,10 @@ return $default(_that.serviceId,_that.name,_that.price,_that.duration);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String serviceId,  String name,  double price,  int duration)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String serviceId,  String name,  double price,  int duration,  String? staffProfileId,  String? staffName,  String? startAt,  String? endAt,  int? sequence)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingServiceItemModel() when $default != null:
-return $default(_that.serviceId,_that.name,_that.price,_that.duration);case _:
+return $default(_that.serviceId,_that.name,_that.price,_that.duration,_that.staffProfileId,_that.staffName,_that.startAt,_that.endAt,_that.sequence);case _:
   return null;
 
 }
@@ -209,13 +214,18 @@ return $default(_that.serviceId,_that.name,_that.price,_that.duration);case _:
 
 
 class _BookingServiceItemModel implements BookingServiceItemModel {
-  const _BookingServiceItemModel({required this.serviceId, required this.name, required this.price, this.duration = 60});
+  const _BookingServiceItemModel({required this.serviceId, required this.name, required this.price, this.duration = 60, this.staffProfileId, this.staffName, this.startAt, this.endAt, this.sequence});
   
 
 @override final  String serviceId;
 @override final  String name;
 @override final  double price;
 @override@JsonKey() final  int duration;
+@override final  String? staffProfileId;
+@override final  String? staffName;
+@override final  String? startAt;
+@override final  String? endAt;
+@override final  int? sequence;
 
 /// Create a copy of BookingServiceItemModel
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +237,16 @@ _$BookingServiceItemModelCopyWith<_BookingServiceItemModel> get copyWith => __$B
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingServiceItemModel&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.duration, duration) || other.duration == duration));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingServiceItemModel&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.staffProfileId, staffProfileId) || other.staffProfileId == staffProfileId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.endAt, endAt) || other.endAt == endAt)&&(identical(other.sequence, sequence) || other.sequence == sequence));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,serviceId,name,price,duration);
+int get hashCode => Object.hash(runtimeType,serviceId,name,price,duration,staffProfileId,staffName,startAt,endAt,sequence);
 
 @override
 String toString() {
-  return 'BookingServiceItemModel(serviceId: $serviceId, name: $name, price: $price, duration: $duration)';
+  return 'BookingServiceItemModel(serviceId: $serviceId, name: $name, price: $price, duration: $duration, staffProfileId: $staffProfileId, staffName: $staffName, startAt: $startAt, endAt: $endAt, sequence: $sequence)';
 }
 
 
@@ -247,7 +257,7 @@ abstract mixin class _$BookingServiceItemModelCopyWith<$Res> implements $Booking
   factory _$BookingServiceItemModelCopyWith(_BookingServiceItemModel value, $Res Function(_BookingServiceItemModel) _then) = __$BookingServiceItemModelCopyWithImpl;
 @override @useResult
 $Res call({
- String serviceId, String name, double price, int duration
+ String serviceId, String name, double price, int duration, String? staffProfileId, String? staffName, String? startAt, String? endAt, int? sequence
 });
 
 
@@ -264,13 +274,18 @@ class __$BookingServiceItemModelCopyWithImpl<$Res>
 
 /// Create a copy of BookingServiceItemModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? serviceId = null,Object? name = null,Object? price = null,Object? duration = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? serviceId = null,Object? name = null,Object? price = null,Object? duration = null,Object? staffProfileId = freezed,Object? staffName = freezed,Object? startAt = freezed,Object? endAt = freezed,Object? sequence = freezed,}) {
   return _then(_BookingServiceItemModel(
 serviceId: null == serviceId ? _self.serviceId : serviceId // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
 as double,duration: null == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
-as int,
+as int,staffProfileId: freezed == staffProfileId ? _self.staffProfileId : staffProfileId // ignore: cast_nullable_to_non_nullable
+as String?,staffName: freezed == staffName ? _self.staffName : staffName // ignore: cast_nullable_to_non_nullable
+as String?,startAt: freezed == startAt ? _self.startAt : startAt // ignore: cast_nullable_to_non_nullable
+as String?,endAt: freezed == endAt ? _self.endAt : endAt // ignore: cast_nullable_to_non_nullable
+as String?,sequence: freezed == sequence ? _self.sequence : sequence // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -1344,7 +1359,7 @@ as bool,
 /// @nodoc
 mixin _$BookingModel {
 
- String get id; String get bookingCode; String? get storeId; String? get customerId; String get status; String get paymentStatus; String get startAt; String get endAt; double get totalDuration; double get totalAmount; List<BookingServiceItemModel> get services; BookingStaffSnapshotModel? get staffSnapshot; BookingCustomerSnapshotModel? get customerSnapshot; BookingStoreSnapshotModel? get store; BookingActionsModel? get actions; String? get note; String? get cancellationReason; String? get cancelledAt; String? get createdAt;
+ String get id; String get bookingCode; String? get storeId; String? get customerId; String get status; String get paymentStatus; String get startAt; String get endAt; double get totalDuration; double get totalAmount; double? get subtotal; double? get discountAmount; String? get paymentMethod; String? get currency; List<String>? get assignedStaffIds; List<BookingServiceItemModel> get services; BookingStaffSnapshotModel? get staffSnapshot; BookingCustomerSnapshotModel? get customerSnapshot; BookingStoreSnapshotModel? get store; BookingActionsModel? get actions; String? get note; String? get cancellationReason; String? get cancelledAt; String? get createdAt;
 /// Create a copy of BookingModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1355,16 +1370,16 @@ $BookingModelCopyWith<BookingModel> get copyWith => _$BookingModelCopyWithImpl<B
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingModel&&(identical(other.id, id) || other.id == id)&&(identical(other.bookingCode, bookingCode) || other.bookingCode == bookingCode)&&(identical(other.storeId, storeId) || other.storeId == storeId)&&(identical(other.customerId, customerId) || other.customerId == customerId)&&(identical(other.status, status) || other.status == status)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.endAt, endAt) || other.endAt == endAt)&&(identical(other.totalDuration, totalDuration) || other.totalDuration == totalDuration)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&const DeepCollectionEquality().equals(other.services, services)&&(identical(other.staffSnapshot, staffSnapshot) || other.staffSnapshot == staffSnapshot)&&(identical(other.customerSnapshot, customerSnapshot) || other.customerSnapshot == customerSnapshot)&&(identical(other.store, store) || other.store == store)&&(identical(other.actions, actions) || other.actions == actions)&&(identical(other.note, note) || other.note == note)&&(identical(other.cancellationReason, cancellationReason) || other.cancellationReason == cancellationReason)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingModel&&(identical(other.id, id) || other.id == id)&&(identical(other.bookingCode, bookingCode) || other.bookingCode == bookingCode)&&(identical(other.storeId, storeId) || other.storeId == storeId)&&(identical(other.customerId, customerId) || other.customerId == customerId)&&(identical(other.status, status) || other.status == status)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.endAt, endAt) || other.endAt == endAt)&&(identical(other.totalDuration, totalDuration) || other.totalDuration == totalDuration)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.currency, currency) || other.currency == currency)&&const DeepCollectionEquality().equals(other.assignedStaffIds, assignedStaffIds)&&const DeepCollectionEquality().equals(other.services, services)&&(identical(other.staffSnapshot, staffSnapshot) || other.staffSnapshot == staffSnapshot)&&(identical(other.customerSnapshot, customerSnapshot) || other.customerSnapshot == customerSnapshot)&&(identical(other.store, store) || other.store == store)&&(identical(other.actions, actions) || other.actions == actions)&&(identical(other.note, note) || other.note == note)&&(identical(other.cancellationReason, cancellationReason) || other.cancellationReason == cancellationReason)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,bookingCode,storeId,customerId,status,paymentStatus,startAt,endAt,totalDuration,totalAmount,const DeepCollectionEquality().hash(services),staffSnapshot,customerSnapshot,store,actions,note,cancellationReason,cancelledAt,createdAt]);
+int get hashCode => Object.hashAll([runtimeType,id,bookingCode,storeId,customerId,status,paymentStatus,startAt,endAt,totalDuration,totalAmount,subtotal,discountAmount,paymentMethod,currency,const DeepCollectionEquality().hash(assignedStaffIds),const DeepCollectionEquality().hash(services),staffSnapshot,customerSnapshot,store,actions,note,cancellationReason,cancelledAt,createdAt]);
 
 @override
 String toString() {
-  return 'BookingModel(id: $id, bookingCode: $bookingCode, storeId: $storeId, customerId: $customerId, status: $status, paymentStatus: $paymentStatus, startAt: $startAt, endAt: $endAt, totalDuration: $totalDuration, totalAmount: $totalAmount, services: $services, staffSnapshot: $staffSnapshot, customerSnapshot: $customerSnapshot, store: $store, actions: $actions, note: $note, cancellationReason: $cancellationReason, cancelledAt: $cancelledAt, createdAt: $createdAt)';
+  return 'BookingModel(id: $id, bookingCode: $bookingCode, storeId: $storeId, customerId: $customerId, status: $status, paymentStatus: $paymentStatus, startAt: $startAt, endAt: $endAt, totalDuration: $totalDuration, totalAmount: $totalAmount, subtotal: $subtotal, discountAmount: $discountAmount, paymentMethod: $paymentMethod, currency: $currency, assignedStaffIds: $assignedStaffIds, services: $services, staffSnapshot: $staffSnapshot, customerSnapshot: $customerSnapshot, store: $store, actions: $actions, note: $note, cancellationReason: $cancellationReason, cancelledAt: $cancelledAt, createdAt: $createdAt)';
 }
 
 
@@ -1375,7 +1390,7 @@ abstract mixin class $BookingModelCopyWith<$Res>  {
   factory $BookingModelCopyWith(BookingModel value, $Res Function(BookingModel) _then) = _$BookingModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String bookingCode, String? storeId, String? customerId, String status, String paymentStatus, String startAt, String endAt, double totalDuration, double totalAmount, List<BookingServiceItemModel> services, BookingStaffSnapshotModel? staffSnapshot, BookingCustomerSnapshotModel? customerSnapshot, BookingStoreSnapshotModel? store, BookingActionsModel? actions, String? note, String? cancellationReason, String? cancelledAt, String? createdAt
+ String id, String bookingCode, String? storeId, String? customerId, String status, String paymentStatus, String startAt, String endAt, double totalDuration, double totalAmount, double? subtotal, double? discountAmount, String? paymentMethod, String? currency, List<String>? assignedStaffIds, List<BookingServiceItemModel> services, BookingStaffSnapshotModel? staffSnapshot, BookingCustomerSnapshotModel? customerSnapshot, BookingStoreSnapshotModel? store, BookingActionsModel? actions, String? note, String? cancellationReason, String? cancelledAt, String? createdAt
 });
 
 
@@ -1392,7 +1407,7 @@ class _$BookingModelCopyWithImpl<$Res>
 
 /// Create a copy of BookingModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? bookingCode = null,Object? storeId = freezed,Object? customerId = freezed,Object? status = null,Object? paymentStatus = null,Object? startAt = null,Object? endAt = null,Object? totalDuration = null,Object? totalAmount = null,Object? services = null,Object? staffSnapshot = freezed,Object? customerSnapshot = freezed,Object? store = freezed,Object? actions = freezed,Object? note = freezed,Object? cancellationReason = freezed,Object? cancelledAt = freezed,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? bookingCode = null,Object? storeId = freezed,Object? customerId = freezed,Object? status = null,Object? paymentStatus = null,Object? startAt = null,Object? endAt = null,Object? totalDuration = null,Object? totalAmount = null,Object? subtotal = freezed,Object? discountAmount = freezed,Object? paymentMethod = freezed,Object? currency = freezed,Object? assignedStaffIds = freezed,Object? services = null,Object? staffSnapshot = freezed,Object? customerSnapshot = freezed,Object? store = freezed,Object? actions = freezed,Object? note = freezed,Object? cancellationReason = freezed,Object? cancelledAt = freezed,Object? createdAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,bookingCode: null == bookingCode ? _self.bookingCode : bookingCode // ignore: cast_nullable_to_non_nullable
@@ -1404,7 +1419,12 @@ as String,startAt: null == startAt ? _self.startAt : startAt // ignore: cast_nul
 as String,endAt: null == endAt ? _self.endAt : endAt // ignore: cast_nullable_to_non_nullable
 as String,totalDuration: null == totalDuration ? _self.totalDuration : totalDuration // ignore: cast_nullable_to_non_nullable
 as double,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
-as double,services: null == services ? _self.services : services // ignore: cast_nullable_to_non_nullable
+as double,subtotal: freezed == subtotal ? _self.subtotal : subtotal // ignore: cast_nullable_to_non_nullable
+as double?,discountAmount: freezed == discountAmount ? _self.discountAmount : discountAmount // ignore: cast_nullable_to_non_nullable
+as double?,paymentMethod: freezed == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
+as String?,currency: freezed == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
+as String?,assignedStaffIds: freezed == assignedStaffIds ? _self.assignedStaffIds : assignedStaffIds // ignore: cast_nullable_to_non_nullable
+as List<String>?,services: null == services ? _self.services : services // ignore: cast_nullable_to_non_nullable
 as List<BookingServiceItemModel>,staffSnapshot: freezed == staffSnapshot ? _self.staffSnapshot : staffSnapshot // ignore: cast_nullable_to_non_nullable
 as BookingStaffSnapshotModel?,customerSnapshot: freezed == customerSnapshot ? _self.customerSnapshot : customerSnapshot // ignore: cast_nullable_to_non_nullable
 as BookingCustomerSnapshotModel?,store: freezed == store ? _self.store : store // ignore: cast_nullable_to_non_nullable
@@ -1546,10 +1566,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String bookingCode,  String? storeId,  String? customerId,  String status,  String paymentStatus,  String startAt,  String endAt,  double totalDuration,  double totalAmount,  List<BookingServiceItemModel> services,  BookingStaffSnapshotModel? staffSnapshot,  BookingCustomerSnapshotModel? customerSnapshot,  BookingStoreSnapshotModel? store,  BookingActionsModel? actions,  String? note,  String? cancellationReason,  String? cancelledAt,  String? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String bookingCode,  String? storeId,  String? customerId,  String status,  String paymentStatus,  String startAt,  String endAt,  double totalDuration,  double totalAmount,  double? subtotal,  double? discountAmount,  String? paymentMethod,  String? currency,  List<String>? assignedStaffIds,  List<BookingServiceItemModel> services,  BookingStaffSnapshotModel? staffSnapshot,  BookingCustomerSnapshotModel? customerSnapshot,  BookingStoreSnapshotModel? store,  BookingActionsModel? actions,  String? note,  String? cancellationReason,  String? cancelledAt,  String? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingModel() when $default != null:
-return $default(_that.id,_that.bookingCode,_that.storeId,_that.customerId,_that.status,_that.paymentStatus,_that.startAt,_that.endAt,_that.totalDuration,_that.totalAmount,_that.services,_that.staffSnapshot,_that.customerSnapshot,_that.store,_that.actions,_that.note,_that.cancellationReason,_that.cancelledAt,_that.createdAt);case _:
+return $default(_that.id,_that.bookingCode,_that.storeId,_that.customerId,_that.status,_that.paymentStatus,_that.startAt,_that.endAt,_that.totalDuration,_that.totalAmount,_that.subtotal,_that.discountAmount,_that.paymentMethod,_that.currency,_that.assignedStaffIds,_that.services,_that.staffSnapshot,_that.customerSnapshot,_that.store,_that.actions,_that.note,_that.cancellationReason,_that.cancelledAt,_that.createdAt);case _:
   return orElse();
 
 }
@@ -1567,10 +1587,10 @@ return $default(_that.id,_that.bookingCode,_that.storeId,_that.customerId,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String bookingCode,  String? storeId,  String? customerId,  String status,  String paymentStatus,  String startAt,  String endAt,  double totalDuration,  double totalAmount,  List<BookingServiceItemModel> services,  BookingStaffSnapshotModel? staffSnapshot,  BookingCustomerSnapshotModel? customerSnapshot,  BookingStoreSnapshotModel? store,  BookingActionsModel? actions,  String? note,  String? cancellationReason,  String? cancelledAt,  String? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String bookingCode,  String? storeId,  String? customerId,  String status,  String paymentStatus,  String startAt,  String endAt,  double totalDuration,  double totalAmount,  double? subtotal,  double? discountAmount,  String? paymentMethod,  String? currency,  List<String>? assignedStaffIds,  List<BookingServiceItemModel> services,  BookingStaffSnapshotModel? staffSnapshot,  BookingCustomerSnapshotModel? customerSnapshot,  BookingStoreSnapshotModel? store,  BookingActionsModel? actions,  String? note,  String? cancellationReason,  String? cancelledAt,  String? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _BookingModel():
-return $default(_that.id,_that.bookingCode,_that.storeId,_that.customerId,_that.status,_that.paymentStatus,_that.startAt,_that.endAt,_that.totalDuration,_that.totalAmount,_that.services,_that.staffSnapshot,_that.customerSnapshot,_that.store,_that.actions,_that.note,_that.cancellationReason,_that.cancelledAt,_that.createdAt);case _:
+return $default(_that.id,_that.bookingCode,_that.storeId,_that.customerId,_that.status,_that.paymentStatus,_that.startAt,_that.endAt,_that.totalDuration,_that.totalAmount,_that.subtotal,_that.discountAmount,_that.paymentMethod,_that.currency,_that.assignedStaffIds,_that.services,_that.staffSnapshot,_that.customerSnapshot,_that.store,_that.actions,_that.note,_that.cancellationReason,_that.cancelledAt,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1587,10 +1607,10 @@ return $default(_that.id,_that.bookingCode,_that.storeId,_that.customerId,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String bookingCode,  String? storeId,  String? customerId,  String status,  String paymentStatus,  String startAt,  String endAt,  double totalDuration,  double totalAmount,  List<BookingServiceItemModel> services,  BookingStaffSnapshotModel? staffSnapshot,  BookingCustomerSnapshotModel? customerSnapshot,  BookingStoreSnapshotModel? store,  BookingActionsModel? actions,  String? note,  String? cancellationReason,  String? cancelledAt,  String? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String bookingCode,  String? storeId,  String? customerId,  String status,  String paymentStatus,  String startAt,  String endAt,  double totalDuration,  double totalAmount,  double? subtotal,  double? discountAmount,  String? paymentMethod,  String? currency,  List<String>? assignedStaffIds,  List<BookingServiceItemModel> services,  BookingStaffSnapshotModel? staffSnapshot,  BookingCustomerSnapshotModel? customerSnapshot,  BookingStoreSnapshotModel? store,  BookingActionsModel? actions,  String? note,  String? cancellationReason,  String? cancelledAt,  String? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingModel() when $default != null:
-return $default(_that.id,_that.bookingCode,_that.storeId,_that.customerId,_that.status,_that.paymentStatus,_that.startAt,_that.endAt,_that.totalDuration,_that.totalAmount,_that.services,_that.staffSnapshot,_that.customerSnapshot,_that.store,_that.actions,_that.note,_that.cancellationReason,_that.cancelledAt,_that.createdAt);case _:
+return $default(_that.id,_that.bookingCode,_that.storeId,_that.customerId,_that.status,_that.paymentStatus,_that.startAt,_that.endAt,_that.totalDuration,_that.totalAmount,_that.subtotal,_that.discountAmount,_that.paymentMethod,_that.currency,_that.assignedStaffIds,_that.services,_that.staffSnapshot,_that.customerSnapshot,_that.store,_that.actions,_that.note,_that.cancellationReason,_that.cancelledAt,_that.createdAt);case _:
   return null;
 
 }
@@ -1602,7 +1622,7 @@ return $default(_that.id,_that.bookingCode,_that.storeId,_that.customerId,_that.
 
 
 class _BookingModel implements BookingModel {
-  const _BookingModel({required this.id, required this.bookingCode, this.storeId, this.customerId, required this.status, this.paymentStatus = 'UNPAID', required this.startAt, required this.endAt, this.totalDuration = 0, this.totalAmount = 0, final  List<BookingServiceItemModel> services = const [], this.staffSnapshot, this.customerSnapshot, this.store, this.actions, this.note, this.cancellationReason, this.cancelledAt, this.createdAt}): _services = services;
+  const _BookingModel({required this.id, required this.bookingCode, this.storeId, this.customerId, required this.status, this.paymentStatus = 'UNPAID', required this.startAt, required this.endAt, this.totalDuration = 0, this.totalAmount = 0, this.subtotal, this.discountAmount, this.paymentMethod, this.currency, final  List<String>? assignedStaffIds, final  List<BookingServiceItemModel> services = const [], this.staffSnapshot, this.customerSnapshot, this.store, this.actions, this.note, this.cancellationReason, this.cancelledAt, this.createdAt}): _assignedStaffIds = assignedStaffIds,_services = services;
   
 
 @override final  String id;
@@ -1615,6 +1635,19 @@ class _BookingModel implements BookingModel {
 @override final  String endAt;
 @override@JsonKey() final  double totalDuration;
 @override@JsonKey() final  double totalAmount;
+@override final  double? subtotal;
+@override final  double? discountAmount;
+@override final  String? paymentMethod;
+@override final  String? currency;
+ final  List<String>? _assignedStaffIds;
+@override List<String>? get assignedStaffIds {
+  final value = _assignedStaffIds;
+  if (value == null) return null;
+  if (_assignedStaffIds is EqualUnmodifiableListView) return _assignedStaffIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
  final  List<BookingServiceItemModel> _services;
 @override@JsonKey() List<BookingServiceItemModel> get services {
   if (_services is EqualUnmodifiableListView) return _services;
@@ -1641,16 +1674,16 @@ _$BookingModelCopyWith<_BookingModel> get copyWith => __$BookingModelCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingModel&&(identical(other.id, id) || other.id == id)&&(identical(other.bookingCode, bookingCode) || other.bookingCode == bookingCode)&&(identical(other.storeId, storeId) || other.storeId == storeId)&&(identical(other.customerId, customerId) || other.customerId == customerId)&&(identical(other.status, status) || other.status == status)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.endAt, endAt) || other.endAt == endAt)&&(identical(other.totalDuration, totalDuration) || other.totalDuration == totalDuration)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&const DeepCollectionEquality().equals(other._services, _services)&&(identical(other.staffSnapshot, staffSnapshot) || other.staffSnapshot == staffSnapshot)&&(identical(other.customerSnapshot, customerSnapshot) || other.customerSnapshot == customerSnapshot)&&(identical(other.store, store) || other.store == store)&&(identical(other.actions, actions) || other.actions == actions)&&(identical(other.note, note) || other.note == note)&&(identical(other.cancellationReason, cancellationReason) || other.cancellationReason == cancellationReason)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingModel&&(identical(other.id, id) || other.id == id)&&(identical(other.bookingCode, bookingCode) || other.bookingCode == bookingCode)&&(identical(other.storeId, storeId) || other.storeId == storeId)&&(identical(other.customerId, customerId) || other.customerId == customerId)&&(identical(other.status, status) || other.status == status)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.endAt, endAt) || other.endAt == endAt)&&(identical(other.totalDuration, totalDuration) || other.totalDuration == totalDuration)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.currency, currency) || other.currency == currency)&&const DeepCollectionEquality().equals(other._assignedStaffIds, _assignedStaffIds)&&const DeepCollectionEquality().equals(other._services, _services)&&(identical(other.staffSnapshot, staffSnapshot) || other.staffSnapshot == staffSnapshot)&&(identical(other.customerSnapshot, customerSnapshot) || other.customerSnapshot == customerSnapshot)&&(identical(other.store, store) || other.store == store)&&(identical(other.actions, actions) || other.actions == actions)&&(identical(other.note, note) || other.note == note)&&(identical(other.cancellationReason, cancellationReason) || other.cancellationReason == cancellationReason)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,bookingCode,storeId,customerId,status,paymentStatus,startAt,endAt,totalDuration,totalAmount,const DeepCollectionEquality().hash(_services),staffSnapshot,customerSnapshot,store,actions,note,cancellationReason,cancelledAt,createdAt]);
+int get hashCode => Object.hashAll([runtimeType,id,bookingCode,storeId,customerId,status,paymentStatus,startAt,endAt,totalDuration,totalAmount,subtotal,discountAmount,paymentMethod,currency,const DeepCollectionEquality().hash(_assignedStaffIds),const DeepCollectionEquality().hash(_services),staffSnapshot,customerSnapshot,store,actions,note,cancellationReason,cancelledAt,createdAt]);
 
 @override
 String toString() {
-  return 'BookingModel(id: $id, bookingCode: $bookingCode, storeId: $storeId, customerId: $customerId, status: $status, paymentStatus: $paymentStatus, startAt: $startAt, endAt: $endAt, totalDuration: $totalDuration, totalAmount: $totalAmount, services: $services, staffSnapshot: $staffSnapshot, customerSnapshot: $customerSnapshot, store: $store, actions: $actions, note: $note, cancellationReason: $cancellationReason, cancelledAt: $cancelledAt, createdAt: $createdAt)';
+  return 'BookingModel(id: $id, bookingCode: $bookingCode, storeId: $storeId, customerId: $customerId, status: $status, paymentStatus: $paymentStatus, startAt: $startAt, endAt: $endAt, totalDuration: $totalDuration, totalAmount: $totalAmount, subtotal: $subtotal, discountAmount: $discountAmount, paymentMethod: $paymentMethod, currency: $currency, assignedStaffIds: $assignedStaffIds, services: $services, staffSnapshot: $staffSnapshot, customerSnapshot: $customerSnapshot, store: $store, actions: $actions, note: $note, cancellationReason: $cancellationReason, cancelledAt: $cancelledAt, createdAt: $createdAt)';
 }
 
 
@@ -1661,7 +1694,7 @@ abstract mixin class _$BookingModelCopyWith<$Res> implements $BookingModelCopyWi
   factory _$BookingModelCopyWith(_BookingModel value, $Res Function(_BookingModel) _then) = __$BookingModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String bookingCode, String? storeId, String? customerId, String status, String paymentStatus, String startAt, String endAt, double totalDuration, double totalAmount, List<BookingServiceItemModel> services, BookingStaffSnapshotModel? staffSnapshot, BookingCustomerSnapshotModel? customerSnapshot, BookingStoreSnapshotModel? store, BookingActionsModel? actions, String? note, String? cancellationReason, String? cancelledAt, String? createdAt
+ String id, String bookingCode, String? storeId, String? customerId, String status, String paymentStatus, String startAt, String endAt, double totalDuration, double totalAmount, double? subtotal, double? discountAmount, String? paymentMethod, String? currency, List<String>? assignedStaffIds, List<BookingServiceItemModel> services, BookingStaffSnapshotModel? staffSnapshot, BookingCustomerSnapshotModel? customerSnapshot, BookingStoreSnapshotModel? store, BookingActionsModel? actions, String? note, String? cancellationReason, String? cancelledAt, String? createdAt
 });
 
 
@@ -1678,7 +1711,7 @@ class __$BookingModelCopyWithImpl<$Res>
 
 /// Create a copy of BookingModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? bookingCode = null,Object? storeId = freezed,Object? customerId = freezed,Object? status = null,Object? paymentStatus = null,Object? startAt = null,Object? endAt = null,Object? totalDuration = null,Object? totalAmount = null,Object? services = null,Object? staffSnapshot = freezed,Object? customerSnapshot = freezed,Object? store = freezed,Object? actions = freezed,Object? note = freezed,Object? cancellationReason = freezed,Object? cancelledAt = freezed,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? bookingCode = null,Object? storeId = freezed,Object? customerId = freezed,Object? status = null,Object? paymentStatus = null,Object? startAt = null,Object? endAt = null,Object? totalDuration = null,Object? totalAmount = null,Object? subtotal = freezed,Object? discountAmount = freezed,Object? paymentMethod = freezed,Object? currency = freezed,Object? assignedStaffIds = freezed,Object? services = null,Object? staffSnapshot = freezed,Object? customerSnapshot = freezed,Object? store = freezed,Object? actions = freezed,Object? note = freezed,Object? cancellationReason = freezed,Object? cancelledAt = freezed,Object? createdAt = freezed,}) {
   return _then(_BookingModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,bookingCode: null == bookingCode ? _self.bookingCode : bookingCode // ignore: cast_nullable_to_non_nullable
@@ -1690,7 +1723,12 @@ as String,startAt: null == startAt ? _self.startAt : startAt // ignore: cast_nul
 as String,endAt: null == endAt ? _self.endAt : endAt // ignore: cast_nullable_to_non_nullable
 as String,totalDuration: null == totalDuration ? _self.totalDuration : totalDuration // ignore: cast_nullable_to_non_nullable
 as double,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
-as double,services: null == services ? _self._services : services // ignore: cast_nullable_to_non_nullable
+as double,subtotal: freezed == subtotal ? _self.subtotal : subtotal // ignore: cast_nullable_to_non_nullable
+as double?,discountAmount: freezed == discountAmount ? _self.discountAmount : discountAmount // ignore: cast_nullable_to_non_nullable
+as double?,paymentMethod: freezed == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
+as String?,currency: freezed == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
+as String?,assignedStaffIds: freezed == assignedStaffIds ? _self._assignedStaffIds : assignedStaffIds // ignore: cast_nullable_to_non_nullable
+as List<String>?,services: null == services ? _self._services : services // ignore: cast_nullable_to_non_nullable
 as List<BookingServiceItemModel>,staffSnapshot: freezed == staffSnapshot ? _self.staffSnapshot : staffSnapshot // ignore: cast_nullable_to_non_nullable
 as BookingStaffSnapshotModel?,customerSnapshot: freezed == customerSnapshot ? _self.customerSnapshot : customerSnapshot // ignore: cast_nullable_to_non_nullable
 as BookingCustomerSnapshotModel?,store: freezed == store ? _self.store : store // ignore: cast_nullable_to_non_nullable

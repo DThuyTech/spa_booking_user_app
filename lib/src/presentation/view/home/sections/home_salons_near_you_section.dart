@@ -6,6 +6,7 @@ class HomeSalonsNearYouSection extends StatelessWidget {
   final List<HomeNearSalonItem> salons;
   final String? title;
   final VoidCallback? onSeeAllTap;
+  final VoidCallback? onMapTap;
   final ValueChanged<HomeNearSalonItem>? onSalonTap;
   final ValueChanged<HomeNearSalonItem>? onBookTap;
 
@@ -17,6 +18,7 @@ class HomeSalonsNearYouSection extends StatelessWidget {
     required this.salons,
     this.title,
     this.onSeeAllTap,
+    this.onMapTap,
     this.onSalonTap,
     this.onBookTap,
   });
@@ -34,14 +36,37 @@ class HomeSalonsNearYouSection extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title ?? context.l10n.nearbySalons,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: _textDark,
-                  letterSpacing: -0.3,
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title ?? context.l10n.nearbySalons,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: _textDark,
+                      letterSpacing: -0.3,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  if (onMapTap != null)
+                    InkWell(
+                      onTap: onMapTap,
+                      borderRadius: BorderRadius.circular(16),
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: _coralColor.withValues(alpha: 0.12),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          LucideIcons.map_pin,
+                          size: 15,
+                          color: _coralColor,
+                        ),
+                      ),
+                    ),
+                ],
               ),
               InkWell(
                 onTap: onSeeAllTap,

@@ -37,8 +37,7 @@ class LoginState extends Equatable {
   bool get isLoading => status == LoginStatus.loading;
   bool get isSuccess => status == LoginStatus.success;
   bool get isFailure => status == LoginStatus.failure;
-  bool get canSubmit =>
-      identifier.trim().isNotEmpty && password.isNotEmpty && !isLoading;
+  bool get canSubmit => identifier.trim().isNotEmpty && !isLoading;
 
   LoginState copyWith({
     String? identifier,

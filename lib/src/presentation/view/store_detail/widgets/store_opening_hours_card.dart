@@ -38,7 +38,9 @@ class _StoreOpeningHoursCardState extends State<StoreOpeningHoursCard> {
           ? 'Chưa cập nhật giờ hoạt động'
           : 'Operating hours not configured';
     } else if (today == null || !today.isOpen) {
-      todayText = isVi ? '${context.l10n.today}: Nghỉ' : '${context.l10n.today}: Closed';
+      todayText = isVi
+          ? '${context.l10n.today}: Nghỉ'
+          : '${context.l10n.today}: Closed';
     } else if (today.timeRanges.isEmpty) {
       todayText = isVi
           ? '${context.l10n.today}: Mở cả ngày'
@@ -190,8 +192,8 @@ class _StoreOpeningHoursCardState extends State<StoreOpeningHoursCard> {
                         color: isToday
                             ? StoreOpeningHoursCard._coralColor
                             : (!entry.isOpen
-                                ? const Color(0xFF94A3B8)
-                                : StoreOpeningHoursCard._textMuted),
+                                  ? const Color(0xFF94A3B8)
+                                  : StoreOpeningHoursCard._textMuted),
                       ),
                     ),
                   ],

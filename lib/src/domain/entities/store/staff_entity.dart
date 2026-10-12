@@ -11,5 +11,6 @@ abstract class StaffEntity with _$StaffEntity {
     String? avatarUrl,
     String? bio,
     @Default(5.0) double rating,
+    @Default([]) List<String> capableServiceIds,
   }) = _StaffEntity;
 }

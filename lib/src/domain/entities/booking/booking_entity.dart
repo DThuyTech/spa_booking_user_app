@@ -9,6 +9,11 @@ abstract class BookingServiceItemEntity with _$BookingServiceItemEntity {
     required String name,
     required double price,
     @Default(60) int duration,
+    String? staffProfileId,
+    String? staffName,
+    DateTime? startAt,
+    DateTime? endAt,
+    int? sequence,
   }) = _BookingServiceItemEntity;
 }
 
@@ -64,6 +69,11 @@ abstract class BookingEntity with _$BookingEntity {
     required DateTime endAt,
     @Default(0) double totalDuration,
     @Default(0) double totalAmount,
+    double? subtotal,
+    double? discountAmount,
+    String? paymentMethod,
+    String? currency,
+    List<String>? assignedStaffIds,
     @Default([]) List<BookingServiceItemEntity> services,
     BookingStaffSnapshotEntity? staffSnapshot,
     BookingCustomerSnapshotEntity? customerSnapshot,

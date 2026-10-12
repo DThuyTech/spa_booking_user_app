@@ -85,11 +85,10 @@ class HomeRecommendedForYouSection extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 12),
-
           // Vertical List of Recommended Salon Cards
           ListView.builder(
             shrinkWrap: true,
+            padding: const EdgeInsets.symmetric(vertical: 8),
             physics: const NeverScrollableScrollPhysics(),
             itemCount: salons.length,
             itemBuilder: (context, index) {

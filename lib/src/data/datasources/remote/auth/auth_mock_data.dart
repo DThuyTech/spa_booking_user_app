@@ -252,4 +252,134 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
     await Future.delayed(const Duration(milliseconds: 300));
     return 'Đặt lại mật khẩu thành công. Vui lòng đăng nhập với mật khẩu mới.';
   }
+
+  @override
+  Future<RequestOtpResponseModel> sendRegisterOtp({
+    String? phoneNumber,
+    String? email,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return RequestOtpResponseModel(
+      success: true,
+      message: 'Mã xác thực OTP đăng ký đã được gửi thành công',
+      otp: '123456',
+      destination: phoneNumber ?? email,
+      expiresInSeconds: 300,
+    );
+  }
+
+  @override
+  Future<AuthResponseModel> registerWithOtp({
+    String? phoneNumber,
+    String? email,
+    required String otp,
+    required String name,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 350));
+    _currentUser = _currentUser.copyWith(
+      fullName: name,
+      email: email ?? _currentUser.email,
+      phone: phoneNumber ?? _currentUser.phone,
+    );
+    return AuthResponseModel(
+      accessToken: 'mock_access_jwt_${DateTime.now().millisecondsSinceEpoch}',
+      refreshToken: 'mock_refresh_jwt_${DateTime.now().millisecondsSinceEpoch}',
+      tokenType: 'Bearer',
+      expiresIn: 86400,
+      user: _currentUser,
+    );
+  }
+
+  @override
+  Future<RequestOtpResponseModel> sendLoginOtp({
+    required String identifier,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return RequestOtpResponseModel(
+      success: true,
+      message: 'Mã xác thực OTP đăng nhập đã được gửi thành công',
+      otp: '123456',
+      destination: identifier,
+      expiresInSeconds: 300,
+    );
+  }
+
+  @override
+  Future<AuthResponseModel> loginWithOtp({
+    required String identifier,
+    required String otp,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 350));
+    _currentUser = _currentUser.copyWith(
+      email: identifier.contains('@') ? identifier : _currentUser.email,
+      phone: !identifier.contains('@') ? identifier : _currentUser.phone,
+    );
+    return AuthResponseModel(
+      accessToken: 'mock_access_jwt_${DateTime.now().millisecondsSinceEpoch}',
+      refreshToken: 'mock_refresh_jwt_${DateTime.now().millisecondsSinceEpoch}',
+      tokenType: 'Bearer',
+      expiresIn: 86400,
+      user: _currentUser,
+    );
+  }
+
+  @override
+  Future<RequestOtpResponseModel> requestChangeEmail({
+    required String newEmail,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return RequestOtpResponseModel(
+      success: true,
+      message: 'Mã xác thực OTP đã được gửi đến email mới',
+      otp: '123456',
+      destination: newEmail,
+      expiresInSeconds: 300,
+    );
+  }
+
+  @override
+  Future<UserModel> verifyChangeEmail({
+    required String newEmail,
+    required String otp,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 350));
+    _currentUser = _currentUser.copyWith(email: newEmail);
+    return _currentUser;
+  }
+
+  @override
+  Future<RequestOtpResponseModel> requestChangePhone({
+    required String newPhone,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return RequestOtpResponseModel(
+      success: true,
+      message: 'Mã xác thực OTP đã được gửi đến số điện thoại mới',
+      otp: '123456',
+      destination: newPhone,
+      expiresInSeconds: 300,
+    );
+  }
+
+  @override
+  Future<UserModel> verifyChangePhone({
+    required String newPhone,
+    required String otp,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 350));
+    _currentUser = _currentUser.copyWith(phone: newPhone);
+    return _currentUser;
+  }
+
+  @override
+  Future<void> removeCustomerEmail() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    _currentUser = _currentUser.copyWith(email: '');
+  }
+
+  @override
+  Future<void> removeCustomerPhone() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    _currentUser = _currentUser.copyWith(phone: '');
+  }
 }

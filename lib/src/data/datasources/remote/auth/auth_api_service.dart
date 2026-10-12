@@ -64,6 +64,49 @@ abstract interface class AuthApiService {
     required String otp,
     required String newPassword,
   });
+
+  // Customer OTP Auth
+  Future<RequestOtpResponseModel> sendRegisterOtp({
+    String? phoneNumber,
+    String? email,
+  });
+
+  Future<AuthResponseModel> registerWithOtp({
+    String? phoneNumber,
+    String? email,
+    required String otp,
+    required String name,
+  });
+
+  Future<RequestOtpResponseModel> sendLoginOtp({required String identifier});
+
+  Future<AuthResponseModel> loginWithOtp({
+    required String identifier,
+    required String otp,
+  });
+
+  // Contact Info Management
+  Future<RequestOtpResponseModel> requestChangeEmail({
+    required String newEmail,
+  });
+
+  Future<UserModel> verifyChangeEmail({
+    required String newEmail,
+    required String otp,
+  });
+
+  Future<RequestOtpResponseModel> requestChangePhone({
+    required String newPhone,
+  });
+
+  Future<UserModel> verifyChangePhone({
+    required String newPhone,
+    required String otp,
+  });
+
+  Future<void> removeCustomerEmail();
+
+  Future<void> removeCustomerPhone();
 }
 
 class AuthApiServiceImpl implements AuthApiService {
@@ -383,5 +426,204 @@ class AuthApiServiceImpl implements AuthApiService {
           'Đặt lại mật khẩu thành công';
     }
     return 'Đặt lại mật khẩu thành công';
+  }
+
+  @override
+  Future<RequestOtpResponseModel> sendRegisterOtp({
+    String? phoneNumber,
+    String? email,
+  }) async {
+    final response = await _client.post<Map<String, dynamic>>(
+      UrlConstants.authCustomerSendRegisterOtp,
+      data: {
+        if (phoneNumber != null && phoneNumber.isNotEmpty)
+          'phoneNumber': phoneNumber,
+        if (email != null && email.isNotEmpty) 'email': email,
+      },
+      options: Options(
+        extra: {
+          AuthInterceptor.extraSkipAuth: true,
+          AuthInterceptor.extraSkipRefresh: true,
+        },
+      ),
+    );
+
+    final responseData = response.data;
+    if (responseData != null) {
+      final payload =
+          (responseData['data'] as Map<String, dynamic>?) ?? responseData;
+      return RequestOtpResponseModel.fromJson(payload);
+    }
+    throw const FormatException('Empty response from send-register-otp');
+  }
+
+  @override
+  Future<AuthResponseModel> registerWithOtp({
+    String? phoneNumber,
+    String? email,
+    required String otp,
+    required String name,
+  }) async {
+    final response = await _client.post<Map<String, dynamic>>(
+      UrlConstants.authCustomerRegisterOtp,
+      data: {
+        if (phoneNumber != null && phoneNumber.isNotEmpty)
+          'phoneNumber': phoneNumber,
+        if (email != null && email.isNotEmpty) 'email': email,
+        'otp': otp,
+        'name': name,
+      },
+      options: Options(
+        extra: {
+          AuthInterceptor.extraSkipAuth: true,
+          AuthInterceptor.extraSkipRefresh: true,
+        },
+      ),
+    );
+
+    final responseData = response.data;
+    if (responseData != null) {
+      final payload =
+          (responseData['data'] as Map<String, dynamic>?) ?? responseData;
+      return AuthResponseModel.fromJson(payload);
+    }
+    throw const FormatException('Empty response from register-otp');
+  }
+
+  @override
+  Future<RequestOtpResponseModel> sendLoginOtp({
+    required String identifier,
+  }) async {
+    final response = await _client.post<Map<String, dynamic>>(
+      UrlConstants.authCustomerSendLoginOtp,
+      data: {'identifier': identifier},
+      options: Options(
+        extra: {
+          AuthInterceptor.extraSkipAuth: true,
+          AuthInterceptor.extraSkipRefresh: true,
+        },
+      ),
+    );
+
+    final responseData = response.data;
+    if (responseData != null) {
+      final payload =
+          (responseData['data'] as Map<String, dynamic>?) ?? responseData;
+      return RequestOtpResponseModel.fromJson(payload);
+    }
+    throw const FormatException('Empty response from send-login-otp');
+  }
+
+  @override
+  Future<AuthResponseModel> loginWithOtp({
+    required String identifier,
+    required String otp,
+  }) async {
+    final response = await _client.post<Map<String, dynamic>>(
+      UrlConstants.authCustomerLoginOtp,
+      data: {'identifier': identifier, 'otp': otp},
+      options: Options(
+        extra: {
+          AuthInterceptor.extraSkipAuth: true,
+          AuthInterceptor.extraSkipRefresh: true,
+        },
+      ),
+    );
+
+    final responseData = response.data;
+    if (responseData != null) {
+      final payload =
+          (responseData['data'] as Map<String, dynamic>?) ?? responseData;
+      return AuthResponseModel.fromJson(payload);
+    }
+    throw const FormatException('Empty response from login-otp');
+  }
+
+  @override
+  Future<RequestOtpResponseModel> requestChangeEmail({
+    required String newEmail,
+  }) async {
+    final response = await _client.post<Map<String, dynamic>>(
+      UrlConstants.customerRequestChangeEmail,
+      data: {'newEmail': newEmail},
+    );
+
+    final responseData = response.data;
+    if (responseData != null) {
+      final payload =
+          (responseData['data'] as Map<String, dynamic>?) ?? responseData;
+      return RequestOtpResponseModel.fromJson(payload);
+    }
+    throw const FormatException('Empty response from requestChangeEmail');
+  }
+
+  @override
+  Future<UserModel> verifyChangeEmail({
+    required String newEmail,
+    required String otp,
+  }) async {
+    final response = await _client.post<Map<String, dynamic>>(
+      UrlConstants.customerVerifyChangeEmail,
+      data: {'newEmail': newEmail, 'otp': otp},
+    );
+
+    final responseData = response.data;
+    if (responseData != null) {
+      final payload =
+          (responseData['data'] as Map<String, dynamic>?) ?? responseData;
+      return UserModel.fromJson(payload);
+    }
+    throw const FormatException('Empty response from verifyChangeEmail');
+  }
+
+  @override
+  Future<RequestOtpResponseModel> requestChangePhone({
+    required String newPhone,
+  }) async {
+    final response = await _client.post<Map<String, dynamic>>(
+      UrlConstants.customerRequestChangePhone,
+      data: {'newPhone': newPhone},
+    );
+
+    final responseData = response.data;
+    if (responseData != null) {
+      final payload =
+          (responseData['data'] as Map<String, dynamic>?) ?? responseData;
+      return RequestOtpResponseModel.fromJson(payload);
+    }
+    throw const FormatException('Empty response from requestChangePhone');
+  }
+
+  @override
+  Future<UserModel> verifyChangePhone({
+    required String newPhone,
+    required String otp,
+  }) async {
+    final response = await _client.post<Map<String, dynamic>>(
+      UrlConstants.customerVerifyChangePhone,
+      data: {'newPhone': newPhone, 'otp': otp},
+    );
+
+    final responseData = response.data;
+    if (responseData != null) {
+      final payload =
+          (responseData['data'] as Map<String, dynamic>?) ?? responseData;
+      return UserModel.fromJson(payload);
+    }
+    throw const FormatException('Empty response from verifyChangePhone');
+  }
+
+  @override
+  Future<void> removeCustomerEmail() async {
+    await _client.delete<Map<String, dynamic>>(
+      UrlConstants.customerDeleteEmail,
+    );
+  }
+
+  @override
+  Future<void> removeCustomerPhone() async {
+    await _client.delete<Map<String, dynamic>>(
+      UrlConstants.customerDeletePhone,
+    );
   }
 }

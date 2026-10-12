@@ -1,4 +1,5 @@
 import 'package:spa_booking/src/domain/entities/auth/auth_session_entity.dart';
+import 'package:spa_booking/src/domain/entities/auth/request_otp_result.dart';
 import 'package:equatable/equatable.dart';
 
 enum RegisterStatus { initial, validating, loading, success, failure }
@@ -14,6 +15,7 @@ class RegisterState extends Equatable {
   final RegisterStatus status;
   final String? errorMessage;
   final AuthSessionEntity? authSession;
+  final RequestOtpResult? otpResult;
 
   const RegisterState({
     this.fullName = '',
@@ -23,6 +25,7 @@ class RegisterState extends Equatable {
     this.status = RegisterStatus.initial,
     this.errorMessage,
     this.authSession,
+    this.otpResult,
   });
 
   bool get isLoading => status == RegisterStatus.loading;
@@ -30,10 +33,7 @@ class RegisterState extends Equatable {
   bool get isPasswordMatched =>
       confirmPassword.isNotEmpty && confirmPassword == password;
   bool get canSubmit =>
-      identifier.trim().isNotEmpty &&
-      password.isNotEmpty &&
-      (!isLoading) &&
-      (confirmPassword.isEmpty || confirmPassword == password);
+      fullName.trim().isNotEmpty && identifier.trim().isNotEmpty && !isLoading;
 
   RegisterState copyWith({
     String? fullName,
@@ -43,6 +43,7 @@ class RegisterState extends Equatable {
     RegisterStatus? status,
     String? Function()? errorMessage,
     AuthSessionEntity? Function()? authSession,
+    RequestOtpResult? Function()? otpResult,
   }) {
     return RegisterState(
       fullName: fullName ?? this.fullName,
@@ -52,6 +53,7 @@ class RegisterState extends Equatable {
       status: status ?? this.status,
       errorMessage: errorMessage != null ? errorMessage() : this.errorMessage,
       authSession: authSession != null ? authSession() : this.authSession,
+      otpResult: otpResult != null ? otpResult() : this.otpResult,
     );
   }
 
@@ -64,5 +66,6 @@ class RegisterState extends Equatable {
     status,
     errorMessage,
     authSession,
+    otpResult,
   ];
 }

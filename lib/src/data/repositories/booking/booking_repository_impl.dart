@@ -8,6 +8,7 @@ import 'package:spa_booking/src/data/model/booking/booking_list_response_model.d
 import 'package:spa_booking/src/data/model/booking/booking_model.dart';
 import 'package:spa_booking/src/domain/entities/booking/booking_availability_entity.dart';
 import 'package:spa_booking/src/domain/entities/booking/booking_entity.dart';
+import 'package:spa_booking/src/domain/entities/booking/booking_item_param.dart';
 import 'package:spa_booking/src/domain/entities/booking/booking_list_entity.dart';
 import 'package:spa_booking/src/domain/repositories/booking/booking_repository.dart';
 
@@ -19,16 +20,22 @@ class BookingRepositoryImpl implements BookingRepository {
   @override
   Future<Either<Failure, BookingAvailabilityEntity>> getAvailability({
     required String storeId,
-    required String date,
-    required List<String> serviceIds,
-    String? staffProfileId,
+    required List<BookingItemParam> services,
+    String? dateFrom,
+    String? dateTo,
+    int stepMinutes = 15,
+    String mode = 'SLOT_SEARCH',
+    String orderMode = 'FLEXIBLE',
   }) async {
     try {
       final model = await remoteDataSource.getAvailability(
         storeId: storeId,
-        date: date,
-        serviceIds: serviceIds,
-        staffProfileId: staffProfileId,
+        services: services,
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        stepMinutes: stepMinutes,
+        mode: mode,
+        orderMode: orderMode,
       );
       return Right(model.toEntity());
     } catch (e) {
@@ -39,16 +46,18 @@ class BookingRepositoryImpl implements BookingRepository {
   @override
   Future<Either<Failure, BookingEntity>> createBooking({
     required String storeId,
-    required List<String> serviceIds,
-    required String startAt,
+    String? startAt,
+    List<BookingItemParam>? items,
+    List<String>? serviceIds,
     String? staffProfileId,
     String? note,
   }) async {
     try {
       final model = await remoteDataSource.createBooking(
         storeId: storeId,
-        serviceIds: serviceIds,
         startAt: startAt,
+        items: items,
+        serviceIds: serviceIds,
         staffProfileId: staffProfileId,
         note: note,
       );

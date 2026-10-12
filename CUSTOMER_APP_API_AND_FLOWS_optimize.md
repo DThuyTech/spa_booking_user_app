@@ -92,26 +92,36 @@ sequenceDiagram
 
 ---
 
-### Luồng 3: Kiểm Tra Lịch Trống (Availability) & Đặt Lịch Hẹn
+### Luồng 3: Kiểm Tra Lịch Trống & Đặt Lịch Hẹn (v2.0 Continuous Availability & Quick Book)
+
+> 💡 **Chi tiết đặc tả tích hợp Frontend:** Xem tài liệu chuyên sâu tại [FE_CUSTOMER_BOOKING_SCHEDULING_INTEGRATION_GUIDE.md](file:///Users/mac/Documents/Project/spa_booking/app_user/FE_CUSTOMER_BOOKING_SCHEDULING_INTEGRATION_GUIDE.md).
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor Customer as Khách hàng
-    participant Avail as Availability Service
+    participant PublicStore as Staff API
+    participant Avail as Continuous Availability API
+    participant Quick as Quick-Book API
     participant Booking as Customer Booking API
-    participant Lock as In-Memory Lock Manager
 
-    Note over Customer,Avail: Bước 1: Khách chọn dịch vụ, ngày và chuyên viên
-    Customer->>Avail: GET /public/stores/{storeId}/availability?date=2026-10-15&serviceIds=id1,id2&staffProfileId=opt
-    Note over Avail: Tính tổng thời lượng, kiểm tra giờ mở cửa,<br/>lịch làm việc nhân viên, và các booking đã có
-    Avail-->>Customer: 200 OK (Mảng timeSlots: ["09:00", "09:30", "10:00", "14:00"...])
+    Note over Customer: Bước 1: Khách chọn 1 hoặc nhiều Dịch vụ (Multi-service)
+    Customer->>PublicStore: GET /public/stores/{storeId}/staff?serviceId={serviceId}
+    PublicStore-->>Customer: Danh sách thợ có kỹ năng làm dịch vụ đó
 
-    Note over Customer,Booking: Bước 2: Khách chọn khung giờ và bấm Xác Nhận Đặt Lịch
-    Customer->>Booking: POST /customer/stores/{storeId}/bookings (serviceIds, staffProfileId, startAt, note)
-    Booking->>Lock: Khóa mutex theo [storeId + staffId + timeRange] chống trùng giờ (Race Condition)
-    Note over Booking: Kiểm tra minBookingNoticeMinutes & maxBookingAdvanceDays
-    Booking-->>Customer: 201 Created (Booking details, bookingCode: #BK-100234, status: PENDING/CONFIRMED)
+    Note over Customer: Bước 2: Với từng dịch vụ, chọn Thợ ruột HOẶC 'Bất kỳ thợ nào' (null)
+
+    alt Nhánh A: Khách bấm '⚡ ĐẶT NHANH GIỜ SỚM NHẤT' (1-Chạm)
+        Customer->>Quick: POST /customer/stores/{storeId}/quick-book (services, preferredDate, orderMode: FLEXIBLE)
+        Quick-->>Customer: 201 Created (Tạo ngay booking với slot sớm nhất tìm được)
+    else Nhánh B: Khách muốn xem & tự chọn Khung Giờ Khả Dụng
+        Customer->>Avail: POST /customer/stores/{storeId}/booking-availability (services, dateFrom, dateTo, mode: SLOT_SEARCH)
+        Note over Avail: Quét 7 ngày liên tiếp (hoặc theo Calendar), ghép slot liên tục không đứt quãng
+        Avail-->>Customer: 200 OK (days[] nhóm theo ngày + options[] kèm tag: EARLIEST, RECOMMENDED)
+        Customer->>Customer: Chọn 1 Khung Giờ ưng ý từ danh sách
+        Customer->>Booking: POST /customer/stores/{storeId}/bookings (startAt, items: [{serviceId, staffProfileId}], note)
+        Booking-->>Customer: 201 Created (Booking details, bookingCode, status: CONFIRMED)
+    end
 ```
 
 ---
@@ -770,6 +780,107 @@ sequenceDiagram
   "createdAt": "2026-10-02T08:30:00.000Z"
 }
 ```
+
+#### 4.3. Tra cứu khung giờ trống liên tục (Continuous Booking Availability v2.0)
+- **Phương thức:** `POST`
+- **Endpoint:**
+  - Customer: `/api/v1/customer/stores/:storeId/booking-availability`
+  - Public: `/api/v1/public/stores/:storeId/booking-availability`
+- **Xác thực:** Bearer Token (hoặc Public nếu là khách vãng lai)
+- **Request Body:**
+```json
+{
+  "services": [
+    {
+      "serviceId": "srv-01",
+      "staffProfileId": "staff-01"
+    },
+    {
+      "serviceId": "srv-02",
+      "staffProfileId": null
+    }
+  ],
+  "dateFrom": "2026-10-15",
+  "dateTo": "2026-10-21",
+  "mode": "SLOT_SEARCH",
+  "orderMode": "FLEXIBLE",
+  "stepMinutes": 15
+}
+```
+*Ghi chú: Nếu không truyền `dateFrom` và `dateTo`, backend tự động quét 7 ngày liên tiếp từ ngày hiện tại.*
+
+- **Response 200 OK:**
+```json
+{
+  "storeId": "store-spa-01",
+  "totalDurationMinutes": 90,
+  "currency": "VND",
+  "days": [
+    {
+      "date": "2026-10-15",
+      "dayOfWeek": "THURSDAY",
+      "totalSlots": 2,
+      "options": [
+        {
+          "date": "2026-10-15",
+          "startTime": "09:00",
+          "endTime": "10:30",
+          "startAt": "2026-10-15T02:00:00.000Z",
+          "endAt": "2026-10-15T03:30:00.000Z",
+          "totalDurationMinutes": 90,
+          "estimatedPrice": 470000,
+          "currency": "VND",
+          "isRecommended": true,
+          "slotTag": "EARLIEST",
+          "items": [
+            {
+              "serviceId": "srv-01",
+              "serviceName": "Cắt tóc tạo kiểu",
+              "durationMinutes": 30,
+              "startTime": "09:00",
+              "endTime": "09:30",
+              "staffProfileId": "staff-01",
+              "staffName": "Mai Nguyễn",
+              "estimatedPrice": 120000
+            },
+            {
+              "serviceId": "srv-02",
+              "serviceName": "Gội đầu dưỡng sinh",
+              "durationMinutes": 60,
+              "startTime": "09:30",
+              "endTime": "10:30",
+              "staffProfileId": "staff-02",
+              "staffName": "Tuấn Trần",
+              "estimatedPrice": 350000
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "options": [ ... ]
+}
+```
+
+#### 4.4. Đặt nhanh 1-Chạm giờ sớm nhất (Quick-Book v2.0)
+- **Phương thức:** `POST`
+- **Endpoint:** `/api/v1/customer/stores/:storeId/quick-book`
+- **Xác thực:** Bearer Token (Role: `CUSTOMER`)
+- **Request Body:**
+```json
+{
+  "services": [
+    { "serviceId": "srv-01", "staffProfileId": null },
+    { "serviceId": "srv-02", "staffProfileId": null }
+  ],
+  "preferredDate": "2026-10-15",
+  "orderMode": "FLEXIBLE",
+  "stepMinutes": 15,
+  "paymentMethod": "CASH",
+  "note": "Khách cần làm nhanh"
+}
+```
+- **Response 201 Created:** Trả về đối tượng `Booking` với trạng thái `CONFIRMED` và slot khả dụng sớm nhất được chọn tự động.
 
 ---
 

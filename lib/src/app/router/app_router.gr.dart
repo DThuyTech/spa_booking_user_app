@@ -50,7 +50,7 @@ import 'package:spa_booking/src/presentation/view/home/view/nearby_stores_list_p
     as _i12;
 import 'package:spa_booking/src/presentation/view/insights/view/my_insights_view.dart'
     as _i11;
-import 'package:spa_booking/src/presentation/view/nearby_stores/view/nearby_stores_view.dart'
+import 'package:spa_booking/src/presentation/view/nearby_stores/view/nearby_stores_page.dart'
     as _i13;
 import 'package:spa_booking/src/presentation/view/notification/models/notification_models.dart'
     as _i33;
@@ -89,6 +89,7 @@ class BookingDetailRoute extends _i29.PageRouteInfo<BookingDetailRouteArgs> {
     String selectedTime = '',
     List<_i31.BookingServiceItem>? selectedServices,
     String? selectedStaffId,
+    Map<String, String?>? selectedStaffPerService,
     DateTime? startAt,
     List<_i29.PageRouteInfo>? children,
   }) : super(
@@ -101,6 +102,7 @@ class BookingDetailRoute extends _i29.PageRouteInfo<BookingDetailRouteArgs> {
            selectedTime: selectedTime,
            selectedServices: selectedServices,
            selectedStaffId: selectedStaffId,
+           selectedStaffPerService: selectedStaffPerService,
            startAt: startAt,
          ),
          initialChildren: children,
@@ -122,6 +124,7 @@ class BookingDetailRoute extends _i29.PageRouteInfo<BookingDetailRouteArgs> {
         selectedTime: args.selectedTime,
         selectedServices: args.selectedServices,
         selectedStaffId: args.selectedStaffId,
+        selectedStaffPerService: args.selectedStaffPerService,
         startAt: args.startAt,
       );
     },
@@ -137,6 +140,7 @@ class BookingDetailRouteArgs {
     this.selectedTime = '',
     this.selectedServices,
     this.selectedStaffId,
+    this.selectedStaffPerService,
     this.startAt,
   });
 
@@ -154,11 +158,13 @@ class BookingDetailRouteArgs {
 
   final String? selectedStaffId;
 
+  final Map<String, String?>? selectedStaffPerService;
+
   final DateTime? startAt;
 
   @override
   String toString() {
-    return 'BookingDetailRouteArgs{key: $key, storeId: $storeId, salonName: $salonName, selectedDate: $selectedDate, selectedTime: $selectedTime, selectedServices: $selectedServices, selectedStaffId: $selectedStaffId, startAt: $startAt}';
+    return 'BookingDetailRouteArgs{key: $key, storeId: $storeId, salonName: $salonName, selectedDate: $selectedDate, selectedTime: $selectedTime, selectedServices: $selectedServices, selectedStaffId: $selectedStaffId, selectedStaffPerService: $selectedStaffPerService, startAt: $startAt}';
   }
 
   @override
@@ -175,6 +181,10 @@ class BookingDetailRouteArgs {
           other.selectedServices,
         ) &&
         selectedStaffId == other.selectedStaffId &&
+        const _i32.MapEquality<String, String?>().equals(
+          selectedStaffPerService,
+          other.selectedStaffPerService,
+        ) &&
         startAt == other.startAt;
   }
 
@@ -189,6 +199,7 @@ class BookingDetailRouteArgs {
         selectedServices,
       ) ^
       selectedStaffId.hashCode ^
+      const _i32.MapEquality<String, String?>().hash(selectedStaffPerService) ^
       startAt.hashCode;
 }
 
@@ -353,6 +364,7 @@ class BookingScheduleRoute
     required String salonName,
     List<_i31.BookingServiceItem>? selectedServices,
     String? selectedStaffId,
+    Map<String, String?>? selectedStaffPerService,
     List<_i29.PageRouteInfo>? children,
   }) : super(
          BookingScheduleRoute.name,
@@ -362,6 +374,7 @@ class BookingScheduleRoute
            salonName: salonName,
            selectedServices: selectedServices,
            selectedStaffId: selectedStaffId,
+           selectedStaffPerService: selectedStaffPerService,
          ),
          initialChildren: children,
        );
@@ -378,6 +391,7 @@ class BookingScheduleRoute
         salonName: args.salonName,
         selectedServices: args.selectedServices,
         selectedStaffId: args.selectedStaffId,
+        selectedStaffPerService: args.selectedStaffPerService,
       );
     },
   );
@@ -390,6 +404,7 @@ class BookingScheduleRouteArgs {
     required this.salonName,
     this.selectedServices,
     this.selectedStaffId,
+    this.selectedStaffPerService,
   });
 
   final _i30.Key? key;
@@ -402,9 +417,11 @@ class BookingScheduleRouteArgs {
 
   final String? selectedStaffId;
 
+  final Map<String, String?>? selectedStaffPerService;
+
   @override
   String toString() {
-    return 'BookingScheduleRouteArgs{key: $key, storeId: $storeId, salonName: $salonName, selectedServices: $selectedServices, selectedStaffId: $selectedStaffId}';
+    return 'BookingScheduleRouteArgs{key: $key, storeId: $storeId, salonName: $salonName, selectedServices: $selectedServices, selectedStaffId: $selectedStaffId, selectedStaffPerService: $selectedStaffPerService}';
   }
 
   @override
@@ -418,7 +435,11 @@ class BookingScheduleRouteArgs {
           selectedServices,
           other.selectedServices,
         ) &&
-        selectedStaffId == other.selectedStaffId;
+        selectedStaffId == other.selectedStaffId &&
+        const _i32.MapEquality<String, String?>().equals(
+          selectedStaffPerService,
+          other.selectedStaffPerService,
+        );
   }
 
   @override
@@ -429,7 +450,8 @@ class BookingScheduleRouteArgs {
       const _i32.ListEquality<_i31.BookingServiceItem>().hash(
         selectedServices,
       ) ^
-      selectedStaffId.hashCode;
+      selectedStaffId.hashCode ^
+      const _i32.MapEquality<String, String?>().hash(selectedStaffPerService);
 }
 
 /// generated route for
@@ -710,17 +732,17 @@ class NearbyStoresListRouteArgs {
 }
 
 /// generated route for
-/// [_i13.NearbyStoresView]
-class NearbyStoresView extends _i29.PageRouteInfo<void> {
-  const NearbyStoresView({List<_i29.PageRouteInfo>? children})
-    : super(NearbyStoresView.name, initialChildren: children);
+/// [_i13.NearbyStoresPage]
+class NearbyStoresRoute extends _i29.PageRouteInfo<void> {
+  const NearbyStoresRoute({List<_i29.PageRouteInfo>? children})
+    : super(NearbyStoresRoute.name, initialChildren: children);
 
-  static const String name = 'NearbyStoresView';
+  static const String name = 'NearbyStoresRoute';
 
   static _i29.PageInfo page = _i29.PageInfo(
     name,
     builder: (data) {
-      return const _i13.NearbyStoresView();
+      return const _i13.NearbyStoresPage();
     },
   );
 }

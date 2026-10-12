@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum StoreDetailTab { overview, services, gallery, reviews }
+enum StoreDetailTab { overview, services, reviews, gallery }
 
 class StoreDetailTabBarSection extends StatelessWidget {
   final StoreDetailTab activeTab;
@@ -17,6 +17,8 @@ class StoreDetailTabBarSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isVi = Localizations.localeOf(context).languageCode == 'vi';
+
     return Column(
       children: [
         Padding(
@@ -24,10 +26,22 @@ class StoreDetailTabBarSection extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildTabItem(StoreDetailTab.overview, 'Overview'),
-              _buildTabItem(StoreDetailTab.services, 'Services'),
-              _buildTabItem(StoreDetailTab.gallery, 'Gallery'),
-              _buildTabItem(StoreDetailTab.reviews, 'Reviews'),
+              _buildTabItem(
+                StoreDetailTab.overview,
+                isVi ? 'Tổng quan' : 'Overview',
+              ),
+              _buildTabItem(
+                StoreDetailTab.services,
+                isVi ? 'Dịch vụ' : 'Services',
+              ),
+              _buildTabItem(
+                StoreDetailTab.reviews,
+                isVi ? 'Đánh giá' : 'Reviews',
+              ),
+              _buildTabItem(
+                StoreDetailTab.gallery,
+                isVi ? 'Thư viện' : 'Gallery',
+              ),
             ],
           ),
         ),
