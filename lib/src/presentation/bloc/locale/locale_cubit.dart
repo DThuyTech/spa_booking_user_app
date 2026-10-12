@@ -20,9 +20,27 @@ class LocaleCubit extends Cubit<LocaleState> {
   static const Locale viLocale = Locale('vi');
   static const Locale enLocale = Locale('en');
 
+  static Locale get deviceDefaultLocale {
+    try {
+      final deviceCode = WidgetsBinding
+          .instance
+          .platformDispatcher
+          .locale
+          .languageCode
+          .toLowerCase();
+      if (deviceCode == 'vi') {
+        return viLocale;
+      }
+      return enLocale;
+    } catch (_) {
+      return enLocale;
+    }
+  }
+
   final PreferencesStorage _preferencesStorage;
 
-  LocaleCubit(this._preferencesStorage) : super(const LocaleState(viLocale)) {
+  LocaleCubit(this._preferencesStorage)
+    : super(LocaleState(deviceDefaultLocale)) {
     _initLocale();
   }
 
@@ -32,11 +50,10 @@ class LocaleCubit extends Cubit<LocaleState> {
       if (savedCode != null && savedCode.isNotEmpty) {
         emit(LocaleState(Locale(savedCode)));
       } else {
-        // Default to Vietnamese
-        emit(const LocaleState(viLocale));
+        emit(LocaleState(deviceDefaultLocale));
       }
     } catch (_) {
-      emit(const LocaleState(viLocale));
+      emit(LocaleState(deviceDefaultLocale));
     }
   }
 

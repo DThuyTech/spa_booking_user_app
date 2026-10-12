@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 
-enum TimeOfDayPeriod {
-  morning,
-  afternoon,
-  evening,
-  night,
-}
+enum TimeOfDayPeriod { morning, afternoon, evening, night }
 
 class HomeTimeTheme {
   final TimeOfDayPeriod period;

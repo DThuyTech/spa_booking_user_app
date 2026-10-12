@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import '../buttons/app_button.dart';
 import '../chips/app_option_picker.dart';
+import '../inputs/app_text_field.dart';
 import '../feedback/app_filter_slider.dart';
 import '../../../../app/di/dependency_injection.dart';
 import '../../../../domain/entities/location/city_entity.dart';
@@ -15,16 +17,20 @@ class SpaFilterCriteria {
   final String date;
   final String time;
   final RangeValues priceRange;
-  final String rating;
+  final double? minPrice;
+  final double? maxPrice;
+  final String? rating;
 
   const SpaFilterCriteria({
     this.location = 'Ho Chi Minh City',
-    this.distanceKm = 5.0,
-    this.services = const ['Hair', 'Massage'],
+    this.distanceKm = 20.0,
+    this.services = const [],
     this.date = 'This Week',
     this.time = 'Any Time',
-    this.priceRange = const RangeValues(20, 150),
-    this.rating = '4.5+',
+    this.priceRange = const RangeValues(0, 500),
+    this.minPrice,
+    this.maxPrice,
+    this.rating,
   });
 
   SpaFilterCriteria copyWith({
@@ -34,6 +40,8 @@ class SpaFilterCriteria {
     String? date,
     String? time,
     RangeValues? priceRange,
+    double? minPrice,
+    double? maxPrice,
     String? rating,
   }) {
     return SpaFilterCriteria(
@@ -43,6 +51,8 @@ class SpaFilterCriteria {
       date: date ?? this.date,
       time: time ?? this.time,
       priceRange: priceRange ?? this.priceRange,
+      minPrice: minPrice ?? this.minPrice,
+      maxPrice: maxPrice ?? this.maxPrice,
       rating: rating ?? this.rating,
     );
   }
@@ -91,8 +101,9 @@ class _AppFilterBottomSheetState extends State<AppFilterBottomSheet> {
   late List<String> _selectedServices;
   late String _selectedDate;
   late String _selectedTime;
-  late RangeValues _priceRange;
-  late String _selectedRating;
+  late final TextEditingController _minPriceController;
+  late final TextEditingController _maxPriceController;
+  String? _selectedRating;
 
   static const Color _coralColor = Color(0xFFFC6E58);
   static const Color _textDark = Color(0xFF1E2022);
@@ -103,11 +114,20 @@ class _AppFilterBottomSheetState extends State<AppFilterBottomSheet> {
   @override
   void initState() {
     super.initState();
+    _minPriceController = TextEditingController();
+    _maxPriceController = TextEditingController();
     _resetTo(widget.initialCriteria);
     _cities = List.from(widget.availableCities ?? []);
     if (_cities.isEmpty) {
       _loadCities();
     }
+  }
+
+  @override
+  void dispose() {
+    _minPriceController.dispose();
+    _maxPriceController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadCities() async {
@@ -144,8 +164,15 @@ class _AppFilterBottomSheetState extends State<AppFilterBottomSheet> {
     _selectedServices = List.from(criteria.services);
     _selectedDate = criteria.date;
     _selectedTime = criteria.time;
-    _priceRange = criteria.priceRange;
-    _selectedRating = criteria.rating;
+    _minPriceController.text = criteria.minPrice != null
+        ? criteria.minPrice!.toInt().toString()
+        : '';
+    _maxPriceController.text = criteria.maxPrice != null
+        ? criteria.maxPrice!.toInt().toString()
+        : '';
+    _selectedRating = (criteria.rating != null && criteria.rating != 'All')
+        ? criteria.rating
+        : null;
   }
 
   void _onReset() {
@@ -157,20 +184,12 @@ class _AppFilterBottomSheetState extends State<AppFilterBottomSheet> {
           services: [],
           date: 'Today',
           time: 'Any Time',
-          priceRange: RangeValues(10, 100),
-          rating: '4.0+',
+          minPrice: null,
+          maxPrice: null,
+          priceRange: RangeValues(0, 500),
+          rating: null,
         ),
       );
-    });
-  }
-
-  void _toggleService(String service) {
-    setState(() {
-      if (_selectedServices.contains(service)) {
-        _selectedServices.remove(service);
-      } else {
-        _selectedServices.add(service);
-      }
     });
   }
 
@@ -315,79 +334,18 @@ class _AppFilterBottomSheetState extends State<AppFilterBottomSheet> {
                     ),
                   ),
 
-                  // Quick popular city chips
-                  const SizedBox(height: 10),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    child: Row(
-                      children:
-                          [
-                            'Hồ Chí Minh',
-                            'Hà Nội',
-                            'Đà Nẵng',
-                            'Bình Dương',
-                            'Đồng Nai',
-                          ].map((cityName) {
-                            final isSelected =
-                                _location.toLowerCase() ==
-                                cityName.toLowerCase();
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(20),
-                                onTap: () {
-                                  setState(() {
-                                    _location = cityName;
-                                  });
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? _coralColor.withValues(alpha: 0.12)
-                                        : const Color(0xFFF3F4F6),
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? _coralColor
-                                          : Colors.transparent,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    cityName,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: isSelected
-                                          ? FontWeight.w700
-                                          : FontWeight.w500,
-                                      color: isSelected
-                                          ? _coralColor
-                                          : const Color(0xFF4B5563),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                    ),
-                  ),
-
                   const SizedBox(height: 22),
 
-                  // 2. Distance Slider
+                  // 2. Distance Slider (Max 20km)
                   AppFilterSlider(
-                    value: _distanceKm,
+                    value: _distanceKm > 20 ? 20 : _distanceKm,
                     min: 1,
-                    max: 50,
-                    label: 'Distance',
-                    valueDisplay: 'Within ${_distanceKm.toStringAsFixed(0)} km',
+                    max: 20,
+                    label: 'Khoảng cách (Distance)',
+                    valueDisplay:
+                        'Trong vòng ${_distanceKm.toStringAsFixed(0)} km',
                     minDisplay: '1 km',
-                    maxDisplay: '50 km',
+                    maxDisplay: '20 km',
                     onChanged: (val) {
                       setState(() {
                         _distanceKm = val;
@@ -397,9 +355,9 @@ class _AppFilterBottomSheetState extends State<AppFilterBottomSheet> {
 
                   const SizedBox(height: 22),
 
-                  // 3. Service
+                  // 3. Date
                   const Text(
-                    'Service',
+                    'Ngày hẹn (Date)',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -409,40 +367,12 @@ class _AppFilterBottomSheetState extends State<AppFilterBottomSheet> {
                   const SizedBox(height: 10),
                   AppOptionPicker<String>(
                     options: const [
-                      OptionPickerItem(value: 'Hair', label: 'Hair'),
-                      OptionPickerItem(
-                        value: 'Hair Color',
-                        label: 'Hair Color',
-                      ),
-                      OptionPickerItem(value: 'Facial', label: 'Facial'),
-                      OptionPickerItem(value: 'Massage', label: 'Massage'),
-                      OptionPickerItem(value: 'Nail', label: 'Nail'),
-                    ],
-                    selectedValues: _selectedServices,
-                    isMultiSelect: true,
-                    onSelected: _toggleService,
-                  ),
-
-                  const SizedBox(height: 22),
-
-                  // 4. Date
-                  const Text(
-                    'Date',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: _textDark,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  AppOptionPicker<String>(
-                    options: const [
-                      OptionPickerItem(value: 'Today', label: 'Today'),
-                      OptionPickerItem(value: 'Tomorrow', label: 'Tomorrow'),
-                      OptionPickerItem(value: 'This Week', label: 'This Week'),
+                      OptionPickerItem(value: 'Today', label: 'Hôm nay'),
+                      OptionPickerItem(value: 'Tomorrow', label: 'Ngày mai'),
+                      OptionPickerItem(value: 'This Week', label: 'Tuần này'),
                       OptionPickerItem(
                         value: 'Custom Date',
-                        label: 'Custom Date',
+                        label: 'Chọn ngày',
                         icon: Icon(LucideIcons.calendar, size: 14),
                       ),
                     ],
@@ -456,80 +386,106 @@ class _AppFilterBottomSheetState extends State<AppFilterBottomSheet> {
 
                   const SizedBox(height: 22),
 
-                  // 5. Time
-                  const Text(
-                    'Time',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: _textDark,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _inputBg,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: const Color(0xFFEDF0F3)),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          LucideIcons.clock,
-                          color: Color(0xFF6B7280),
-                          size: 18,
+                  // 6. Price Range Input (Optional)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Khoảng giá (Price)',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: _textDark,
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            _selectedTime,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: _textDark,
+                      ),
+                      Text(
+                        'Tùy chọn',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AppTextField(
+                          controller: _minPriceController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          hint: 'Giá từ (đ)',
+                          prefixIcon: const Icon(
+                            LucideIcons.banknote,
+                            size: 16,
+                            color: Color(0xFF9CA3AF),
+                          ),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          '—',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF9CA3AF),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: AppTextField(
+                          controller: _maxPriceController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          hint: 'Đến (đ)',
+                          prefixIcon: const Icon(
+                            LucideIcons.banknote,
+                            size: 16,
+                            color: Color(0xFF9CA3AF),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 22),
+
+                  // 7. Rating (Có thể bỏ chọn)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Đánh giá (Rating)',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: _textDark,
+                        ),
+                      ),
+                      if (_selectedRating != null)
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedRating = null;
+                            });
+                          },
+                          child: const Text(
+                            'Bỏ chọn',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: _coralColor,
                             ),
                           ),
                         ),
-                        const Icon(
-                          LucideIcons.chevron_down,
-                          color: Color(0xFF9CA3AF),
-                          size: 18,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 22),
-
-                  // 6. Price Range Slider
-                  AppPriceRangeSlider(
-                    values: _priceRange,
-                    min: 0,
-                    max: 200,
-                    label: 'Price Range',
-                    valueDisplay:
-                        '\$${_priceRange.start.toStringAsFixed(0)} - \$${_priceRange.end.toStringAsFixed(0)}+',
-                    onChanged: (values) {
-                      setState(() {
-                        _priceRange = values;
-                      });
-                    },
-                  ),
-
-                  const SizedBox(height: 22),
-
-                  // 7. Rating
-                  const Text(
-                    'Rating',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: _textDark,
-                    ),
+                    ],
                   ),
                   const SizedBox(height: 10),
                   AppOptionPicker<String>(
@@ -562,10 +518,16 @@ class _AppFilterBottomSheetState extends State<AppFilterBottomSheet> {
                         ),
                       ),
                     ],
-                    selectedValues: [_selectedRating],
+                    selectedValues: _selectedRating != null
+                        ? [_selectedRating!]
+                        : const [],
                     onSelected: (val) {
                       setState(() {
-                        _selectedRating = val;
+                        if (_selectedRating == val) {
+                          _selectedRating = null;
+                        } else {
+                          _selectedRating = val;
+                        }
                       });
                     },
                   ),
@@ -613,6 +575,12 @@ class _AppFilterBottomSheetState extends State<AppFilterBottomSheet> {
                   child: AppButton(
                     text: 'Apply Filters',
                     onPressed: () {
+                      final minP = double.tryParse(
+                        _minPriceController.text.trim(),
+                      );
+                      final maxP = double.tryParse(
+                        _maxPriceController.text.trim(),
+                      );
                       widget.onApply(
                         SpaFilterCriteria(
                           location: _location,
@@ -620,7 +588,9 @@ class _AppFilterBottomSheetState extends State<AppFilterBottomSheet> {
                           services: _selectedServices,
                           date: _selectedDate,
                           time: _selectedTime,
-                          priceRange: _priceRange,
+                          minPrice: minP,
+                          maxPrice: maxP,
+                          priceRange: RangeValues(minP ?? 0, maxP ?? 500),
                           rating: _selectedRating,
                         ),
                       );

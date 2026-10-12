@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
+import 'package:spa_booking/src/app/di/dependency_injection.dart';
+import 'package:spa_booking/src/core/storage/secure_storage.dart';
 import '../../../../bloc/auth/login/login_bloc.dart';
 import '../../../../bloc/auth/login/login_event.dart';
 import '../../../../bloc/auth/login/login_state.dart';
-import '../../forgot_password/view/forgot_password_view.dart';
 import '../widgets/frosted_glass_card.dart';
 import '../widgets/glassmorphic_text_field.dart';
 
@@ -19,31 +20,68 @@ class LoginCardSection extends StatefulWidget {
 
 class _LoginCardSectionState extends State<LoginCardSection> {
   late final TextEditingController _identifierController;
-  late final TextEditingController _passwordController;
   final FocusNode _identifierFocusNode = FocusNode();
-  final FocusNode _passwordFocusNode = FocusNode();
-  bool _obscurePassword = true;
+  bool _rememberCredentials = true;
 
   @override
   void initState() {
     super.initState();
     final currentPhone = context.read<LoginBloc>().state.phone;
     _identifierController = TextEditingController(text: currentPhone);
-    _passwordController = TextEditingController();
+    _loadRememberedCredentials();
+  }
+
+  Future<void> _loadRememberedCredentials() async {
+    try {
+      if (sl.isRegistered<SecureStorage>()) {
+        final storage = sl<SecureStorage>();
+        final isRemembered = await storage.read('auth_remember_me');
+        if (isRemembered != 'false') {
+          final savedId = await storage.read('auth_saved_identifier');
+          if (mounted && savedId != null && savedId.isNotEmpty) {
+            _identifierController.text = savedId;
+            context.read<LoginBloc>().add(LoginIdentifierChanged(savedId));
+          }
+          if (mounted) {
+            setState(() => _rememberCredentials = true);
+          }
+        } else {
+          if (mounted) {
+            setState(() => _rememberCredentials = false);
+          }
+        }
+      }
+    } catch (_) {}
   }
 
   @override
   void dispose() {
     _identifierController.dispose();
-    _passwordController.dispose();
     _identifierFocusNode.dispose();
-    _passwordFocusNode.dispose();
     super.dispose();
+  }
+
+  Future<void> _saveOrClearCredentials() async {
+    try {
+      if (sl.isRegistered<SecureStorage>()) {
+        final storage = sl<SecureStorage>();
+        if (_rememberCredentials) {
+          await storage.write('auth_remember_me', 'true');
+          await storage.write(
+            'auth_saved_identifier',
+            _identifierController.text.trim(),
+          );
+        } else {
+          await storage.write('auth_remember_me', 'false');
+          await storage.delete('auth_saved_identifier');
+        }
+      }
+    } catch (_) {}
   }
 
   void _handleSubmit() {
     _identifierFocusNode.unfocus();
-    _passwordFocusNode.unfocus();
+    _saveOrClearCredentials();
     context.read<LoginBloc>().add(const LoginSubmitted());
   }
 
@@ -76,14 +114,12 @@ class _LoginCardSectionState extends State<LoginCardSection> {
                 hintText: l10n.enterEmailOrPhone,
                 prefixIcon: LucideIcons.user,
                 keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
+                textInputAction: TextInputAction.done,
                 hasError: hasError,
                 onChanged: (value) {
                   context.read<LoginBloc>().add(LoginIdentifierChanged(value));
                 },
-                onSubmitted: (_) {
-                  _passwordFocusNode.requestFocus();
-                },
+                onSubmitted: (_) => _handleSubmit(),
               ),
 
               // Inline Validation Error
@@ -102,85 +138,100 @@ class _LoginCardSectionState extends State<LoginCardSection> {
                 ),
               ],
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
 
-              // 2. Password Field with translucent white glassmorphism
-              GlassmorphicTextField(
-                textFieldKey: const Key('login_password_field'),
-                controller: _passwordController,
-                focusNode: _passwordFocusNode,
-                hintText: l10n.enterPassword,
-                prefixIcon: LucideIcons.key,
-                obscureText: _obscurePassword,
-                suffixIcon: IconButton(
-                  padding: EdgeInsets.zero,
-                  splashRadius: 18,
-                  icon: Icon(
-                    _obscurePassword ? LucideIcons.eye_off : LucideIcons.eye,
-                    size: 19,
-                    color: const Color(0xFF8A7D75),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscurePassword = !_obscurePassword;
-                    });
-                  },
-                ),
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
-                onChanged: (value) {
-                  context.read<LoginBloc>().add(LoginPasswordChanged(value));
-                },
-                onSubmitted: (_) => _handleSubmit(),
-              ),
-
-              if (state.passwordError != null) ...[
-                const SizedBox(height: 6),
-                Padding(
-                  padding: const EdgeInsets.only(left: 18),
-                  child: Text(
-                    state.passwordError!,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFFD32F2F),
+              // Remember Me Checkbox
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _rememberCredentials = !_rememberCredentials;
+                      });
+                    },
+                    behavior: HitTestBehavior.opaque,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: Checkbox(
+                            value: _rememberCredentials,
+                            activeColor: const Color(0xFFB85848),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            side: const BorderSide(
+                              color: Color(0xFF8A7D75),
+                              width: 1.5,
+                            ),
+                            onChanged: (val) {
+                              setState(() {
+                                _rememberCredentials = val ?? false;
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          Localizations.localeOf(context).languageCode == 'vi'
+                              ? 'Nhớ tài khoản'
+                              : 'Remember me',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF5A4E46),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
 
               const SizedBox(height: 14),
 
-              // 3. "Forgot Password?" Link (matching Image 2 position & color)
-              Align(
-                alignment: Alignment.centerRight,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const ForgotPasswordView(),
-                      ),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 4,
-                      vertical: 2,
-                    ),
-                    child: Text(
-                      l10n.forgotPassword,
-                      style: const TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFFB85848),
-                        letterSpacing: 0.1,
-                      ),
-                    ),
+              // Helper note
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.35),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.5),
                   ),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      LucideIcons.shield_check,
+                      size: 16,
+                      color: Color(0xFFFA7762),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        Localizations.localeOf(context).languageCode == 'vi'
+                            ? 'Mã OTP bảo mật sẽ được gửi về Email hoặc Số điện thoại của bạn.'
+                            : 'A secure OTP code will be sent to your Email or Phone.',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF5A4E46),
+                          fontWeight: FontWeight.w500,
+                          height: 1.35,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
-              const SizedBox(height: 22),
+              const SizedBox(height: 16),
 
               // 4. Action Button (Login)
               _buildLoginButton(context, state),
@@ -194,7 +245,6 @@ class _LoginCardSectionState extends State<LoginCardSection> {
   }
 
   Widget _buildLoginButton(BuildContext context, LoginState state) {
-    final l10n = context.l10n;
     final isEnabled = state.canSubmit;
     final isLoading = state.isLoading;
 
@@ -239,7 +289,9 @@ class _LoginCardSectionState extends State<LoginCardSection> {
                     ),
                   )
                 : Text(
-                    l10n.loginButton,
+                    Localizations.localeOf(context).languageCode == 'vi'
+                        ? 'Nhận mã OTP'
+                        : 'Send OTP',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

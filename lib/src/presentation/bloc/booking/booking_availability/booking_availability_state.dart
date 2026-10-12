@@ -15,6 +15,8 @@ abstract class BookingAvailabilityState with _$BookingAvailabilityState {
     BookingAvailabilityStatus status,
     BookingAvailabilityEntity? availability,
     String? selectedTime,
+    BookingAvailabilityOptionEntity? selectedOption,
+    DateTime? selectedStartAt,
     Failure? failure,
   }) = _BookingAvailabilityState;
 

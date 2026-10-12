@@ -352,4 +352,162 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(FailureMapper.map(e));
     }
   }
+
+  @override
+  Future<Either<Failure, RequestOtpResult>> sendRegisterOtp({
+    String? phoneNumber,
+    String? email,
+  }) async {
+    try {
+      final response = await remote.sendRegisterOtp(
+        phoneNumber: phoneNumber,
+        email: email,
+      );
+      return Right(AuthMapper.toRequestOtpResult(response));
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthSessionEntity>> registerWithOtp({
+    String? phoneNumber,
+    String? email,
+    required String otp,
+    required String name,
+  }) async {
+    try {
+      final response = await remote.registerWithOtp(
+        phoneNumber: phoneNumber,
+        email: email,
+        otp: otp,
+        name: name,
+      );
+      final entity = AuthMapper.toAuthSessionEntityFromAuthResponse(response);
+
+      await sessionStorage.saveTokens(
+        accessToken: entity.accessToken,
+        refreshToken: entity.refreshToken,
+        expiresInSeconds: entity.expiresIn,
+      );
+      await sessionStorage.saveUserData(entity.user.id);
+
+      return Right(entity);
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, RequestOtpResult>> sendLoginOtp({
+    required String identifier,
+  }) async {
+    try {
+      final response = await remote.sendLoginOtp(identifier: identifier);
+      return Right(AuthMapper.toRequestOtpResult(response));
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthSessionEntity>> loginWithOtp({
+    required String identifier,
+    required String otp,
+  }) async {
+    try {
+      final response = await remote.loginWithOtp(
+        identifier: identifier,
+        otp: otp,
+      );
+      final entity = AuthMapper.toAuthSessionEntityFromAuthResponse(response);
+
+      await sessionStorage.saveTokens(
+        accessToken: entity.accessToken,
+        refreshToken: entity.refreshToken,
+        expiresInSeconds: entity.expiresIn,
+      );
+      await sessionStorage.saveUserData(entity.user.id);
+
+      return Right(entity);
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, RequestOtpResult>> requestChangeEmail({
+    required String newEmail,
+  }) async {
+    try {
+      final response = await remote.requestChangeEmail(newEmail: newEmail);
+      return Right(AuthMapper.toRequestOtpResult(response));
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> verifyChangeEmail({
+    required String newEmail,
+    required String otp,
+  }) async {
+    try {
+      final userModel = await remote.verifyChangeEmail(
+        newEmail: newEmail,
+        otp: otp,
+      );
+      return Right(AuthMapper.toUser(userModel));
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, RequestOtpResult>> requestChangePhone({
+    required String newPhone,
+  }) async {
+    try {
+      final response = await remote.requestChangePhone(newPhone: newPhone);
+      return Right(AuthMapper.toRequestOtpResult(response));
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> verifyChangePhone({
+    required String newPhone,
+    required String otp,
+  }) async {
+    try {
+      final userModel = await remote.verifyChangePhone(
+        newPhone: newPhone,
+        otp: otp,
+      );
+      return Right(AuthMapper.toUser(userModel));
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> removeCustomerEmail() async {
+    try {
+      await remote.removeCustomerEmail();
+      return const Right(unit);
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> removeCustomerPhone() async {
+    try {
+      await remote.removeCustomerPhone();
+      return const Right(unit);
+    } catch (e) {
+      return Left(FailureMapper.map(e));
+    }
+  }
 }

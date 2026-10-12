@@ -84,17 +84,16 @@ class StoreDetailBodyView extends StatelessWidget {
           services: store.services,
           onBookService: onBookService,
         );
-
-      case StoreDetailTab.gallery:
-        return StoreGalleryTabView(
-          coverImageUrl: store.coverImageUrl,
-          images: store.images,
-        );
       case StoreDetailTab.reviews:
         return StoreReviewsTabView(
           ratingSummary: store.reviewSummary,
           onViewAllReviews: onViewAllReviews,
           onWriteReview: onWriteReview,
+        );
+      case StoreDetailTab.gallery:
+        return StoreGalleryTabView(
+          coverImageUrl: store.coverImageUrl,
+          images: store.images,
         );
     }
   }

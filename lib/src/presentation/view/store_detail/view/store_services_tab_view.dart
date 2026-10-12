@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:spa_booking/src/core/extensions/double_extensions.dart';
 import 'package:spa_booking/src/domain/entities/store/store.dart';
 import '../../../../shared/shared.dart';
-
-import '../widgets/store_service_item_card.dart';
 
 class StoreServicesTabView extends StatefulWidget {
   final List<ServiceCategoryEntity> categories;
@@ -21,219 +20,224 @@ class StoreServicesTabView extends StatefulWidget {
 }
 
 class _StoreServicesTabViewState extends State<StoreServicesTabView> {
-  String? _selectedCategoryId;
-
-  static const Color _selectedChipBg = Color(0xFFA53C2A);
-  static const Color _unselectedChipBg = Color(0xFFE0F2FE);
-  static const Color _unselectedChipText = Color(0xFF0369A1);
+  static const Color _coralColor = Color(0xFFFF6F59);
   static const Color _textDark = Color(0xFF1E2022);
+  static const Color _textMuted = Color(0xFF64748B);
 
   @override
   Widget build(BuildContext context) {
-    final categories = _sortedCategories;
-    final filteredServices = _filteredServices;
+    if (widget.services.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 40),
+        child: Center(
+          child: Text(
+            context.l10n.noServicesInCategory,
+            style: const TextStyle(fontSize: 13.5, color: _textMuted),
+          ),
+        ),
+      );
+    }
+
+    // Group services by category
+    final sortedCategories = [...widget.categories]
+      ..sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
+
+    final Map<String, List<ServiceEntity>> groupedServices = {};
+    for (final cat in sortedCategories) {
+      final list = widget.services
+          .where((s) => s.categoryId == cat.id)
+          .toList();
+      if (list.isNotEmpty) {
+        groupedServices[cat.name] = list;
+      }
+    }
+
+    // Add uncategorized if any
+    final uncategorized = widget.services
+        .where(
+          (s) =>
+              s.categoryId == null ||
+              !sortedCategories.any((cat) => cat.id == s.categoryId),
+        )
+        .toList();
+    if (uncategorized.isNotEmpty) {
+      groupedServices['Dịch vụ khác'] = uncategorized;
+    }
+
+    if (groupedServices.isEmpty) {
+      groupedServices['Dịch vụ'] = widget.services;
+    }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 16),
+          ...groupedServices.entries.toList().asMap().entries.map((entry) {
+            final index = entry.key;
+            final categoryName = entry.value.key;
+            final services = entry.value.value;
 
-          _buildCategoryFilter(categories),
-
-          const SizedBox(height: 20),
-
-          if (filteredServices.isEmpty)
-            _buildEmptyState()
-          else
-            _buildServiceList(categories, filteredServices),
-
-          const SizedBox(height: 20),
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _buildExpandableCategoryCard(
+                categoryName: categoryName,
+                services: services,
+                initiallyExpanded: index == 0,
+              ),
+            );
+          }),
+          const SizedBox(height: 24),
         ],
       ),
     );
   }
 
-  List<ServiceCategoryEntity> get _sortedCategories {
-    final result = [...widget.categories];
-
-    result.sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
-
-    return result;
-  }
-
-  List<ServiceEntity> get _filteredServices {
-    if (_selectedCategoryId == null) {
-      return widget.services;
-    }
-
-    return widget.services
-        .where((service) => service.categoryId == _selectedCategoryId)
-        .toList();
-  }
-
-  Widget _buildCategoryFilter(List<ServiceCategoryEntity> categories) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
-      child: Row(
-        children: [
-          _buildCategoryChip(
-            label: context.l10n.all,
-            isSelected: _selectedCategoryId == null,
-            onTap: () {
-              setState(() {
-                _selectedCategoryId = null;
-              });
-            },
-          ),
-
-          ...categories.map(
-            (category) => _buildCategoryChip(
-              label: category.name,
-              isSelected: _selectedCategoryId == category.id,
-              onTap: () {
-                setState(() {
-                  _selectedCategoryId = category.id;
-                });
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategoryChip({
-    required String label,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 9),
-          decoration: BoxDecoration(
-            color: isSelected ? _selectedChipBg : _unselectedChipBg,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-              color: isSelected ? Colors.white : _unselectedChipText,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildServiceList(
-    List<ServiceCategoryEntity> categories,
-    List<ServiceEntity> services,
-  ) {
-    if (_selectedCategoryId != null) {
-      final category = categories
-          .where((e) => e.id == _selectedCategoryId)
-          .firstOrNull;
-
-      return _buildCategorySection(
-        categoryName: category?.name ?? 'Services',
-        services: services,
-      );
-    }
-
-    final sections = <Widget>[];
-
-    for (final category in categories) {
-      final categoryServices = services
-          .where((service) => service.categoryId == category.id)
-          .toList();
-
-      if (categoryServices.isEmpty) {
-        continue;
-      }
-
-      sections.add(
-        _buildCategorySection(
-          categoryName: category.name,
-          services: categoryServices,
-        ),
-      );
-    }
-
-    // Services không có category hoặc category không tồn tại.
-    final uncategorizedServices = services
-        .where(
-          (service) =>
-              service.categoryId == null ||
-              !categories.any((category) => category.id == service.categoryId),
-        )
-        .toList();
-
-    if (uncategorizedServices.isNotEmpty) {
-      sections.add(
-        _buildCategorySection(
-          categoryName: 'Other Services',
-          services: uncategorizedServices,
-        ),
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: sections,
-    );
-  }
-
-  Widget _buildCategorySection({
+  Widget _buildExpandableCategoryCard({
     required String categoryName,
     required List<ServiceEntity> services,
+    required bool initiallyExpanded,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          categoryName,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-            color: _textDark,
-            letterSpacing: -0.2,
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFF1F5F9), width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.025),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
-        ),
-        const SizedBox(height: 12),
-
-        ...services.map(
-          (service) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: StoreDetailEntityCard(
-              service: service,
-              // onBook: () => widget.onBookService?.call(service),
-              onBook: () {},
-            ),
+        ],
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          initiallyExpanded: initiallyExpanded,
+          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          childrenPadding: const EdgeInsets.only(bottom: 8),
+          iconColor: _coralColor,
+          collapsedIconColor: const Color(0xFF94A3B8),
+          title: Row(
+            children: [
+              Text(
+                categoryName,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: _textDark,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF1F5F9),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  '${services.length}',
+                  style: const TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF64748B),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
+          children: [
+            const Divider(height: 1, thickness: 0.8, color: Color(0xFFF1F5F9)),
+            ...services.asMap().entries.map((entry) {
+              final isLast = entry.key == services.length - 1;
+              final service = entry.value;
 
-        const SizedBox(height: 12),
-      ],
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 40),
-      child: Center(
-        child: Text(
-          context.l10n.noServicesInCategory,
-          style: const TextStyle(fontSize: 14, color: Color(0xFF94A3B8)),
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Service details
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                service.name,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: _textDark,
+                                  height: 1.3,
+                                ),
+                              ),
+                              if (service.description != null &&
+                                  service.description!.trim().isNotEmpty) ...[
+                                const SizedBox(height: 3),
+                                Text(
+                                  service.description!.trim(),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: _textMuted,
+                                    height: 1.3,
+                                  ),
+                                ),
+                              ],
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    LucideIcons.clock,
+                                    size: 12,
+                                    color: Color(0xFF94A3B8),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '${service.durationMinutes} phút',
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF64748B),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // Price
+                        Text(
+                          service.basePrice.toVnd(),
+                          style: const TextStyle(
+                            fontSize: 14.5,
+                            fontWeight: FontWeight.w700,
+                            color: _coralColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!isLast)
+                    const Divider(
+                      height: 1,
+                      indent: 16,
+                      endIndent: 16,
+                      thickness: 0.5,
+                      color: Color(0xFFF8FAFC),
+                    ),
+                ],
+              );
+            }),
+          ],
         ),
       ),
     );

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:spa_booking/src/domain/entities/booking/booking_availability_entity.dart';
+import 'package:spa_booking/src/domain/entities/booking/booking_item_param.dart';
 import 'package:spa_booking/src/domain/entities/store/schedule_grid_entity.dart';
 import 'package:spa_booking/src/presentation/bloc/booking/booking_availability/booking_availability_bloc.dart';
 import 'package:spa_booking/src/presentation/bloc/booking/booking_availability/booking_availability_event.dart';
@@ -21,6 +22,8 @@ class BookingSchedulePage extends StatelessWidget {
   final String salonName;
   final List<BookingServiceItem>? selectedServices;
   final String? selectedStaffId;
+  final Map<String, String?>? selectedStaffPerService;
+  final bool isQuickBook;
 
   const BookingSchedulePage({
     super.key,
@@ -28,6 +31,8 @@ class BookingSchedulePage extends StatelessWidget {
     required this.salonName,
     this.selectedServices,
     this.selectedStaffId,
+    this.selectedStaffPerService,
+    this.isQuickBook = false,
   });
 
   @override
@@ -37,6 +42,8 @@ class BookingSchedulePage extends StatelessWidget {
       salonName: salonName,
       selectedServices: selectedServices,
       selectedStaffId: selectedStaffId,
+      selectedStaffPerService: selectedStaffPerService,
+      isQuickBook: isQuickBook,
     );
   }
 }
@@ -46,6 +53,8 @@ class BookingScheduleView extends StatelessWidget {
   final String salonName;
   final List<BookingServiceItem>? selectedServices;
   final String? selectedStaffId;
+  final Map<String, String?>? selectedStaffPerService;
+  final bool isQuickBook;
 
   const BookingScheduleView({
     super.key,
@@ -53,6 +62,8 @@ class BookingScheduleView extends StatelessWidget {
     required this.salonName,
     this.selectedServices,
     this.selectedStaffId,
+    this.selectedStaffPerService,
+    this.isQuickBook = false,
   });
 
   @override
@@ -88,6 +99,8 @@ class BookingScheduleView extends StatelessWidget {
       salonName: salonName,
       selectedServices: selectedServices,
       selectedStaffId: selectedStaffId,
+      selectedStaffPerService: selectedStaffPerService,
+      isQuickBook: isQuickBook,
     );
 
     if (providers.isEmpty) return content;
@@ -100,12 +113,16 @@ class _BookingScheduleContentView extends StatefulWidget {
   final String salonName;
   final List<BookingServiceItem>? selectedServices;
   final String? selectedStaffId;
+  final Map<String, String?>? selectedStaffPerService;
+  final bool isQuickBook;
 
   const _BookingScheduleContentView({
     this.storeId,
     required this.salonName,
     this.selectedServices,
     this.selectedStaffId,
+    this.selectedStaffPerService,
+    this.isQuickBook = false,
   });
 
   @override
@@ -119,7 +136,6 @@ class _BookingScheduleContentViewState
   static final DateFormat _displayDate = DateFormat('MMM d, yyyy', 'en_US');
   static final DateFormat _apiDate = DateFormat('yyyy-MM-dd', 'en_US');
 
-  String _selectedFilterChip = 'All Staff';
   String? _selectedStaffId;
   String _selectedTime = '';
   late DateTime _selectedDate;
@@ -127,6 +143,9 @@ class _BookingScheduleContentViewState
   // Latest API data
   ScheduleGridEntity? _grid;
   BookingAvailabilityEntity? _availability;
+  BookingAvailabilityOptionEntity? _selectedOption;
+  DateTime? _apiSelectedStartAt;
+  Map<String, String?>? _effectiveStaffPerService;
 
   bool get _isRealStore => widget.storeId != null && widget.storeId!.isNotEmpty;
 
@@ -183,20 +202,35 @@ class _BookingScheduleContentViewState
       _grid = null;
       _availability = null;
       _selectedTime = '';
+      _selectedOption = null;
+      _apiSelectedStartAt = null;
     });
 
     context.read<StoreScheduleGridBloc>().add(
       FetchScheduleGridEvent(storeId: widget.storeId!, date: date),
     );
 
-    final serviceIds =
-        widget.selectedServices?.map((s) => s.id).toList() ?? const [];
-    if (_hasAvailabilityBloc && serviceIds.isNotEmpty) {
+    final serviceItems = (widget.selectedServices ?? []).map((s) {
+      final staffId = widget.isQuickBook
+          ? null
+          : (widget.selectedStaffPerService?[s.id] ?? widget.selectedStaffId);
+      final cleanStaffId =
+          (staffId != null &&
+              staffId.isNotEmpty &&
+              !staffId.startsWith('unassigned'))
+          ? staffId
+          : null;
+      return BookingItemParam(serviceId: s.id, staffProfileId: cleanStaffId);
+    }).toList();
+
+    if (_hasAvailabilityBloc && serviceItems.isNotEmpty) {
       context.read<BookingAvailabilityBloc>().add(
         CheckAvailabilitySlotsEvent(
           storeId: widget.storeId!,
-          date: date,
-          serviceIds: serviceIds,
+          services: serviceItems,
+          dateFrom: date,
+          dateTo: date,
+          stepMinutes: 15,
         ),
       );
     }
@@ -228,26 +262,34 @@ class _BookingScheduleContentViewState
   }
 
   void _onSelectSlot(String staffId, String time) {
-    // Don't allow picking a time that already passed today.
-    if (_useApi && _isToday) {
-      final mins = ScheduleGridMapper.displayToMinutes(time);
-      final now = DateTime.now();
-      if (mins != null && mins <= now.hour * 60 + now.minute) {
-        AppToastHelper.showInfo(
-          context,
-          message: 'This time has already passed',
-        );
-        return;
-      }
-    }
-
     setState(() {
       _selectedStaffId = staffId;
       _selectedTime = time;
     });
   }
 
+  void _onSelectOption(BookingAvailabilityOptionEntity option) {
+    setState(() {
+      _selectedOption = option;
+      _selectedTime = option.startTime;
+      _apiSelectedStartAt = DateTime.tryParse(option.startAt);
+
+      if (option.items.isNotEmpty) {
+        final updatedMap = Map<String, String?>.from(
+          widget.selectedStaffPerService ?? {},
+        );
+        for (final item in option.items) {
+          if (item.staffProfileId != null && item.staffProfileId!.isNotEmpty) {
+            updatedMap[item.serviceId] = item.staffProfileId;
+          }
+        }
+        _effectiveStaffPerService = updatedMap;
+      }
+    });
+  }
+
   DateTime? get _selectedStartAt {
+    if (_apiSelectedStartAt != null) return _apiSelectedStartAt;
     final mins = ScheduleGridMapper.displayToMinutes(_selectedTime);
     if (mins == null) return null;
     return DateTime(
@@ -260,19 +302,47 @@ class _BookingScheduleContentViewState
   }
 
   String get _timeRangeDisplay {
+    if (_selectedOption != null) {
+      return '${_selectedOption!.startTime} - ${_selectedOption!.endTime}';
+    }
     final start = _selectedStartAt;
     if (start == null) return _selectedTime;
     final duration = _serviceDurationMinutes;
     if (duration <= 0) return _selectedTime;
     final end = start.add(Duration(minutes: duration));
     final fmt = DateFormat('hh:mm a', 'en_US');
-    return '${fmt.format(start)} – ${fmt.format(end)}';
+    return '${fmt.format(start)} - ${fmt.format(end)}';
   }
 
   void _onProceedToDetail() {
-    if (_useApi && (_selectedTime.isEmpty || _selectedStaffId == null)) {
-      AppToastHelper.showInfo(context, message: 'Please pick a time slot');
+    if (_useApi && _selectedTime.isEmpty) {
+      final isVi = Localizations.localeOf(context).languageCode == 'vi';
+      AppToastHelper.showInfo(
+        context,
+        message: isVi
+            ? 'Vui lòng chọn một khung giờ'
+            : 'Please pick a time slot',
+      );
       return;
+    }
+
+    // Tìm option khớp với slot đã chọn nếu _selectedOption chưa được set
+    BookingAvailabilityOptionEntity? effectiveOption = _selectedOption;
+    if (effectiveOption == null && _availability != null) {
+      final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate);
+      final day = _availability!.days
+          .where((d) => d.date == dateStr)
+          .firstOrNull;
+      final options = (day != null && day.options.isNotEmpty)
+          ? day.options
+          : _availability!.options;
+      effectiveOption = options
+          .where(
+            (o) =>
+                o.startTime == _selectedTime ||
+                '${o.startTime} - ${o.endTime}' == _selectedTime,
+          )
+          .firstOrNull;
     }
 
     final isUnassigned =
@@ -290,7 +360,11 @@ class _BookingScheduleContentViewState
           selectedTime: _timeRangeDisplay,
           selectedServices: widget.selectedServices,
           selectedStaffId: staffIdToSend,
+          selectedStaffPerService:
+              _effectiveStaffPerService ?? widget.selectedStaffPerService,
           startAt: _useApi ? _selectedStartAt : null,
+          selectedOption: effectiveOption,
+          isQuickBook: widget.isQuickBook,
         ),
       ),
     );
@@ -315,7 +389,36 @@ class _BookingScheduleContentViewState
           BlocListener<BookingAvailabilityBloc, BookingAvailabilityState>(
             listener: (context, state) {
               if (state.isLoaded) {
-                setState(() => _availability = state.availability);
+                setState(() {
+                  _availability = state.availability;
+                  if (state.selectedOption != null) {
+                    _selectedOption = state.selectedOption;
+                    _selectedTime = state.selectedOption!.startTime;
+                    _apiSelectedStartAt = DateTime.tryParse(
+                      state.selectedOption!.startAt,
+                    );
+                  } else if (widget.isQuickBook &&
+                      _selectedTime.isEmpty &&
+                      state.availability != null) {
+                    final dateStr = DateFormat(
+                      'yyyy-MM-dd',
+                    ).format(_selectedDate);
+                    final day = state.availability!.days
+                        .where((d) => d.date == dateStr)
+                        .firstOrNull;
+                    final options = (day != null && day.options.isNotEmpty)
+                        ? day.options
+                        : state.availability!.options;
+                    if (options.isNotEmpty) {
+                      final earliest =
+                          options
+                              .where((o) => o.slotTag == 'EARLIEST')
+                              .firstOrNull ??
+                          options.first;
+                      _onSelectOption(earliest);
+                    }
+                  }
+                });
               }
             },
           ),
@@ -325,18 +428,23 @@ class _BookingScheduleContentViewState
   }
 
   Widget _buildScaffold(BuildContext context) {
+    final isVi = Localizations.localeOf(context).languageCode == 'vi';
     late final List<BookingStaffItem> staffMembers;
     late final List<String> timeColumns;
     late final List<BookingTimeSlotItem> slots;
-    var bookingCount = 3;
     var isLoading = false;
     String? emptyMessage;
     String dateDisplay = 'Aug 26, 2026';
 
     if (_useApi) {
       final gridState = context.watch<StoreScheduleGridBloc>().state;
+      final availState = _hasAvailabilityBloc
+          ? context.watch<BookingAvailabilityBloc>().state
+          : null;
       isLoading =
-          gridState.isLoading || (_grid == null && !gridState.isFailure);
+          gridState.isLoading ||
+          (availState?.isLoading ?? false) ||
+          (_grid == null && !gridState.isFailure);
       dateDisplay = _displayDate.format(_selectedDate);
 
       final data = _grid == null
@@ -350,54 +458,61 @@ class _BookingScheduleContentViewState
       staffMembers = data.staffMembers;
       timeColumns = data.timeColumns;
       slots = data.slots;
-      bookingCount = data.bookingCount;
       if (gridState.isFailure) {
-        emptyMessage = 'Could not load the schedule. Pull down to retry.';
+        emptyMessage = isVi
+            ? 'Không thể tải lịch hẹn. Vuốt xuống để thử lại.'
+            : 'Could not load the schedule. Pull down to retry.';
       } else if (data.isStoreClosed) {
-        emptyMessage = 'The store is closed on this day';
+        emptyMessage = isVi
+            ? 'Salon đóng cửa vào ngày này'
+            : 'The store is closed on this day';
       } else if (data.isEmpty) {
-        emptyMessage = 'No booking slots available on this day';
+        emptyMessage = isVi
+            ? 'Chưa có khung giờ trống vào ngày này'
+            : 'No booking slots available on this day';
       }
     } else {
       staffMembers = const [];
       timeColumns = const [];
       slots = const [];
-      emptyMessage = 'No booking slots available';
+      emptyMessage = isVi
+          ? 'Không có khung giờ khả dụng'
+          : 'No booking slots available';
     }
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      appBar: AppAppBar(title: 'Booking', onMorePressed: () {}),
+      appBar: AppAppBar(
+        title: widget.isQuickBook
+            ? (isVi ? 'Đặt nhanh - Chọn giờ' : 'Quick Book - Time')
+            : (isVi ? 'Chọn ngày & giờ' : 'Select Date & Time'),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(LucideIcons.arrow_left, color: Color(0xFF1E2022)),
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
+      ),
       body: RefreshIndicator(
         color: _coralColor,
         onRefresh: () async => _loadSchedule(),
         child: BookingScheduleBodyView(
           salonName: widget.salonName,
           selectedDate: dateDisplay,
-          selectedFilterChip: _selectedFilterChip,
-          onFilterChipChanged: (chip) {
-            setState(() {
-              _selectedFilterChip = chip;
-            });
-          },
+          selectedDateTime: _selectedDate,
+          onDateSelected: _changeDate,
           staffMembers: staffMembers,
           timeColumns: timeColumns,
           slots: slots,
           selectedStaffId: _selectedStaffId,
           selectedTime: _selectedTime,
           onSelectSlot: _onSelectSlot,
-          onAddCustomBooking: () {
-            AppToastHelper.showInfo(
-              context,
-              message: 'Add custom booking slot',
-            );
-          },
-          bookingCount: bookingCount,
+          availability: _availability,
+          onSelectOption: _onSelectOption,
           isToday: _useApi ? _isToday : true,
           isLoading: isLoading,
           emptyMessage: emptyMessage,
-          onTodayTap: _useApi ? () => _changeDate(DateTime.now()) : null,
           onDateTap: _useApi ? _onPickDate : null,
+          isQuickBook: widget.isQuickBook,
         ),
       ),
       bottomNavigationBar: Container(
@@ -412,33 +527,62 @@ class _BookingScheduleContentViewState
             ),
           ],
         ),
-        child: Row(
-          children: [
-            // Add Custom Time Slot Button
-            IconButton(
-              onPressed: () {
-                AppToastHelper.showInfo(
-                  context,
-                  message: 'Add custom booking slot',
-                );
-              },
-              icon: const Icon(
-                LucideIcons.circle_plus,
-                color: Color(0xFF475569),
-                size: 26,
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (_selectedTime.isNotEmpty) ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          LucideIcons.clock,
+                          size: 15,
+                          color: _coralColor,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          _timeRangeDisplay,
+                          style: const TextStyle(
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF1E2022),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      _displayDate.format(_selectedDate),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF64748B),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+              ],
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: AppButton(
+                  text: isVi
+                      ? 'Tiếp tục xem chi tiết lịch hẹn'
+                      : 'Continue to Booking Detail',
+                  backgroundColor: _selectedTime.isNotEmpty
+                      ? _coralColor
+                      : const Color(0xFFCBD5E1),
+                  onPressed: _selectedTime.isNotEmpty
+                      ? _onProceedToDetail
+                      : null,
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-
-            // Confirm and Proceed Button
-            Expanded(
-              child: AppButton(
-                text: 'Continue to Booking Detail',
-                backgroundColor: _coralColor,
-                onPressed: _onProceedToDetail,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

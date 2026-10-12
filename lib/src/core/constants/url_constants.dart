@@ -6,6 +6,28 @@ abstract final class UrlConstants {
   static const String authCustomerRegister = '$apiV1/auth/customer/register';
   static const String authLogin = authCustomerLogin;
   static const String authRegister = authCustomerRegister;
+
+  // Customer OTP Auth
+  static const String authCustomerSendRegisterOtp =
+      '$apiV1/auth/customer/send-register-otp';
+  static const String authCustomerRegisterOtp =
+      '$apiV1/auth/customer/register-otp';
+  static const String authCustomerSendLoginOtp =
+      '$apiV1/auth/customer/send-login-otp';
+  static const String authCustomerLoginOtp = '$apiV1/auth/customer/login-otp';
+
+  // Customer Contact Info (Email / Phone) Change
+  static const String customerRequestChangeEmail =
+      '$apiV1/customers/me/request-change-email';
+  static const String customerVerifyChangeEmail =
+      '$apiV1/customers/me/verify-change-email';
+  static const String customerRequestChangePhone =
+      '$apiV1/customers/me/request-change-phone';
+  static const String customerVerifyChangePhone =
+      '$apiV1/customers/me/verify-change-phone';
+  static const String customerDeleteEmail = '$apiV1/customers/me/email';
+  static const String customerDeletePhone = '$apiV1/customers/me/phone';
+
   static const String authRefresh = '$apiV1/auth/refresh';
   static const String authLogout = '$apiV1/auth/logout';
   static const String authMe = '$apiV1/auth/me';

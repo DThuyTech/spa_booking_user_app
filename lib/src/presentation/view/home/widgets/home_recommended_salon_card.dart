@@ -44,12 +44,11 @@ class HomeRecommendedSalonCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF1F3F5), width: 1.2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
         ],
       ),

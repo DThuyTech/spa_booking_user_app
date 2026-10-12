@@ -11,33 +11,30 @@ part of 'staff_model.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$StaffModel {
 
- String get staffProfileId; String get fullName; String? get role; String? get avatarUrl; String? get bio; double get rating;
+ String get staffProfileId; String get fullName; String? get role; String? get avatarUrl; String? get bio; double get rating; List<String> get capableServiceIds;
 /// Create a copy of StaffModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $StaffModelCopyWith<StaffModel> get copyWith => _$StaffModelCopyWithImpl<StaffModel>(this as StaffModel, _$identity);
 
-  /// Serializes this StaffModel to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StaffModel&&(identical(other.staffProfileId, staffProfileId) || other.staffProfileId == staffProfileId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.role, role) || other.role == role)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.rating, rating) || other.rating == rating));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StaffModel&&(identical(other.staffProfileId, staffProfileId) || other.staffProfileId == staffProfileId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.role, role) || other.role == role)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.rating, rating) || other.rating == rating)&&const DeepCollectionEquality().equals(other.capableServiceIds, capableServiceIds));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
-int get hashCode => Object.hash(runtimeType,staffProfileId,fullName,role,avatarUrl,bio,rating);
+int get hashCode => Object.hash(runtimeType,staffProfileId,fullName,role,avatarUrl,bio,rating,const DeepCollectionEquality().hash(capableServiceIds));
 
 @override
 String toString() {
-  return 'StaffModel(staffProfileId: $staffProfileId, fullName: $fullName, role: $role, avatarUrl: $avatarUrl, bio: $bio, rating: $rating)';
+  return 'StaffModel(staffProfileId: $staffProfileId, fullName: $fullName, role: $role, avatarUrl: $avatarUrl, bio: $bio, rating: $rating, capableServiceIds: $capableServiceIds)';
 }
 
 
@@ -48,7 +45,7 @@ abstract mixin class $StaffModelCopyWith<$Res>  {
   factory $StaffModelCopyWith(StaffModel value, $Res Function(StaffModel) _then) = _$StaffModelCopyWithImpl;
 @useResult
 $Res call({
- String staffProfileId, String fullName, String? role, String? avatarUrl, String? bio, double rating
+ String staffProfileId, String fullName, String? role, String? avatarUrl, String? bio, double rating, List<String> capableServiceIds
 });
 
 
@@ -65,7 +62,7 @@ class _$StaffModelCopyWithImpl<$Res>
 
 /// Create a copy of StaffModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? staffProfileId = null,Object? fullName = null,Object? role = freezed,Object? avatarUrl = freezed,Object? bio = freezed,Object? rating = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? staffProfileId = null,Object? fullName = null,Object? role = freezed,Object? avatarUrl = freezed,Object? bio = freezed,Object? rating = null,Object? capableServiceIds = null,}) {
   return _then(_self.copyWith(
 staffProfileId: null == staffProfileId ? _self.staffProfileId : staffProfileId // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
@@ -73,7 +70,8 @@ as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_
 as String?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,bio: freezed == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
 as String?,rating: null == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
-as double,
+as double,capableServiceIds: null == capableServiceIds ? _self.capableServiceIds : capableServiceIds // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 
@@ -158,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String staffProfileId,  String fullName,  String? role,  String? avatarUrl,  String? bio,  double rating)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String staffProfileId,  String fullName,  String? role,  String? avatarUrl,  String? bio,  double rating,  List<String> capableServiceIds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StaffModel() when $default != null:
-return $default(_that.staffProfileId,_that.fullName,_that.role,_that.avatarUrl,_that.bio,_that.rating);case _:
+return $default(_that.staffProfileId,_that.fullName,_that.role,_that.avatarUrl,_that.bio,_that.rating,_that.capableServiceIds);case _:
   return orElse();
 
 }
@@ -179,10 +177,10 @@ return $default(_that.staffProfileId,_that.fullName,_that.role,_that.avatarUrl,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String staffProfileId,  String fullName,  String? role,  String? avatarUrl,  String? bio,  double rating)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String staffProfileId,  String fullName,  String? role,  String? avatarUrl,  String? bio,  double rating,  List<String> capableServiceIds)  $default,) {final _that = this;
 switch (_that) {
 case _StaffModel():
-return $default(_that.staffProfileId,_that.fullName,_that.role,_that.avatarUrl,_that.bio,_that.rating);case _:
+return $default(_that.staffProfileId,_that.fullName,_that.role,_that.avatarUrl,_that.bio,_that.rating,_that.capableServiceIds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +197,10 @@ return $default(_that.staffProfileId,_that.fullName,_that.role,_that.avatarUrl,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String staffProfileId,  String fullName,  String? role,  String? avatarUrl,  String? bio,  double rating)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String staffProfileId,  String fullName,  String? role,  String? avatarUrl,  String? bio,  double rating,  List<String> capableServiceIds)?  $default,) {final _that = this;
 switch (_that) {
 case _StaffModel() when $default != null:
-return $default(_that.staffProfileId,_that.fullName,_that.role,_that.avatarUrl,_that.bio,_that.rating);case _:
+return $default(_that.staffProfileId,_that.fullName,_that.role,_that.avatarUrl,_that.bio,_that.rating,_that.capableServiceIds);case _:
   return null;
 
 }
@@ -211,11 +209,11 @@ return $default(_that.staffProfileId,_that.fullName,_that.role,_that.avatarUrl,_
 }
 
 /// @nodoc
-@JsonSerializable()
 
-class _StaffModel implements StaffModel {
-  const _StaffModel({required this.staffProfileId, required this.fullName, this.role, this.avatarUrl, this.bio, this.rating = 5.0});
-  factory _StaffModel.fromJson(Map<String, dynamic> json) => _$StaffModelFromJson(json);
+
+class _StaffModel extends StaffModel {
+  const _StaffModel({required this.staffProfileId, required this.fullName, this.role, this.avatarUrl, this.bio, this.rating = 5.0, final  List<String> capableServiceIds = const []}): _capableServiceIds = capableServiceIds,super._();
+  
 
 @override final  String staffProfileId;
 @override final  String fullName;
@@ -223,6 +221,13 @@ class _StaffModel implements StaffModel {
 @override final  String? avatarUrl;
 @override final  String? bio;
 @override@JsonKey() final  double rating;
+ final  List<String> _capableServiceIds;
+@override@JsonKey() List<String> get capableServiceIds {
+  if (_capableServiceIds is EqualUnmodifiableListView) return _capableServiceIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_capableServiceIds);
+}
+
 
 /// Create a copy of StaffModel
 /// with the given fields replaced by the non-null parameter values.
@@ -230,23 +235,20 @@ class _StaffModel implements StaffModel {
 @pragma('vm:prefer-inline')
 _$StaffModelCopyWith<_StaffModel> get copyWith => __$StaffModelCopyWithImpl<_StaffModel>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$StaffModelToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StaffModel&&(identical(other.staffProfileId, staffProfileId) || other.staffProfileId == staffProfileId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.role, role) || other.role == role)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.rating, rating) || other.rating == rating));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StaffModel&&(identical(other.staffProfileId, staffProfileId) || other.staffProfileId == staffProfileId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.role, role) || other.role == role)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.rating, rating) || other.rating == rating)&&const DeepCollectionEquality().equals(other._capableServiceIds, _capableServiceIds));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
-int get hashCode => Object.hash(runtimeType,staffProfileId,fullName,role,avatarUrl,bio,rating);
+int get hashCode => Object.hash(runtimeType,staffProfileId,fullName,role,avatarUrl,bio,rating,const DeepCollectionEquality().hash(_capableServiceIds));
 
 @override
 String toString() {
-  return 'StaffModel(staffProfileId: $staffProfileId, fullName: $fullName, role: $role, avatarUrl: $avatarUrl, bio: $bio, rating: $rating)';
+  return 'StaffModel(staffProfileId: $staffProfileId, fullName: $fullName, role: $role, avatarUrl: $avatarUrl, bio: $bio, rating: $rating, capableServiceIds: $capableServiceIds)';
 }
 
 
@@ -257,7 +259,7 @@ abstract mixin class _$StaffModelCopyWith<$Res> implements $StaffModelCopyWith<$
   factory _$StaffModelCopyWith(_StaffModel value, $Res Function(_StaffModel) _then) = __$StaffModelCopyWithImpl;
 @override @useResult
 $Res call({
- String staffProfileId, String fullName, String? role, String? avatarUrl, String? bio, double rating
+ String staffProfileId, String fullName, String? role, String? avatarUrl, String? bio, double rating, List<String> capableServiceIds
 });
 
 
@@ -274,7 +276,7 @@ class __$StaffModelCopyWithImpl<$Res>
 
 /// Create a copy of StaffModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? staffProfileId = null,Object? fullName = null,Object? role = freezed,Object? avatarUrl = freezed,Object? bio = freezed,Object? rating = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? staffProfileId = null,Object? fullName = null,Object? role = freezed,Object? avatarUrl = freezed,Object? bio = freezed,Object? rating = null,Object? capableServiceIds = null,}) {
   return _then(_StaffModel(
 staffProfileId: null == staffProfileId ? _self.staffProfileId : staffProfileId // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
@@ -282,7 +284,8 @@ as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_
 as String?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,bio: freezed == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
 as String?,rating: null == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
-as double,
+as double,capableServiceIds: null == capableServiceIds ? _self._capableServiceIds : capableServiceIds // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 

@@ -12,17 +12,38 @@ abstract class BookingServiceItemModel with _$BookingServiceItemModel {
     required String name,
     required double price,
     @Default(60) int duration,
+    String? staffProfileId,
+    String? staffName,
+    String? startAt,
+    String? endAt,
+    int? sequence,
   }) = _BookingServiceItemModel;
 
   factory BookingServiceItemModel.fromJson(Map<String, dynamic> json) {
+    final rawStaff = json['staffSnapshot'] ?? json['staff'];
+    String? staffName;
+    if (rawStaff is Map<String, dynamic>) {
+      staffName = (rawStaff['name'] ?? rawStaff['fullName']) as String?;
+    }
+
     return BookingServiceItemModel(
       serviceId: JsonParser.string(
         json['serviceId'],
         defaultValue: json['id'] ?? '',
       ),
       name: JsonParser.string(json['name'], defaultValue: ''),
-      price: JsonParser.doubleValue(json['price']),
-      duration: JsonParser.intValue(json['duration'], defaultValue: 60),
+      price: JsonParser.doubleValue(
+        json['totalAmount'] ?? json['price'] ?? json['unitPrice'],
+      ),
+      duration: JsonParser.intValue(
+        json['durationMinutes'] ?? json['duration'],
+        defaultValue: 60,
+      ),
+      staffProfileId: (json['staffProfileId'] ?? json['staffId']) as String?,
+      staffName: staffName,
+      startAt: json['startAt'] as String?,
+      endAt: json['endAt'] as String?,
+      sequence: json['sequence'] as int?,
     );
   }
 }
@@ -36,7 +57,9 @@ abstract class BookingStaffSnapshotModel with _$BookingStaffSnapshotModel {
 
   factory BookingStaffSnapshotModel.fromJson(Map<String, dynamic> json) {
     return BookingStaffSnapshotModel(
-      staffId: (json['staffId'] ?? json['id'] ?? '') as String,
+      staffId:
+          (json['staffProfileId'] ?? json['staffId'] ?? json['id'] ?? '')
+              as String,
       name: (json['name'] ?? json['fullName'] ?? '') as String,
     );
   }
@@ -76,7 +99,7 @@ abstract class BookingStoreSnapshotModel with _$BookingStoreSnapshotModel {
       slug: json['slug'] as String?,
       logoUrl: (json['logoUrl'] ?? json['coverImageUrl']) as String?,
       address: json['address'] as String?,
-      phoneNumber: json['phoneNumber'] as String?,
+      phoneNumber: (json['phoneNumber'] ?? json['phone']) as String?,
     );
   }
 }
@@ -107,6 +130,11 @@ abstract class BookingModel with _$BookingModel {
     required String endAt,
     @Default(0) double totalDuration,
     @Default(0) double totalAmount,
+    double? subtotal,
+    double? discountAmount,
+    String? paymentMethod,
+    String? currency,
+    List<String>? assignedStaffIds,
     @Default([]) List<BookingServiceItemModel> services,
     BookingStaffSnapshotModel? staffSnapshot,
     BookingCustomerSnapshotModel? customerSnapshot,
@@ -137,19 +165,39 @@ abstract class BookingModel with _$BookingModel {
       store = BookingStoreSnapshotModel.fromJson(rawStore);
     }
 
-    final rawActions = json['actions'];
+    final rawActions = json['actions'] ?? json['actionFlags'];
     BookingActionsModel? actions;
     if (rawActions is Map<String, dynamic>) {
       actions = BookingActionsModel.fromJson(rawActions);
     }
 
+    final rawItems = json['items'];
     final rawServices = json['services'];
     List<BookingServiceItemModel> services = [];
-    if (rawServices is List) {
+    if (rawItems is List && rawItems.isNotEmpty) {
+      services = rawItems
+          .whereType<Map<String, dynamic>>()
+          .map(BookingServiceItemModel.fromJson)
+          .toList();
+    } else if (rawServices is List) {
       services = rawServices
           .whereType<Map<String, dynamic>>()
           .map(BookingServiceItemModel.fromJson)
           .toList();
+    }
+
+    double duration =
+        (json['totalDuration'] ?? json['totalDurationMinutes'] as num?)
+            ?.toDouble() ??
+        0;
+    if (duration <= 0) {
+      final s = DateTime.tryParse(json['startAt'] ?? '');
+      final e = DateTime.tryParse(json['endAt'] ?? '');
+      if (s != null && e != null) {
+        duration = e.difference(s).inMinutes.toDouble();
+      } else if (services.isNotEmpty) {
+        duration = services.fold(0.0, (sum, item) => sum + item.duration);
+      }
     }
 
     return BookingModel(
@@ -161,11 +209,17 @@ abstract class BookingModel with _$BookingModel {
       paymentStatus: (json['paymentStatus'] ?? 'UNPAID') as String,
       startAt: (json['startAt'] ?? '') as String,
       endAt: (json['endAt'] ?? '') as String,
-      totalDuration:
-          (json['totalDuration'] ?? json['totalDurationMinutes'] as num?)
-              ?.toDouble() ??
-          0,
+      totalDuration: duration,
       totalAmount: (json['totalAmount'] as num?)?.toDouble() ?? 0,
+      subtotal:
+          (json['subtotal'] as num?)?.toDouble() ??
+          (json['totalAmount'] as num?)?.toDouble(),
+      discountAmount: (json['discountAmount'] as num?)?.toDouble() ?? 0.0,
+      paymentMethod: json['paymentMethod'] as String?,
+      currency: (json['currency'] ?? 'VND') as String?,
+      assignedStaffIds: (json['assignedStaffIds'] as List?)
+          ?.map((e) => e.toString())
+          .toList(),
       services: services,
       staffSnapshot: staffSnapshot,
       customerSnapshot: customerSnapshot,
@@ -197,6 +251,11 @@ extension BookingModelX on BookingModel {
       endAt: parseDate(endAt),
       totalDuration: totalDuration,
       totalAmount: totalAmount,
+      subtotal: subtotal,
+      discountAmount: discountAmount,
+      paymentMethod: paymentMethod,
+      currency: currency,
+      assignedStaffIds: assignedStaffIds,
       services: services
           .map(
             (s) => BookingServiceItemEntity(
@@ -204,6 +263,11 @@ extension BookingModelX on BookingModel {
               name: s.name,
               price: s.price,
               duration: s.duration,
+              staffProfileId: s.staffProfileId,
+              staffName: s.staffName,
+              startAt: s.startAt != null ? DateTime.tryParse(s.startAt!) : null,
+              endAt: s.endAt != null ? DateTime.tryParse(s.endAt!) : null,
+              sequence: s.sequence,
             ),
           )
           .toList(),

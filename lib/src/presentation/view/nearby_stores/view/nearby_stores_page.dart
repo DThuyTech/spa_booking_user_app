@@ -15,14 +15,14 @@ import '../widgets/nearby_store_map_canvas.dart';
 import '../widgets/nearby_store_search_bar.dart';
 
 @RoutePage()
-class NearbyStoresView extends StatefulWidget {
-  const NearbyStoresView({super.key});
+class NearbyStoresPage extends StatefulWidget {
+  const NearbyStoresPage({super.key});
 
   @override
-  State<NearbyStoresView> createState() => _NearbyStoresViewState();
+  State<NearbyStoresPage> createState() => _NearbyStoresPageState();
 }
 
-class _NearbyStoresViewState extends State<NearbyStoresView> {
+class _NearbyStoresPageState extends State<NearbyStoresPage> {
   final TextEditingController _searchController = TextEditingController();
   final MapController _mapController = MapController();
   late final PageController _pageController;
@@ -497,19 +497,24 @@ class _NearbyStoresViewState extends State<NearbyStoresView> {
           ),
 
           // 2. Floating Search Header with Filters at Top Safe Area
-          SizedBox(
-            width: MediaQuery.sizeOf(context).width,
-            height: MediaQuery.sizeOf(context).height,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: NearbyStoreSearchHeader(
-                searchController: _searchController,
-                onSearchChanged: _onSearchChanged,
-                onClearSearch: _onClearSearch,
-                onOpenFilter: _openFilterBottomSheet,
-                activeFilter: _activeFilter,
-                onSelectFilter: _onSelectFilter,
-                totalResults: _filteredStores.length,
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: NearbyStoreSearchHeader(
+                  searchController: _searchController,
+                  onSearchChanged: _onSearchChanged,
+                  onClearSearch: _onClearSearch,
+                  onOpenFilter: _openFilterBottomSheet,
+                  activeFilter: _activeFilter,
+                  onSelectFilter: _onSelectFilter,
+                  totalResults: _filteredStores.length,
+                  onBack: () => context.router.maybePop(),
+                ),
               ),
             ),
           ),

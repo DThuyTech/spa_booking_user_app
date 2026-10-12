@@ -41,6 +41,11 @@ import '../../domain/usecases/auth/change_password_usecase.dart';
 import '../../domain/usecases/auth/forgot_password_usecase.dart';
 import '../../domain/usecases/auth/verify_reset_otp_usecase.dart';
 import '../../domain/usecases/auth/reset_password_usecase.dart';
+import '../../domain/usecases/auth/send_register_otp_usecase.dart';
+import '../../domain/usecases/auth/register_with_otp_usecase.dart';
+import '../../domain/usecases/auth/send_login_otp_usecase.dart';
+import '../../domain/usecases/auth/login_with_otp_usecase.dart';
+import '../../domain/usecases/auth/change_contact_usecase.dart';
 import '../../presentation/bloc/auth/change_password/change_password_cubit.dart';
 import '../../presentation/bloc/auth/forgot_password/forgot_password_cubit.dart';
 import '../../presentation/bloc/home/home_bloc.dart';
@@ -271,10 +276,26 @@ Future<void> registerDependencies({
   sl.registerFactory<ResetPasswordUseCase>(
     () => ResetPasswordUseCase(sl<AuthRepository>()),
   );
+  sl.registerFactory<SendRegisterOtpUseCase>(
+    () => SendRegisterOtpUseCase(sl<AuthRepository>()),
+  );
+  sl.registerFactory<RegisterWithOtpUseCase>(
+    () => RegisterWithOtpUseCase(sl<AuthRepository>()),
+  );
+  sl.registerFactory<SendLoginOtpUseCase>(
+    () => SendLoginOtpUseCase(sl<AuthRepository>()),
+  );
+  sl.registerFactory<LoginWithOtpUseCase>(
+    () => LoginWithOtpUseCase(sl<AuthRepository>()),
+  );
+  sl.registerFactory<ChangeContactUseCase>(
+    () => ChangeContactUseCase(sl<AuthRepository>()),
+  );
 
   sl.registerFactory<LoginBloc>(
     () => LoginBloc(
       loginUseCase: sl<LoginUseCase>(),
+      sendLoginOtpUseCase: sl<SendLoginOtpUseCase>(),
       sessionManager: sl<SessionManager>(),
       authSessionBloc: sl.isRegistered<AuthSessionBloc>()
           ? sl<AuthSessionBloc>()
@@ -284,6 +305,7 @@ Future<void> registerDependencies({
   sl.registerFactory<RegisterBloc>(
     () => RegisterBloc(
       registerUseCase: sl<RegisterUseCase>(),
+      sendRegisterOtpUseCase: sl<SendRegisterOtpUseCase>(),
       sessionManager: sl<SessionManager>(),
       authSessionBloc: sl.isRegistered<AuthSessionBloc>()
           ? sl<AuthSessionBloc>()
@@ -294,6 +316,11 @@ Future<void> registerDependencies({
     () => OtpVerificationBloc(
       verifyOtpUseCase: sl<VerifyOtpUseCase>(),
       requestOtpUseCase: sl<RequestOtpUseCase>(),
+      loginWithOtpUseCase: sl<LoginWithOtpUseCase>(),
+      registerWithOtpUseCase: sl<RegisterWithOtpUseCase>(),
+      sendLoginOtpUseCase: sl<SendLoginOtpUseCase>(),
+      sendRegisterOtpUseCase: sl<SendRegisterOtpUseCase>(),
+      changeContactUseCase: sl<ChangeContactUseCase>(),
     ),
   );
   sl.registerFactory<ChangePasswordCubit>(

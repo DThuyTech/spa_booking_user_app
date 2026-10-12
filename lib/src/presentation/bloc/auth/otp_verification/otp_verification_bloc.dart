@@ -1,7 +1,12 @@
 import 'dart:async';
-import 'package:spa_booking/src/domain/usecases/auth/request_otp_usecase.dart';
-import 'package:spa_booking/src/domain/usecases/auth/verify_otp_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spa_booking/src/domain/usecases/auth/change_contact_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/login_with_otp_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/register_with_otp_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/request_otp_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/send_login_otp_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/send_register_otp_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/verify_otp_usecase.dart';
 import 'otp_verification_event.dart';
 import 'otp_verification_state.dart';
 
@@ -9,11 +14,22 @@ class OtpVerificationBloc
     extends Bloc<OtpVerificationEvent, OtpVerificationState> {
   final VerifyOtpUseCase verifyOtpUseCase;
   final RequestOtpUseCase requestOtpUseCase;
+  final LoginWithOtpUseCase? loginWithOtpUseCase;
+  final RegisterWithOtpUseCase? registerWithOtpUseCase;
+  final SendLoginOtpUseCase? sendLoginOtpUseCase;
+  final SendRegisterOtpUseCase? sendRegisterOtpUseCase;
+  final ChangeContactUseCase? changeContactUseCase;
+
   Timer? _timer;
 
   OtpVerificationBloc({
     required this.verifyOtpUseCase,
     required this.requestOtpUseCase,
+    this.loginWithOtpUseCase,
+    this.registerWithOtpUseCase,
+    this.sendLoginOtpUseCase,
+    this.sendRegisterOtpUseCase,
+    this.changeContactUseCase,
   }) : super(const OtpVerificationState()) {
     on<OtpStarted>(_onStarted);
     on<OtpDigitChanged>(_onDigitChanged);
@@ -39,7 +55,10 @@ class OtpVerificationBloc
   void _onStarted(OtpStarted event, Emitter<OtpVerificationState> emit) {
     emit(
       state.copyWith(
-        phone: event.phone,
+        identifier: event.identifier,
+        name: event.name,
+        mockOtp: event.mockOtp,
+        flowType: event.flowType,
         remainingSeconds: event.initialCountdownSeconds,
         status: OtpStatus.entering,
         errorMessage: () => null,
@@ -84,7 +103,7 @@ class OtpVerificationBloc
         state.copyWith(
           status: OtpStatus.failure,
           errorMessage: () =>
-              'Verification code has expired. Please request a new one.',
+              'Mã xác thực OTP đã hết hạn. Vui lòng bấm gửi lại mã mới.',
         ),
       );
       return;
@@ -92,14 +111,130 @@ class OtpVerificationBloc
 
     emit(state.copyWith(status: OtpStatus.verifying, errorMessage: () => null));
 
-    final result = await verifyOtpUseCase(phone: state.phone, code: state.code);
+    final id = state.identifier.trim();
+    final isEmail = id.contains('@');
 
+    switch (state.flowType) {
+      case OtpFlowType.login:
+        if (loginWithOtpUseCase != null) {
+          final result = await loginWithOtpUseCase!(
+            identifier: id,
+            otp: state.code,
+          );
+          result.fold(
+            (failure) {
+              emit(
+                state.copyWith(
+                  status: OtpStatus.failure,
+                  errorMessage: () => failure.message,
+                ),
+              );
+            },
+            (session) {
+              _timer?.cancel();
+              emit(
+                state.copyWith(
+                  status: OtpStatus.verified,
+                  authSession: () => session,
+                ),
+              );
+            },
+          );
+          return;
+        }
+        break;
+
+      case OtpFlowType.register:
+        if (registerWithOtpUseCase != null) {
+          final result = await registerWithOtpUseCase!(
+            email: isEmail ? id : null,
+            phoneNumber: !isEmail ? id : null,
+            name: state.name ?? '',
+            otp: state.code,
+          );
+          result.fold(
+            (failure) {
+              emit(
+                state.copyWith(
+                  status: OtpStatus.failure,
+                  errorMessage: () => failure.message,
+                ),
+              );
+            },
+            (session) {
+              _timer?.cancel();
+              emit(
+                state.copyWith(
+                  status: OtpStatus.verified,
+                  authSession: () => session,
+                ),
+              );
+            },
+          );
+          return;
+        }
+        break;
+
+      case OtpFlowType.changeEmail:
+        if (changeContactUseCase != null) {
+          final result = await changeContactUseCase!.verifyChangeEmail(
+            newEmail: id,
+            otp: state.code,
+          );
+          result.fold(
+            (failure) {
+              emit(
+                state.copyWith(
+                  status: OtpStatus.failure,
+                  errorMessage: () => failure.message,
+                ),
+              );
+            },
+            (user) {
+              _timer?.cancel();
+              emit(state.copyWith(status: OtpStatus.verified));
+            },
+          );
+          return;
+        }
+        break;
+
+      case OtpFlowType.changePhone:
+        if (changeContactUseCase != null) {
+          final result = await changeContactUseCase!.verifyChangePhone(
+            newPhone: id,
+            otp: state.code,
+          );
+          result.fold(
+            (failure) {
+              emit(
+                state.copyWith(
+                  status: OtpStatus.failure,
+                  errorMessage: () => failure.message,
+                ),
+              );
+            },
+            (user) {
+              _timer?.cancel();
+              emit(state.copyWith(status: OtpStatus.verified));
+            },
+          );
+          return;
+        }
+        break;
+
+      case OtpFlowType.phoneVerify:
+        break;
+    }
+
+    // Fallback logic
+    final result = await verifyOtpUseCase(phone: id, code: state.code);
     result.fold(
       (failure) {
         emit(
           state.copyWith(
             status: OtpStatus.failure,
-            errorMessage: () => 'Invalid verification code. Please try again.',
+            errorMessage: () => failure.message,
           ),
         );
       },
@@ -123,8 +258,146 @@ class OtpVerificationBloc
 
     emit(state.copyWith(status: OtpStatus.resending, errorMessage: () => null));
 
-    final result = await requestOtpUseCase(state.phone);
+    final id = state.identifier.trim();
+    final isEmail = id.contains('@');
 
+    switch (state.flowType) {
+      case OtpFlowType.login:
+        if (sendLoginOtpUseCase != null) {
+          final result = await sendLoginOtpUseCase!(identifier: id);
+          result.fold(
+            (failure) {
+              emit(
+                state.copyWith(
+                  status: OtpStatus.failure,
+                  errorMessage: () => failure.message,
+                ),
+              );
+            },
+            (otpResult) {
+              final seconds = otpResult.expiresInSeconds > 0
+                  ? otpResult.expiresInSeconds
+                  : 300;
+              emit(
+                state.copyWith(
+                  code: '',
+                  mockOtp: otpResult.otp,
+                  remainingSeconds: seconds,
+                  status: OtpStatus.entering,
+                  errorMessage: () => null,
+                ),
+              );
+              _startTimer(seconds);
+            },
+          );
+          return;
+        }
+        break;
+
+      case OtpFlowType.register:
+        if (sendRegisterOtpUseCase != null) {
+          final result = await sendRegisterOtpUseCase!(
+            email: isEmail ? id : null,
+            phoneNumber: !isEmail ? id : null,
+          );
+          result.fold(
+            (failure) {
+              emit(
+                state.copyWith(
+                  status: OtpStatus.failure,
+                  errorMessage: () => failure.message,
+                ),
+              );
+            },
+            (otpResult) {
+              final seconds = otpResult.expiresInSeconds > 0
+                  ? otpResult.expiresInSeconds
+                  : 300;
+              emit(
+                state.copyWith(
+                  code: '',
+                  mockOtp: otpResult.otp,
+                  remainingSeconds: seconds,
+                  status: OtpStatus.entering,
+                  errorMessage: () => null,
+                ),
+              );
+              _startTimer(seconds);
+            },
+          );
+          return;
+        }
+        break;
+
+      case OtpFlowType.changeEmail:
+        if (changeContactUseCase != null) {
+          final result = await changeContactUseCase!.requestChangeEmail(id);
+          result.fold(
+            (failure) {
+              emit(
+                state.copyWith(
+                  status: OtpStatus.failure,
+                  errorMessage: () => failure.message,
+                ),
+              );
+            },
+            (otpResult) {
+              final seconds = otpResult.expiresInSeconds > 0
+                  ? otpResult.expiresInSeconds
+                  : 300;
+              emit(
+                state.copyWith(
+                  code: '',
+                  mockOtp: otpResult.otp,
+                  remainingSeconds: seconds,
+                  status: OtpStatus.entering,
+                  errorMessage: () => null,
+                ),
+              );
+              _startTimer(seconds);
+            },
+          );
+          return;
+        }
+        break;
+
+      case OtpFlowType.changePhone:
+        if (changeContactUseCase != null) {
+          final result = await changeContactUseCase!.requestChangePhone(id);
+          result.fold(
+            (failure) {
+              emit(
+                state.copyWith(
+                  status: OtpStatus.failure,
+                  errorMessage: () => failure.message,
+                ),
+              );
+            },
+            (otpResult) {
+              final seconds = otpResult.expiresInSeconds > 0
+                  ? otpResult.expiresInSeconds
+                  : 300;
+              emit(
+                state.copyWith(
+                  code: '',
+                  mockOtp: otpResult.otp,
+                  remainingSeconds: seconds,
+                  status: OtpStatus.entering,
+                  errorMessage: () => null,
+                ),
+              );
+              _startTimer(seconds);
+            },
+          );
+          return;
+        }
+        break;
+
+      case OtpFlowType.phoneVerify:
+        break;
+    }
+
+    final result = await requestOtpUseCase(id);
     result.fold(
       (failure) {
         emit(
@@ -141,6 +414,7 @@ class OtpVerificationBloc
         emit(
           state.copyWith(
             code: '',
+            mockOtp: otpResult.otp,
             remainingSeconds: seconds,
             status: OtpStatus.entering,
             errorMessage: () => null,

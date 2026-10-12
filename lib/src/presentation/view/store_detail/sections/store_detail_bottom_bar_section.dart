@@ -10,9 +10,7 @@ class StoreDetailBottomBarSection extends StatelessWidget {
   final VoidCallback? onBookAppointment;
   final bool isStoreOpen;
 
-  static const Color _coralColor = Color(0xFFFF6F59);
   static const Color _appointmentBtnColor = Color(0xFFA53C2A);
-  static const Color _textDark = Color(0xFF1E2022);
 
   const StoreDetailBottomBarSection({
     super.key,
@@ -46,54 +44,7 @@ class StoreDetailBottomBarSection extends StatelessWidget {
           ),
         ],
       ),
-      child: activeTab == StoreDetailTab.overview
-          ? _buildOverviewBar(context)
-          : _buildFullAppointmentBar(context),
-    );
-  }
-
-  Widget _buildOverviewBar(BuildContext context) {
-    final isVi = Localizations.localeOf(context).languageCode == 'vi';
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              startingPrice,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w800,
-                color: _textDark,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              isStoreOpen
-                  ? seatsText
-                  : (isVi ? 'Nhận đặt lịch ngày khác' : 'Advance booking open'),
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: isStoreOpen ? _coralColor : const Color(0xFF059669),
-              ),
-            ),
-          ],
-        ),
-        AppButton(
-          text: isStoreOpen
-              ? (isVi ? 'Đặt ngay' : 'Book now')
-              : (isVi ? 'Đặt lịch' : 'Book now'),
-          onPressed: onBookNow,
-          backgroundColor: _coralColor,
-          textColor: Colors.white,
-          borderRadius: BorderRadius.circular(22),
-          height: 44,
-          padding: const EdgeInsets.symmetric(horizontal: 28),
-        ),
-      ],
+      child: _buildFullAppointmentBar(context),
     );
   }
 

@@ -14,59 +14,62 @@ class RegisterFormSession extends StatefulWidget {
 }
 
 class _RegisterFormSessionState extends State<RegisterFormSession> {
+  final _fullNameController = TextEditingController();
   final _identifierController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
 
+  final _fullNameFocus = FocusNode();
   final _identifierFocus = FocusNode();
-  final _passwordFocus = FocusNode();
-  final _confirmPasswordFocus = FocusNode();
 
-  bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
   bool _isAgreedToTerms = false;
 
   @override
   void initState() {
     super.initState();
 
+    _fullNameController.addListener(() {
+      context.read<RegisterBloc>().add(
+        RegisterFullNameChanged(_fullNameController.text),
+      );
+    });
+
     _identifierController.addListener(() {
       context.read<RegisterBloc>().add(
         RegisterIdentifierChanged(_identifierController.text),
-      );
-    });
-    _passwordController.addListener(() {
-      context.read<RegisterBloc>().add(
-        RegisterPasswordChanged(_passwordController.text),
-      );
-    });
-    _confirmPasswordController.addListener(() {
-      context.read<RegisterBloc>().add(
-        RegisterConfirmPasswordChanged(_confirmPasswordController.text),
       );
     });
   }
 
   @override
   void dispose() {
+    _fullNameController.dispose();
     _identifierController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
+    _fullNameFocus.dispose();
     _identifierFocus.dispose();
-    _passwordFocus.dispose();
-    _confirmPasswordFocus.dispose();
     super.dispose();
   }
 
   void _handleRegister() {
+    _fullNameFocus.unfocus();
     _identifierFocus.unfocus();
-    _passwordFocus.unfocus();
-    _confirmPasswordFocus.unfocus();
 
-    if (_passwordController.text != _confirmPasswordController.text) {
+    final isVi = Localizations.localeOf(context).languageCode == 'vi';
+
+    if (_fullNameController.text.trim().isEmpty) {
       AppToast.error(
         context,
-        message: 'Passwords do not match. Please verify your password.',
+        message: isVi
+            ? 'Vui lòng nhập Họ và tên'
+            : 'Please enter your full name',
+      );
+      return;
+    }
+
+    if (_identifierController.text.trim().isEmpty) {
+      AppToast.error(
+        context,
+        message: isVi
+            ? 'Vui lòng nhập Email hoặc Số điện thoại'
+            : 'Please enter your email or phone number',
       );
       return;
     }
@@ -74,7 +77,9 @@ class _RegisterFormSessionState extends State<RegisterFormSession> {
     if (!_isAgreedToTerms) {
       AppToast.error(
         context,
-        message: 'Please agree to the Terms of Service to continue.',
+        message: isVi
+            ? 'Vui lòng đồng ý với Điều khoản dịch vụ để tiếp tục.'
+            : 'Please agree to the Terms of Service to continue.',
       );
       return;
     }
@@ -85,78 +90,70 @@ class _RegisterFormSessionState extends State<RegisterFormSession> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final isVi = Localizations.localeOf(context).languageCode == 'vi';
 
-    return // Glassmorphic Card
-    FrostedGlassCard(
+    return FrostedGlassCard(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Email or Phone
+          // 1. Full Name
           GlassmorphicTextField(
+            textFieldKey: const Key('register_name_field'),
+            controller: _fullNameController,
+            focusNode: _fullNameFocus,
+            hintText: isVi ? 'Họ và tên của bạn' : 'Full name',
+            prefixIcon: LucideIcons.user,
+            keyboardType: TextInputType.name,
+            textInputAction: TextInputAction.next,
+            onSubmitted: (_) => _identifierFocus.requestFocus(),
+          ),
+          const SizedBox(height: 14),
+
+          // 2. Email or Phone
+          GlassmorphicTextField(
+            textFieldKey: const Key('register_identifier_field'),
             controller: _identifierController,
             focusNode: _identifierFocus,
             hintText: l10n.enterEmailOrPhone,
             prefixIcon: LucideIcons.mail,
             keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            onSubmitted: (_) => _passwordFocus.requestFocus(),
-          ),
-          const SizedBox(height: 14),
-
-          // Password
-          GlassmorphicTextField(
-            textFieldKey: const Key('register_password_field'),
-            controller: _passwordController,
-            focusNode: _passwordFocus,
-            hintText: l10n.enterPassword,
-            prefixIcon: LucideIcons.key,
-            obscureText: _obscurePassword,
-            suffixIcon: IconButton(
-              padding: EdgeInsets.zero,
-              splashRadius: 18,
-              icon: Icon(
-                _obscurePassword ? LucideIcons.eye_off : LucideIcons.eye,
-                size: 19,
-                color: const Color(0xFF8A7D75),
-              ),
-              onPressed: () {
-                setState(() {
-                  _obscurePassword = !_obscurePassword;
-                });
-              },
-            ),
-            keyboardType: TextInputType.visiblePassword,
-            textInputAction: TextInputAction.next,
-            onSubmitted: (_) => _confirmPasswordFocus.requestFocus(),
-          ),
-          const SizedBox(height: 14),
-
-          // Confirm Password
-          GlassmorphicTextField(
-            textFieldKey: const Key('register_confirm_password_field'),
-            controller: _confirmPasswordController,
-            focusNode: _confirmPasswordFocus,
-            hintText: 'Confirm password',
-            prefixIcon: LucideIcons.shield_check,
-            obscureText: _obscureConfirmPassword,
-            suffixIcon: IconButton(
-              padding: EdgeInsets.zero,
-              splashRadius: 18,
-              icon: Icon(
-                _obscureConfirmPassword ? LucideIcons.eye_off : LucideIcons.eye,
-                size: 19,
-                color: const Color(0xFF8A7D75),
-              ),
-              onPressed: () {
-                setState(() {
-                  _obscureConfirmPassword = !_obscureConfirmPassword;
-                });
-              },
-            ),
-            keyboardType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.done,
             onSubmitted: (_) => _handleRegister(),
+          ),
+          const SizedBox(height: 14),
+
+          // Helper note
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.35),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  LucideIcons.shield_check,
+                  size: 16,
+                  color: Color(0xFFFA7762),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    isVi
+                        ? 'Mã OTP bảo mật sẽ được gửi về Email hoặc SĐT để hoàn tất tạo tài khoản.'
+                        : 'A secure OTP code will be sent to your Email or Phone to complete registration.',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF5A4E46),
+                      fontWeight: FontWeight.w500,
+                      height: 1.35,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
 
@@ -191,7 +188,7 @@ class _RegisterFormSessionState extends State<RegisterFormSession> {
                   },
                   child: Text.rich(
                     TextSpan(
-                      text: 'I agree to the ',
+                      text: isVi ? 'Tôi đồng ý với ' : 'I agree to the ',
                       style: const TextStyle(
                         fontSize: 12.5,
                         color: Color(0xFF4A3E39),
@@ -275,7 +272,7 @@ class _RegisterFormSessionState extends State<RegisterFormSession> {
                               ),
                             )
                           : Text(
-                              l10n.register,
+                              isVi ? 'Đăng ký bằng OTP' : 'Register with OTP',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,

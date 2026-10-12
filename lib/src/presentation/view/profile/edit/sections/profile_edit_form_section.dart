@@ -103,6 +103,18 @@ class ProfileEditFormSection extends StatelessWidget {
           onChanged: onPhoneNumberChanged,
         ),
 
+        const SizedBox(height: 6),
+        Text(
+          Localizations.localeOf(context).languageCode == 'vi'
+              ? 'Để thay đổi Số điện thoại hoặc Email, vui lòng vào Cài đặt để xác thực OTP bảo mật.'
+              : 'To change your Phone or Email, please visit Settings to verify via secure OTP.',
+          style: const TextStyle(
+            fontSize: 12,
+            color: Color(0xFF94A3B8),
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+
         const SizedBox(height: 20),
         // Date of Birth Field
         AppTextField(

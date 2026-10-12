@@ -1,8 +1,9 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spa_booking/src/app/session/session_manager.dart';
 import 'package:spa_booking/src/core/network/auth/token_pair.dart';
 import 'package:spa_booking/src/domain/usecases/auth/register_usecase.dart';
+import 'package:spa_booking/src/domain/usecases/auth/send_register_otp_usecase.dart';
 import 'package:spa_booking/src/presentation/bloc/auth_session/auth_session_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'register_event.dart';
 import 'register_state.dart';
 
@@ -11,6 +12,7 @@ export 'register_state.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   final RegisterUseCase registerUseCase;
+  final SendRegisterOtpUseCase? sendRegisterOtpUseCase;
   final SessionManager sessionManager;
   final AuthSessionBloc? authSessionBloc;
 
@@ -20,6 +22,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   RegisterBloc({
     required this.registerUseCase,
+    this.sendRegisterOtpUseCase,
     required this.sessionManager,
     this.authSessionBloc,
   }) : super(const RegisterState()) {
@@ -56,45 +59,38 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   ) async {
     if (state.isLoading) return;
 
-    final email = state.identifier.trim();
-    final password = state.password;
-    final confirmPassword = state.confirmPassword;
-
-    if (email.isEmpty) {
+    final fullName = state.fullName.trim();
+    if (fullName.isEmpty) {
       emit(
         state.copyWith(
           status: RegisterStatus.failure,
-          errorMessage: () => 'Email cannot be empty.',
+          errorMessage: () => 'Vui lòng nhập Họ và tên.',
         ),
       );
       return;
     }
 
-    if (!_emailRegex.hasMatch(email)) {
+    final identifier = state.identifier.trim();
+    if (identifier.isEmpty) {
       emit(
         state.copyWith(
           status: RegisterStatus.failure,
-          errorMessage: () => 'Please enter a valid email address.',
+          errorMessage: () => 'Vui lòng nhập Email hoặc Số điện thoại.',
         ),
       );
       return;
     }
 
-    if (password.length < 8) {
-      emit(
-        state.copyWith(
-          status: RegisterStatus.failure,
-          errorMessage: () => 'Password must be at least 8 characters long.',
-        ),
-      );
-      return;
-    }
+    final isEmail = _emailRegex.hasMatch(identifier);
+    final isPhone = RegExp(
+      r'^\+?[0-9]{8,15}$',
+    ).hasMatch(identifier.replaceAll(RegExp(r'[\s-]'), ''));
 
-    if (confirmPassword.isNotEmpty && confirmPassword != password) {
+    if (!isEmail && !isPhone) {
       emit(
         state.copyWith(
           status: RegisterStatus.failure,
-          errorMessage: () => 'Passwords do not match.',
+          errorMessage: () => 'Email hoặc Số điện thoại không hợp lệ.',
         ),
       );
       return;
@@ -104,10 +100,62 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       state.copyWith(status: RegisterStatus.loading, errorMessage: () => null),
     );
 
+    // Prefer OTP registration flow if sendRegisterOtpUseCase is provided
+    if (sendRegisterOtpUseCase != null) {
+      final result = await sendRegisterOtpUseCase!(
+        email: isEmail ? identifier : null,
+        phoneNumber: !isEmail ? identifier : null,
+      );
+
+      result.fold(
+        (failure) {
+          emit(
+            state.copyWith(
+              status: RegisterStatus.failure,
+              errorMessage: () => failure.message,
+            ),
+          );
+        },
+        (otpResult) {
+          emit(
+            state.copyWith(
+              status: RegisterStatus.success,
+              otpResult: () => otpResult,
+            ),
+          );
+        },
+      );
+      return;
+    }
+
+    // Fallback password registration
+    final password = state.password;
+    final confirmPassword = state.confirmPassword;
+
+    if (password.length < 8) {
+      emit(
+        state.copyWith(
+          status: RegisterStatus.failure,
+          errorMessage: () => 'Mật khẩu phải có ít nhất 8 ký tự.',
+        ),
+      );
+      return;
+    }
+
+    if (confirmPassword.isNotEmpty && confirmPassword != password) {
+      emit(
+        state.copyWith(
+          status: RegisterStatus.failure,
+          errorMessage: () => 'Mật khẩu xác nhận không khớp.',
+        ),
+      );
+      return;
+    }
+
     final result = await registerUseCase(
-      email: email,
+      email: identifier,
       password: password,
-      fullName: state.fullName,
+      fullName: fullName,
     );
 
     await result.fold(

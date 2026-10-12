@@ -52,6 +52,7 @@ class HomeBodyView extends StatelessWidget {
   final List<HomeNearSalonItem> nearSalons;
   final String? nearSalonsTitle;
   final VoidCallback? onSeeAllNearSalons;
+  final VoidCallback? onNearSalonsMapTap;
   final ValueChanged<HomeNearSalonItem>? onNearSalonTap;
   final ValueChanged<HomeNearSalonItem>? onNearSalonBook;
 
@@ -91,6 +92,7 @@ class HomeBodyView extends StatelessWidget {
     this.nearSalons = const [],
     this.nearSalonsTitle,
     this.onSeeAllNearSalons,
+    this.onNearSalonsMapTap,
     this.onNearSalonTap,
     this.onNearSalonBook,
     this.recommendedSalons = const [],
@@ -197,18 +199,7 @@ class HomeBodyView extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              // 4. Salons Near You Section
-              HomeSalonsNearYouSection(
-                salons: nearSalons,
-                title: nearSalonsTitle,
-                onSeeAllTap: onSeeAllNearSalons,
-                onSalonTap: onNearSalonTap,
-                onBookTap: onNearSalonBook,
-              ),
-
-              const SizedBox(height: 24),
-
-              // 5. Recommended for You Section (Salon chung thành phố)
+              // 4. Recommended for You Section (Salon chung thành phố)
               HomeRecommendedForYouSection(
                 salons: recommendedSalons,
                 title: recommendedTitle,
@@ -216,6 +207,18 @@ class HomeBodyView extends StatelessWidget {
                 onSeeAllTap: onSeeAllRecommended,
                 onSalonTap: onRecommendedSalonTap,
                 onFavoriteToggle: onFavoriteToggle,
+              ),
+
+              const SizedBox(height: 24),
+
+              // 5. Salons Near You Section
+              HomeSalonsNearYouSection(
+                salons: nearSalons,
+                title: nearSalonsTitle,
+                onSeeAllTap: onSeeAllNearSalons,
+                onMapTap: onNearSalonsMapTap,
+                onSalonTap: onNearSalonTap,
+                onBookTap: onNearSalonBook,
               ),
 
               // Bottom space for Bottom Navigation Bar

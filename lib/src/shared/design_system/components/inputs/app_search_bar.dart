@@ -25,11 +25,13 @@ class AppSearchBar extends StatefulWidget {
   final bool autoFocus;
   final Duration debounceDuration;
   final bool showFilterButton;
+  final bool isFilterActive;
+  final Widget? prefixIcon;
 
   const AppSearchBar({
     super.key,
     this.controller,
-    this.hintText = 'Tìm ván cờ, địa điểm...',
+    this.hintText = 'Tìm kiếm spa, salon, dịch vụ...',
     this.onChanged,
     this.onSubmitted,
     this.onClear,
@@ -39,6 +41,8 @@ class AppSearchBar extends StatefulWidget {
     this.autoFocus = false,
     this.debounceDuration = const Duration(milliseconds: 300),
     this.showFilterButton = false,
+    this.isFilterActive = false,
+    this.prefixIcon,
   });
 
   @override
@@ -161,11 +165,15 @@ class _AppSearchBarState extends State<AppSearchBar>
           ),
           prefixIcon: Padding(
             padding: const EdgeInsets.only(left: 16, right: 10),
-            child: Icon(
-              Icons.search_rounded,
-              color: _isFocused ? AppColors.primaryBrown : AppColors.softBrown,
-              size: 20,
-            ),
+            child:
+                widget.prefixIcon ??
+                Icon(
+                  Icons.search_rounded,
+                  color: _isFocused
+                      ? AppColors.primaryBrown
+                      : AppColors.softBrown,
+                  size: 20,
+                ),
           ),
           prefixIconConstraints: const BoxConstraints(
             minWidth: 48,
@@ -209,12 +217,30 @@ class _AppSearchBarState extends State<AppSearchBar>
                   onTap: widget.onFilterTap,
                   child: Padding(
                     padding: const EdgeInsets.only(right: 14, left: 8),
-                    child: Icon(
-                      Icons.tune_rounded,
-                      size: 18,
-                      color: widget.onFilterTap != null
-                          ? AppColors.primaryBrown
-                          : AppColors.softBrown,
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Icon(
+                          Icons.tune_rounded,
+                          size: 18,
+                          color: widget.onFilterTap != null
+                              ? AppColors.primaryBrown
+                              : AppColors.softBrown,
+                        ),
+                        if (widget.isFilterActive)
+                          Positioned(
+                            top: -2,
+                            right: -2,
+                            child: Container(
+                              width: 7,
+                              height: 7,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFFC6E58),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),

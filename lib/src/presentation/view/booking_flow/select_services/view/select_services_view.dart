@@ -6,8 +6,9 @@ import 'package:spa_booking/src/core/extensions/double_extensions.dart';
 import 'package:spa_booking/src/presentation/bloc/store/store_services/store_services_bloc.dart';
 import 'package:spa_booking/src/presentation/bloc/store/store_staff/store_staff_bloc.dart';
 import 'package:spa_booking/src/shared/shared.dart';
-import '../../booking_schedule/view/booking_schedule_view.dart';
 import '../../models/booking_models.dart';
+import '../../booking_schedule/view/booking_schedule_view.dart';
+import '../../select_staff/view/select_staff_view.dart';
 import '../body_view/select_services_body_view.dart';
 
 @RoutePage()
@@ -182,7 +183,7 @@ class _SelectServicesContentViewState
     if (widget.initialStaffMembers != null &&
         widget.initialStaffMembers!.isNotEmpty) {
       _staffMembers = List.from(widget.initialStaffMembers!);
-      _selectedStaffId = _staffMembers.first.id;
+      _selectedStaffId = null;
     } else {
       _staffMembers = [];
       _selectedStaffId = null;
@@ -253,22 +254,40 @@ class _SelectServicesContentViewState
     return trimmed.substring(0, trimmed.length >= 2 ? 2 : 1).toUpperCase();
   }
 
-  String get _subtitleText {
-    final staff = _staffMembers.cast<BookingStaffItem?>().firstWhere(
-      (s) => s?.id == _selectedStaffId,
-      orElse: () => null,
-    );
-    final staffName =
-        staff?.name ?? (widget.storeId == null ? 'Sarah' : widget.salonName);
-    return '$staffName • 10:00 AM - 10:30 AM (30 min)';
-  }
-
   void _onConfirmBooking() {
     final selectedServicesList = _services.where((s) => s.isSelected).toList();
     if (selectedServicesList.isEmpty) {
+      final isVi = Localizations.localeOf(context).languageCode == 'vi';
       AppToastHelper.showInfo(
         context,
-        message: 'Please select at least one service',
+        message: isVi
+            ? 'Vui lòng chọn ít nhất một dịch vụ'
+            : 'Please select at least one service',
+      );
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SelectStaffView(
+          storeId: widget.storeId,
+          salonName: widget.salonName,
+          selectedServices: selectedServicesList,
+          initialSelectedStaffId: _selectedStaffId,
+        ),
+      ),
+    );
+  }
+
+  void _onQuickBook() {
+    final selectedServicesList = _services.where((s) => s.isSelected).toList();
+    if (selectedServicesList.isEmpty) {
+      final isVi = Localizations.localeOf(context).languageCode == 'vi';
+      AppToastHelper.showInfo(
+        context,
+        message: isVi
+            ? 'Vui lòng chọn ít nhất một dịch vụ'
+            : 'Please select at least one service',
       );
       return;
     }
@@ -279,7 +298,9 @@ class _SelectServicesContentViewState
           storeId: widget.storeId,
           salonName: widget.salonName,
           selectedServices: selectedServicesList,
-          selectedStaffId: _selectedStaffId,
+          selectedStaffId: null,
+          selectedStaffPerService: const {},
+          isQuickBook: true,
         ),
       ),
     );
@@ -374,10 +395,6 @@ class _SelectServicesContentViewState
 
               setState(() {
                 _staffMembers = staffItems;
-                if (_selectedStaffId == null ||
-                    !staffItems.any((st) => st.id == _selectedStaffId)) {
-                  _selectedStaffId = staffItems.first.id;
-                }
               });
             }
           },
@@ -404,40 +421,8 @@ class _SelectServicesContentViewState
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppAppBar(
-        centerTitle: false,
         showBackButton: false,
-        titleWidget: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              context.l10n.newBooking,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                color: _textDark,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Row(
-              children: [
-                const Icon(
-                  LucideIcons.calendar,
-                  size: 13,
-                  color: Color(0xFF71717A),
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  _subtitleText,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF71717A),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+        title: context.l10n.newBooking,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 12),
@@ -453,6 +438,7 @@ class _SelectServicesContentViewState
           ),
         ],
       ),
+
       body: isLoading && _services.isEmpty
           ? const Center(child: CircularProgressIndicator(color: _coralColor))
           : SelectServicesBodyView(
@@ -497,43 +483,115 @@ class _SelectServicesContentViewState
             ),
           ],
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
+        child: Builder(
+          builder: (context) {
+            final isVi = Localizations.localeOf(context).languageCode == 'vi';
+            return Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  context.l10n.totalEst,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF64748B),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          context.l10n.totalEst,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF64748B),
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          _formattedTotalPrice,
+                          style: const TextStyle(
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.w800,
+                            color: _textDark,
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (_selectedCount > 0)
+                      Text(
+                        '$_selectedCount ${isVi ? "dịch vụ" : "services"} • $_totalDurationDisplay',
+                        style: const TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF64748B),
+                        ),
+                      ),
+                  ],
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  _formattedTotalPrice,
-                  style: const TextStyle(
-                    fontSize: 17.5,
-                    fontWeight: FontWeight.w800,
-                    color: _textDark,
-                  ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Flexible(
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 45,
+                        child: OutlinedButton.icon(
+                          onPressed: _selectedCount > 0 ? _onQuickBook : null,
+
+                          label: Text(
+                            isVi ? 'Đặt nhanh' : 'Quick Book',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: _selectedCount > 0
+                                  ? const Color(0xFFB45309)
+                                  : const Color(0xFF94A3B8),
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: _selectedCount > 0
+                                ? const Color(0xFFFFFBEB)
+                                : const Color(0xFFF1F5F9),
+                            side: BorderSide(
+                              color: _selectedCount > 0
+                                  ? const Color(0xFFFDE68A)
+                                  : const Color(0xFFCBD5E1),
+                              width: 1.2,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    // Nút 2: Tiếp tục chọn chuyên viên
+                    Flexible(
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 46,
+                        child: AppButton(
+                          text: isVi
+                              ? 'Tiếp tục chọn chuyên viên'
+                              : 'Select Specialist',
+                          trailingIcon: const Icon(
+                            LucideIcons.arrow_right,
+                            size: 16,
+                            color: Colors.white,
+                          ),
+                          backgroundColor: _coralColor,
+                          onPressed: _selectedCount > 0
+                              ? _onConfirmBooking
+                              : null,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+
+                // Nút 1: Đặt nhanh (Không cần chọn chuyên viên)
               ],
-            ),
-            AppButton(
-              text: 'Confirm Booking',
-              trailingIcon: const Icon(
-                LucideIcons.arrow_right,
-                size: 16,
-                color: Colors.white,
-              ),
-              backgroundColor: _coralColor,
-              onPressed: _selectedCount > 0 ? _onConfirmBooking : null,
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

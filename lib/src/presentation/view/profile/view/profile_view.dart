@@ -9,6 +9,7 @@ import '../widgets/profile_stats_row.dart';
 import '../../../bloc/locale/locale_cubit.dart';
 import '../../booking_dashboard/view/booking_dashboard_view.dart';
 import '../../insights/view/my_insights_view.dart';
+import '../settings/view/settings_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -66,80 +67,6 @@ class ProfileView extends StatelessWidget {
               onPressed: () {
                 Navigator.of(dialogContext).pop();
                 context.read<ProfileBloc>().add(const ProfileLogoutRequested());
-              },
-              variant: AppButtonVariant.destructive,
-              borderRadius: BorderRadius.circular(12),
-              size: AppButtonSize.sm,
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDeleteAccountDialog(BuildContext context) {
-    final l10n = context.l10n;
-    showDialog(
-      context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFEE2E2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  Icons.warning_amber_rounded,
-                  color: Color(0xFFDC2626),
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  l10n.confirmDeleteAccount,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF2C2420),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          content: Text(
-            l10n.deleteAccountMessage,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Color(0xFF7A6F68),
-              height: 1.4,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text(
-                l10n.cancel,
-                style: const TextStyle(
-                  color: Color(0xFF7A6F68),
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            AppButton(
-              text: l10n.deletePermanently,
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-                context.read<ProfileBloc>().add(
-                  const ProfileDeleteAccountRequested(),
-                );
               },
               variant: AppButtonVariant.destructive,
               borderRadius: BorderRadius.circular(12),
@@ -462,13 +389,6 @@ class ProfileView extends StatelessWidget {
                                 );
                               },
                             ),
-                            ProfileMenuItemData(
-                              icon: LucideIcons.lock,
-                              title: l10n.changePassword,
-                              onTap: () {
-                                context.router.push(const ChangePasswordRoute());
-                              },
-                            ),
                           ],
                         ),
 
@@ -522,7 +442,15 @@ class ProfileView extends StatelessWidget {
                               icon: LucideIcons.settings,
                               title: l10n.settings,
                               onTap: () {
-                                AppToast.info(context, message: l10n.settings);
+                                final profileBloc = context.read<ProfileBloc>();
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => BlocProvider.value(
+                                      value: profileBloc,
+                                      child: const SettingsView(),
+                                    ),
+                                  ),
+                                );
                               },
                             ),
                             ProfileMenuItemData(
@@ -553,42 +481,8 @@ class ProfileView extends StatelessWidget {
                           fullWidth: true,
                         ),
 
-                        const SizedBox(height: 12),
-
-                        // Delete Account Button (Required for Apple Review Guideline 5.1.1(v))
-                        Center(
-                          child: TextButton.icon(
-                            onPressed:
-                                (state.isLoggingOut || state.isDeletingAccount)
-                                ? null
-                                : () => _showDeleteAccountDialog(context),
-                            icon: state.isDeletingAccount
-                                ? const SizedBox(
-                                    width: 14,
-                                    height: 14,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: Color(0xFFDC2626),
-                                    ),
-                                  )
-                                : const Icon(
-                                    LucideIcons.trash,
-                                    size: 16,
-                                    color: Color(0xFFDC2626),
-                                  ),
-                            label: Text(
-                              l10n.deleteAccount,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFFDC2626),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        // Bottom space so content scrolls past floating island nav bar
-                        const SizedBox(height: 120),
+                        // Bottom space so content scrolls smoothly
+                        const SizedBox(height: 40),
                       ],
                     ),
                   ),

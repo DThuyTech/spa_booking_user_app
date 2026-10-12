@@ -121,6 +121,8 @@ class BookingDetailData {
   final double discount;
   final double totalAmount;
   final String paymentStatus;
+  final String? staffName;
+  final Map<String, String>? serviceStaffNames;
 
   const BookingDetailData({
     required this.bookingCode,
@@ -137,5 +139,7 @@ class BookingDetailData {
     required this.discount,
     required this.totalAmount,
     required this.paymentStatus,
+    this.staffName,
+    this.serviceStaffNames,
   });
 }

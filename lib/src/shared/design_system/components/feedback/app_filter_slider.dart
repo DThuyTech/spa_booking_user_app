@@ -66,9 +66,12 @@ class AppFilterSlider extends StatelessWidget {
             overlayShape: const RoundSliderOverlayShape(overlayRadius: 18),
           ),
           child: Slider(
-            value: value.clamp(min, max),
-            min: min,
-            max: max,
+            value: value.clamp(
+              min < max ? min : 0.0,
+              max > min ? max : min + 1.0,
+            ),
+            min: min < max ? min : 0.0,
+            max: max > min ? max : min + 1.0,
             onChanged: onChanged,
           ),
         ),
@@ -129,6 +132,15 @@ class AppPriceRangeSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final safeMin = min < max ? min : 0.0;
+    final safeMax = max > safeMin ? max : safeMin + 1.0;
+    final clampedStart = values.start.clamp(safeMin, safeMax);
+    final clampedEnd = values.end.clamp(safeMin, safeMax);
+    final safeValues = RangeValues(
+      clampedStart <= clampedEnd ? clampedStart : clampedEnd,
+      clampedEnd >= clampedStart ? clampedEnd : clampedStart,
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -166,9 +178,9 @@ class AppPriceRangeSlider extends StatelessWidget {
             ),
           ),
           child: RangeSlider(
-            values: values,
-            min: min,
-            max: max,
+            values: safeValues,
+            min: safeMin,
+            max: safeMax,
             onChanged: onChanged,
           ),
         ),

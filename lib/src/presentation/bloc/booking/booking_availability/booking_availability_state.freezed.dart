@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookingAvailabilityState {
 
- BookingAvailabilityStatus get status; BookingAvailabilityEntity? get availability; String? get selectedTime; Failure? get failure;
+ BookingAvailabilityStatus get status; BookingAvailabilityEntity? get availability; String? get selectedTime; BookingAvailabilityOptionEntity? get selectedOption; DateTime? get selectedStartAt; Failure? get failure;
 /// Create a copy of BookingAvailabilityState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $BookingAvailabilityStateCopyWith<BookingAvailabilityState> get copyWith => _$Bo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingAvailabilityState&&(identical(other.status, status) || other.status == status)&&(identical(other.availability, availability) || other.availability == availability)&&(identical(other.selectedTime, selectedTime) || other.selectedTime == selectedTime)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingAvailabilityState&&(identical(other.status, status) || other.status == status)&&(identical(other.availability, availability) || other.availability == availability)&&(identical(other.selectedTime, selectedTime) || other.selectedTime == selectedTime)&&(identical(other.selectedOption, selectedOption) || other.selectedOption == selectedOption)&&(identical(other.selectedStartAt, selectedStartAt) || other.selectedStartAt == selectedStartAt)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,availability,selectedTime,failure);
+int get hashCode => Object.hash(runtimeType,status,availability,selectedTime,selectedOption,selectedStartAt,failure);
 
 @override
 String toString() {
-  return 'BookingAvailabilityState(status: $status, availability: $availability, selectedTime: $selectedTime, failure: $failure)';
+  return 'BookingAvailabilityState(status: $status, availability: $availability, selectedTime: $selectedTime, selectedOption: $selectedOption, selectedStartAt: $selectedStartAt, failure: $failure)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $BookingAvailabilityStateCopyWith<$Res>  {
   factory $BookingAvailabilityStateCopyWith(BookingAvailabilityState value, $Res Function(BookingAvailabilityState) _then) = _$BookingAvailabilityStateCopyWithImpl;
 @useResult
 $Res call({
- BookingAvailabilityStatus status, BookingAvailabilityEntity? availability, String? selectedTime, Failure? failure
+ BookingAvailabilityStatus status, BookingAvailabilityEntity? availability, String? selectedTime, BookingAvailabilityOptionEntity? selectedOption, DateTime? selectedStartAt, Failure? failure
 });
 
 
-$BookingAvailabilityEntityCopyWith<$Res>? get availability;
+$BookingAvailabilityEntityCopyWith<$Res>? get availability;$BookingAvailabilityOptionEntityCopyWith<$Res>? get selectedOption;
 
 }
 /// @nodoc
@@ -62,12 +62,14 @@ class _$BookingAvailabilityStateCopyWithImpl<$Res>
 
 /// Create a copy of BookingAvailabilityState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? availability = freezed,Object? selectedTime = freezed,Object? failure = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? availability = freezed,Object? selectedTime = freezed,Object? selectedOption = freezed,Object? selectedStartAt = freezed,Object? failure = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as BookingAvailabilityStatus,availability: freezed == availability ? _self.availability : availability // ignore: cast_nullable_to_non_nullable
 as BookingAvailabilityEntity?,selectedTime: freezed == selectedTime ? _self.selectedTime : selectedTime // ignore: cast_nullable_to_non_nullable
-as String?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
+as String?,selectedOption: freezed == selectedOption ? _self.selectedOption : selectedOption // ignore: cast_nullable_to_non_nullable
+as BookingAvailabilityOptionEntity?,selectedStartAt: freezed == selectedStartAt ? _self.selectedStartAt : selectedStartAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as Failure?,
   ));
 }
@@ -82,6 +84,18 @@ $BookingAvailabilityEntityCopyWith<$Res>? get availability {
 
   return $BookingAvailabilityEntityCopyWith<$Res>(_self.availability!, (value) {
     return _then(_self.copyWith(availability: value));
+  });
+}/// Create a copy of BookingAvailabilityState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BookingAvailabilityOptionEntityCopyWith<$Res>? get selectedOption {
+    if (_self.selectedOption == null) {
+    return null;
+  }
+
+  return $BookingAvailabilityOptionEntityCopyWith<$Res>(_self.selectedOption!, (value) {
+    return _then(_self.copyWith(selectedOption: value));
   });
 }
 }
@@ -165,10 +179,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( BookingAvailabilityStatus status,  BookingAvailabilityEntity? availability,  String? selectedTime,  Failure? failure)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( BookingAvailabilityStatus status,  BookingAvailabilityEntity? availability,  String? selectedTime,  BookingAvailabilityOptionEntity? selectedOption,  DateTime? selectedStartAt,  Failure? failure)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingAvailabilityState() when $default != null:
-return $default(_that.status,_that.availability,_that.selectedTime,_that.failure);case _:
+return $default(_that.status,_that.availability,_that.selectedTime,_that.selectedOption,_that.selectedStartAt,_that.failure);case _:
   return orElse();
 
 }
@@ -186,10 +200,10 @@ return $default(_that.status,_that.availability,_that.selectedTime,_that.failure
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( BookingAvailabilityStatus status,  BookingAvailabilityEntity? availability,  String? selectedTime,  Failure? failure)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( BookingAvailabilityStatus status,  BookingAvailabilityEntity? availability,  String? selectedTime,  BookingAvailabilityOptionEntity? selectedOption,  DateTime? selectedStartAt,  Failure? failure)  $default,) {final _that = this;
 switch (_that) {
 case _BookingAvailabilityState():
-return $default(_that.status,_that.availability,_that.selectedTime,_that.failure);case _:
+return $default(_that.status,_that.availability,_that.selectedTime,_that.selectedOption,_that.selectedStartAt,_that.failure);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +220,10 @@ return $default(_that.status,_that.availability,_that.selectedTime,_that.failure
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( BookingAvailabilityStatus status,  BookingAvailabilityEntity? availability,  String? selectedTime,  Failure? failure)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( BookingAvailabilityStatus status,  BookingAvailabilityEntity? availability,  String? selectedTime,  BookingAvailabilityOptionEntity? selectedOption,  DateTime? selectedStartAt,  Failure? failure)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingAvailabilityState() when $default != null:
-return $default(_that.status,_that.availability,_that.selectedTime,_that.failure);case _:
+return $default(_that.status,_that.availability,_that.selectedTime,_that.selectedOption,_that.selectedStartAt,_that.failure);case _:
   return null;
 
 }
@@ -221,12 +235,14 @@ return $default(_that.status,_that.availability,_that.selectedTime,_that.failure
 
 
 class _BookingAvailabilityState extends BookingAvailabilityState {
-  const _BookingAvailabilityState({this.status = BookingAvailabilityStatus.initial, this.availability, this.selectedTime, this.failure}): super._();
+  const _BookingAvailabilityState({this.status = BookingAvailabilityStatus.initial, this.availability, this.selectedTime, this.selectedOption, this.selectedStartAt, this.failure}): super._();
   
 
 @override@JsonKey() final  BookingAvailabilityStatus status;
 @override final  BookingAvailabilityEntity? availability;
 @override final  String? selectedTime;
+@override final  BookingAvailabilityOptionEntity? selectedOption;
+@override final  DateTime? selectedStartAt;
 @override final  Failure? failure;
 
 /// Create a copy of BookingAvailabilityState
@@ -239,16 +255,16 @@ _$BookingAvailabilityStateCopyWith<_BookingAvailabilityState> get copyWith => __
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingAvailabilityState&&(identical(other.status, status) || other.status == status)&&(identical(other.availability, availability) || other.availability == availability)&&(identical(other.selectedTime, selectedTime) || other.selectedTime == selectedTime)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingAvailabilityState&&(identical(other.status, status) || other.status == status)&&(identical(other.availability, availability) || other.availability == availability)&&(identical(other.selectedTime, selectedTime) || other.selectedTime == selectedTime)&&(identical(other.selectedOption, selectedOption) || other.selectedOption == selectedOption)&&(identical(other.selectedStartAt, selectedStartAt) || other.selectedStartAt == selectedStartAt)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,availability,selectedTime,failure);
+int get hashCode => Object.hash(runtimeType,status,availability,selectedTime,selectedOption,selectedStartAt,failure);
 
 @override
 String toString() {
-  return 'BookingAvailabilityState(status: $status, availability: $availability, selectedTime: $selectedTime, failure: $failure)';
+  return 'BookingAvailabilityState(status: $status, availability: $availability, selectedTime: $selectedTime, selectedOption: $selectedOption, selectedStartAt: $selectedStartAt, failure: $failure)';
 }
 
 
@@ -259,11 +275,11 @@ abstract mixin class _$BookingAvailabilityStateCopyWith<$Res> implements $Bookin
   factory _$BookingAvailabilityStateCopyWith(_BookingAvailabilityState value, $Res Function(_BookingAvailabilityState) _then) = __$BookingAvailabilityStateCopyWithImpl;
 @override @useResult
 $Res call({
- BookingAvailabilityStatus status, BookingAvailabilityEntity? availability, String? selectedTime, Failure? failure
+ BookingAvailabilityStatus status, BookingAvailabilityEntity? availability, String? selectedTime, BookingAvailabilityOptionEntity? selectedOption, DateTime? selectedStartAt, Failure? failure
 });
 
 
-@override $BookingAvailabilityEntityCopyWith<$Res>? get availability;
+@override $BookingAvailabilityEntityCopyWith<$Res>? get availability;@override $BookingAvailabilityOptionEntityCopyWith<$Res>? get selectedOption;
 
 }
 /// @nodoc
@@ -276,12 +292,14 @@ class __$BookingAvailabilityStateCopyWithImpl<$Res>
 
 /// Create a copy of BookingAvailabilityState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? availability = freezed,Object? selectedTime = freezed,Object? failure = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? availability = freezed,Object? selectedTime = freezed,Object? selectedOption = freezed,Object? selectedStartAt = freezed,Object? failure = freezed,}) {
   return _then(_BookingAvailabilityState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as BookingAvailabilityStatus,availability: freezed == availability ? _self.availability : availability // ignore: cast_nullable_to_non_nullable
 as BookingAvailabilityEntity?,selectedTime: freezed == selectedTime ? _self.selectedTime : selectedTime // ignore: cast_nullable_to_non_nullable
-as String?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
+as String?,selectedOption: freezed == selectedOption ? _self.selectedOption : selectedOption // ignore: cast_nullable_to_non_nullable
+as BookingAvailabilityOptionEntity?,selectedStartAt: freezed == selectedStartAt ? _self.selectedStartAt : selectedStartAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as Failure?,
   ));
 }
@@ -297,6 +315,18 @@ $BookingAvailabilityEntityCopyWith<$Res>? get availability {
 
   return $BookingAvailabilityEntityCopyWith<$Res>(_self.availability!, (value) {
     return _then(_self.copyWith(availability: value));
+  });
+}/// Create a copy of BookingAvailabilityState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BookingAvailabilityOptionEntityCopyWith<$Res>? get selectedOption {
+    if (_self.selectedOption == null) {
+    return null;
+  }
+
+  return $BookingAvailabilityOptionEntityCopyWith<$Res>(_self.selectedOption!, (value) {
+    return _then(_self.copyWith(selectedOption: value));
   });
 }
 }

@@ -269,6 +269,9 @@ class _HomeViewState extends State<HomeView> {
             },
             nearSalons: nearSalons,
             nearSalonsTitle: nearSalonsTitle,
+            onNearSalonsMapTap: () {
+              context.router.push(const NearbyStoresRoute());
+            },
             onSeeAllNearSalons: () {
               context.router.push(
                 NearbyStoresListRoute(

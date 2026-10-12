@@ -6,7 +6,6 @@ import 'package:spa_booking/src/core/extensions/double_extensions.dart';
 import 'package:spa_booking/src/domain/entities/store/store_full_detail_entity.dart';
 import 'package:spa_booking/src/presentation/bloc/review/store_reviews/store_reviews_bloc.dart';
 import 'package:spa_booking/src/presentation/bloc/store/store_detail/store_detail_bloc.dart';
-import 'package:spa_booking/src/presentation/view/booking_flow/booking_schedule/view/booking_schedule_view.dart';
 import 'package:spa_booking/src/presentation/view/store_detail/body_view/store_detail_body_view.dart';
 import 'package:spa_booking/src/presentation/view/store_detail/sections/store_detail_bottom_bar_section.dart';
 import 'package:spa_booking/src/presentation/view/store_detail/sections/store_detail_tab_bar_section.dart';
@@ -58,10 +57,12 @@ class _StoreDetailContentViewState extends State<StoreDetailContentView> {
   // }
 
   void _onBookAppointment(StoreFullDetailEntity store) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) =>
-            BookingScheduleView(storeId: widget.storeId, salonName: store.name),
+    context.router.push(
+      SelectServicesRoute(
+        storeId: widget.storeId,
+        salonName: store.name,
+        initialServices: [],
+        initialStaffMembers: [],
       ),
     );
   }
@@ -222,7 +223,7 @@ class _StoreDetailContentViewState extends State<StoreDetailContentView> {
       },
       onShareTap: () => _onShare(displayStore),
       onBookSeat: () => _onBookSeat(displayStore),
-      onBookService: (val) {},
+      onBookService: (val) => _onBookAppointment(displayStore),
       // onPhotoTap: _onPhotoTap,
       onGetDirections: () {},
       onViewAllReviews: () {},

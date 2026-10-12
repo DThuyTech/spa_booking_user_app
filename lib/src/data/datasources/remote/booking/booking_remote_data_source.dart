@@ -1,21 +1,27 @@
+import 'package:dio/dio.dart';
 import 'package:spa_booking/src/core/network/network_client.dart';
 import 'package:spa_booking/src/data/model/analytics/customer_spending_analytics_model.dart';
 import 'package:spa_booking/src/data/model/booking/booking_availability_model.dart';
 import 'package:spa_booking/src/data/model/booking/booking_list_response_model.dart';
 import 'package:spa_booking/src/data/model/booking/booking_model.dart';
+import '../../../../domain/entities/booking/booking_item_param.dart';
 
 abstract interface class BookingRemoteDataSource {
   Future<BookingAvailabilityModel> getAvailability({
     required String storeId,
-    required String date,
-    required List<String> serviceIds,
-    String? staffProfileId,
+    required List<BookingItemParam> services,
+    String? dateFrom,
+    String? dateTo,
+    int stepMinutes = 15,
+    String mode = 'SLOT_SEARCH',
+    String orderMode = 'FLEXIBLE',
   });
 
   Future<BookingModel> createBooking({
     required String storeId,
-    required List<String> serviceIds,
-    required String startAt,
+    String? startAt,
+    List<BookingItemParam>? items,
+    List<String>? serviceIds,
     String? staffProfileId,
     String? note,
   });
@@ -66,22 +72,38 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   @override
   Future<BookingAvailabilityModel> getAvailability({
     required String storeId,
-    required String date,
-    required List<String> serviceIds,
-    String? staffProfileId,
+    required List<BookingItemParam> services,
+    String? dateFrom,
+    String? dateTo,
+    int stepMinutes = 15,
+    String mode = 'SLOT_SEARCH',
+    String orderMode = 'FLEXIBLE',
   }) async {
-    final queryParams = <String, dynamic>{
-      'date': date,
-      'serviceIds': serviceIds.join(','),
+    final body = <String, dynamic>{
+      'services': services.map((s) => s.toJson()).toList(),
+      if (dateFrom != null && dateFrom.isNotEmpty) 'dateFrom': dateFrom,
+      if (dateTo != null && dateTo.isNotEmpty) 'dateTo': dateTo,
+      'stepMinutes': stepMinutes,
+      'mode': mode,
+      'orderMode': orderMode,
     };
-    if (staffProfileId != null && staffProfileId.isNotEmpty) {
-      queryParams['staffProfileId'] = staffProfileId;
-    }
 
-    final response = await _client.get<Map<String, dynamic>>(
-      '/public/stores/$storeId/availability',
-      queryParameters: queryParams,
-    );
+    Response<Map<String, dynamic>> response;
+    try {
+      response = await _client.post<Map<String, dynamic>>(
+        '/customer/stores/$storeId/booking-availability',
+        data: body,
+      );
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
+        response = await _client.post<Map<String, dynamic>>(
+          '/public/stores/$storeId/booking-availability',
+          data: body,
+        );
+      } else {
+        rethrow;
+      }
+    }
 
     final data = response.data;
     if (data != null) {
@@ -94,18 +116,35 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   @override
   Future<BookingModel> createBooking({
     required String storeId,
-    required List<String> serviceIds,
-    required String startAt,
+    String? startAt,
+    List<BookingItemParam>? items,
+    List<String>? serviceIds,
     String? staffProfileId,
     String? note,
   }) async {
-    final body = <String, dynamic>{
-      'serviceIds': serviceIds,
-      'startAt': startAt,
-    };
-    if (staffProfileId != null && staffProfileId.isNotEmpty) {
-      body['staffProfileId'] = staffProfileId;
+    final List<Map<String, dynamic>> requestItems;
+    if (items != null && items.isNotEmpty) {
+      requestItems = items.map((i) => i.toJson()).toList();
+    } else if (serviceIds != null && serviceIds.isNotEmpty) {
+      requestItems = serviceIds
+          .map(
+            (id) => {
+              'serviceId': id,
+              'staffProfileId':
+                  (staffProfileId != null && staffProfileId.isNotEmpty)
+                  ? staffProfileId
+                  : null,
+            },
+          )
+          .toList();
+    } else {
+      requestItems = [];
     }
+
+    final body = <String, dynamic>{
+      if (startAt != null && startAt.isNotEmpty) 'startAt': startAt,
+      'items': requestItems,
+    };
     if (note != null && note.isNotEmpty) {
       body['note'] = note;
     }

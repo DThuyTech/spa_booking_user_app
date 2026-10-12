@@ -49,6 +49,8 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: FavoriteStoresRoute.page),
     AutoRoute(page: StoreDetailRoute.page),
     AutoRoute(page: NearbyStoresListRoute.page),
+    AutoRoute(page: NearbyStoresRoute.page),
+
     AutoRoute(page: UserReviewsRoute.page, guards: [AuthGuard(sessionManager)]),
     AutoRoute(
       page: UserReviewDetailRoute.page,

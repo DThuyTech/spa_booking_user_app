@@ -6,7 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spa_booking/src/presentation/view/auth/register/session/session.dart';
 import 'package:spa_booking/src/shared/widgets/toast/app_toast.dart';
+import '../../../../bloc/auth/otp_verification/otp_verification_state.dart';
 import '../../../../bloc/auth/register/register_bloc.dart';
+import '../../otp_verification/view/otp_verification_view.dart';
 
 @RoutePage()
 class RegisterPage extends StatelessWidget {
@@ -60,12 +62,26 @@ class _RegisterViewState extends State<RegisterView> {
           context.read<RegisterBloc>().add(const ErrorCleared());
         }
         if (state.isSuccess) {
-          AppToast.success(
-            context,
-            title: 'Welcome!',
-            message: 'Your account has been registered successfully.',
-          );
-          context.router.replaceAll([const RootRoute()]);
+          if (state.otpResult != null) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => OtpVerificationPage(
+                  identifier: state.identifier,
+                  name: state.fullName,
+                  flowType: OtpFlowType.register,
+                  mockOtp: state.otpResult?.otp,
+                  expiresInSeconds: state.otpResult?.expiresInSeconds ?? 300,
+                ),
+              ),
+            );
+          } else {
+            AppToast.success(
+              context,
+              title: 'Welcome!',
+              message: 'Your account has been registered successfully.',
+            );
+            context.router.replaceAll([const RootRoute()]);
+          }
         }
       },
       builder: (context, state) {

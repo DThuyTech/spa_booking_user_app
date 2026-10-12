@@ -57,7 +57,9 @@ class OtpHeaderSection extends StatelessWidget {
 
             // Title
             Text(
-              l10n.verifyYourNumber,
+              state.identifier.contains('@')
+                  ? 'Xác thực Email'
+                  : l10n.verifyYourNumber,
               style: const TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.w800,
@@ -69,9 +71,9 @@ class OtpHeaderSection extends StatelessWidget {
 
             const SizedBox(height: 8),
 
-            // Masked phone message
+            // Masked phone / email message
             Text(
-              '${l10n.weSentCodeTo}\n${state.maskedPhone}',
+              '${l10n.weSentCodeTo}\n${state.maskedIdentifier}',
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -80,6 +82,40 @@ class OtpHeaderSection extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
+
+            if (state.mockOtp != null && state.mockOtp!.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF7ED),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: const Color(0xFFFFEDD5)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      LucideIcons.sparkles,
+                      size: 14,
+                      color: Color(0xFFEA580C),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Mã OTP thử nghiệm: ${state.mockOtp}',
+                      style: const TextStyle(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFFC2410C),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ],
         );
       },

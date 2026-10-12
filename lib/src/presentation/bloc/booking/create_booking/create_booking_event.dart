@@ -9,15 +9,17 @@ sealed class CreateBookingEvent extends Equatable {
 
 class SubmitBookingEvent extends CreateBookingEvent {
   final String storeId;
-  final List<String> serviceIds;
-  final String startAt;
+  final String? startAt;
+  final List<BookingItemParam>? items;
+  final List<String>? serviceIds;
   final String? staffProfileId;
   final String? note;
 
   const SubmitBookingEvent({
     required this.storeId,
-    required this.serviceIds,
-    required this.startAt,
+    this.startAt,
+    this.items,
+    this.serviceIds,
     this.staffProfileId,
     this.note,
   });
@@ -25,8 +27,9 @@ class SubmitBookingEvent extends CreateBookingEvent {
   @override
   List<Object?> get props => [
     storeId,
-    serviceIds,
     startAt,
+    items,
+    serviceIds,
     staffProfileId,
     note,
   ];

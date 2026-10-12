@@ -26,7 +26,10 @@ class AuthMapper {
 
   static RequestOtpResult toRequestOtpResult(RequestOtpResponseModel model) {
     return RequestOtpResult(
+      success: model.success,
       message: model.message,
+      otp: model.otp,
+      destination: model.destination,
       expiresInSeconds: model.expiresInSeconds,
     );
   }

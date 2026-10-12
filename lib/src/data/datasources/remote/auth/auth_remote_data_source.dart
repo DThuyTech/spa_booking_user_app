@@ -65,6 +65,49 @@ abstract interface class AuthRemoteDataSource {
     required String otp,
     required String newPassword,
   });
+
+  // Customer OTP Auth
+  Future<RequestOtpResponseModel> sendRegisterOtp({
+    String? phoneNumber,
+    String? email,
+  });
+
+  Future<AuthResponseModel> registerWithOtp({
+    String? phoneNumber,
+    String? email,
+    required String otp,
+    required String name,
+  });
+
+  Future<RequestOtpResponseModel> sendLoginOtp({required String identifier});
+
+  Future<AuthResponseModel> loginWithOtp({
+    required String identifier,
+    required String otp,
+  });
+
+  // Contact Info Management
+  Future<RequestOtpResponseModel> requestChangeEmail({
+    required String newEmail,
+  });
+
+  Future<UserModel> verifyChangeEmail({
+    required String newEmail,
+    required String otp,
+  });
+
+  Future<RequestOtpResponseModel> requestChangePhone({
+    required String newPhone,
+  });
+
+  Future<UserModel> verifyChangePhone({
+    required String newPhone,
+    required String otp,
+  });
+
+  Future<void> removeCustomerEmail();
+
+  Future<void> removeCustomerPhone();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -190,5 +233,81 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       otp: otp,
       newPassword: newPassword,
     );
+  }
+
+  @override
+  Future<RequestOtpResponseModel> sendRegisterOtp({
+    String? phoneNumber,
+    String? email,
+  }) {
+    return _apiService.sendRegisterOtp(phoneNumber: phoneNumber, email: email);
+  }
+
+  @override
+  Future<AuthResponseModel> registerWithOtp({
+    String? phoneNumber,
+    String? email,
+    required String otp,
+    required String name,
+  }) {
+    return _apiService.registerWithOtp(
+      phoneNumber: phoneNumber,
+      email: email,
+      otp: otp,
+      name: name,
+    );
+  }
+
+  @override
+  Future<RequestOtpResponseModel> sendLoginOtp({required String identifier}) {
+    return _apiService.sendLoginOtp(identifier: identifier);
+  }
+
+  @override
+  Future<AuthResponseModel> loginWithOtp({
+    required String identifier,
+    required String otp,
+  }) {
+    return _apiService.loginWithOtp(identifier: identifier, otp: otp);
+  }
+
+  @override
+  Future<RequestOtpResponseModel> requestChangeEmail({
+    required String newEmail,
+  }) {
+    return _apiService.requestChangeEmail(newEmail: newEmail);
+  }
+
+  @override
+  Future<UserModel> verifyChangeEmail({
+    required String newEmail,
+    required String otp,
+  }) {
+    return _apiService.verifyChangeEmail(newEmail: newEmail, otp: otp);
+  }
+
+  @override
+  Future<RequestOtpResponseModel> requestChangePhone({
+    required String newPhone,
+  }) {
+    return _apiService.requestChangePhone(newPhone: newPhone);
+  }
+
+  @override
+  Future<UserModel> verifyChangePhone({
+    required String newPhone,
+    required String otp,
+  }) {
+    return _apiService.verifyChangePhone(newPhone: newPhone, otp: otp);
+  }
+
+  @override
+  Future<void> removeCustomerEmail() {
+    return _apiService.removeCustomerEmail();
+  }
+
+  @override
+  Future<void> removeCustomerPhone() {
+    return _apiService.removeCustomerPhone();
   }
 }

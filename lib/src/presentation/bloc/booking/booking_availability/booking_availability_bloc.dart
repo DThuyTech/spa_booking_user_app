@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/error/failure.dart';
+import '../../../../domain/entities/booking/booking_availability_entity.dart';
 import '../../../../domain/usecases/booking/get_availability_usecase.dart';
 import 'booking_availability_event.dart';
 import 'booking_availability_state.dart';
@@ -24,9 +25,12 @@ class BookingAvailabilityBloc
 
     final result = await getAvailabilityUseCase(
       storeId: event.storeId,
-      date: event.date,
-      serviceIds: event.serviceIds,
-      staffProfileId: event.staffProfileId,
+      services: event.services,
+      dateFrom: event.dateFrom,
+      dateTo: event.dateTo,
+      stepMinutes: event.stepMinutes,
+      mode: event.mode,
+      orderMode: event.orderMode,
     );
 
     result.fold(
@@ -37,18 +41,26 @@ class BookingAvailabilityBloc
         ),
       ),
       (availability) {
-        String? firstAvailable;
-        for (final slot in availability.slots) {
-          if (slot.available) {
-            firstAvailable = slot.time;
-            break;
-          }
+        BookingAvailabilityOptionEntity? firstOption;
+        if (availability.options.isNotEmpty) {
+          firstOption = availability.options.first;
+        } else if (availability.days.isNotEmpty &&
+            availability.days.first.options.isNotEmpty) {
+          firstOption = availability.days.first.options.first;
         }
+
+        DateTime? startAtDate;
+        if (firstOption != null) {
+          startAtDate = DateTime.tryParse(firstOption.startAt);
+        }
+
         emit(
           state.copyWith(
             status: BookingAvailabilityStatus.loaded,
             availability: availability,
-            selectedTime: firstAvailable,
+            selectedOption: firstOption,
+            selectedTime: firstOption?.startTime,
+            selectedStartAt: startAtDate,
             failure: null,
           ),
         );
@@ -60,6 +72,16 @@ class BookingAvailabilityBloc
     SelectBookingSlotEvent event,
     Emitter<BookingAvailabilityState> emit,
   ) {
-    emit(state.copyWith(selectedTime: event.time));
+    DateTime? startAtDate;
+    if (event.option != null) {
+      startAtDate = DateTime.tryParse(event.option!.startAt);
+    }
+    emit(
+      state.copyWith(
+        selectedTime: event.time,
+        selectedOption: event.option ?? state.selectedOption,
+        selectedStartAt: startAtDate ?? state.selectedStartAt,
+      ),
+    );
   }
 }

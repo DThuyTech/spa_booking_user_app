@@ -54,10 +54,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     final confirm = _confirmPasswordController.text;
 
     if (current.isEmpty) {
-      AppToast.warning(
-        context,
-        message: 'Vui lòng nhập mật khẩu hiện tại',
-      );
+      AppToast.warning(context, message: 'Vui lòng nhập mật khẩu hiện tại');
       return;
     }
     if (newPass.length < 8) {
@@ -82,10 +79,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
       return;
     }
 
-    _cubit.changePassword(
-      oldPassword: current,
-      newPassword: newPass,
-    );
+    _cubit.changePassword(oldPassword: current, newPassword: newPass);
   }
 
   @override

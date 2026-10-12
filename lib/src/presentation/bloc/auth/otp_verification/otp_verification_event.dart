@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'otp_verification_state.dart';
+
 sealed class OtpVerificationEvent extends Equatable {
   const OtpVerificationEvent();
 
@@ -8,13 +10,38 @@ sealed class OtpVerificationEvent extends Equatable {
 }
 
 final class OtpStarted extends OtpVerificationEvent {
-  final String phone;
+  final String identifier;
+  final String? name;
+  final String? mockOtp;
+  final OtpFlowType flowType;
   final int initialCountdownSeconds;
 
-  const OtpStarted({required this.phone, this.initialCountdownSeconds = 300});
+  const OtpStarted({
+    required this.identifier,
+    this.name,
+    this.mockOtp,
+    this.flowType = OtpFlowType.login,
+    this.initialCountdownSeconds = 300,
+  });
+
+  // Backward compatibility factory constructor
+  factory OtpStarted.legacy({
+    required String phone,
+    int initialCountdownSeconds = 300,
+  }) => OtpStarted(
+    identifier: phone,
+    flowType: OtpFlowType.phoneVerify,
+    initialCountdownSeconds: initialCountdownSeconds,
+  );
 
   @override
-  List<Object?> get props => [phone, initialCountdownSeconds];
+  List<Object?> get props => [
+    identifier,
+    name,
+    mockOtp,
+    flowType,
+    initialCountdownSeconds,
+  ];
 }
 
 final class OtpDigitChanged extends OtpVerificationEvent {

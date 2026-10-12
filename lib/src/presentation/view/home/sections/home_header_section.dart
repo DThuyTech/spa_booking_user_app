@@ -136,25 +136,14 @@ class HomeHeaderSection extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          displayGreeting,
-                          style: const TextStyle(
-                            fontSize: 21,
-                            fontWeight: FontWeight.w800,
-                            color: _textDark,
-                            letterSpacing: -0.4,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Icon(
-                          theme.timeIcon,
-                          size: 19,
-                          color: theme.accentColor,
-                        ),
-                      ],
+                    Text(
+                      displayGreeting,
+                      style: const TextStyle(
+                        fontSize: 21,
+                        fontWeight: FontWeight.w800,
+                        color: _textDark,
+                        letterSpacing: -0.4,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     GestureDetector(
@@ -211,6 +200,8 @@ class HomeHeaderSection extends StatelessWidget {
                       clipBehavior: Clip.none,
                       children: [
                         Container(
+                          width: 43,
+                          height: 43,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white,
@@ -227,13 +218,13 @@ class HomeHeaderSection extends StatelessWidget {
                             ],
                           ),
                           child: IconButton(
-                            icon: const Icon(LucideIcons.bell, size: 20),
+                            icon: const Icon(LucideIcons.bell, size: 16),
                             color: _textDark,
                             onPressed: onNotificationTap,
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(6),
                             constraints: const BoxConstraints(
-                              minWidth: 40,
-                              minHeight: 40,
+                              minWidth: 30,
+                              minHeight: 30,
                             ),
                           ),
                         ),
@@ -265,7 +256,7 @@ class HomeHeaderSection extends StatelessWidget {
                       ],
                     ),
 
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 6),
 
                     // Avatar / Profile Initials (Matching user's coral circle badge)
                     GestureDetector(
@@ -277,13 +268,6 @@ class HomeHeaderSection extends StatelessWidget {
                           color: _coralColor,
                           shape: BoxShape.circle,
                           border: Border.all(color: Colors.white, width: 2.2),
-                          boxShadow: [
-                            BoxShadow(
-                              color: _coralColor.withValues(alpha: 0.32),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
                         ),
                         child: Center(
                           child: Text(
@@ -303,7 +287,7 @@ class HomeHeaderSection extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 18),
+            const SizedBox(height: 8),
 
             // Search Bar Row: Search Input + Coral Filter Button
             Row(
