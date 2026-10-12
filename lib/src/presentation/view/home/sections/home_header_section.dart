@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import '../../../../shared/shared.dart';
+import '../models/home_time_theme.dart';
 
 class HomeHeaderCurvePainter extends CustomPainter {
   final Color baseColor;
   final Color waveColor;
+  final Color gradientTop;
 
   const HomeHeaderCurvePainter({
     this.baseColor = const Color(0xFFFFECE7),
     this.waveColor = const Color(0xFFFFF6F3),
+    this.gradientTop = const Color(0xFFFFF3F0),
   });
 
   @override
@@ -36,12 +39,12 @@ class HomeHeaderCurvePainter extends CustomPainter {
 
     canvas.drawPath(backPath, backPaint);
 
-    // 2. Front primary wave with smooth peach/coral gradient
+    // 2. Front primary wave with smooth dynamic gradient
     final frontPaint = Paint()
       ..shader = LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [const Color(0xFFFFF3F0), baseColor],
+        colors: [gradientTop, baseColor],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
       ..style = PaintingStyle.fill;
 
@@ -66,7 +69,10 @@ class HomeHeaderCurvePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant HomeHeaderCurvePainter oldDelegate) => false;
+  bool shouldRepaint(covariant HomeHeaderCurvePainter oldDelegate) =>
+      oldDelegate.baseColor != baseColor ||
+      oldDelegate.waveColor != waveColor ||
+      oldDelegate.gradientTop != gradientTop;
 }
 
 class HomeHeaderSection extends StatelessWidget {
@@ -79,13 +85,14 @@ class HomeHeaderSection extends StatelessWidget {
   final VoidCallback? onAvatarTap;
   final VoidCallback? onSearchTap;
   final VoidCallback? onFilterTap;
+  final HomeTimeTheme? timeTheme;
 
   static const Color _coralColor = Color(0xFFFC6E58);
   static const Color _textDark = Color(0xFF1E2022);
 
   const HomeHeaderSection({
     super.key,
-    this.greetingText = 'Good morning',
+    this.greetingText = '',
     this.locationText = 'Ho Chi Minh City',
     this.userAvatarSeed = 'KH',
     this.notificationCount = 3,
@@ -94,14 +101,23 @@ class HomeHeaderSection extends StatelessWidget {
     this.onAvatarTap,
     this.onSearchTap,
     this.onFilterTap,
+    this.timeTheme,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = timeTheme ?? HomeTimeTheme.now(context);
     final topPadding = MediaQuery.of(context).padding.top;
+    final displayGreeting = greetingText.trim().isNotEmpty
+        ? greetingText
+        : theme.greetingText;
 
     return CustomPaint(
-      painter: const HomeHeaderCurvePainter(),
+      painter: HomeHeaderCurvePainter(
+        gradientTop: theme.gradientTop,
+        baseColor: theme.baseColor,
+        waveColor: theme.waveColor,
+      ),
       child: Padding(
         padding: EdgeInsets.only(
           top: topPadding + 10,
@@ -120,14 +136,25 @@ class HomeHeaderSection extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      greetingText,
-                      style: const TextStyle(
-                        fontSize: 21,
-                        fontWeight: FontWeight.w800,
-                        color: _textDark,
-                        letterSpacing: -0.4,
-                      ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          displayGreeting,
+                          style: const TextStyle(
+                            fontSize: 21,
+                            fontWeight: FontWeight.w800,
+                            color: _textDark,
+                            letterSpacing: -0.4,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(
+                          theme.timeIcon,
+                          size: 19,
+                          color: theme.accentColor,
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 4),
                     GestureDetector(

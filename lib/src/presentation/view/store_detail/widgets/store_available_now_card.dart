@@ -5,6 +5,7 @@ class StoreAvailableNowCard extends StatelessWidget {
   final int availableSeats;
   final String estimatedWait;
   final VoidCallback? onBookSeat;
+  final bool isStoreOpen;
 
   static const Color _coralColor = Color(0xFFFF6F59);
   static const Color _textDark = Color(0xFF1E2022);
@@ -16,10 +17,29 @@ class StoreAvailableNowCard extends StatelessWidget {
     this.availableSeats = 3,
     this.estimatedWait = '~5 min',
     this.onBookSeat,
+    this.isStoreOpen = true,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isVi = Localizations.localeOf(context).languageCode == 'vi';
+
+    final title = isStoreOpen
+        ? context.l10n.availableNow
+        : (isVi ? 'Đặt lịch hẹn trước' : 'Advance Booking');
+
+    final subtitle = isStoreOpen
+        ? (isVi
+            ? 'Còn $availableSeats ghế trống • Thời gian chờ: $estimatedWait'
+            : '$availableSeats seats available • Estimated wait: $estimatedWait')
+        : (isVi
+            ? 'Salon đang tạm đóng cửa. Bạn vẫn có thể chọn dịch vụ & đặt lịch trước cho các ngày tiếp theo!'
+            : 'Salon is currently closed. You can book an appointment in advance for upcoming days!');
+
+    final buttonText = isStoreOpen
+        ? (isVi ? 'Đặt chỗ ngay' : 'Book a seat')
+        : (isVi ? 'Đặt lịch trước ngay' : 'Book appointment');
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -55,7 +75,7 @@ class StoreAvailableNowCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    context.l10n.availableNow,
+                    title,
                     style: const TextStyle(
                       fontSize: 19,
                       fontWeight: FontWeight.w700,
@@ -65,16 +85,17 @@ class StoreAvailableNowCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    '$availableSeats seats available • Estimated wait: $estimatedWait',
+                    subtitle,
                     style: const TextStyle(
                       fontSize: 13.5,
                       fontWeight: FontWeight.w500,
                       color: _textMuted,
+                      height: 1.35,
                     ),
                   ),
                   const SizedBox(height: 18),
                   AppButton(
-                    text: 'Book a seat',
+                    text: buttonText,
                     onPressed: onBookSeat,
                     backgroundColor: _coralColor,
                     textColor: Colors.white,

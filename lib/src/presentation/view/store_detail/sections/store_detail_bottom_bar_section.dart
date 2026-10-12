@@ -8,6 +8,7 @@ class StoreDetailBottomBarSection extends StatelessWidget {
   final String seatsText;
   final VoidCallback? onBookNow;
   final VoidCallback? onBookAppointment;
+  final bool isStoreOpen;
 
   static const Color _coralColor = Color(0xFFFF6F59);
   static const Color _appointmentBtnColor = Color(0xFFA53C2A);
@@ -20,6 +21,7 @@ class StoreDetailBottomBarSection extends StatelessWidget {
     this.seatsText = '3 seats available',
     this.onBookNow,
     this.onBookAppointment,
+    this.isStoreOpen = true,
   });
 
   @override
@@ -45,12 +47,13 @@ class StoreDetailBottomBarSection extends StatelessWidget {
         ],
       ),
       child: activeTab == StoreDetailTab.overview
-          ? _buildOverviewBar()
-          : _buildFullAppointmentBar(),
+          ? _buildOverviewBar(context)
+          : _buildFullAppointmentBar(context),
     );
   }
 
-  Widget _buildOverviewBar() {
+  Widget _buildOverviewBar(BuildContext context) {
+    final isVi = Localizations.localeOf(context).languageCode == 'vi';
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -68,17 +71,21 @@ class StoreDetailBottomBarSection extends StatelessWidget {
             ),
             const SizedBox(height: 2),
             Text(
-              seatsText,
-              style: const TextStyle(
+              isStoreOpen
+                  ? seatsText
+                  : (isVi ? 'Nhận đặt lịch ngày khác' : 'Advance booking open'),
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: _coralColor,
+                color: isStoreOpen ? _coralColor : const Color(0xFF059669),
               ),
             ),
           ],
         ),
         AppButton(
-          text: 'Book now',
+          text: isStoreOpen
+              ? (isVi ? 'Đặt ngay' : 'Book now')
+              : (isVi ? 'Đặt lịch' : 'Book now'),
           onPressed: onBookNow,
           backgroundColor: _coralColor,
           textColor: Colors.white,
@@ -90,9 +97,10 @@ class StoreDetailBottomBarSection extends StatelessWidget {
     );
   }
 
-  Widget _buildFullAppointmentBar() {
+  Widget _buildFullAppointmentBar(BuildContext context) {
+    final isVi = Localizations.localeOf(context).languageCode == 'vi';
     return AppButton(
-      text: 'Book Appointment',
+      text: isVi ? 'Đặt lịch hẹn' : 'Book Appointment',
       leadingIcon: const Icon(
         LucideIcons.calendar,
         size: 18,

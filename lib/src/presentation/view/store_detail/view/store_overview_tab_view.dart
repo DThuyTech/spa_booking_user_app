@@ -5,6 +5,7 @@ import '../widgets/store_available_now_card.dart';
 import '../widgets/store_location_card.dart';
 import '../widgets/store_opening_hours_card.dart';
 import '../widgets/store_overview_services_card.dart';
+import '../utils/store_operating_hours_helper.dart';
 
 class StoreOverviewTabView extends StatelessWidget {
   final StoreFullDetailEntity store;
@@ -23,6 +24,11 @@ class StoreOverviewTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final storeDetail = store;
+    final operatingStatus = StoreOperatingHoursHelper.calculateStatus(
+      businessHours: store.businessHours?.days,
+      context: context,
+    );
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -30,10 +36,11 @@ class StoreOverviewTabView extends StatelessWidget {
         children: [
           const SizedBox(height: 16),
 
-          // 1. Available Now Card
+          // 1. Available Now / Advance Booking Card
           StoreAvailableNowCard(
             availableSeats: 4,
             estimatedWait: '~5 min',
+            isStoreOpen: operatingStatus.isOpen,
             onBookSeat: onBookSeat,
           ),
           const SizedBox(height: 16),

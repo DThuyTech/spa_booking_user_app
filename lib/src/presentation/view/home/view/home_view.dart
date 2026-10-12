@@ -13,6 +13,7 @@ import '../../../bloc/home/home_event.dart';
 import '../../../bloc/home/home_state.dart';
 import '../../../bloc/notification/notification_bloc.dart';
 import '../body_view/home_body_view.dart';
+import '../models/home_time_theme.dart';
 import '../widgets/home_near_salon_card.dart';
 import '../widgets/home_recommended_salon_card.dart';
 
@@ -184,6 +185,14 @@ class _HomeViewState extends State<HomeView> {
         ? authUser!.fullName
         : 'KH';
 
+    final timeTheme = HomeTimeTheme.now(context);
+    final userFirstName = authUser?.fullName.isNotEmpty == true
+        ? authUser!.fullName.trim().split(' ').last
+        : null;
+    final greetingText = userFirstName != null && userFirstName.isNotEmpty
+        ? '${timeTheme.greetingText}, $userFirstName'
+        : timeTheme.greetingText;
+
     final unreadNotificationCount = context
         .watch<NotificationBloc>()
         .state
@@ -203,7 +212,8 @@ class _HomeViewState extends State<HomeView> {
           top: false,
           bottom: false,
           child: HomeBodyView(
-            greetingText: 'Good morning',
+            greetingText: greetingText,
+            timeTheme: timeTheme,
             locationText: homeState.selectedCity,
             userAvatarSeed: avatarSeed,
             notificationCount: unreadNotificationCount,

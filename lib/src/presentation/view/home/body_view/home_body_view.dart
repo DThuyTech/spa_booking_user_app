@@ -19,6 +19,7 @@ import '../widgets/home_near_salon_card.dart';
 import '../widgets/home_recommended_salon_card.dart';
 import '../widgets/home_special_offer_card.dart';
 import '../widgets/merchant_intro_bottom_sheet.dart';
+import '../models/home_time_theme.dart';
 
 class HomeBodyView extends StatelessWidget {
   final String greetingText;
@@ -30,6 +31,7 @@ class HomeBodyView extends StatelessWidget {
   final VoidCallback? onAvatarTap;
   final VoidCallback? onSearchTap;
   final VoidCallback? onFilterTap;
+  final HomeTimeTheme? timeTheme;
 
   final List<StoreEntity> recentlyBookedStores;
   final ValueChanged<StoreEntity>? onRecentlyBookedTap;
@@ -73,6 +75,7 @@ class HomeBodyView extends StatelessWidget {
     this.onAvatarTap,
     this.onSearchTap,
     this.onFilterTap,
+    this.timeTheme,
     this.recentlyBookedStores = const [],
     this.onRecentlyBookedTap,
     this.onRecentlyBookedRebook,
@@ -152,6 +155,7 @@ class HomeBodyView extends StatelessWidget {
                 onAvatarTap: onAvatarTap,
                 onSearchTap: onSearchTap,
                 onFilterTap: onFilterTap,
+                timeTheme: timeTheme,
               ),
 
               const SizedBox(height: 14),

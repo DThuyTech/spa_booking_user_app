@@ -7,7 +7,6 @@ import '../widgets/profile_header_wave.dart';
 import '../widgets/profile_menu_section.dart';
 import '../widgets/profile_stats_row.dart';
 import '../../../bloc/locale/locale_cubit.dart';
-import '../../auth/change_password/view/change_password_view.dart';
 import '../../booking_dashboard/view/booking_dashboard_view.dart';
 import '../../insights/view/my_insights_view.dart';
 import 'package:flutter/material.dart';
@@ -467,11 +466,7 @@ class ProfileView extends StatelessWidget {
                               icon: LucideIcons.lock,
                               title: l10n.changePassword,
                               onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => const ChangePasswordView(),
-                                  ),
-                                );
+                                context.router.push(const ChangePasswordRoute());
                               },
                             ),
                           ],

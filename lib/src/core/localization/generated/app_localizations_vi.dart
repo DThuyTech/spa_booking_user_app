@@ -229,7 +229,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get changePassword => 'Đổi mật khẩu';
 
   @override
-  String get insightsTitle => 'Thống kê & Doanh thu';
+  String get insightsTitle => 'Thống kê';
 
   @override
   String get favorites => 'Yêu thích';

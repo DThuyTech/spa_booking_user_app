@@ -227,7 +227,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changePassword => 'Change Password';
 
   @override
-  String get insightsTitle => 'Summary & Revenue (Insights)';
+  String get insightsTitle => 'Insights';
 
   @override
   String get favorites => 'Favorites';

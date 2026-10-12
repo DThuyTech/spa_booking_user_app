@@ -10,6 +10,7 @@ import 'package:spa_booking/src/presentation/view/booking_flow/booking_schedule/
 import 'package:spa_booking/src/presentation/view/store_detail/body_view/store_detail_body_view.dart';
 import 'package:spa_booking/src/presentation/view/store_detail/sections/store_detail_bottom_bar_section.dart';
 import 'package:spa_booking/src/presentation/view/store_detail/sections/store_detail_tab_bar_section.dart';
+import 'package:spa_booking/src/presentation/view/store_detail/utils/store_operating_hours_helper.dart';
 import 'package:spa_booking/src/shared/shared.dart';
 
 class StoreDetailContentView extends StatefulWidget {
@@ -168,10 +169,15 @@ class _StoreDetailContentViewState extends State<StoreDetailContentView> {
             );
           }
           if (state.detail == null) return SizedBox();
+          final operatingStatus = StoreOperatingHoursHelper.calculateStatus(
+            businessHours: state.detail!.businessHours?.days,
+            context: context,
+          );
           return StoreDetailBottomBarSection(
             activeTab: _activeTab,
             startingPrice: 'From ${state.detail!.minPrice.toVnd()}',
             seatsText: '0',
+            isStoreOpen: operatingStatus.isOpen,
             onBookNow: () => _onBookSeat(state.detail!),
             onBookAppointment: () => _onBookAppointment(state.detail!),
           );

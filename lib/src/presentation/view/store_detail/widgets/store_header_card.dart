@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spa_booking/src/domain/entities/store/store_full_detail_entity.dart';
 import '../../../../shared/shared.dart';
+import '../utils/store_operating_hours_helper.dart';
 
 class StoreHeaderCard extends StatelessWidget {
   final StoreFullDetailEntity store;
@@ -8,13 +9,17 @@ class StoreHeaderCard extends StatelessWidget {
   static const Color _starColor = Color(0xFFF59E0B);
   static const Color _textDark = Color(0xFF1E2022);
   static const Color _textMuted = Color(0xFF71717A);
-  static const Color _openBadgeBg = Color(0xFFE8F8F0);
-  static const Color _openBadgeText = Color(0xFF16A34A);
 
   const StoreHeaderCard({super.key, required this.store});
 
   @override
   Widget build(BuildContext context) {
+    final operatingStatus = StoreOperatingHoursHelper.calculateStatus(
+      businessHours: store.businessHours?.days,
+      context: context,
+    );
+    final isVi = Localizations.localeOf(context).languageCode == 'vi';
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -81,14 +86,14 @@ class StoreHeaderCard extends StatelessWidget {
           // Badges Row
           Row(
             children: [
-              // Open Now Badge
+              // Operating Status Badge (Open / Closed / Opening soon)
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 10,
                   vertical: 5,
                 ),
                 decoration: BoxDecoration(
-                  color: _openBadgeBg,
+                  color: operatingStatus.badgeBg,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
@@ -97,46 +102,66 @@ class StoreHeaderCard extends StatelessWidget {
                     Container(
                       width: 6,
                       height: 6,
-                      decoration: const BoxDecoration(
-                        color: _openBadgeText,
+                      decoration: BoxDecoration(
+                        color: operatingStatus.badgeTextColor,
                         shape: BoxShape.circle,
                       ),
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      context.l10n.openNow,
-                      style: const TextStyle(
+                      operatingStatus.statusText,
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: _openBadgeText,
+                        color: operatingStatus.badgeTextColor,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
-
-              // Available Seats Badge
-              // Container(
-              //   padding: const EdgeInsets.symmetric(
-              //     horizontal: 10,
-              //     vertical: 5,
-              //   ),
-              //   decoration: BoxDecoration(
-              //     color: _seatsBadgeBg,
-              //     borderRadius: BorderRadius.circular(16),
-              //   ),
-              //   child: Text(
-              //     'còn ${store.seatsText} ghế',
-              //     style: const TextStyle(
-              //       fontSize: 12,
-              //       fontWeight: FontWeight.w500,
-              //       color: _seatsBadgeText,
-              //     ),
-              //   ),
-              // ),
+              if (operatingStatus.nextTimeText != null) ...[
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    operatingStatus.nextTimeText!,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: _textMuted,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ],
           ),
+
+          // Advance booking availability hint when closed
+          if (!operatingStatus.isOpen) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(
+                  LucideIcons.calendar_clock,
+                  size: 14,
+                  color: Color(0xFF059669),
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    isVi
+                        ? 'Vẫn nhận đặt lịch hẹn cho các ngày khác'
+                        : 'Advance booking open for any upcoming day',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF059669),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );

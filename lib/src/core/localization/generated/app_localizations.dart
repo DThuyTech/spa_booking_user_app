@@ -527,7 +527,7 @@ abstract class AppLocalizations {
   /// Insights and spending analytics
   ///
   /// In en, this message translates to:
-  /// **'Summary & Revenue (Insights)'**
+  /// **'Insights'**
   String get insightsTitle;
 
   /// Favorites menu item

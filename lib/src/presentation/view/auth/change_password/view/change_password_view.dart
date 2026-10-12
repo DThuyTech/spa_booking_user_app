@@ -13,10 +13,7 @@ class ChangePasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<ChangePasswordCubit>(),
-      child: const ChangePasswordView(),
-    );
+    return const ChangePasswordView();
   }
 }
 
@@ -28,6 +25,7 @@ class ChangePasswordView extends StatefulWidget {
 }
 
 class _ChangePasswordViewState extends State<ChangePasswordView> {
+  late final ChangePasswordCubit _cubit;
   late final TextEditingController _currentPasswordController;
   late final TextEditingController _newPasswordController;
   late final TextEditingController _confirmPasswordController;
@@ -35,6 +33,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   @override
   void initState() {
     super.initState();
+    _cubit = sl<ChangePasswordCubit>();
     _currentPasswordController = TextEditingController();
     _newPasswordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
@@ -45,16 +44,20 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     _currentPasswordController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
+    _cubit.close();
     super.dispose();
   }
 
-  void _onUpdatePassword(BuildContext context) {
+  void _onUpdatePassword() {
     final current = _currentPasswordController.text;
     final newPass = _newPasswordController.text;
     final confirm = _confirmPasswordController.text;
 
     if (current.isEmpty) {
-      AppToast.warning(context, message: 'Vui lòng nhập mật khẩu hiện tại');
+      AppToast.warning(
+        context,
+        message: 'Vui lòng nhập mật khẩu hiện tại',
+      );
       return;
     }
     if (newPass.length < 8) {
@@ -79,7 +82,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
       return;
     }
 
-    context.read<ChangePasswordCubit>().changePassword(
+    _cubit.changePassword(
       oldPassword: current,
       newPassword: newPass,
     );
@@ -87,36 +90,42 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ChangePasswordCubit, ChangePasswordState>(
-      listener: (context, state) {
-        if (state.isFailure) {
-          AppToast.error(
-            context,
-            message: state.errorMessage ?? 'Đổi mật khẩu thất bại',
-          );
-        } else if (state.isSuccess) {
-          AppToast.success(
-            context,
-            message: state.message ?? 'Đổi mật khẩu thành công!',
-          );
-          Navigator.of(context).maybePop();
-        }
-      },
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: const AppAppBar(backgroundColor: Colors.white),
-          body: SafeArea(
-            child: ChangePasswordBodyView(
-              currentPasswordController: _currentPasswordController,
-              newPasswordController: _newPasswordController,
-              confirmPasswordController: _confirmPasswordController,
-              isLoading: state.isLoading,
-              onUpdatePassword: () => _onUpdatePassword(context),
+    return BlocProvider.value(
+      value: _cubit,
+      child: BlocConsumer<ChangePasswordCubit, ChangePasswordState>(
+        listener: (context, state) {
+          if (state.isFailure) {
+            AppToast.error(
+              context,
+              message: state.errorMessage ?? 'Đổi mật khẩu thất bại',
+            );
+          } else if (state.isSuccess) {
+            AppToast.success(
+              context,
+              message: state.message ?? 'Đổi mật khẩu thành công!',
+            );
+            Navigator.of(context).maybePop();
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: const AppAppBar(
+              backgroundColor: Colors.white,
+              title: 'Change Password',
             ),
-          ),
-        );
-      },
+            body: SafeArea(
+              child: ChangePasswordBodyView(
+                currentPasswordController: _currentPasswordController,
+                newPasswordController: _newPasswordController,
+                confirmPasswordController: _confirmPasswordController,
+                isLoading: state.isLoading,
+                onUpdatePassword: _onUpdatePassword,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

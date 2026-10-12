@@ -38,7 +38,7 @@ class _MyInsightsViewState extends State<MyInsightsView> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppAppBar(
-        title: 'My Insights',
+        title: context.l10n.insightsTitle,
         centerTitle: false,
         actions: [
           Padding(
