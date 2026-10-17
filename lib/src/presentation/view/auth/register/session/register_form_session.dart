@@ -16,11 +16,14 @@ class RegisterFormSession extends StatefulWidget {
 class _RegisterFormSessionState extends State<RegisterFormSession> {
   final _fullNameController = TextEditingController();
   final _identifierController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   final _fullNameFocus = FocusNode();
   final _identifierFocus = FocusNode();
+  final _passwordFocus = FocusNode();
 
   bool _isAgreedToTerms = false;
+  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -37,20 +40,29 @@ class _RegisterFormSessionState extends State<RegisterFormSession> {
         RegisterIdentifierChanged(_identifierController.text),
       );
     });
+
+    _passwordController.addListener(() {
+      context.read<RegisterBloc>().add(
+        RegisterPasswordChanged(_passwordController.text),
+      );
+    });
   }
 
   @override
   void dispose() {
     _fullNameController.dispose();
     _identifierController.dispose();
+    _passwordController.dispose();
     _fullNameFocus.dispose();
     _identifierFocus.dispose();
+    _passwordFocus.dispose();
     super.dispose();
   }
 
   void _handleRegister() {
     _fullNameFocus.unfocus();
     _identifierFocus.unfocus();
+    _passwordFocus.unfocus();
 
     final isVi = Localizations.localeOf(context).languageCode == 'vi';
 
@@ -70,6 +82,17 @@ class _RegisterFormSessionState extends State<RegisterFormSession> {
         message: isVi
             ? 'Vui lòng nhập Email hoặc Số điện thoại'
             : 'Please enter your email or phone number',
+      );
+      return;
+    }
+
+    final pass = _passwordController.text.trim();
+    if (pass.isNotEmpty && pass.length < 6) {
+      AppToast.error(
+        context,
+        message: isVi
+            ? 'Mật khẩu phải có ít nhất 6 ký tự'
+            : 'Password must be at least 6 characters',
       );
       return;
     }
@@ -118,7 +141,33 @@ class _RegisterFormSessionState extends State<RegisterFormSession> {
             hintText: l10n.enterEmailOrPhone,
             prefixIcon: LucideIcons.mail,
             keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            onSubmitted: (_) => _passwordFocus.requestFocus(),
+          ),
+          const SizedBox(height: 14),
+
+          // 3. Password (Optional)
+          GlassmorphicTextField(
+            textFieldKey: const Key('register_password_field'),
+            controller: _passwordController,
+            focusNode: _passwordFocus,
+            hintText: isVi ? 'Mật khẩu (Tùy chọn)' : 'Password (Optional)',
+            prefixIcon: LucideIcons.lock,
+            obscureText: _obscurePassword,
+            keyboardType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.done,
+            suffixIcon: IconButton(
+              icon: Icon(
+                _obscurePassword ? LucideIcons.eye_off : LucideIcons.eye,
+                size: 19,
+                color: const Color(0xFF8A7D75),
+              ),
+              onPressed: () {
+                setState(() {
+                  _obscurePassword = !_obscurePassword;
+                });
+              },
+            ),
             onSubmitted: (_) => _handleRegister(),
           ),
           const SizedBox(height: 14),
@@ -248,7 +297,7 @@ class _RegisterFormSessionState extends State<RegisterFormSession> {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFF7664D).withValues(alpha: 0.30),
+                      color: const Color(0xFFF7664D).withValues(alpha: 0.35),
                       blurRadius: 16,
                       offset: const Offset(0, 5),
                     ),
@@ -266,13 +315,12 @@ class _RegisterFormSessionState extends State<RegisterFormSession> {
                               height: 22,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2.4,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white,
-                                ),
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
                           : Text(
-                              isVi ? 'Đăng ký bằng OTP' : 'Register with OTP',
+                              isVi ? 'Đăng ký tài khoản' : 'Sign Up',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -286,6 +334,7 @@ class _RegisterFormSessionState extends State<RegisterFormSession> {
               );
             },
           ),
+          const SizedBox(height: 14),
         ],
       ),
     );

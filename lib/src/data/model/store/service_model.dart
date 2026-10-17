@@ -24,6 +24,9 @@ class ServiceModel {
   final String? imageUrl;
   final String? categoryId;
 
+  @JsonKey(defaultValue: 0)
+  final int position;
+
   final AppliedPricingRuleModel? appliedPricingRule;
 
   const ServiceModel({
@@ -37,6 +40,7 @@ class ServiceModel {
     required this.durationMinutes,
     this.imageUrl,
     this.categoryId,
+    this.position = 0,
     this.appliedPricingRule,
   });
 
@@ -59,6 +63,7 @@ extension ServiceModelX on ServiceModel {
       durationMinutes: durationMinutes,
       imageUrl: imageUrl,
       categoryId: categoryId,
+      position: position,
       appliedPricingRule: appliedPricingRule?.toEntity(),
     );
   }

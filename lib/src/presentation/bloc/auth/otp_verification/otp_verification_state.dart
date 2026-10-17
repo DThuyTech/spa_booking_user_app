@@ -8,6 +8,7 @@ enum OtpFlowType { login, register, phoneVerify, changeEmail, changePhone }
 class OtpVerificationState extends Equatable {
   final String identifier;
   final String? name;
+  final String? password;
   final String? mockOtp;
   final OtpFlowType flowType;
   final String code;
@@ -19,6 +20,7 @@ class OtpVerificationState extends Equatable {
   const OtpVerificationState({
     this.identifier = '',
     this.name,
+    this.password,
     this.mockOtp,
     this.flowType = OtpFlowType.login,
     this.code = '',
@@ -71,6 +73,7 @@ class OtpVerificationState extends Equatable {
   OtpVerificationState copyWith({
     String? identifier,
     String? name,
+    String? password,
     String? mockOtp,
     OtpFlowType? flowType,
     String? code,
@@ -82,6 +85,7 @@ class OtpVerificationState extends Equatable {
     return OtpVerificationState(
       identifier: identifier ?? this.identifier,
       name: name ?? this.name,
+      password: password ?? this.password,
       mockOtp: mockOtp ?? this.mockOtp,
       flowType: flowType ?? this.flowType,
       code: code ?? this.code,
@@ -96,6 +100,7 @@ class OtpVerificationState extends Equatable {
   List<Object?> get props => [
     identifier,
     name,
+    password,
     mockOtp,
     flowType,
     code,

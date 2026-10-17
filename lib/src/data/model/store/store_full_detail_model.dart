@@ -76,9 +76,24 @@ class StoreFullDetailModel {
 
     final isFav = (json['isFavorite'] ?? storeMap?['isFavorite']) == true;
 
+    List<dynamic> allServices = [];
+    if (json['services'] is List && (json['services'] as List).isNotEmpty) {
+      allServices = json['services'] as List;
+    } else {
+      final rawCategories = json['categories'] ?? storeMap?['categories'];
+      if (rawCategories is List) {
+        for (final cat in rawCategories) {
+          if (cat is Map<String, dynamic> && cat['services'] is List) {
+            allServices.addAll(cat['services'] as List);
+          }
+        }
+      }
+    }
+
     final merged = <String, dynamic>{
       ...?storeMap,
       ...json,
+      'services': allServices,
       'isFavorite': isFav,
       if (reviewsMap != null && json['reviewSummary'] == null)
         'reviewSummary': reviewsMap,

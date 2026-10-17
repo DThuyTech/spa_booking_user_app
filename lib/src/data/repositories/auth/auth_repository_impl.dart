@@ -295,7 +295,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, String>> changePassword({
-    required String oldPassword,
+    String? oldPassword,
     required String newPassword,
   }) async {
     try {
@@ -375,6 +375,7 @@ class AuthRepositoryImpl implements AuthRepository {
     String? email,
     required String otp,
     required String name,
+    String? password,
   }) async {
     try {
       final response = await remote.registerWithOtp(
@@ -382,6 +383,7 @@ class AuthRepositoryImpl implements AuthRepository {
         email: email,
         otp: otp,
         name: name,
+        password: password,
       );
       final entity = AuthMapper.toAuthSessionEntityFromAuthResponse(response);
 

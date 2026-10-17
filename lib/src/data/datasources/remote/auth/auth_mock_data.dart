@@ -214,7 +214,7 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
 
   @override
   Future<String> changePassword({
-    required String oldPassword,
+    String? oldPassword,
     required String newPassword,
   }) async {
     await Future.delayed(const Duration(milliseconds: 300));
@@ -274,6 +274,7 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
     String? email,
     required String otp,
     required String name,
+    String? password,
   }) async {
     await Future.delayed(const Duration(milliseconds: 350));
     _currentUser = _currentUser.copyWith(

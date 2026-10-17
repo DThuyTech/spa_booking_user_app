@@ -8,7 +8,7 @@ class ChangePasswordUseCase {
   const ChangePasswordUseCase(this._repository);
 
   Future<Either<Failure, String>> call({
-    required String oldPassword,
+    String? oldPassword,
     required String newPassword,
   }) {
     return _repository.changePassword(

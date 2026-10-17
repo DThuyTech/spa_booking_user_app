@@ -51,7 +51,7 @@ abstract interface class AuthApiService {
   Future<void> deleteAccount();
 
   Future<String> changePassword({
-    required String oldPassword,
+    String? oldPassword,
     required String newPassword,
   });
 
@@ -76,6 +76,7 @@ abstract interface class AuthApiService {
     String? email,
     required String otp,
     required String name,
+    String? password,
   });
 
   Future<RequestOtpResponseModel> sendLoginOtp({required String identifier});
@@ -119,9 +120,14 @@ class AuthApiServiceImpl implements AuthApiService {
     required String email,
     required String password,
   }) async {
+    final isEmail = email.contains('@');
     final response = await _client.post<Map<String, dynamic>>(
       UrlConstants.authCustomerLogin,
-      data: {'email': email, 'password': password},
+      data: {
+        'identifier': email,
+        if (isEmail) 'email': email else 'phoneNumber': email,
+        'password': password,
+      },
       options: Options(
         extra: {
           AuthInterceptor.extraSkipAuth: true,
@@ -340,12 +346,16 @@ class AuthApiServiceImpl implements AuthApiService {
 
   @override
   Future<String> changePassword({
-    required String oldPassword,
+    String? oldPassword,
     required String newPassword,
   }) async {
     final response = await _client.post<Map<String, dynamic>>(
       UrlConstants.authChangePassword,
-      data: {'oldPassword': oldPassword, 'newPassword': newPassword},
+      data: {
+        if (oldPassword != null && oldPassword.isNotEmpty)
+          'oldPassword': oldPassword,
+        'newPassword': newPassword,
+      },
     );
 
     final responseData = response.data;
@@ -463,6 +473,7 @@ class AuthApiServiceImpl implements AuthApiService {
     String? email,
     required String otp,
     required String name,
+    String? password,
   }) async {
     final response = await _client.post<Map<String, dynamic>>(
       UrlConstants.authCustomerRegisterOtp,
@@ -472,6 +483,7 @@ class AuthApiServiceImpl implements AuthApiService {
         if (email != null && email.isNotEmpty) 'email': email,
         'otp': otp,
         'name': name,
+        if (password != null && password.isNotEmpty) 'password': password,
       },
       options: Options(
         extra: {

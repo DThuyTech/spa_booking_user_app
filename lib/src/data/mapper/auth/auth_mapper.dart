@@ -45,6 +45,7 @@ class AuthMapper {
       status: model.status,
       dateOfBirth: model.dateOfBirth,
       bookingStats: model.bookingStats?.toEntity(),
+      isPasswordSet: model.isPasswordSet,
     );
   }
 

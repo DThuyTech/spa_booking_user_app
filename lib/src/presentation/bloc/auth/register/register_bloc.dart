@@ -96,6 +96,17 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       return;
     }
 
+    final password = state.password.trim();
+    if (password.isNotEmpty && password.length < 6) {
+      emit(
+        state.copyWith(
+          status: RegisterStatus.failure,
+          errorMessage: () => 'Mật khẩu phải có ít nhất 6 ký tự.',
+        ),
+      );
+      return;
+    }
+
     emit(
       state.copyWith(status: RegisterStatus.loading, errorMessage: () => null),
     );
@@ -129,7 +140,6 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     }
 
     // Fallback password registration
-    final password = state.password;
     final confirmPassword = state.confirmPassword;
 
     if (password.length < 8) {

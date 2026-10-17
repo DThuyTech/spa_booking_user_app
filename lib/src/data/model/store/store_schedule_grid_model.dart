@@ -14,6 +14,8 @@ extension StoreScheduleGridModelX on StoreScheduleGridModel {
           (s) => StaffShiftEntity(
             staffProfileId: s.staffProfileId,
             staffName: s.staffName,
+            avatarUrl: s.avatarUrl,
+            position: s.position,
             shiftStart: s.shiftStart,
             shiftEnd: s.shiftEnd,
           ),
@@ -105,12 +107,16 @@ class StoreOperatingHoursModel extends Equatable {
 class StoreStaffShiftModel extends Equatable {
   final String staffProfileId;
   final String staffName;
+  final String? avatarUrl;
+  final int position;
   final String shiftStart;
   final String shiftEnd;
 
   const StoreStaffShiftModel({
     required this.staffProfileId,
     required this.staffName,
+    this.avatarUrl,
+    this.position = 0,
     required this.shiftStart,
     required this.shiftEnd,
   });
@@ -119,13 +125,22 @@ class StoreStaffShiftModel extends Equatable {
     return StoreStaffShiftModel(
       staffProfileId: (json['staffProfileId'] ?? json['id'] ?? '') as String,
       staffName: (json['staffName'] ?? json['name'] ?? '') as String,
+      avatarUrl: json['avatarUrl'] as String?,
+      position: (json['position'] as num?)?.toInt() ?? 0,
       shiftStart: json['shiftStart'] as String? ?? '',
       shiftEnd: json['shiftEnd'] as String? ?? '',
     );
   }
 
   @override
-  List<Object?> get props => [staffProfileId, staffName, shiftStart, shiftEnd];
+  List<Object?> get props => [
+    staffProfileId,
+    staffName,
+    avatarUrl,
+    position,
+    shiftStart,
+    shiftEnd,
+  ];
 }
 
 class StoreBookedIntervalModel extends Equatable {
@@ -246,7 +261,7 @@ class StoreScheduleGridModel extends Equatable {
       bookingPolicy = StoreBookingPolicyModel.fromJson(rawPolicy);
     }
 
-    final rawShifts = json['staffShifts'];
+    final rawShifts = json['staffColumns'] ?? json['staffShifts'];
     List<StoreStaffShiftModel> staffShifts = [];
     if (rawShifts is List) {
       staffShifts = rawShifts

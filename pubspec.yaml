@@ -2,7 +2,7 @@ name: spa_booking
 description: "Aura - Premium Spa & Salon Booking"
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.1+3
+version: 1.0.1+5
 
 environment:
   sdk: ^3.12.2

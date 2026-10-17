@@ -61,6 +61,8 @@ class ScheduleGridEntity extends Equatable {
 class StaffShiftEntity extends Equatable {
   final String staffProfileId;
   final String staffName;
+  final String? avatarUrl;
+  final int position;
 
   /// "HH:mm"
   final String shiftStart;
@@ -71,12 +73,21 @@ class StaffShiftEntity extends Equatable {
   const StaffShiftEntity({
     required this.staffProfileId,
     required this.staffName,
-    required this.shiftStart,
-    required this.shiftEnd,
+    this.avatarUrl,
+    this.position = 0,
+    this.shiftStart = '',
+    this.shiftEnd = '',
   });
 
   @override
-  List<Object?> get props => [staffProfileId, staffName, shiftStart, shiftEnd];
+  List<Object?> get props => [
+    staffProfileId,
+    staffName,
+    avatarUrl,
+    position,
+    shiftStart,
+    shiftEnd,
+  ];
 }
 
 class BookedIntervalEntity extends Equatable {

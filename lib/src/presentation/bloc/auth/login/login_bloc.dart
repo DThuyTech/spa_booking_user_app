@@ -23,10 +23,27 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     required this.sessionManager,
     this.authSessionBloc,
   }) : super(const LoginState()) {
+    on<LoginMethodChanged>(_onMethodChanged);
     on<LoginIdentifierChanged>(_onIdentifierChanged);
     on<LoginPasswordChanged>(_onPasswordChanged);
     on<LoginSubmitted>(_onSubmitted);
     on<LoginErrorDismissed>(_onErrorDismissed);
+  }
+
+  void _onMethodChanged(
+    LoginMethodChanged event,
+    Emitter<LoginState> emit,
+  ) {
+    if (state.loginMethod == event.method) return;
+    emit(
+      state.copyWith(
+        loginMethod: event.method,
+        identifierError: () => null,
+        passwordError: () => null,
+        errorMessage: () => null,
+        status: LoginStatus.initial,
+      ),
+    );
   }
 
   void _onIdentifierChanged(
@@ -100,36 +117,39 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       ),
     );
 
-    // Prefer Passwordless OTP flow if sendLoginOtpUseCase is available
-    if (sendLoginOtpUseCase != null) {
-      final result = await sendLoginOtpUseCase!(identifier: identifier);
-      result.fold(
-        (failure) {
-          emit(
-            state.copyWith(
-              status: LoginStatus.failure,
-              errorMessage: () => failure.message,
-            ),
-          );
-        },
-        (otpResult) {
-          emit(
-            state.copyWith(
-              status: LoginStatus.success,
-              otpResult: () => otpResult,
-            ),
-          );
-        },
-      );
-      return;
+    // Branch 1: Login with OTP
+    if (state.loginMethod == LoginMethod.otp) {
+      if (sendLoginOtpUseCase != null) {
+        final result = await sendLoginOtpUseCase!(identifier: identifier);
+        result.fold(
+          (failure) {
+            emit(
+              state.copyWith(
+                status: LoginStatus.failure,
+                errorMessage: () => failure.message,
+              ),
+            );
+          },
+          (otpResult) {
+            emit(
+              state.copyWith(
+                status: LoginStatus.success,
+                otpResult: () => otpResult,
+                authSession: () => null,
+              ),
+            );
+          },
+        );
+        return;
+      }
     }
 
-    // Fallback password login
+    // Branch 2: Login with Password
     final password = state.password;
     if (password.isEmpty) {
       emit(
         state.copyWith(
-          passwordError: () => 'Mật khẩu không được để trống.',
+          passwordError: () => 'Vui lòng nhập mật khẩu.',
           status: LoginStatus.failure,
         ),
       );
@@ -171,6 +191,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           state.copyWith(
             status: LoginStatus.success,
             authSession: () => session,
+            otpResult: () => null,
           ),
         );
       },

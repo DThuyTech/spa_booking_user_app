@@ -13,6 +13,7 @@ class User extends Equatable {
   final UserStatusEnum status;
   final String? dateOfBirth;
   final CustomerBookingStats? bookingStats;
+  final bool isPasswordSet;
 
   const User({
     required this.id,
@@ -24,6 +25,7 @@ class User extends Equatable {
     this.status = UserStatusEnum.active,
     this.dateOfBirth,
     this.bookingStats,
+    this.isPasswordSet = true,
   });
 
   User copyWith({
@@ -36,6 +38,7 @@ class User extends Equatable {
     UserStatusEnum? status,
     String? Function()? dateOfBirth,
     CustomerBookingStats? Function()? bookingStats,
+    bool? isPasswordSet,
   }) {
     return User(
       id: id ?? this.id,
@@ -47,6 +50,7 @@ class User extends Equatable {
       status: status ?? this.status,
       dateOfBirth: dateOfBirth != null ? dateOfBirth() : this.dateOfBirth,
       bookingStats: bookingStats != null ? bookingStats() : this.bookingStats,
+      isPasswordSet: isPasswordSet ?? this.isPasswordSet,
     );
   }
 
@@ -61,5 +65,6 @@ class User extends Equatable {
     status,
     dateOfBirth,
     bookingStats,
+    isPasswordSet,
   ];
 }

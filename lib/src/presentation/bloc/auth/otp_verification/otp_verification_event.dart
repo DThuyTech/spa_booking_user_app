@@ -12,6 +12,7 @@ sealed class OtpVerificationEvent extends Equatable {
 final class OtpStarted extends OtpVerificationEvent {
   final String identifier;
   final String? name;
+  final String? password;
   final String? mockOtp;
   final OtpFlowType flowType;
   final int initialCountdownSeconds;
@@ -19,6 +20,7 @@ final class OtpStarted extends OtpVerificationEvent {
   const OtpStarted({
     required this.identifier,
     this.name,
+    this.password,
     this.mockOtp,
     this.flowType = OtpFlowType.login,
     this.initialCountdownSeconds = 300,
@@ -38,6 +40,7 @@ final class OtpStarted extends OtpVerificationEvent {
   List<Object?> get props => [
     identifier,
     name,
+    password,
     mockOtp,
     flowType,
     initialCountdownSeconds,

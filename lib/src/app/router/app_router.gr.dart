@@ -11,13 +11,17 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 
 import 'package:auto_route/auto_route.dart' as _i29;
-import 'package:collection/collection.dart' as _i32;
+import 'package:collection/collection.dart' as _i33;
 import 'package:flutter/material.dart' as _i30;
-import 'package:spa_booking/src/domain/entities/auth/user.dart' as _i35;
+import 'package:spa_booking/src/domain/entities/auth/user.dart' as _i37;
+import 'package:spa_booking/src/domain/entities/booking/booking_availability_entity.dart'
+    as _i32;
 import 'package:spa_booking/src/domain/entities/review/user_review_entity.dart'
-    as _i36;
+    as _i38;
 import 'package:spa_booking/src/domain/entities/store/store_entity.dart'
-    as _i34;
+    as _i35;
+import 'package:spa_booking/src/presentation/bloc/auth/otp_verification/otp_verification_state.dart'
+    as _i36;
 import 'package:spa_booking/src/presentation/view/auth/change_password/view/change_password_view.dart'
     as _i5;
 import 'package:spa_booking/src/presentation/view/auth/forgot_password/view/forgot_password_view.dart'
@@ -53,7 +57,7 @@ import 'package:spa_booking/src/presentation/view/insights/view/my_insights_view
 import 'package:spa_booking/src/presentation/view/nearby_stores/view/nearby_stores_page.dart'
     as _i13;
 import 'package:spa_booking/src/presentation/view/notification/models/notification_models.dart'
-    as _i33;
+    as _i34;
 import 'package:spa_booking/src/presentation/view/notification/notification_dashboard/view/notification_dashboard_view.dart'
     as _i14;
 import 'package:spa_booking/src/presentation/view/notification/notification_detail_booking/view/booking_notification_view.dart'
@@ -91,6 +95,8 @@ class BookingDetailRoute extends _i29.PageRouteInfo<BookingDetailRouteArgs> {
     String? selectedStaffId,
     Map<String, String?>? selectedStaffPerService,
     DateTime? startAt,
+    _i32.BookingAvailabilityOptionEntity? selectedOption,
+    bool isQuickBook = false,
     List<_i29.PageRouteInfo>? children,
   }) : super(
          BookingDetailRoute.name,
@@ -104,6 +110,8 @@ class BookingDetailRoute extends _i29.PageRouteInfo<BookingDetailRouteArgs> {
            selectedStaffId: selectedStaffId,
            selectedStaffPerService: selectedStaffPerService,
            startAt: startAt,
+           selectedOption: selectedOption,
+           isQuickBook: isQuickBook,
          ),
          initialChildren: children,
        );
@@ -126,6 +134,8 @@ class BookingDetailRoute extends _i29.PageRouteInfo<BookingDetailRouteArgs> {
         selectedStaffId: args.selectedStaffId,
         selectedStaffPerService: args.selectedStaffPerService,
         startAt: args.startAt,
+        selectedOption: args.selectedOption,
+        isQuickBook: args.isQuickBook,
       );
     },
   );
@@ -142,6 +152,8 @@ class BookingDetailRouteArgs {
     this.selectedStaffId,
     this.selectedStaffPerService,
     this.startAt,
+    this.selectedOption,
+    this.isQuickBook = false,
   });
 
   final _i30.Key? key;
@@ -162,9 +174,13 @@ class BookingDetailRouteArgs {
 
   final DateTime? startAt;
 
+  final _i32.BookingAvailabilityOptionEntity? selectedOption;
+
+  final bool isQuickBook;
+
   @override
   String toString() {
-    return 'BookingDetailRouteArgs{key: $key, storeId: $storeId, salonName: $salonName, selectedDate: $selectedDate, selectedTime: $selectedTime, selectedServices: $selectedServices, selectedStaffId: $selectedStaffId, selectedStaffPerService: $selectedStaffPerService, startAt: $startAt}';
+    return 'BookingDetailRouteArgs{key: $key, storeId: $storeId, salonName: $salonName, selectedDate: $selectedDate, selectedTime: $selectedTime, selectedServices: $selectedServices, selectedStaffId: $selectedStaffId, selectedStaffPerService: $selectedStaffPerService, startAt: $startAt, selectedOption: $selectedOption, isQuickBook: $isQuickBook}';
   }
 
   @override
@@ -176,16 +192,18 @@ class BookingDetailRouteArgs {
         salonName == other.salonName &&
         selectedDate == other.selectedDate &&
         selectedTime == other.selectedTime &&
-        const _i32.ListEquality<_i31.BookingServiceItem>().equals(
+        const _i33.ListEquality<_i31.BookingServiceItem>().equals(
           selectedServices,
           other.selectedServices,
         ) &&
         selectedStaffId == other.selectedStaffId &&
-        const _i32.MapEquality<String, String?>().equals(
+        const _i33.MapEquality<String, String?>().equals(
           selectedStaffPerService,
           other.selectedStaffPerService,
         ) &&
-        startAt == other.startAt;
+        startAt == other.startAt &&
+        selectedOption == other.selectedOption &&
+        isQuickBook == other.isQuickBook;
   }
 
   @override
@@ -195,12 +213,14 @@ class BookingDetailRouteArgs {
       salonName.hashCode ^
       selectedDate.hashCode ^
       selectedTime.hashCode ^
-      const _i32.ListEquality<_i31.BookingServiceItem>().hash(
+      const _i33.ListEquality<_i31.BookingServiceItem>().hash(
         selectedServices,
       ) ^
       selectedStaffId.hashCode ^
-      const _i32.MapEquality<String, String?>().hash(selectedStaffPerService) ^
-      startAt.hashCode;
+      const _i33.MapEquality<String, String?>().hash(selectedStaffPerService) ^
+      startAt.hashCode ^
+      selectedOption.hashCode ^
+      isQuickBook.hashCode;
 }
 
 /// generated route for
@@ -209,7 +229,7 @@ class BookingNotificationRoute
     extends _i29.PageRouteInfo<BookingNotificationRouteArgs> {
   BookingNotificationRoute({
     _i30.Key? key,
-    _i33.BookingNotificationData? booking,
+    _i34.BookingNotificationData? booking,
     List<_i29.PageRouteInfo>? children,
   }) : super(
          BookingNotificationRoute.name,
@@ -235,7 +255,7 @@ class BookingNotificationRouteArgs {
 
   final _i30.Key? key;
 
-  final _i33.BookingNotificationData? booking;
+  final _i34.BookingNotificationData? booking;
 
   @override
   String toString() {
@@ -365,6 +385,7 @@ class BookingScheduleRoute
     List<_i31.BookingServiceItem>? selectedServices,
     String? selectedStaffId,
     Map<String, String?>? selectedStaffPerService,
+    bool isQuickBook = false,
     List<_i29.PageRouteInfo>? children,
   }) : super(
          BookingScheduleRoute.name,
@@ -375,6 +396,7 @@ class BookingScheduleRoute
            selectedServices: selectedServices,
            selectedStaffId: selectedStaffId,
            selectedStaffPerService: selectedStaffPerService,
+           isQuickBook: isQuickBook,
          ),
          initialChildren: children,
        );
@@ -392,6 +414,7 @@ class BookingScheduleRoute
         selectedServices: args.selectedServices,
         selectedStaffId: args.selectedStaffId,
         selectedStaffPerService: args.selectedStaffPerService,
+        isQuickBook: args.isQuickBook,
       );
     },
   );
@@ -405,6 +428,7 @@ class BookingScheduleRouteArgs {
     this.selectedServices,
     this.selectedStaffId,
     this.selectedStaffPerService,
+    this.isQuickBook = false,
   });
 
   final _i30.Key? key;
@@ -419,9 +443,11 @@ class BookingScheduleRouteArgs {
 
   final Map<String, String?>? selectedStaffPerService;
 
+  final bool isQuickBook;
+
   @override
   String toString() {
-    return 'BookingScheduleRouteArgs{key: $key, storeId: $storeId, salonName: $salonName, selectedServices: $selectedServices, selectedStaffId: $selectedStaffId, selectedStaffPerService: $selectedStaffPerService}';
+    return 'BookingScheduleRouteArgs{key: $key, storeId: $storeId, salonName: $salonName, selectedServices: $selectedServices, selectedStaffId: $selectedStaffId, selectedStaffPerService: $selectedStaffPerService, isQuickBook: $isQuickBook}';
   }
 
   @override
@@ -431,15 +457,16 @@ class BookingScheduleRouteArgs {
     return key == other.key &&
         storeId == other.storeId &&
         salonName == other.salonName &&
-        const _i32.ListEquality<_i31.BookingServiceItem>().equals(
+        const _i33.ListEquality<_i31.BookingServiceItem>().equals(
           selectedServices,
           other.selectedServices,
         ) &&
         selectedStaffId == other.selectedStaffId &&
-        const _i32.MapEquality<String, String?>().equals(
+        const _i33.MapEquality<String, String?>().equals(
           selectedStaffPerService,
           other.selectedStaffPerService,
-        );
+        ) &&
+        isQuickBook == other.isQuickBook;
   }
 
   @override
@@ -447,11 +474,12 @@ class BookingScheduleRouteArgs {
       key.hashCode ^
       storeId.hashCode ^
       salonName.hashCode ^
-      const _i32.ListEquality<_i31.BookingServiceItem>().hash(
+      const _i33.ListEquality<_i31.BookingServiceItem>().hash(
         selectedServices,
       ) ^
       selectedStaffId.hashCode ^
-      const _i32.MapEquality<String, String?>().hash(selectedStaffPerService);
+      const _i33.MapEquality<String, String?>().hash(selectedStaffPerService) ^
+      isQuickBook.hashCode;
 }
 
 /// generated route for
@@ -668,7 +696,7 @@ class NearbyStoresListRoute
     extends _i29.PageRouteInfo<NearbyStoresListRouteArgs> {
   NearbyStoresListRoute({
     _i30.Key? key,
-    List<_i34.StoreEntity>? initialStores,
+    List<_i35.StoreEntity>? initialStores,
     String? city,
     List<_i29.PageRouteInfo>? children,
   }) : super(
@@ -703,7 +731,7 @@ class NearbyStoresListRouteArgs {
 
   final _i30.Key? key;
 
-  final List<_i34.StoreEntity>? initialStores;
+  final List<_i35.StoreEntity>? initialStores;
 
   final String? city;
 
@@ -717,7 +745,7 @@ class NearbyStoresListRouteArgs {
     if (identical(this, other)) return true;
     if (other is! NearbyStoresListRouteArgs) return false;
     return key == other.key &&
-        const _i32.ListEquality<_i34.StoreEntity>().equals(
+        const _i33.ListEquality<_i35.StoreEntity>().equals(
           initialStores,
           other.initialStores,
         ) &&
@@ -727,7 +755,7 @@ class NearbyStoresListRouteArgs {
   @override
   int get hashCode =>
       key.hashCode ^
-      const _i32.ListEquality<_i34.StoreEntity>().hash(initialStores) ^
+      const _i33.ListEquality<_i35.StoreEntity>().hash(initialStores) ^
       city.hashCode;
 }
 
@@ -785,7 +813,12 @@ class OtpVerificationRoute
     extends _i29.PageRouteInfo<OtpVerificationRouteArgs> {
   OtpVerificationRoute({
     _i30.Key? key,
-    required String phone,
+    String? phone,
+    String? identifier,
+    String? name,
+    String? password,
+    String? mockOtp,
+    _i36.OtpFlowType flowType = _i36.OtpFlowType.login,
     int expiresInSeconds = 300,
     List<_i29.PageRouteInfo>? children,
   }) : super(
@@ -793,6 +826,11 @@ class OtpVerificationRoute
          args: OtpVerificationRouteArgs(
            key: key,
            phone: phone,
+           identifier: identifier,
+           name: name,
+           password: password,
+           mockOtp: mockOtp,
+           flowType: flowType,
            expiresInSeconds: expiresInSeconds,
          ),
          initialChildren: children,
@@ -803,10 +841,17 @@ class OtpVerificationRoute
   static _i29.PageInfo page = _i29.PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<OtpVerificationRouteArgs>();
+      final args = data.argsAs<OtpVerificationRouteArgs>(
+        orElse: () => const OtpVerificationRouteArgs(),
+      );
       return _i16.OtpVerificationPage(
         key: args.key,
         phone: args.phone,
+        identifier: args.identifier,
+        name: args.name,
+        password: args.password,
+        mockOtp: args.mockOtp,
+        flowType: args.flowType,
         expiresInSeconds: args.expiresInSeconds,
       );
     },
@@ -816,19 +861,34 @@ class OtpVerificationRoute
 class OtpVerificationRouteArgs {
   const OtpVerificationRouteArgs({
     this.key,
-    required this.phone,
+    this.phone,
+    this.identifier,
+    this.name,
+    this.password,
+    this.mockOtp,
+    this.flowType = _i36.OtpFlowType.login,
     this.expiresInSeconds = 300,
   });
 
   final _i30.Key? key;
 
-  final String phone;
+  final String? phone;
+
+  final String? identifier;
+
+  final String? name;
+
+  final String? password;
+
+  final String? mockOtp;
+
+  final _i36.OtpFlowType flowType;
 
   final int expiresInSeconds;
 
   @override
   String toString() {
-    return 'OtpVerificationRouteArgs{key: $key, phone: $phone, expiresInSeconds: $expiresInSeconds}';
+    return 'OtpVerificationRouteArgs{key: $key, phone: $phone, identifier: $identifier, name: $name, password: $password, mockOtp: $mockOtp, flowType: $flowType, expiresInSeconds: $expiresInSeconds}';
   }
 
   @override
@@ -837,11 +897,24 @@ class OtpVerificationRouteArgs {
     if (other is! OtpVerificationRouteArgs) return false;
     return key == other.key &&
         phone == other.phone &&
+        identifier == other.identifier &&
+        name == other.name &&
+        password == other.password &&
+        mockOtp == other.mockOtp &&
+        flowType == other.flowType &&
         expiresInSeconds == other.expiresInSeconds;
   }
 
   @override
-  int get hashCode => key.hashCode ^ phone.hashCode ^ expiresInSeconds.hashCode;
+  int get hashCode =>
+      key.hashCode ^
+      phone.hashCode ^
+      identifier.hashCode ^
+      name.hashCode ^
+      password.hashCode ^
+      mockOtp.hashCode ^
+      flowType.hashCode ^
+      expiresInSeconds.hashCode;
 }
 
 /// generated route for
@@ -849,7 +922,7 @@ class OtpVerificationRouteArgs {
 class ProfileEditRoute extends _i29.PageRouteInfo<ProfileEditRouteArgs> {
   ProfileEditRoute({
     _i30.Key? key,
-    _i35.User? user,
+    _i37.User? user,
     bool isInitialSetup = false,
     List<_i29.PageRouteInfo>? children,
   }) : super(
@@ -888,7 +961,7 @@ class ProfileEditRouteArgs {
 
   final _i30.Key? key;
 
-  final _i35.User? user;
+  final _i37.User? user;
 
   final bool isInitialSetup;
 
@@ -1093,11 +1166,11 @@ class SelectServicesRouteArgs {
         storeId == other.storeId &&
         salonName == other.salonName &&
         initialSelectedServiceId == other.initialSelectedServiceId &&
-        const _i32.ListEquality<_i31.BookingServiceItem>().equals(
+        const _i33.ListEquality<_i31.BookingServiceItem>().equals(
           initialServices,
           other.initialServices,
         ) &&
-        const _i32.ListEquality<_i31.BookingStaffItem>().equals(
+        const _i33.ListEquality<_i31.BookingStaffItem>().equals(
           initialStaffMembers,
           other.initialStaffMembers,
         );
@@ -1109,8 +1182,8 @@ class SelectServicesRouteArgs {
       storeId.hashCode ^
       salonName.hashCode ^
       initialSelectedServiceId.hashCode ^
-      const _i32.ListEquality<_i31.BookingServiceItem>().hash(initialServices) ^
-      const _i32.ListEquality<_i31.BookingStaffItem>().hash(
+      const _i33.ListEquality<_i31.BookingServiceItem>().hash(initialServices) ^
+      const _i33.ListEquality<_i31.BookingStaffItem>().hash(
         initialStaffMembers,
       );
 }
@@ -1185,7 +1258,7 @@ class UserReviewDetailRoute
   UserReviewDetailRoute({
     _i30.Key? key,
     required String reviewId,
-    _i36.UserReviewEntity? initialReview,
+    _i38.UserReviewEntity? initialReview,
     List<_i29.PageRouteInfo>? children,
   }) : super(
          UserReviewDetailRoute.name,
@@ -1223,7 +1296,7 @@ class UserReviewDetailRouteArgs {
 
   final String reviewId;
 
-  final _i36.UserReviewEntity? initialReview;
+  final _i38.UserReviewEntity? initialReview;
 
   @override
   String toString() {
@@ -1264,7 +1337,7 @@ class UserReviewsRoute extends _i29.PageRouteInfo<void> {
 class VoucherDetailRoute extends _i29.PageRouteInfo<VoucherDetailRouteArgs> {
   VoucherDetailRoute({
     _i30.Key? key,
-    _i33.VoucherNotificationData? voucher,
+    _i34.VoucherNotificationData? voucher,
     List<_i29.PageRouteInfo>? children,
   }) : super(
          VoucherDetailRoute.name,
@@ -1290,7 +1363,7 @@ class VoucherDetailRouteArgs {
 
   final _i30.Key? key;
 
-  final _i33.VoucherNotificationData? voucher;
+  final _i34.VoucherNotificationData? voucher;
 
   @override
   String toString() {

@@ -1,10 +1,24 @@
 import 'package:equatable/equatable.dart';
 
+enum LoginMethod {
+  password,
+  otp,
+}
+
 sealed class LoginEvent extends Equatable {
   const LoginEvent();
 
   @override
   List<Object?> get props => [];
+}
+
+final class LoginMethodChanged extends LoginEvent {
+  final LoginMethod method;
+
+  const LoginMethodChanged(this.method);
+
+  @override
+  List<Object?> get props => [method];
 }
 
 final class LoginIdentifierChanged extends LoginEvent {

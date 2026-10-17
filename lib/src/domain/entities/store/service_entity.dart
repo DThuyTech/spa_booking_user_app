@@ -16,6 +16,7 @@ abstract class ServiceEntity with _$ServiceEntity {
     required int durationMinutes,
     String? imageUrl,
     String? categoryId,
+    @Default(0) int position,
 
     AppliedPricingRuleEntity? appliedPricingRule,
   }) = _ServiceEntity;

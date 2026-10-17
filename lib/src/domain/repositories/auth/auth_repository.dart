@@ -61,7 +61,7 @@ abstract interface class AuthRepository {
   Future<Either<Failure, Unit>> deleteAccount();
 
   Future<Either<Failure, String>> changePassword({
-    required String oldPassword,
+    String? oldPassword,
     required String newPassword,
   });
 
@@ -91,6 +91,7 @@ abstract interface class AuthRepository {
     String? email,
     required String otp,
     required String name,
+    String? password,
   });
 
   Future<Either<Failure, RequestOtpResult>> sendLoginOtp({

@@ -14,6 +14,7 @@ abstract class StaffModel with _$StaffModel {
     String? avatarUrl,
     String? bio,
     @Default(5.0) double rating,
+    @Default(0) int position,
     @Default([]) List<String> capableServiceIds,
   }) = _StaffModel;
 
@@ -46,6 +47,10 @@ abstract class StaffModel with _$StaffModel {
             .toList() ??
         const <String>[];
 
+    final pos = (json['position'] as num?)?.toInt() ??
+        (json['displayOrder'] as num?)?.toInt() ??
+        0;
+
     return StaffModel(
       staffProfileId: (json['staffProfileId'] ?? json['id'] ?? '') as String,
       fullName: nameStr,
@@ -53,6 +58,7 @@ abstract class StaffModel with _$StaffModel {
       avatarUrl: json['avatarUrl'] as String?,
       bio: json['bio'] as String?,
       rating: (json['rating'] as num?)?.toDouble() ?? 5.0,
+      position: pos,
       capableServiceIds: capableIds,
     );
   }
@@ -64,6 +70,7 @@ abstract class StaffModel with _$StaffModel {
     'avatarUrl': avatarUrl,
     'bio': bio,
     'rating': rating,
+    'position': position,
     'capableServiceIds': capableServiceIds,
   };
 }
@@ -76,6 +83,7 @@ extension StaffModelX on StaffModel {
     avatarUrl: avatarUrl,
     bio: bio,
     rating: rating,
+    position: position,
     capableServiceIds: capableServiceIds,
   );
 }

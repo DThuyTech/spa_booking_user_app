@@ -17,6 +17,7 @@ ServiceModel _$ServiceModelFromJson(Map<String, dynamic> json) => ServiceModel(
   durationMinutes: (json['durationMinutes'] as num).toInt(),
   imageUrl: json['imageUrl'] as String?,
   categoryId: json['categoryId'] as String?,
+  position: (json['position'] as num?)?.toInt() ?? 0,
   appliedPricingRule: json['appliedPricingRule'] == null
       ? null
       : AppliedPricingRuleModel.fromJson(
@@ -36,5 +37,6 @@ Map<String, dynamic> _$ServiceModelToJson(ServiceModel instance) =>
       'durationMinutes': instance.durationMinutes,
       'imageUrl': instance.imageUrl,
       'categoryId': instance.categoryId,
+      'position': instance.position,
       'appliedPricingRule': instance.appliedPricingRule,
     };

@@ -11,33 +11,30 @@ part of 'service_category_model.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$ServiceCategoryModel {
 
- String get id; String get name; String? get iconUrl; int get displayOrder;
+ String get id; String get name; String? get description; String? get iconUrl; int get position; int get displayOrder; List<ServiceModel> get services;
 /// Create a copy of ServiceCategoryModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $ServiceCategoryModelCopyWith<ServiceCategoryModel> get copyWith => _$ServiceCategoryModelCopyWithImpl<ServiceCategoryModel>(this as ServiceCategoryModel, _$identity);
 
-  /// Serializes this ServiceCategoryModel to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServiceCategoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl)&&(identical(other.displayOrder, displayOrder) || other.displayOrder == displayOrder));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServiceCategoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl)&&(identical(other.position, position) || other.position == position)&&(identical(other.displayOrder, displayOrder) || other.displayOrder == displayOrder)&&const DeepCollectionEquality().equals(other.services, services));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
-int get hashCode => Object.hash(runtimeType,id,name,iconUrl,displayOrder);
+int get hashCode => Object.hash(runtimeType,id,name,description,iconUrl,position,displayOrder,const DeepCollectionEquality().hash(services));
 
 @override
 String toString() {
-  return 'ServiceCategoryModel(id: $id, name: $name, iconUrl: $iconUrl, displayOrder: $displayOrder)';
+  return 'ServiceCategoryModel(id: $id, name: $name, description: $description, iconUrl: $iconUrl, position: $position, displayOrder: $displayOrder, services: $services)';
 }
 
 
@@ -48,7 +45,7 @@ abstract mixin class $ServiceCategoryModelCopyWith<$Res>  {
   factory $ServiceCategoryModelCopyWith(ServiceCategoryModel value, $Res Function(ServiceCategoryModel) _then) = _$ServiceCategoryModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String? iconUrl, int displayOrder
+ String id, String name, String? description, String? iconUrl, int position, int displayOrder, List<ServiceModel> services
 });
 
 
@@ -65,13 +62,16 @@ class _$ServiceCategoryModelCopyWithImpl<$Res>
 
 /// Create a copy of ServiceCategoryModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? iconUrl = freezed,Object? displayOrder = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? iconUrl = freezed,Object? position = null,Object? displayOrder = null,Object? services = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,iconUrl: freezed == iconUrl ? _self.iconUrl : iconUrl // ignore: cast_nullable_to_non_nullable
-as String?,displayOrder: null == displayOrder ? _self.displayOrder : displayOrder // ignore: cast_nullable_to_non_nullable
-as int,
+as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,iconUrl: freezed == iconUrl ? _self.iconUrl : iconUrl // ignore: cast_nullable_to_non_nullable
+as String?,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
+as int,displayOrder: null == displayOrder ? _self.displayOrder : displayOrder // ignore: cast_nullable_to_non_nullable
+as int,services: null == services ? _self.services : services // ignore: cast_nullable_to_non_nullable
+as List<ServiceModel>,
   ));
 }
 
@@ -156,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? iconUrl,  int displayOrder)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? description,  String? iconUrl,  int position,  int displayOrder,  List<ServiceModel> services)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ServiceCategoryModel() when $default != null:
-return $default(_that.id,_that.name,_that.iconUrl,_that.displayOrder);case _:
+return $default(_that.id,_that.name,_that.description,_that.iconUrl,_that.position,_that.displayOrder,_that.services);case _:
   return orElse();
 
 }
@@ -177,10 +177,10 @@ return $default(_that.id,_that.name,_that.iconUrl,_that.displayOrder);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? iconUrl,  int displayOrder)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? description,  String? iconUrl,  int position,  int displayOrder,  List<ServiceModel> services)  $default,) {final _that = this;
 switch (_that) {
 case _ServiceCategoryModel():
-return $default(_that.id,_that.name,_that.iconUrl,_that.displayOrder);case _:
+return $default(_that.id,_that.name,_that.description,_that.iconUrl,_that.position,_that.displayOrder,_that.services);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +197,10 @@ return $default(_that.id,_that.name,_that.iconUrl,_that.displayOrder);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? iconUrl,  int displayOrder)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? description,  String? iconUrl,  int position,  int displayOrder,  List<ServiceModel> services)?  $default,) {final _that = this;
 switch (_that) {
 case _ServiceCategoryModel() when $default != null:
-return $default(_that.id,_that.name,_that.iconUrl,_that.displayOrder);case _:
+return $default(_that.id,_that.name,_that.description,_that.iconUrl,_that.position,_that.displayOrder,_that.services);case _:
   return null;
 
 }
@@ -209,16 +209,25 @@ return $default(_that.id,_that.name,_that.iconUrl,_that.displayOrder);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
 
-class _ServiceCategoryModel implements ServiceCategoryModel {
-  const _ServiceCategoryModel({required this.id, required this.name, this.iconUrl, this.displayOrder = 0});
-  factory _ServiceCategoryModel.fromJson(Map<String, dynamic> json) => _$ServiceCategoryModelFromJson(json);
+
+class _ServiceCategoryModel extends ServiceCategoryModel {
+  const _ServiceCategoryModel({required this.id, required this.name, this.description, this.iconUrl, this.position = 0, this.displayOrder = 0, final  List<ServiceModel> services = const []}): _services = services,super._();
+  
 
 @override final  String id;
 @override final  String name;
+@override final  String? description;
 @override final  String? iconUrl;
+@override@JsonKey() final  int position;
 @override@JsonKey() final  int displayOrder;
+ final  List<ServiceModel> _services;
+@override@JsonKey() List<ServiceModel> get services {
+  if (_services is EqualUnmodifiableListView) return _services;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_services);
+}
+
 
 /// Create a copy of ServiceCategoryModel
 /// with the given fields replaced by the non-null parameter values.
@@ -226,23 +235,20 @@ class _ServiceCategoryModel implements ServiceCategoryModel {
 @pragma('vm:prefer-inline')
 _$ServiceCategoryModelCopyWith<_ServiceCategoryModel> get copyWith => __$ServiceCategoryModelCopyWithImpl<_ServiceCategoryModel>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$ServiceCategoryModelToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ServiceCategoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl)&&(identical(other.displayOrder, displayOrder) || other.displayOrder == displayOrder));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ServiceCategoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl)&&(identical(other.position, position) || other.position == position)&&(identical(other.displayOrder, displayOrder) || other.displayOrder == displayOrder)&&const DeepCollectionEquality().equals(other._services, _services));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
-int get hashCode => Object.hash(runtimeType,id,name,iconUrl,displayOrder);
+int get hashCode => Object.hash(runtimeType,id,name,description,iconUrl,position,displayOrder,const DeepCollectionEquality().hash(_services));
 
 @override
 String toString() {
-  return 'ServiceCategoryModel(id: $id, name: $name, iconUrl: $iconUrl, displayOrder: $displayOrder)';
+  return 'ServiceCategoryModel(id: $id, name: $name, description: $description, iconUrl: $iconUrl, position: $position, displayOrder: $displayOrder, services: $services)';
 }
 
 
@@ -253,7 +259,7 @@ abstract mixin class _$ServiceCategoryModelCopyWith<$Res> implements $ServiceCat
   factory _$ServiceCategoryModelCopyWith(_ServiceCategoryModel value, $Res Function(_ServiceCategoryModel) _then) = __$ServiceCategoryModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String? iconUrl, int displayOrder
+ String id, String name, String? description, String? iconUrl, int position, int displayOrder, List<ServiceModel> services
 });
 
 
@@ -270,13 +276,16 @@ class __$ServiceCategoryModelCopyWithImpl<$Res>
 
 /// Create a copy of ServiceCategoryModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? iconUrl = freezed,Object? displayOrder = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? iconUrl = freezed,Object? position = null,Object? displayOrder = null,Object? services = null,}) {
   return _then(_ServiceCategoryModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,iconUrl: freezed == iconUrl ? _self.iconUrl : iconUrl // ignore: cast_nullable_to_non_nullable
-as String?,displayOrder: null == displayOrder ? _self.displayOrder : displayOrder // ignore: cast_nullable_to_non_nullable
-as int,
+as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,iconUrl: freezed == iconUrl ? _self.iconUrl : iconUrl // ignore: cast_nullable_to_non_nullable
+as String?,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
+as int,displayOrder: null == displayOrder ? _self.displayOrder : displayOrder // ignore: cast_nullable_to_non_nullable
+as int,services: null == services ? _self._services : services // ignore: cast_nullable_to_non_nullable
+as List<ServiceModel>,
   ));
 }
 

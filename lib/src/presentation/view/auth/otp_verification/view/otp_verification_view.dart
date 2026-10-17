@@ -16,6 +16,7 @@ class OtpVerificationPage extends StatelessWidget {
   final String? phone;
   final String? identifier;
   final String? name;
+  final String? password;
   final String? mockOtp;
   final OtpFlowType flowType;
   final int expiresInSeconds;
@@ -25,6 +26,7 @@ class OtpVerificationPage extends StatelessWidget {
     this.phone,
     this.identifier,
     this.name,
+    this.password,
     this.mockOtp,
     this.flowType = OtpFlowType.login,
     this.expiresInSeconds = 300,
@@ -42,6 +44,7 @@ class OtpVerificationPage extends StatelessWidget {
           OtpStarted(
             identifier: effectiveId,
             name: name,
+            password: password,
             mockOtp: mockOtp,
             flowType: flowType,
             initialCountdownSeconds: expiresInSeconds,

@@ -13,12 +13,14 @@ class RegisterWithOtpUseCase {
     String? email,
     required String otp,
     required String name,
+    String? password,
   }) {
     return repository.registerWithOtp(
       phoneNumber: phoneNumber,
       email: email,
       otp: otp,
       name: name,
+      password: password,
     );
   }
 }

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ServiceEntity {
 
- String get id; String get name; String? get description; double get basePrice; int? get effectivePrice; bool get hasDiscount; double get discountPercent; int get durationMinutes; String? get imageUrl; String? get categoryId; AppliedPricingRuleEntity? get appliedPricingRule;
+ String get id; String get name; String? get description; double get basePrice; int? get effectivePrice; bool get hasDiscount; double get discountPercent; int get durationMinutes; String? get imageUrl; String? get categoryId; int get position; AppliedPricingRuleEntity? get appliedPricingRule;
 /// Create a copy of ServiceEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ServiceEntityCopyWith<ServiceEntity> get copyWith => _$ServiceEntityCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServiceEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.basePrice, basePrice) || other.basePrice == basePrice)&&(identical(other.effectivePrice, effectivePrice) || other.effectivePrice == effectivePrice)&&(identical(other.hasDiscount, hasDiscount) || other.hasDiscount == hasDiscount)&&(identical(other.discountPercent, discountPercent) || other.discountPercent == discountPercent)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.appliedPricingRule, appliedPricingRule) || other.appliedPricingRule == appliedPricingRule));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServiceEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.basePrice, basePrice) || other.basePrice == basePrice)&&(identical(other.effectivePrice, effectivePrice) || other.effectivePrice == effectivePrice)&&(identical(other.hasDiscount, hasDiscount) || other.hasDiscount == hasDiscount)&&(identical(other.discountPercent, discountPercent) || other.discountPercent == discountPercent)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.position, position) || other.position == position)&&(identical(other.appliedPricingRule, appliedPricingRule) || other.appliedPricingRule == appliedPricingRule));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,basePrice,effectivePrice,hasDiscount,discountPercent,durationMinutes,imageUrl,categoryId,appliedPricingRule);
+int get hashCode => Object.hash(runtimeType,id,name,description,basePrice,effectivePrice,hasDiscount,discountPercent,durationMinutes,imageUrl,categoryId,position,appliedPricingRule);
 
 @override
 String toString() {
-  return 'ServiceEntity(id: $id, name: $name, description: $description, basePrice: $basePrice, effectivePrice: $effectivePrice, hasDiscount: $hasDiscount, discountPercent: $discountPercent, durationMinutes: $durationMinutes, imageUrl: $imageUrl, categoryId: $categoryId, appliedPricingRule: $appliedPricingRule)';
+  return 'ServiceEntity(id: $id, name: $name, description: $description, basePrice: $basePrice, effectivePrice: $effectivePrice, hasDiscount: $hasDiscount, discountPercent: $discountPercent, durationMinutes: $durationMinutes, imageUrl: $imageUrl, categoryId: $categoryId, position: $position, appliedPricingRule: $appliedPricingRule)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ServiceEntityCopyWith<$Res>  {
   factory $ServiceEntityCopyWith(ServiceEntity value, $Res Function(ServiceEntity) _then) = _$ServiceEntityCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String? description, double basePrice, int? effectivePrice, bool hasDiscount, double discountPercent, int durationMinutes, String? imageUrl, String? categoryId, AppliedPricingRuleEntity? appliedPricingRule
+ String id, String name, String? description, double basePrice, int? effectivePrice, bool hasDiscount, double discountPercent, int durationMinutes, String? imageUrl, String? categoryId, int position, AppliedPricingRuleEntity? appliedPricingRule
 });
 
 
@@ -62,7 +62,7 @@ class _$ServiceEntityCopyWithImpl<$Res>
 
 /// Create a copy of ServiceEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? basePrice = null,Object? effectivePrice = freezed,Object? hasDiscount = null,Object? discountPercent = null,Object? durationMinutes = null,Object? imageUrl = freezed,Object? categoryId = freezed,Object? appliedPricingRule = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? basePrice = null,Object? effectivePrice = freezed,Object? hasDiscount = null,Object? discountPercent = null,Object? durationMinutes = null,Object? imageUrl = freezed,Object? categoryId = freezed,Object? position = null,Object? appliedPricingRule = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,8 @@ as bool,discountPercent: null == discountPercent ? _self.discountPercent : disco
 as double,durationMinutes: null == durationMinutes ? _self.durationMinutes : durationMinutes // ignore: cast_nullable_to_non_nullable
 as int,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
 as String?,categoryId: freezed == categoryId ? _self.categoryId : categoryId // ignore: cast_nullable_to_non_nullable
-as String?,appliedPricingRule: freezed == appliedPricingRule ? _self.appliedPricingRule : appliedPricingRule // ignore: cast_nullable_to_non_nullable
+as String?,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
+as int,appliedPricingRule: freezed == appliedPricingRule ? _self.appliedPricingRule : appliedPricingRule // ignore: cast_nullable_to_non_nullable
 as AppliedPricingRuleEntity?,
   ));
 }
@@ -172,10 +173,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? description,  double basePrice,  int? effectivePrice,  bool hasDiscount,  double discountPercent,  int durationMinutes,  String? imageUrl,  String? categoryId,  AppliedPricingRuleEntity? appliedPricingRule)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? description,  double basePrice,  int? effectivePrice,  bool hasDiscount,  double discountPercent,  int durationMinutes,  String? imageUrl,  String? categoryId,  int position,  AppliedPricingRuleEntity? appliedPricingRule)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ServiceEntity() when $default != null:
-return $default(_that.id,_that.name,_that.description,_that.basePrice,_that.effectivePrice,_that.hasDiscount,_that.discountPercent,_that.durationMinutes,_that.imageUrl,_that.categoryId,_that.appliedPricingRule);case _:
+return $default(_that.id,_that.name,_that.description,_that.basePrice,_that.effectivePrice,_that.hasDiscount,_that.discountPercent,_that.durationMinutes,_that.imageUrl,_that.categoryId,_that.position,_that.appliedPricingRule);case _:
   return orElse();
 
 }
@@ -193,10 +194,10 @@ return $default(_that.id,_that.name,_that.description,_that.basePrice,_that.effe
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? description,  double basePrice,  int? effectivePrice,  bool hasDiscount,  double discountPercent,  int durationMinutes,  String? imageUrl,  String? categoryId,  AppliedPricingRuleEntity? appliedPricingRule)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? description,  double basePrice,  int? effectivePrice,  bool hasDiscount,  double discountPercent,  int durationMinutes,  String? imageUrl,  String? categoryId,  int position,  AppliedPricingRuleEntity? appliedPricingRule)  $default,) {final _that = this;
 switch (_that) {
 case _ServiceEntity():
-return $default(_that.id,_that.name,_that.description,_that.basePrice,_that.effectivePrice,_that.hasDiscount,_that.discountPercent,_that.durationMinutes,_that.imageUrl,_that.categoryId,_that.appliedPricingRule);case _:
+return $default(_that.id,_that.name,_that.description,_that.basePrice,_that.effectivePrice,_that.hasDiscount,_that.discountPercent,_that.durationMinutes,_that.imageUrl,_that.categoryId,_that.position,_that.appliedPricingRule);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -213,10 +214,10 @@ return $default(_that.id,_that.name,_that.description,_that.basePrice,_that.effe
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? description,  double basePrice,  int? effectivePrice,  bool hasDiscount,  double discountPercent,  int durationMinutes,  String? imageUrl,  String? categoryId,  AppliedPricingRuleEntity? appliedPricingRule)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? description,  double basePrice,  int? effectivePrice,  bool hasDiscount,  double discountPercent,  int durationMinutes,  String? imageUrl,  String? categoryId,  int position,  AppliedPricingRuleEntity? appliedPricingRule)?  $default,) {final _that = this;
 switch (_that) {
 case _ServiceEntity() when $default != null:
-return $default(_that.id,_that.name,_that.description,_that.basePrice,_that.effectivePrice,_that.hasDiscount,_that.discountPercent,_that.durationMinutes,_that.imageUrl,_that.categoryId,_that.appliedPricingRule);case _:
+return $default(_that.id,_that.name,_that.description,_that.basePrice,_that.effectivePrice,_that.hasDiscount,_that.discountPercent,_that.durationMinutes,_that.imageUrl,_that.categoryId,_that.position,_that.appliedPricingRule);case _:
   return null;
 
 }
@@ -228,7 +229,7 @@ return $default(_that.id,_that.name,_that.description,_that.basePrice,_that.effe
 
 
 class _ServiceEntity implements ServiceEntity {
-  const _ServiceEntity({required this.id, required this.name, this.description, required this.basePrice, this.effectivePrice, this.hasDiscount = false, this.discountPercent = 0, required this.durationMinutes, this.imageUrl, this.categoryId, this.appliedPricingRule});
+  const _ServiceEntity({required this.id, required this.name, this.description, required this.basePrice, this.effectivePrice, this.hasDiscount = false, this.discountPercent = 0, required this.durationMinutes, this.imageUrl, this.categoryId, this.position = 0, this.appliedPricingRule});
   
 
 @override final  String id;
@@ -241,6 +242,7 @@ class _ServiceEntity implements ServiceEntity {
 @override final  int durationMinutes;
 @override final  String? imageUrl;
 @override final  String? categoryId;
+@override@JsonKey() final  int position;
 @override final  AppliedPricingRuleEntity? appliedPricingRule;
 
 /// Create a copy of ServiceEntity
@@ -253,16 +255,16 @@ _$ServiceEntityCopyWith<_ServiceEntity> get copyWith => __$ServiceEntityCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ServiceEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.basePrice, basePrice) || other.basePrice == basePrice)&&(identical(other.effectivePrice, effectivePrice) || other.effectivePrice == effectivePrice)&&(identical(other.hasDiscount, hasDiscount) || other.hasDiscount == hasDiscount)&&(identical(other.discountPercent, discountPercent) || other.discountPercent == discountPercent)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.appliedPricingRule, appliedPricingRule) || other.appliedPricingRule == appliedPricingRule));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ServiceEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.basePrice, basePrice) || other.basePrice == basePrice)&&(identical(other.effectivePrice, effectivePrice) || other.effectivePrice == effectivePrice)&&(identical(other.hasDiscount, hasDiscount) || other.hasDiscount == hasDiscount)&&(identical(other.discountPercent, discountPercent) || other.discountPercent == discountPercent)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.position, position) || other.position == position)&&(identical(other.appliedPricingRule, appliedPricingRule) || other.appliedPricingRule == appliedPricingRule));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,basePrice,effectivePrice,hasDiscount,discountPercent,durationMinutes,imageUrl,categoryId,appliedPricingRule);
+int get hashCode => Object.hash(runtimeType,id,name,description,basePrice,effectivePrice,hasDiscount,discountPercent,durationMinutes,imageUrl,categoryId,position,appliedPricingRule);
 
 @override
 String toString() {
-  return 'ServiceEntity(id: $id, name: $name, description: $description, basePrice: $basePrice, effectivePrice: $effectivePrice, hasDiscount: $hasDiscount, discountPercent: $discountPercent, durationMinutes: $durationMinutes, imageUrl: $imageUrl, categoryId: $categoryId, appliedPricingRule: $appliedPricingRule)';
+  return 'ServiceEntity(id: $id, name: $name, description: $description, basePrice: $basePrice, effectivePrice: $effectivePrice, hasDiscount: $hasDiscount, discountPercent: $discountPercent, durationMinutes: $durationMinutes, imageUrl: $imageUrl, categoryId: $categoryId, position: $position, appliedPricingRule: $appliedPricingRule)';
 }
 
 
@@ -273,7 +275,7 @@ abstract mixin class _$ServiceEntityCopyWith<$Res> implements $ServiceEntityCopy
   factory _$ServiceEntityCopyWith(_ServiceEntity value, $Res Function(_ServiceEntity) _then) = __$ServiceEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String? description, double basePrice, int? effectivePrice, bool hasDiscount, double discountPercent, int durationMinutes, String? imageUrl, String? categoryId, AppliedPricingRuleEntity? appliedPricingRule
+ String id, String name, String? description, double basePrice, int? effectivePrice, bool hasDiscount, double discountPercent, int durationMinutes, String? imageUrl, String? categoryId, int position, AppliedPricingRuleEntity? appliedPricingRule
 });
 
 
@@ -290,7 +292,7 @@ class __$ServiceEntityCopyWithImpl<$Res>
 
 /// Create a copy of ServiceEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? basePrice = null,Object? effectivePrice = freezed,Object? hasDiscount = null,Object? discountPercent = null,Object? durationMinutes = null,Object? imageUrl = freezed,Object? categoryId = freezed,Object? appliedPricingRule = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? basePrice = null,Object? effectivePrice = freezed,Object? hasDiscount = null,Object? discountPercent = null,Object? durationMinutes = null,Object? imageUrl = freezed,Object? categoryId = freezed,Object? position = null,Object? appliedPricingRule = freezed,}) {
   return _then(_ServiceEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -302,7 +304,8 @@ as bool,discountPercent: null == discountPercent ? _self.discountPercent : disco
 as double,durationMinutes: null == durationMinutes ? _self.durationMinutes : durationMinutes // ignore: cast_nullable_to_non_nullable
 as int,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
 as String?,categoryId: freezed == categoryId ? _self.categoryId : categoryId // ignore: cast_nullable_to_non_nullable
-as String?,appliedPricingRule: freezed == appliedPricingRule ? _self.appliedPricingRule : appliedPricingRule // ignore: cast_nullable_to_non_nullable
+as String?,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
+as int,appliedPricingRule: freezed == appliedPricingRule ? _self.appliedPricingRule : appliedPricingRule // ignore: cast_nullable_to_non_nullable
 as AppliedPricingRuleEntity?,
   ));
 }

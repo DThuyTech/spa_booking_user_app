@@ -57,6 +57,7 @@ class OtpVerificationBloc
       state.copyWith(
         identifier: event.identifier,
         name: event.name,
+        password: event.password,
         mockOtp: event.mockOtp,
         flowType: event.flowType,
         remainingSeconds: event.initialCountdownSeconds,
@@ -151,6 +152,7 @@ class OtpVerificationBloc
             phoneNumber: !isEmail ? id : null,
             name: state.name ?? '',
             otp: state.code,
+            password: state.password,
           );
           result.fold(
             (failure) {

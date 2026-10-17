@@ -52,7 +52,7 @@ abstract interface class AuthRemoteDataSource {
   Future<void> deleteAccount();
 
   Future<String> changePassword({
-    required String oldPassword,
+    String? oldPassword,
     required String newPassword,
   });
 
@@ -77,6 +77,7 @@ abstract interface class AuthRemoteDataSource {
     String? email,
     required String otp,
     required String name,
+    String? password,
   });
 
   Future<RequestOtpResponseModel> sendLoginOtp({required String identifier});
@@ -203,7 +204,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<String> changePassword({
-    required String oldPassword,
+    String? oldPassword,
     required String newPassword,
   }) {
     return _apiService.changePassword(
@@ -249,12 +250,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     String? email,
     required String otp,
     required String name,
+    String? password,
   }) {
     return _apiService.registerWithOtp(
       phoneNumber: phoneNumber,
       email: email,
       otp: otp,
       name: name,
+      password: password,
     );
   }
 

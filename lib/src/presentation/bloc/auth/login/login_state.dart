@@ -1,6 +1,7 @@
 import 'package:spa_booking/src/domain/entities/auth/auth_session_entity.dart';
 import 'package:spa_booking/src/domain/entities/auth/request_otp_result.dart';
 import 'package:equatable/equatable.dart';
+import 'login_event.dart';
 
 enum LoginStatus { initial, validating, loading, success, failure }
 
@@ -8,6 +9,7 @@ enum LoginStatus { initial, validating, loading, success, failure }
 typedef LoginStatusEnum = LoginStatus;
 
 class LoginState extends Equatable {
+  final LoginMethod loginMethod;
   final String identifier;
   final String password;
   final bool isValid;
@@ -19,6 +21,7 @@ class LoginState extends Equatable {
   final RequestOtpResult? otpResult;
 
   const LoginState({
+    this.loginMethod = LoginMethod.password,
     this.identifier = '',
     this.password = '',
     this.isValid = false,
@@ -34,12 +37,21 @@ class LoginState extends Equatable {
   String get phone => identifier;
   String? get phoneError => identifierError;
 
+  bool get isPasswordMethod => loginMethod == LoginMethod.password;
+  bool get isOtpMethod => loginMethod == LoginMethod.otp;
+
   bool get isLoading => status == LoginStatus.loading;
   bool get isSuccess => status == LoginStatus.success;
   bool get isFailure => status == LoginStatus.failure;
-  bool get canSubmit => identifier.trim().isNotEmpty && !isLoading;
+  bool get canSubmit {
+    if (isLoading) return false;
+    if (identifier.trim().isEmpty) return false;
+    if (loginMethod == LoginMethod.password && password.isEmpty) return false;
+    return true;
+  }
 
   LoginState copyWith({
+    LoginMethod? loginMethod,
     String? identifier,
     String? phone,
     String? password,
@@ -53,6 +65,7 @@ class LoginState extends Equatable {
     RequestOtpResult? Function()? otpResult,
   }) {
     return LoginState(
+      loginMethod: loginMethod ?? this.loginMethod,
       identifier: identifier ?? phone ?? this.identifier,
       password: password ?? this.password,
       isValid: isValid ?? this.isValid,
@@ -71,6 +84,7 @@ class LoginState extends Equatable {
 
   @override
   List<Object?> get props => [
+    loginMethod,
     identifier,
     password,
     isValid,

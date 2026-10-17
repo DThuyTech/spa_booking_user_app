@@ -71,6 +71,7 @@ class UserModel extends Equatable {
   final UserStatusEnum status;
   final String? dateOfBirth;
   final CustomerBookingStatsModel? bookingStats;
+  final bool isPasswordSet;
 
   const UserModel({
     required this.id,
@@ -82,6 +83,7 @@ class UserModel extends Equatable {
     this.status = UserStatusEnum.active,
     this.dateOfBirth,
     this.bookingStats,
+    this.isPasswordSet = true,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -109,6 +111,8 @@ class UserModel extends Equatable {
       stats = CustomerBookingStatsModel.fromJson(rawStats);
     }
 
+    final isPasswordSet = (json['isPasswordSet'] as bool?) ?? true;
+
     return UserModel(
       id: (json['_id'] ?? json['id'] ?? json['userId'] ?? '') as String,
       email: (json['email'] ?? '') as String,
@@ -119,6 +123,7 @@ class UserModel extends Equatable {
       status: status,
       dateOfBirth: json['dateOfBirth']?.toString(),
       bookingStats: stats,
+      isPasswordSet: isPasswordSet,
     );
   }
 
@@ -132,6 +137,7 @@ class UserModel extends Equatable {
     UserStatusEnum? status,
     String? Function()? dateOfBirth,
     CustomerBookingStatsModel? Function()? bookingStats,
+    bool? isPasswordSet,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -143,6 +149,7 @@ class UserModel extends Equatable {
       status: status ?? this.status,
       dateOfBirth: dateOfBirth != null ? dateOfBirth() : this.dateOfBirth,
       bookingStats: bookingStats != null ? bookingStats() : this.bookingStats,
+      isPasswordSet: isPasswordSet ?? this.isPasswordSet,
     );
   }
 
@@ -155,6 +162,7 @@ class UserModel extends Equatable {
     if (avatar != null) 'avatar': avatar,
     'status': status.toJson(),
     if (dateOfBirth != null) 'dateOfBirth': dateOfBirth,
+    'isPasswordSet': isPasswordSet,
   };
 
   @override
@@ -168,6 +176,7 @@ class UserModel extends Equatable {
     status,
     dateOfBirth,
     bookingStats,
+    isPasswordSet,
   ];
 }
 
@@ -182,5 +191,6 @@ extension UserModelX on UserModel {
     status: status,
     dateOfBirth: dateOfBirth,
     bookingStats: bookingStats?.toEntity(),
+    isPasswordSet: isPasswordSet,
   );
 }

@@ -68,6 +68,7 @@ class _RegisterViewState extends State<RegisterView> {
                 builder: (_) => OtpVerificationPage(
                   identifier: state.identifier,
                   name: state.fullName,
+                  password: state.password.isNotEmpty ? state.password : null,
                   flowType: OtpFlowType.register,
                   mockOtp: state.otpResult?.otp,
                   expiresInSeconds: state.otpResult?.expiresInSeconds ?? 300,

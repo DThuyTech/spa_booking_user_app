@@ -38,15 +38,14 @@ class _StoreServicesTabViewState extends State<StoreServicesTabView> {
       );
     }
 
-    // Group services by category
-    final sortedCategories = [...widget.categories]
-      ..sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
+    // Categories and services are already ordered by position ASC from backend
+    final categories = widget.categories;
 
     final Map<String, List<ServiceEntity>> groupedServices = {};
-    for (final cat in sortedCategories) {
-      final list = widget.services
-          .where((s) => s.categoryId == cat.id)
-          .toList();
+    for (final cat in categories) {
+      final list = cat.services.isNotEmpty
+          ? cat.services
+          : widget.services.where((s) => s.categoryId == cat.id).toList();
       if (list.isNotEmpty) {
         groupedServices[cat.name] = list;
       }
@@ -57,7 +56,7 @@ class _StoreServicesTabViewState extends State<StoreServicesTabView> {
         .where(
           (s) =>
               s.categoryId == null ||
-              !sortedCategories.any((cat) => cat.id == s.categoryId),
+              !categories.any((cat) => cat.id == s.categoryId),
         )
         .toList();
     if (uncategorized.isNotEmpty) {
